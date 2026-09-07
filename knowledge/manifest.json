@@ -5,7 +5,15 @@
       "slug": "insurance-debt",
       "name": "保险债权投资计划",
       "desc": "保债计划合规、登记与监管制度文件汇编",
-      "order": 1
+      "order": 1,
+      "collapsed": true
+    },
+    {
+      "slug": "stay-hungry",
+      "name": "stay hungry 学习库",
+      "desc": "AI/科技学习资料 · 求知若饥",
+      "order": 2,
+      "collapsed": false
     }
   ],
   "items": [
@@ -228,6 +236,111 @@
       "file": "0.债权投资计划内部交流-王少斌.pptx",
       "size": 16832184,
       "pages": 33,
+      "url": null
+    },
+    {
+      "slug": "claude-code-deepseek-guide",
+      "topic": "stay-hungry",
+      "title": "Claude Code + DeepSeek 安装指南",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "Node.js → Claude Code → DeepSeek API → Git 七步安装教程",
+      "tags": [
+        "安装",
+        "教程"
+      ],
+      "original": "Claude-Code-DeepSeek-安装指南.pdf",
+      "file": "Claude-Code-DeepSeek-安装指南.pdf",
+      "size": 459016,
+      "pages": 5,
+      "url": null
+    },
+    {
+      "slug": "union-card-handbook-2026",
+      "topic": "stay-hungry",
+      "title": "2026 年联合年卡使用手册",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "北京联合年卡各场馆开放时间、电话、使用期限",
+      "tags": [
+        "生活",
+        "年卡",
+        "北京"
+      ],
+      "original": "2026年联合年卡使用手册.pdf",
+      "file": "2026年联合年卡使用手册.pdf",
+      "size": 7872989,
+      "pages": 2,
+      "url": null
+    },
+    {
+      "slug": "science-golden-age",
+      "topic": "stay-hungry",
+      "title": "科学：一个全新的黄金时代",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "OSTP 报告中文译本，取代布什1945《科学：无尽的前沿》，AI 驱动科研新范式",
+      "tags": [
+        "科学",
+        "AI",
+        "白宫报告"
+      ],
+      "original": "科学：一个全新的黄金时代.pdf",
+      "file": "科学：一个全新的黄金时代.pdf",
+      "size": 1211328,
+      "pages": 170,
+      "url": null
+    },
+    {
+      "slug": "ai-learning-hub",
+      "topic": "stay-hungry",
+      "title": "AI 时代三份重磅文档精读",
+      "type": "html",
+      "date": "2026-09-07",
+      "desc": "WAIC 演讲全录 + 高盛中国科技市场 + 科学黄金时代，三视角精读笔记（交互页）",
+      "tags": [
+        "AI",
+        "精读",
+        "学习笔记"
+      ],
+      "original": "learning-hub.html",
+      "file": "learning-hub.html",
+      "size": 38460,
+      "pages": 0,
+      "url": null
+    },
+    {
+      "slug": "motherland-100",
+      "topic": "stay-hungry",
+      "title": "祖国 100 岁",
+      "type": "image",
+      "date": "2026-09-07",
+      "desc": "图片（内容未查看，按文件名登记）",
+      "tags": [
+        "图片"
+      ],
+      "original": "祖国100岁.jpg",
+      "file": "祖国100岁.jpg",
+      "size": 329169,
+      "pages": 1,
+      "url": null
+    },
+    {
+      "slug": "waic-2026-speeches",
+      "topic": "stay-hungry",
+      "title": "2026 世界人工智能大会演讲全录",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "230 页全量演讲稿 OCR 汇总：开幕式四点意见、主席声明15条、世界AI合作组织成立、萨顿/印奇/朱松纯/李开复等演讲",
+      "tags": [
+        "AI",
+        "WAIC",
+        "演讲稿"
+      ],
+      "original": "2026世界人工智能大会暨人工智能全球治理高级别会议全量演讲稿汇总.pdf",
+      "file": "2026世界人工智能大会暨人工智能全球治理高级别会议全量演讲稿汇总.pdf",
+      "size": 13235939,
+      "pages": 230,
       "url": null
     }
   ]

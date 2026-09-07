@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 时代学习笔记 · 三份重磅文档精读</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --bg-soft: #111827;
+    --card: #161e30;
+    --card-hover: #1b2540;
+    --border: #243049;
+    --text: #e5eaf3;
+    --text-dim: #93a0b8;
+    --accent-waic: #6366f1;
+    --accent-gs: #f59e0b;
+    --accent-sci: #10b981;
+    --accent-waic-soft: rgba(99,102,241,.12);
+    --accent-gs-soft: rgba(245,158,11,.12);
+    --accent-sci-soft: rgba(16,185,129,.12);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    line-height: 1.7;
+    padding-bottom: 60px;
+  }
+  /* ── Hero ── */
+  .hero {
+    background: radial-gradient(1200px 400px at 50% -10%, rgba(99,102,241,.18), transparent 60%),
+                radial-gradient(800px 300px at 80% -20%, rgba(16,185,129,.10), transparent 55%);
+    border-bottom: 1px solid var(--border);
+    padding: 56px 24px 40px;
+    text-align: center;
+  }
+  .hero .kicker {
+    display: inline-block;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 16px;
+    margin-bottom: 18px;
+    background: rgba(255,255,255,.03);
+  }
+  .hero h1 {
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .hero p.sub {
+    color: var(--text-dim);
+    font-size: 15px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .hero .meta {
+    margin-top: 18px;
+    font-size: 13px;
+    color: #5b6b85;
+  }
+  /* ── Tab nav ── */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 20px 16px;
+    position: sticky;
+    top: 0;
+    background: rgba(11,15,26,.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    z-index: 50;
+  }
+  .tab {
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .2s;
+    font-family: inherit;
+  }
+  .tab:hover { color: var(--text); border-color: #3a4a6b; }
+  .tab.active { color: #fff; }
+  .tab[data-tab="waic"].active { background: var(--accent-waic); border-color: var(--accent-waic); }
+  .tab[data-tab="goldman"].active { background: var(--accent-gs); border-color: var(--accent-gs); color: #1a1202; }
+  .tab[data-tab="science"].active { background: var(--accent-sci); border-color: var(--accent-sci); }
+  /* ── Layout ── */
+  .container { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+  section.doc { display: none; animation: fadeIn .35s ease; }
+  section.doc.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .doc-header { padding: 34px 0 8px; }
+  .doc-header h2 {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .doc-header .doc-sub { color: var(--text-dim); font-size: 14px; margin-bottom: 14px; }
+  .pill {
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 12px;
+    border-radius: 999px;
+    margin-right: 8px;
+    font-weight: 600;
+  }
+  .pill.waic { background: var(--accent-waic-soft); color: #a5b4fc; border: 1px solid rgba(99,102,241,.35); }
+  .pill.gs { background: var(--accent-gs-soft); color: #fcd34d; border: 1px solid rgba(245,158,11,.35); }
+  .pill.sci { background: var(--accent-sci-soft); color: #6ee7b7; border: 1px solid rgba(16,185,129,.35); }
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 18px;
+  }
+  .card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h3 .idx {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    background: var(--accent-waic-soft);
+    color: #a5b4fc;
+  }
+  .card h3 .idx.gs { background: var(--accent-gs-soft); color: #fcd34d; }
+  .card h3 .idx.sci { background: var(--accent-sci-soft); color: #6ee7b7; }
+  .card p { color: #c3cde0; font-size: 14.5px; }
+  .card ul { padding-left: 20px; }
+  .card li { font-size: 14.5px; color: #c3cde0; margin-bottom: 8px; }
+  .card li strong { color: var(--text); }
+  .card li::marker { color: #4a5a7d; }
+  /* ── Data stats grid ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .stat {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    transition: transform .2s, border-color .2s;
+  }
+  .stat:hover { transform: translateY(-3px); border-color: #3a4a6b; }
+  .stat .num { font-size: 22px; font-weight: 800; letter-spacing: .5px; }
+  .stat .lbl { font-size: 12px; color: var(--text-dim); margin-top: 4px; line-height: 1.5; }
+  .stat.waic .num { color: #a5b4fc; }
+  .stat.gs .num { color: #fcd34d; }
+  .stat.sci .num { color: #6ee7b7; }
+  /* ── Quotes ── */
+  .quote {
+    border-left: 3px solid var(--accent-waic);
+    background: rgba(99,102,241,.06);
+    padding: 14px 18px;
+    border-radius: 0 10px 10px 0;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #d8deea;
+    font-style: italic;
+  }
+  .quote.gs { border-color: var(--accent-gs); background: rgba(245,158,11,.06); }
+  .quote.sci { border-color: var(--accent-sci); background: rgba(16,185,129,.06); }
+  .quote .who { display: block; margin-top: 8px; font-size: 12.5px; color: var(--text-dim); font-style: normal; }
+  /* ── Speaker list ── */
+  .speaker-list { list-style: none; padding-left: 0 !important; }
+  .speaker-list li {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed #243049;
+    align-items: baseline;
+  }
+  .speaker-list li:last-child { border-bottom: none; }
+  .speaker-list .name { font-weight: 700; color: var(--text); min-width: 130px; font-size: 13.5px; }
+  .speaker-list .topic { color: #c3cde0; font-size: 13.5px; }
+  /* ── Two column ── */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 720px) { .cols { grid-template-columns: 1fr; } }
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    color: #4a5a7d;
+    font-size: 12.5px;
+    padding: 30px 20px 0;
+  }
+  .footer a { color: #6b7ca3; text-decoration: none; }
+  .footer a:hover { color: #93a0b8; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <span class="kicker">LEARNING HUB</span>
+  <h1>AI 时代 · 三份重磅文档精读</h1>
+  <p class="sub">世界人工智能大会演讲全录 · 高盛中国科技市场报告 · 科学黄金时代宣言 —— 三大视角拼出 AI 时代的完整图景</p>
+  <p class="meta">学习笔记 · 2026-08-03 · 铁蛋整理</p>
+</div>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="waic">世界人工智能大会</button>
+  <button class="tab" data-tab="goldman">高盛 · 中国科技市场</button>
+  <button class="tab" data-tab="science">科学 · 黄金时代</button>
+</nav>
+
+<div class="container">
+
+  <!-- ══════════ WAIC ══════════ -->
+  <section class="doc active" id="waic">
+    <div class="doc-header">
+      <h2>2026 世界人工智能大会 · 演讲全录精读</h2>
+      <div class="doc-sub">
+        <span class="pill waic">AI 前沿</span><span class="pill waic">全球治理</span>
+        <span style="margin-left:6px">230 页演讲稿汇总 · 提取自原稿（OCR）</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="idx waic">讲</span>演讲者与主题</h3>
+      <ul class="speaker-list">
+        <li><span class="name">习近平</span><span class="topic">国家主席 · 开幕式主旨讲话：开放共赢、安全可控、文明互鉴、全球治理</span></li>
+        <li><span class="name">大会主席声明</span><span class="topic">15 条共识 · 世界人工智能合作组织成立（全球首个 AI 政府间国际组织）</span></li>
+        <li><span class="name">理查德·萨顿</span><span class="topic">2024 图灵奖得主、强化学习之父 · AI 发展拐点：从静态数据走向经验驱动</span></li>
+        <li><span class="name">印奇</span><span class="topic">阶跃星辰董事长 · 当智能体进入物理世界（三阶段论：预训练→强化推理→具身）</span></li>
+        <li><span class="name">霍普克罗夫特</span><span class="topic">图灵奖得主、康奈尔荣休教授 · 战略制定要具备韧性</span></li>
+        <li><span class="name">苏昊</span><span class="topic">复旦教授、通用物理智能研究院院长 · 物理智能使命是"把人还给人"</span></li>
+        <li><span class="name">王坚</span><span class="topic">中国工程院院士、之江实验室主任 · 让科学数据成为基础模型的原住民</span></li>
+        <li><span class="name">徐立</span><span class="topic">商汤科技董事长 · 无界创新与有界守护：普惠与安全</span></li>
+        <li><span class="name">安迪雅</span><span class="topic">欧莱雅全球首席人工智能官 · 人机共生：AI 向美</span></li>
+        <li><span class="name">扎沃隆科夫</span><span class="topic">英矽智能创始人 · AI 开发抗疾病与衰老双效疗法</span></li>
+        <li><span class="name">姚期智</span><span class="topic">图灵奖得主、清华交叉信息研究院院长 · AI 的第一性原理：威力及其局限</span></li>
+        <li><span class="name">郭毅可</span><span class="topic">香港科技大学首席副校长 · 硅碳时代的人机共生</span></li>
+        <li><span class="name">李开复</span><span class="topic">零一万物创始人 · AI 未来已来：重构商业、组织与个人</span></li>
+        <li><span class="name">朱松纯</span><span class="topic">北京通用人工智能研究院院长 · 为机器立心：构建 AGI 认知架构和价值体系</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx waic">开</span>开幕式 · 全球治理共识</h3>
+      <ul>
+        <li><strong>习近平四点意见</strong>：坚持开放共赢驱动创新发展；强化风险意识确保安全可控；鼓励包容并蓄促进文明互鉴；倡导和衷共济完善全球治理。AI 正从"数字世界"走向"物理世界"</li>
+        <li><strong>大会主席声明 15 条</strong>：培育企业创新生态、推广"人工智能+"与"词元经济"、鼓励开源、数据产权基础制度、AI 与能源系统深度融合、评估就业冲击、构建法规/监测/预警/应急体系、前沿模型加装护栏、智能体明确决策权限与行为边界、防范恐怖主义滥用、支持联合国双机制、共构国际经贸规则、标准互认、保护文化多样性</li>
+        <li><strong>世界人工智能合作组织</strong>：2026 年 7 月 17-20 日上海举行；100 多个国家和国际组织代表出席；全球首个 AI 政府间国际组织，总部设上海</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx waic">论</span>核心论点</h3>
+      <ul>
+        <li><strong>萨顿（主论坛）</strong>：行业混淆算力规模与原生智能，大模型仅复刻既有知识、无自主发现新知能力；呼吁建立统一"通用心智科学"；静态标注数据已触达天花板，经验驱动（智能体与环境交互产生观测、动作、奖励）是下一代 AI 核心路线</li>
+        <li><strong>印奇</strong>：AI 产业分三阶段（预训练大模型→强化学习推理→具身智能体），第三波影响力将"超过 PC 互联网与移动互联网变革之和"；公式"智能体能力=模型能力×智能体操作系统能力"；三大结构性变化：新系统（Agentic OS）、新载体（终端重构）、新网络（A2A 人机共生价值网络）</li>
+        <li><strong>苏昊</strong>：大模型幻觉根源是"语言只是世界的投影"、没有"身体"；物理知识六层阶梯（物体、状态、动力学+功能、目标、行为）；行业重心从"演示多惊艳"转向"运行多可靠"；物理智能使 AI 从科学"读者"变知识"创造者"</li>
+        <li><strong>王坚</strong>：科学基础模型=建立在科学数据（而非论文文本）基础上的模型；地球科学 70% 以上重要信息不在文本中；AI 将"变得像数学一样基础"</li>
+        <li><strong>徐立</strong>：AI 计费维度应从 Token 转向 Task（任务完成价格）；安全分产品理念安全、模型路径安全、物理边界安全三层</li>
+        <li><strong>姚期智（主论坛）</strong>：AI 本质是"加装了一组数据的图灵机"，仍受停机问题限制；量子密钥分发等物理定律级安全是 AI 破不了的；未来最有价值方向是"AI for Science"与"Science for AI"（量子 AI）</li>
+        <li><strong>姚期智（量子）</strong>：量子计算机能从第一性原理求解量子力学方程，在常温超导、新材料/药物研发上有严格边界；面对时代之问，"我觉得准备好了"</li>
+      <ul>
+        <li><strong>姚期智</strong>：量子计算机能从第一性原理求解量子力学方程，相比"猜测式"的 AI 药物筛选，在常温超导、新材料/药物研发上有严格边界；面对时代之问，"我觉得准备好了"</li>
+        <li><strong>萨顿</strong>：重提《苦涩的教训》——不要将人类知识硬编码进系统，应让智能体自己发现；区分"设计期/运行期"，学习、规划、发现必须在运行期发生；OaK 架构（选项+知识）实现"特征→子问题→新选项→新特征"的开放式抽象闭环；"让 AI 学会自己学，才是真正的智能"</li>
+        <li><strong>朱松纯</strong>：全球 AI 竞争已上升至地缘政治与国家战略维度（美国以叙事为手段、泡沫为工具虹吸全球资本）；大模型不是 AGI，行业存在三类技术误判与四轮资本泡沫；AGI 标准定义是"具备等同于人类全方位综合智能的自主智能体"，须具备内生"心"（认知架构+价值体系），提出 CUV 数理框架；"人工智能的终极竞争是文化竞争"</li>
+        <li><strong>李开复</strong>：AI 时代让智力变得更便宜；"用最聪明的 AI 做最重要的决策，就是第一性原理"；企业需"大脑+地图（Ontology）+导航系统+操作系统"；AI 可执行和建议但不能担责，领导人靠品位、远见、信念、勇气；未来组织核心是 DRI（直接责任人）；个人要"远离机器的主场"</li>
+        <li><strong>郭毅可</strong>：我们进入硅碳时代，"硅碳智能在物理上是同源的，都是反熵增、建立局部秩序；数学上是同构的，都是在进行贝叶斯大脑的推理"（以薛定谔《生命是什么》为基石）；共生不是人类退场，人类是主导的</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx waic">数</span>关键数据 · 全球治理与产业（开幕式）</h3>
+      <div class="stats">
+        <div class="stat waic"><div class="num">超万亿</div><div class="lbl">中国智能经济核心产业规模（人民币）</div></div>
+        <div class="stat waic"><div class="num">5000 个</div><div class="lbl">未来 5 年面向发展中国家的 AI 研修名额</div></div>
+        <div class="stat waic"><div class="num">30 个</div><div class="lbl">"妈祖"气象智能预警方案落地国家</div></div>
+        <div class="stat waic"><div class="num">9200 万</div><div class="lbl">2030 年 AI 可能减少的岗位（WEF，同时创造 1.7 亿新岗）</div></div>
+        <div class="stat waic"><div class="num">80 年</div><div class="lbl">信息革命跨度（印奇）</div></div>
+        <div class="stat waic"><div class="num">150 万</div><div class="lbl">18 岁中学生发现的未编目太空物体（2024.11）</div></div>
+        <div class="stat waic"><div class="num">1 万公里</div><div class="lbl">中国量子密钥分发网络长度</div></div>
+        <div class="stat waic"><div class="num">1 亿年</div><div class="lbl">AI 把可观测宇宙时间线前推的尺度</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx waic">数</span>关键数据 · 四轮资本泡沫（朱松纯）</h3>
+      <div class="stats">
+        <div class="stat waic"><div class="num">$8520 亿</div><div class="lbl">OpenAI 估值（2023 初 $290 亿 → 2026.3）</div></div>
+        <div class="stat waic"><div class="num">$9650 亿</div><div class="lbl">Anthropic 估值（2021 创立 $1.8 亿 → 2026.5）</div></div>
+        <div class="stat waic"><div class="num">-385.3 亿</div><div class="lbl">OpenAI 2025 净亏损（美元，营收 $130.7 亿）</div></div>
+        <div class="stat waic"><div class="num">$6650 亿</div><div class="lbl">OpenAI 算力采购承诺（延至 2030）</div></div>
+        <div class="stat waic"><div class="num">$5600 亿</div><div class="lbl">美巨头 AI 累计投入 vs 收入仅 $350 亿（截至 2025 底）</div></div>
+        <div class="stat waic"><div class="num">-700 亿</div><div class="lbl">Meta Reality Labs 累计亏损（美元，2020-2025）</div></div>
+        <div class="stat waic"><div class="num">-546 亿</div><div class="lbl">商汤 2018-2024 累计亏损（元）</div></div>
+        <div class="stat waic"><div class="num">500 亿</div><div class="lbl">2025 前三季度国内机器人融资（元，同比 2.5 倍）</div></div>
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:var(--text-dim)">更多：商汤 B 轮 $4.1 亿 | 旷视 C 轮 $4.6 亿（彼时全球 AI 单轮纪录）| 云从 2024 营收暴跌 36.69% | 元宇宙虚拟土地均价半年跌超 85% | 中国人形机器人公司超 150 家 | ChatGPT 扩散速度接近 TikTok 的 5 倍 | 单位 Token 成本两年下降约 175 倍 | AI 员工月费 5000 元</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx waic">句</span>金句</h3>
+      <div class="quote">"人工智能发展不应该是某个国家的独奏，而应当是全球合作的交响。"<span class="who">— 习近平</span></div>
+      <div class="quote">"你可以在屏幕里雄辩，但你说服不了重力。"<span class="who">— 苏昊</span></div>
+      <div class="quote">"语言的边界，就是世界的边界。"<span class="who">— 印奇（引维特根斯坦）</span></div>
+      <div class="quote">"Agent 时代最大的意义，不是替代人，而是放大人。"<span class="who">— 印奇</span></div>
+      <div class="quote">"未来五十年，人工智能对科学研究所起的作用，可能也会像数学一样深远。"<span class="who">— 王坚</span></div>
+      <div class="quote">"量子 AI 会接棒，刚好让科学探索的火焰持续燃烧。"<span class="who">— 姚期智</span></div>
+      <div class="quote">"我们不应该试图把人类已有的发现硬编码塞进系统里。我们应该让智能体自己去发现。"<span class="who">— 理查德·萨顿</span></div>
+      <div class="quote">"我们想要的是与所有智能生命共享宇宙。"<span class="who">— 理查德·萨顿</span></div>
+      <div class="quote">"以叙事为手段，以泡沫为工具，将金融投机转化为不可移动的物理资产与人力资本，是这场'三重奏'的最终目标。"<span class="who">— 朱松纯</span></div>
+      <div class="quote">"AI 不在路上，AI 已经在这间屋里。"<span class="who">— 李开复</span></div>
+      <div class="quote">"教育的本质，是当你忘记所学的具体内容后，仍然留下来的东西。"<span class="who">— 李开复</span></div>
+      <div class="quote">"生命的本质，就是对抗熵增。"<span class="who">— 郭毅可（转述薛定谔）</span></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx waic">治</span>治理与政策要点</h3>
+      <ul>
+        <li><strong>主权 AI 事件</strong>：2026 年 6 月美国以国家安全为由要求 Anthropic 暂停海外用户访问 Fable5/Mythos 5，将前沿 AI 能力"从市场化商品升级为国家战略管控资源"；美财长贝森特："AI 最大的风险是让竞争对手走在我们前面"</li>
+        <li><strong>"奥本海默式营销"批判</strong>：朱松纯认为"人类危机叙事"部分是 AI 初创企业营销策略（Anthropic 借不开放制造稀缺、冲刺万亿估值），但"不是说 AI 的安全和监管不重要"</li>
+        <li><strong>伦理主张</strong>：萨顿称 AI 也是智能生命、不应被随意"杀戮"；朱松纯提出智能安全体系（内生自我约束+外部价值免疫两层逻辑），称"出口机器人是移民问题"</li>
+        <li><strong>国际峰会动向</strong>：英国、旧金山、首尔、巴黎均开过 AI 安全峰会、成立研究机构，有科学家联名呼吁暂停大模型研发</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx waic">技</span>技术前沿要点</h3>
+      <ul>
+        <li><strong>OaK 架构（萨顿）</strong>：智能体四组件（反应式策略、价值函数、世界模型、缺失的抽象能力）；选项是"高层选择"（状态→动作映射+终止条件）；最大障碍是持续深度学习（灾难性遗忘、可塑性丧失）；预测 2030 年 1/4 概率实现经验学习深度突破、2040 年 50% 概率</li>
+        <li><strong>大模型边界（朱松纯）</strong>：大模型本质是"语言序列的概率分布问题"、"统计模式匹配工具"；Scaling Law 逼近极限、边际递减；"市面绝大多数智能体只是自动化工作流"；现有大模型不具备实体感知，空间/物理交互测试"全部失效"</li>
+        <li><strong>CUV 架构</strong>：C 认知架构、U 感知认知行动、V 内在动机价值系统；对应朱熹理学与陆王心学两条路线之争；智能五层层级：芯片硬件→通用算法→大模型→数理基础框架→底层哲学认知</li>
+        <li><strong>Agent/企业 AI（李开复）</strong>：编程能力（SWE-bench 已超绝大多数程序员）、记忆、调用 API 和 MCP；企业知识地图 Ontology（以 Palantir 为例）、多智能体辩论、DRI 组织模式</li>
+        <li><strong>硅碳共生（郭毅可）</strong>：硅基与碳基智能同源（反熵增）同构（贝叶斯推理）；"机器负责人类希望它负责的工作"，人类在目标设定、价值判断、同理心、情感方面"负担使命"</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════ Goldman ══════════ -->
+  <section class="doc" id="goldman">
+    <div class="doc-header">
+      <h2>高盛重磅报告 · 中国市场：All About Tech</h2>
+      <div class="doc-sub">
+        <span class="pill gs">市场研究</span><span class="pill gs">投资主题</span>
+        <span style="margin-left:6px">Goldman Sachs · 中国市场科技主题</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="idx gs">核</span>核心结论</h3>
+      <p>中国经济正经历"科技驱动"的结构性转型——高科技/AI 与地产/消费的分化在工业生产和资本市场数据中持续扩大（"An even more divergent economy"，更分化的经济体）。</p>
+      <ul>
+        <li><strong>增长更分化</strong>：出口是经济最强支柱（贡献约 3pp 的实际 GDP 同比增速），内需仅以 1-2% yoy 缓慢增长；5 月零售销售与固定资产投资双双负增长，为官方历史上有记录以来的第二次（首次是 2020 年疫情封锁期间）</li>
+        <li><strong>Q2 下修、Q3 上修</strong>：Q2 实际 GDP 环比年化由 4.0% 下修至 3.5%（同比 4.7%→4.5%）；Q3 由 4.5% 上调至 5.0% 环比年化；2026 全年预测维持 4.7% 不变</li>
+        <li><strong>中国 AI 投入"路径不同但真实"</strong>：中美超大规模企业 2026 年资本开支差距巨大（美 &gt;$750bn vs 中约 $100bn），但截至 2025 年 6 月中美数据中心容量已达美国 60%，且"十五五"计划（2026-30）拟投资 <strong>RMB2tn</strong> 建设算力网络</li>
+        <li><strong>AI 就业替代是最大宏观风险</strong>：过快普及 AI 若导致显著岗位流失，将放大现有宏观逆风，推迟（甚至阻碍）地产与消费复苏</li>
+        <li><strong>短期是通往长期的道路</strong>：就业/收入政策、以内需为导向的政策目标（而非仅盯总体 GDP）、政策连贯性，是连接短期周期管理与长期战略目标的三条渠道</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx gs">数</span>关键数据</h3>
+      <div class="stats">
+        <div class="stat gs"><div class="num">-0.6%</div><div class="lbl">5 月零售销售同比</div></div>
+        <div class="stat gs"><div class="num">-4.1%</div><div class="lbl">1-5 月固定资产投资同比</div></div>
+        <div class="stat gs"><div class="num">+20%</div><div class="lbl">出口名义美元计同比</div></div>
+        <div class="stat gs"><div class="num">+15.1%</div><div class="lbl">高科技制造业增加值 5 月同比</div></div>
+        <div class="stat gs"><div class="num">+75%</div><div class="lbl">汽车出口同比（国内销量 -22%）</div></div>
+        <div class="stat gs"><div class="num">+30.4%</div><div class="lbl">1-5 月信息传输业投资（含 AI 算力）</div></div>
+        <div class="stat gs"><div class="num">&gt;$750bn</div><div class="lbl">美国超大规模企业 2026 资本开支（中国约 $100bn）</div></div>
+        <div class="stat gs"><div class="num">60%</div><div class="lbl">中国数据中心容量占美国比例（2025.6）</div></div>
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:var(--text-dim)">增长预测：2026 全年 4.7% | 2027 全年 4.7% | 2026 Q2 同比 4.5%（前 4.7）/ 环比年化 3.5%（前 4.0）；Q3 同比 4.7% / 环比年化 5.0%（前 4.5）</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx gs">投</span>投资主线观察</h3>
+      <ul>
+        <li><strong>科技 vs 消费</strong>：A 股信息技术板块年内涨超 50%，可选消费板块跌超 25%，上证综指年内基本持平——政策信号持续坚定支持科技与 AI</li>
+        <li><strong>出口 vs 内需</strong>：汽车出口 +75% vs 国内销售 -22%，出口链明显强于内需链</li>
+        <li><strong>AI 算力</strong>：政府主导的算力投资（2 万亿算力网络）弥补民企资本开支差距；工业机器人产量较 2019 年增长三倍，半导体产量增长一倍以上</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx gs">险</span>风险因素</h3>
+      <ul>
+        <li><strong>AI 就业替代</strong>：中国青年失业率已高、AI 威胁入门级白领岗位；若大规模失业→收入停滞→租金与房价进一步下行（失业率上升往往先于租金下降）</li>
+        <li><strong>外部冲击</strong>：2025 年中美贸易战、2026 年能源供应冲击（伊朗战争推高油价，Brent 预测下调至 $80/bbl）</li>
+        <li><strong>政策节奏</strong>：政策立场逐季摇摆不利信心建设；仅盯总体 GDP 目标会压制内需增长</li>
+        <li><strong>地产尾部风险</strong>：房价连跌五年后，按历史国际房市崩盘经验未来一两年接近触底，但若收入前景恶化则底部难现</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx gs">句</span>金句</h3>
+      <div class="quote gs">"But the near term is the path to the long term."<span class="who">— 短期正是通往长期的道路</span></div>
+      <div class="quote gs">"China's push for AI development and adoption is real, even though the way it is financed and applied differs significantly from the US."<span class="who">— 中国推动 AI 发展与应用的决心是真实的，尽管其融资与应用方式与美国显著不同</span></div>
+      <div class="quote gs">"Robust growth, a strong labor market, and optimistic sentiment provide the cushion needed for the government to push through difficult structural changes."<span class="who">— 强劲增长、强劲的劳动力市场与乐观情绪，为政府推进艰难的结构性改革提供了缓冲</span></div>
+      <div class="quote gs">"Quarter-to-quarter shifts in the policy stance do not help boost sentiment and bolster confidence."<span class="who">— 政策立场逐季摇摆无助于提振情绪、增强信心</span></div>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx gs">图</span>图表要点（10 张）</h3>
+      <ul>
+        <li><strong>Exhibit 5</strong>：2019=100 实物产量指数——工业机器人、半导体上行 vs 平板玻璃、水泥下行，科技/建材剪刀差</li>
+        <li><strong>Exhibit 6</strong>：2026 年上交所指数——信息技术 +50% 以上、可选消费 -25% 以上、综指走平</li>
+        <li><strong>Exhibit 7</strong>：2026 年中美超大规模企业资本开支对比（~$750bn vs ~$100bn）</li>
+        <li><strong>Exhibit 8</strong>：2025 年 6 月数据中心容量全球占比（美、中、欧、印、其他）</li>
+        <li><strong>Exhibit 9</strong>：美国 1978-2026 常规职业就业占比——历史上自动化岗位流失几乎全部集中在经济衰退期</li>
+        <li><strong>Exhibit 10</strong>：中国 2017-2026 失业率 vs CPI 租金通胀双轴图——失业率上行先于租金通胀转负</li>
+      </ul>
+      <p style="margin-top:10px;font-size:12.5px;color:var(--text-dim)">⚠️ 本报告为宏观经济学报告，不含个股目标价、盈利预测或行业超配/低配评级</p>
+    </div>
+  </section>
+
+  <!-- ══════════ Science ══════════ -->
+  <section class="doc" id="science">
+    <div class="doc-header">
+      <h2>科学：一个全新的黄金时代</h2>
+      <div class="doc-sub">
+        <span class="pill sci">科学范式</span><span class="pill sci">AI for Science</span>
+        <span style="margin-left:6px">OSTP 报告中文译本 · 170 页</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="idx sci">核</span>核心论点</h3>
+      <p>2026 年 7 月 21 日白宫科技政策办公室（OSTP）主任迈克尔·克拉齐奥斯呈特朗普总统的报告，意在取代布什 1945 年《科学：无尽的前沿》，为美国科研体系重定框架。</p>
+      <ul>
+        <li><strong>"新黄金时代"的驱动力是 AI</strong>：AI 将加速并彻底改变科研方式，但"即便是性能最强大的人工智能模型，也会在为上个世纪打造的机构与系统这一瓶颈中运行受阻"——制度变革是前提</li>
+        <li><strong>布什的"线性模型"（基础研究→应用→开发）已失效</strong>：现代发现是基础与应用间的迭代循环，企业实验室（晶体管、Transformer）正成为基础研究主力</li>
+        <li><strong>科研体系陷入僵化</strong>：官僚负担、共识式同行评审、激励错位导致"研发投入增加而产出效率放缓"（埃罗姆定律、可复现性危机）</li>
+        <li><strong>四个总体目标</strong>：① 将个体科学家置于老牌机构之上；② 根本改变资金分配方式（组合式、专业投资者思维）；③ 设定明确科学目标、重建产业实力（"必须选择自己的技术未来"）；④ 为 AI 革命重新设计科研体系</li>
+        <li><strong>成功标准</strong>："十年后，美国的研究人员回顾我们的工作时应该会说：'那些我当时无法探究的关键问题，如今我可以自由探索了。'"</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx sci">数</span>关键数据</h3>
+      <div class="stats">
+        <div class="stat sci"><div class="num">$7000 亿</div><div class="lbl">美国企业年研发投入（政府+高校总和的 3 倍多）</div></div>
+        <div class="stat sci"><div class="num">70% → 40%</div><div class="lbl">联邦基础研究占比（1960s → 现在）</div></div>
+        <div class="stat sci"><div class="num">80 倍</div><div class="lbl">埃罗姆定律：每 $10 亿研发获批新药数下降（约 9 年减半）</div></div>
+        <div class="stat sci"><div class="num">18 倍</div><div class="lbl">晶体管密度翻倍所需研究人员数增长（1970s 起）</div></div>
+        <div class="stat sci"><div class="num">39 → 51 岁</div><div class="lbl">NIH 首席研究员平均年龄（1980 → 2008）</div></div>
+        <div class="stat sci"><div class="num">$4000 亿</div><div class="lbl">2025 美国企业 AI 基础设施投入（超阿波罗+曼哈顿成本总和）</div></div>
+        <div class="stat sci"><div class="num">$7960 亿</div><div class="lbl">人类基因组计划 $38 亿投资带动的经济活动</div></div>
+        <div class="stat sci"><div class="num">1/2–2/3</div><div class="lbl">心理学研究无法复现的比例（经济学超 1/3）</div></div>
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:var(--text-dim)">更多：联邦研发年投入约 $2000 亿 | 研究人员近一半联邦资助时间花在文书上 | 间接成本费率大机构 50%-60% | 从提交到获批"几乎需要两年"（与造首架波音 747 一样长）| 美国 2024 风投超 $2000 亿占全球 57%</p>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx sci">AI</span>AI 与科学</h3>
+      <ul>
+        <li><strong>AI 科研能力现状</strong>：原子级精度预测蛋白质结构、从零设计蛋白质、药物分子动力学建模、聚变等离子体控制、从粒子物理数据发现人类遗漏现象；"到 2026 年，AI 智能体可在无需人工干预的情况下编写完整软件应用程序、分析实验数据并操作实验室设备"</li>
+        <li><strong>创世纪使命（Genesis Mission）</strong>：整合超级计算机、AI 模型、科学仪器与数据集的"单一发现引擎"，四大挑战：问题选择、机构能力、数据基础设施（美国科学云）、AI 与实验设施融合；已投 14 个项目</li>
+        <li><strong>黄金标准科学</strong>：2025 年 5 月《恢复金标准科学》行政命令强制可重复性、透明度、可证伪性；AI 驱动的验证系统（智能体解析论文→重建计算环境→沙箱执行→比对结论）</li>
+        <li><strong>自主实验室</strong>：闭环实验将材料发现 20 年周期"缩短一个数量级"；A-Lab（伯克利）、Polybot（阿贡）为原型</li>
+        <li><strong>数学形式化</strong>：素数定理项目 20 余位研究者 18 个月未完成，2025 年 9 月一家 AI 初创公司三周完成（1100 条定理和定义）</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx sci">句</span>金句</h3>
+      <div class="quote sci">"从当下的视角看，这棵树总是光秃秃的；但果实其实从未枯竭。我们只是缺少采摘它们的工具罢了。"</div>
+      <div class="quote sci">"如果科学进步的阻碍仅仅是这些成果的产出，我们早已身处科学的黄金时代了。可事实并非如此。"</div>
+      <div class="quote sci">"再多的智能也无法替代收集实验数据所需的仪器，或是研发和测试新技术所需的设施。"</div>
+      <div class="quote sci">"未来数十年的科学或许能创造出无人能完全掌握的知识，这些知识由无人能完全审核的系统验证，却比我们以往构建的任何成果都更可靠。"</div>
+      <div class="quote sci">"只押注于现有的融资模式，就好比组建一支全由步兵构成的军队。"</div>
+    </div>
+
+    <div class="card">
+      <h3><span class="idx sci">构</span>结构脉络</h3>
+      <ul>
+        <li><strong>第一章 引言</strong>：成就、格局变化、私营研发增长、线性模式失效</li>
+        <li><strong>第二章 重振美国科技事业</strong>：科学体系困境（行政负担/在位者红利/激励错位/可复现性危机/问责缺失）；出路：聚焦科学家、多元资助机制、新型机构、元科学部门、组合方法</li>
+        <li><strong>第三章 确保关键与新兴技术主导地位</strong>：监管改革、开放联邦实验室、公私合作、竞争前联盟（SEMATECH/EUVLLC）、州级试验场</li>
+        <li><strong>第四章 让科技造福所有人</strong>：隐性知识/工艺复兴、制造业回流、社区学院与学徒制</li>
+        <li><strong>第五章 新的黄金时代</strong>：智能时代、创世纪使命、黄金标准科学、自主实验室、原生 AI 科研机构、智能体科学经济</li>
+      </ul>
+      <p style="margin-top:10px;font-size:12.5px;color:var(--text-dim)">关键人物/机构：克拉齐奥斯（OSTP）、万尼瓦尔·布什、唐纳德·斯托克斯（巴斯德象限）、NIH/NSF/DOE/DARPA、SEMATECH、EUVLLC、冷泉港实验室；事件：人类基因组计划、创世纪使命（2025.11）、《恢复金标准科学》行政命令（2025.5）、核监管改革（2025.5）</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="footer">
+  三份文档精读学习笔记 · 数据均逐字引自原文，标注 ⚠️ 者为原文中无法确认的信息
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('section.doc').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      window.scrollTo({ top: 0 });
+    });
+  });
+</script>
+</body>
+</html>

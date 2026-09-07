@@ -37,12 +37,13 @@ FILES = KB / "files"
 PAGES = KB / "pages"
 WORK = KB / ".work"
 
-TYPE_LABEL = {"ppt": "PPT", "pdf": "PDF", "doc": "文档", "xls": "表格", "link": "链接", "image": "图片"}
-TYPE_ICON = {"ppt": "📽️", "pdf": "📄", "doc": "📝", "xls": "📊", "link": "🔗", "image": "🖼️"}
+TYPE_LABEL = {"ppt": "PPT", "pdf": "PDF", "doc": "文档", "xls": "表格", "link": "链接", "image": "图片", "html": "网页"}
+TYPE_ICON = {"ppt": "📽️", "pdf": "📄", "doc": "📝", "xls": "📊", "link": "🔗", "image": "🖼️", "html": "🌐"}
 EXT_TO_TYPE = {".pptx": "ppt", ".ppt": "ppt", ".pdf": "pdf",
                ".docx": "doc", ".doc": "doc",
                ".xlsx": "xls", ".xls": "xls",
-               ".png": "image", ".jpg": "image", ".jpeg": "image"}
+               ".png": "image", ".jpg": "image", ".jpeg": "image",
+               ".html": "html", ".htm": "html"}
 DPI_DEFAULT = {"pdf": 110, "ppt": 110, "doc": 110, "xls": 110}
 JPEG_QUALITY = 88        # 文档类渲染图统一转 JPEG 的体积参数(屏幕阅读足够, 体积约 1/3)
 MAX_FILE_MB = 100      # GitHub 硬限, 超过直接拒绝
@@ -211,9 +212,12 @@ def to_jpeg(pages: list[Path], quality: int) -> list[Path]:
 
 
 def shrink_pages(pdf: Path, out_dir: Path, pages: list[Path], dpi: int) -> list[Path]:
-    """单条目渲染图超 PNG_BUDGET_MB 时两级降级: L1 PNG→JPEG, L2 60% DPI 重渲。"""
+    """单条目渲染图超 PNG_BUDGET_MB 时两级降级: L1 PNG→JPEG, L2 60% DPI 重渲。
+
+    入参必须是 PNG 列表(调用方别再预先 to_jpeg——对 JPG 再 to_jpeg 会自删源文件,
+    2026-09-07 科学黄金时代 170 页入库踩过)。L2 重渲后同样转 JPEG, 输出统一 JPG。"""
     if pages_total_mb(pages) <= PNG_BUDGET_MB:
-        return pages
+        return to_jpeg(pages, JPEG_QUALITY)
     pages = to_jpeg(pages, JPEG_QUALITY)
     print(f"[shrink] L1: PNG→JPEG q{JPEG_QUALITY}, 现 {pages_total_mb(pages):.1f} MB", flush=True)
     if pages_total_mb(pages) <= PNG_BUDGET_MB:
@@ -222,6 +226,7 @@ def shrink_pages(pdf: Path, out_dir: Path, pages: list[Path], dpi: int) -> list[
     for p in pages:
         p.unlink()
     pages = pdf_to_pages(pdf, out_dir, dpi2)
+    pages = to_jpeg(pages, JPEG_QUALITY)
     print(f"[shrink] L2: {dpi2} DPI 重渲, 现 {pages_total_mb(pages):.1f} MB", flush=True)
     return pages
 
@@ -312,6 +317,8 @@ def _add_file(a, slug: str, topic: dict) -> dict:
         if not a.no_render and (a.force_render or not (PAGES / slug).exists()):
             if itype == "pdf":
                 pdf = src
+            elif itype == "html":
+                pages_rendered = []  # 网页类型不渲染图片页, 条目页 iframe 内嵌预览
             elif itype == "ppt":
                 pdf = wdir / "src.pdf"
                 pptx_to_pdf(src, pdf)
@@ -328,7 +335,7 @@ def _add_file(a, slug: str, topic: dict) -> dict:
                 pages_rendered = [ip]
             if itype in ("ppt", "doc", "xls", "pdf"):
                 pages_rendered = pdf_to_pages(pdf, wdir / "pages", dpi)
-                pages_rendered = to_jpeg(pages_rendered, JPEG_QUALITY)  # 屏幕阅读 JPEG 足够, 体积约 1/3
+                # shrink_pages 全权负责 PNG→JPEG 转换(别再预先 to_jpeg, 见其 docstring)
                 pages_rendered = shrink_pages(pdf, wdir / "pages", pages_rendered, dpi)
 
         # 全部成功 → 目录级搬入(原子落库)
@@ -458,12 +465,14 @@ def build_index(m: dict) -> None:
         its = sorted((it for it in items if it["topic"] == t["slug"]),
                      key=lambda it: it.get("date", ""), reverse=True)
         cards = "".join(item_card(it, t["name"]) for it in its)
+        closed_cls = " closed" if t.get("collapsed") else ""
         sections.append(
-            f'<section class="kb-topic">'
-            f'<div class="kb-topic-head">'
+            f'<section class="kb-topic{closed_cls}">'
+            f'<div class="kb-topic-head" onclick="toggleTopic(this)">'
             f'<span class="kb-topic-name">{esc(t["name"])}</span>'
             f'<span class="kb-topic-slug">{esc(t["slug"])}</span>'
-            f'<span class="kb-topic-count">{len(its)} ITEMS</span></div>'
+            f'<span class="kb-topic-count">{len(its)} ITEMS</span>'
+            f'<span class="kb-arrow">▸</span></div>'
             f'<div class="kb-grid">{cards}</div></section>')
     total = len(items)
     html = f"""<!DOCTYPE html>
@@ -471,21 +480,36 @@ def build_index(m: dict) -> None:
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>知识库 · EVERSTEAD</title>
+<title>stay hungry · EVERSTEAD</title>
 <link rel="stylesheet" href="../zy-tech.css">
+<style>
+/* stay hungry 知识库: 主题分组默认折叠 */
+.kb-topic-head{{cursor:pointer;user-select:none;display:flex;align-items:center;gap:10px}}
+.kb-arrow{{margin-left:auto;font-size:13px;color:var(--muted);transition:transform .2s}}
+.kb-topic.closed .kb-grid{{display:none}}
+.kb-topic.closed .kb-arrow{{transform:rotate(0deg)}}
+.kb-topic:not(.closed) .kb-arrow{{transform:rotate(90deg)}}
+.kb-topic{{margin-bottom:26px}}
+</style>
 </head>
 <body>
 <div class="kb-topbar">
   <a class="kb-back" href="../index.html">← 成果站首页</a>
-  <span class="kb-brand">知识库<span class="kb-en">KNOWLEDGE BASE</span></span>
+  <span class="kb-brand">stay hungry<span class="kb-en">KNOWLEDGE BASE · 求知若饥</span></span>
   <span class="kb-count" id="kb-count-n">{total} ITEMS</span>
 </div>
 <input class="kb-search" id="q" type="text" placeholder="搜索标题 / 描述 / 标签 …">
 <div id="sections">
 {"".join(sections) or '<div class="kb-note">暂无条目 — 用 kb_ingest.py add 入库</div>'}
 </div>
-<div class="kb-footer">铁蛋整理 · 翻页预览 + 原文件下载 · 持续更新</div>
+<div class="kb-footer">stay hungry · 求知若饥 · 翻页预览 + 原文件下载 · 持续更新</div>
 {FILTER_JS}
+<script>
+/* 主题分组折叠/展开 */
+function toggleTopic(head){{
+  head.parentElement.classList.toggle('closed');
+}}
+</script>
 </body>
 </html>"""
     (KB / "index.html").write_text(html, encoding="utf-8")
@@ -519,6 +543,16 @@ def build_item_page(it: dict, m: dict) -> None:
                 f'<div class="u">{esc(it["url"])}</div>'
                 f'<a class="kb-btn" href="{esc(it["url"])}" target="_blank" rel="noopener">↗ 打开链接</a>'
                 f'</div>')
+    elif it["type"] == "html" and fname:
+        # 网页条目: iframe 内嵌原文件预览(单文件无依赖的页面)
+        src_url = f"../files/{slug}/{urllib.parse.quote(fname)}"
+        body = (f'<div class="kb-htmlpanel">'
+                f'<iframe src="{src_url}" title="{esc(it["title"])}"></iframe>'
+                f'</div>'
+                f'<style>'
+                f'.kb-htmlpanel{{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:14px}}'
+                f'.kb-htmlpanel iframe{{width:100%;height:78vh;border:0;background:#fff}}'
+                f'</style>')
     elif pages:
         first = rel_pages[0]
         body = (f'<div class="viewer"><img id="pg" src="{first}" alt="{esc(it["title"])}"></div>'

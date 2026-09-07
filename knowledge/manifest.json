@@ -378,6 +378,24 @@
       "size": 766444,
       "pages": 0,
       "url": null
+    },
+    {
+      "slug": "trust-budget-template",
+      "topic": "stay-hungry",
+      "title": "信托项目收支预算表",
+      "type": "xls",
+      "date": "2026-09-07",
+      "desc": "信托项目收支预算表模板",
+      "tags": [
+        "信托",
+        "预算",
+        "模板"
+      ],
+      "original": "5-信托项目收支预算表.xlsx",
+      "file": "5-信托项目收支预算表.xlsx",
+      "size": 14094,
+      "pages": 1,
+      "url": null
     }
   ]
 }

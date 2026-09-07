@@ -37,13 +37,14 @@ FILES = KB / "files"
 PAGES = KB / "pages"
 WORK = KB / ".work"
 
-TYPE_LABEL = {"ppt": "PPT", "pdf": "PDF", "doc": "文档", "xls": "表格", "link": "链接", "image": "图片", "html": "网页"}
-TYPE_ICON = {"ppt": "📽️", "pdf": "📄", "doc": "📝", "xls": "📊", "link": "🔗", "image": "🖼️", "html": "🌐"}
+TYPE_LABEL = {"ppt": "PPT", "pdf": "PDF", "doc": "文档", "xls": "表格", "link": "链接", "image": "图片", "html": "网页", "md": "文档"}
+TYPE_ICON = {"ppt": "📽️", "pdf": "📄", "doc": "📝", "xls": "📊", "link": "🔗", "image": "🖼️", "html": "🌐", "md": "📝"}
 EXT_TO_TYPE = {".pptx": "ppt", ".ppt": "ppt", ".pdf": "pdf",
                ".docx": "doc", ".doc": "doc",
                ".xlsx": "xls", ".xls": "xls",
                ".png": "image", ".jpg": "image", ".jpeg": "image",
-               ".html": "html", ".htm": "html"}
+               ".html": "html", ".htm": "html",
+               ".md": "md"}
 DPI_DEFAULT = {"pdf": 110, "ppt": 110, "doc": 110, "xls": 110}
 JPEG_QUALITY = 88        # 文档类渲染图统一转 JPEG 的体积参数(屏幕阅读足够, 体积约 1/3)
 MAX_FILE_MB = 100      # GitHub 硬限, 超过直接拒绝
@@ -102,6 +103,59 @@ def url_ok(url: str) -> bool:
             return r.status < 400
     except Exception:
         return False
+
+
+def md_to_html_light(text: str) -> str:
+    """极简 md→html: 标题/表格/列表/代码块/粗体。够知识库说明文档用。"""
+    out = []
+    in_code = in_ul = in_ol = False
+    for line in text.splitlines():
+        if line.strip().startswith("```"):
+            out.append("</code></pre>" if in_code else '<pre style="background:#0d1a30;color:#7dd3fc;padding:12px;border-radius:8px;overflow:auto"><code>')
+            in_code = not in_code
+            continue
+        if in_code:
+            out.append(esc(line))
+            continue
+        if line.strip().startswith("|"):
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            tag = "th" if line.replace("|", "").replace("-", "").replace(":", "").strip() == "" else "td"
+            if tag == "th":
+                continue  # 跳过表头分隔行
+            out.append("<tr>" + "".join(f"<{tag} style='border:1px solid rgba(56,189,248,.16);padding:6px 10px'>{esc(c)}</{tag}>" for c in cells) + "</tr>")
+            continue
+        m = re.match(r"^(#{1,4})\s+(.*)$", line)
+        if m:
+            if in_ul: out.append("</ul>"); in_ul = False
+            if in_ol: out.append("</ol>"); in_ol = False
+            lv = len(m.group(1))
+            out.append(f"<h{lv+2} style='color:#7dd3fc;margin:18px 0 8px'>{esc(m.group(2))}</h{lv+2}>")
+            continue
+        m = re.match(r"^\s*[-*]\s+(.*)$", line)
+        if m:
+            if in_ol: out.append("</ol>"); in_ol = False
+            if not in_ul: out.append("<ul>"); in_ul = True
+            out.append(f"<li>{esc(m.group(1))}</li>")
+            continue
+        m = re.match(r"^\s*\d+[.)]\s+(.*)$", line)
+        if m:
+            if in_ul: out.append("</ul>"); in_ul = False
+            if not in_ol: out.append("<ol>"); in_ol = True
+            out.append(f"<li>{esc(m.group(1))}</li>")
+            continue
+        if not line.strip():
+            continue
+        if in_ul: out.append("</ul>"); in_ul = False
+        if in_ol: out.append("</ol>"); in_ol = False
+        txt = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", line.strip())
+        out.append(f"<p style='line-height:1.8'>{esc(txt)}</p>")
+    if in_ul: out.append("</ul>")
+    if in_ol: out.append("</ol>")
+    body = "\n".join(out)
+    return (f"<!DOCTYPE html><html lang='zh-CN'><head><meta charset='UTF-8'>"
+            f"<style>body{{font-family:'Microsoft YaHei',sans-serif;max-width:780px;"
+            f"margin:0 auto;padding:24px;color:#e2ecf7;background:#03060c;line-height:1.7}}</style>"
+            f"</head><body>{body}</body></html>")
 
 
 def page_list(slug: str) -> list[str]:
@@ -319,6 +373,12 @@ def _add_file(a, slug: str, topic: dict) -> dict:
                 pdf = src
             elif itype == "html":
                 pages_rendered = []  # 网页类型不渲染图片页, 条目页 iframe 内嵌预览
+            elif itype == "md":
+                # md → 轻量 HTML 放 files/<slug>/<name>.html, 条目页 iframe 预览; 原 md 供下载
+                html_path = wdir / "file" / (src.name + ".html")
+                html_path.write_text(md_to_html_light(src.read_text(encoding="utf-8", errors="replace")),
+                                     encoding="utf-8")
+                pages_rendered = []
             elif itype == "ppt":
                 pdf = wdir / "src.pdf"
                 pptx_to_pdf(src, pdf)
@@ -552,6 +612,16 @@ def build_item_page(it: dict, m: dict) -> None:
                 f'<style>'
                 f'.kb-htmlpanel{{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:14px}}'
                 f'.kb-htmlpanel iframe{{width:100%;height:78vh;border:0;background:#fff}}'
+                f'</style>')
+    elif it["type"] == "md" and fname:
+        # md 条目: 预览 files/<slug>/<原名>.html(入库时轻量转换), 原 md 供下载
+        src_url = f"../files/{slug}/{urllib.parse.quote(fname)}.html"
+        body = (f'<div class="kb-htmlpanel">'
+                f'<iframe src="{src_url}" title="{esc(it["title"])}"></iframe>'
+                f'</div>'
+                f'<style>'
+                f'.kb-htmlpanel{{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:14px}}'
+                f'.kb-htmlpanel iframe{{width:100%;height:78vh;border:0}}'
                 f'</style>')
     elif pages:
         first = rel_pages[0]

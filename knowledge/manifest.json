@@ -14,6 +14,18 @@
       "desc": "AI/科技学习资料 · 求知若饥",
       "order": 2,
       "collapsed": false
+    },
+    {
+      "slug": "ai",
+      "name": "AI 学习",
+      "desc": "AI 前沿与学习资料（stay hungry/ai 文件夹）",
+      "order": 3
+    },
+    {
+      "slug": "stay-foolish",
+      "name": "stay foolish 投资研读",
+      "desc": "投资与宏观经济研读（stay hungry/stay foolish 文件夹）",
+      "order": 4
     }
   ],
   "items": [
@@ -395,6 +407,42 @@
       "file": "5-信托项目收支预算表.xlsx",
       "size": 14094,
       "pages": 1,
+      "url": null
+    },
+    {
+      "slug": "debt-plan-monthly-trend",
+      "topic": "insurance-debt",
+      "title": "债权投资计划月度登记动态(2016-2026)",
+      "type": "html",
+      "date": "2026-09-07",
+      "desc": "每月登记数量/规模/同比,1-12月全年累计单独标记,含发行缴款与平均收益率;98个月度数据点",
+      "tags": [
+        "月度动态",
+        "同比",
+        "登记数据"
+      ],
+      "original": "debt-plan-monthly-trend.html",
+      "file": "debt-plan-monthly-trend.html",
+      "size": 19260,
+      "pages": 0,
+      "url": null
+    },
+    {
+      "slug": "debt-plan-company-annual",
+      "topic": "insurance-debt",
+      "title": "各公司债权投资计划年度情况表(2024-2026)",
+      "type": "html",
+      "date": "2026-09-07",
+      "desc": "54-58家公司年度登记/发行缴款/最新存量,2024/2025/2026三年对照,按规模排序",
+      "tags": [
+        "公司情况",
+        "发行缴款",
+        "存量"
+      ],
+      "original": "debt-plan-company-annual.html",
+      "file": "debt-plan-company-annual.html",
+      "size": 21600,
+      "pages": 0,
       "url": null
     }
   ]

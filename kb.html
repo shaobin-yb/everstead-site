@@ -40,7 +40,7 @@ a{text-decoration:none;color:inherit}
   background:linear-gradient(92deg,#e8f6ff 10%,var(--cyan) 45%,var(--violet) 90%);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   filter:drop-shadow(0 0 20px rgba(34,211,238,.2))}
-.hero .desc{margin-top:16px;color:var(--muted);font-size:14px;line-height:1.8;max-width:640px}
+.hero .desc{margin-top:16px;color:var(--muted);font-size:14px;line-height:1.8;max-width:680px}
 .hero .desc b{color:var(--text)}
 
 /* 统计条 */
@@ -53,8 +53,8 @@ a{text-decoration:none;color:inherit}
   text-shadow:0 0 12px rgba(34,211,238,.35);font-variant-numeric:tabular-nums}
 .stat .k{font-size:12px;color:var(--muted);margin-top:3px}
 
-/* 搜索与筛选 */
-.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0 22px;align-items:center}
+/* 搜索 */
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0 26px;align-items:center}
 .search{flex:1;min-width:260px;display:flex;align-items:center;gap:10px;
   border:1px solid var(--line);border-radius:10px;background:var(--panel);
   padding:10px 16px;transition:all .2s}
@@ -70,30 +70,48 @@ a{text-decoration:none;color:inherit}
 .chip.on{background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(139,92,246,.18));
   color:var(--cyan);border-color:var(--line-strong)}
 
-/* 卡片网格 */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
-.card{position:relative;border:1px solid var(--line);border-radius:14px;
-  background:var(--panel);backdrop-filter:blur(10px);padding:20px 22px;cursor:pointer;
+/* 能力折叠区块 */
+.cap-block{border:1px solid var(--line);border-radius:14px;margin-bottom:16px;
+  background:var(--panel);backdrop-filter:blur(10px);overflow:hidden}
+.cap-head{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;
+  user-select:none;transition:background .2s;flex-wrap:wrap}
+.cap-head:hover{background:rgba(34,211,238,.05)}
+.cap-head .ico{width:40px;height:40px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:19px;
+  border:1px solid var(--line-strong)}
+.cap-head .t{font-size:16px;font-weight:700;line-height:1.4}
+.cap-head .en{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.18em;margin-top:2px}
+.cap-head .cnt{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:4px 12px;white-space:nowrap}
+.cap-head .caret{color:var(--cyan);font-size:13px;transition:transform .25s;flex-shrink:0}
+.cap-block.open .cap-head .caret{transform:rotate(90deg)}
+.cap-body{display:none;padding:0 22px 22px}
+.cap-block.open .cap-body{display:block}
+.cap-body .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px}
+
+/* 机构卡片 */
+.card{position:relative;border:1px solid var(--line);border-radius:12px;
+  background:rgba(8,17,32,.5);padding:18px 20px;cursor:pointer;
   transition:all .22s;overflow:hidden}
 .card::before{content:'';position:absolute;left:0;right:0;top:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0;transition:opacity .25s}
 .card:hover{transform:translateY(-4px);border-color:var(--line-strong);
   background:var(--panel2);box-shadow:0 10px 36px rgba(0,0,0,.5),0 0 22px rgba(34,211,238,.15)}
 .card:hover::before{opacity:1}
-.card .org{font-size:16.5px;font-weight:700;line-height:1.45}
-.card .meta{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.05em}
-.persons{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.person{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--line);
-  border-radius:10px;padding:10px 14px;background:rgba(8,17,32,.5)}
-.person .role{flex-shrink:0;font-size:10.5px;letter-spacing:.1em;border-radius:6px;
-  padding:3px 8px;margin-top:2px;font-family:var(--mono)}
+.card .org{font-size:15.5px;font-weight:700;line-height:1.45}
+.card .sub{font-family:var(--mono);font-size:10.5px;color:var(--cyan);margin-top:4px;letter-spacing:.05em}
+.persons{margin-top:12px;display:flex;flex-direction:column;gap:9px}
+.person{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--line);
+  border-radius:9px;padding:9px 12px;background:rgba(10,20,38,.45)}
+.person .role{flex-shrink:0;font-size:10px;letter-spacing:.08em;border-radius:6px;
+  padding:3px 7px;margin-top:2px;font-family:var(--mono);white-space:nowrap}
 .person .role.xz{color:#0e7490;background:rgba(34,211,238,.15);border:1px solid rgba(34,211,238,.3)}
 .person .role.zy{color:#7c3aed;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)}
 .person .info{flex:1;min-width:0}
-.person .name{font-size:14.5px;font-weight:700}
-.person .title{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
-.person .brief{font-family:var(--mono);font-size:11px;color:#9db4cd;margin-top:4px}
-.card .more{position:absolute;right:18px;bottom:14px;color:var(--cyan);font-size:14px;
+.person .name{font-size:13.5px;font-weight:700}
+.person .title{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.5}
+.person .brief{font-family:var(--mono);font-size:10.5px;color:#9db4cd;margin-top:3px}
+.card .more{position:absolute;right:16px;bottom:12px;color:var(--cyan);font-size:13px;
   opacity:0;transform:translateX(-6px);transition:all .25s}
 .card:hover .more{opacity:1;transform:none}
 
@@ -143,7 +161,7 @@ a{text-decoration:none;color:inherit}
 @media (max-width:640px){
   .wrap{padding:0 16px 40px}
   .hero{padding:40px 0 26px}
-  .grid{grid-template-columns:1fr}
+  .cap-body .grid{grid-template-columns:1fr}
   .modal{padding:24px 18px}
 }
 </style>
@@ -157,12 +175,12 @@ a{text-decoration:none;color:inherit}
   </header>
 
   <section class="hero">
-    <div class="kicker">DEBT INVESTMENT PLAN CAPABILITY</div>
-    <h1>债权投资计划风险责任人<br>知识库</h1>
+    <div class="kicker">INVESTMENT CAPABILITY RISK-PERSONS</div>
+    <h1>保险资管风险责任人<br>知识库</h1>
     <p class="desc">
-      覆盖 <b>36 家保险资管机构</b>的<b>债权投资计划产品管理能力</b>风险责任人档案：
+      覆盖保险资管机构<b>5 大类投资管理能力</b>的风险责任人档案：
       行政责任人 + 专业责任人的职务、学历、从业经历与任职变更历史。
-      数据来源: 中国保险资产管理业协会投资管理能力信息披露系统（ir.iamac.org.cn）+ 内部档案 PDF。
+      数据来源: 中国保险资产管理业协会投资管理能力信息披露系统（ir.iamac.org.cn）+ 内部档案。
     </p>
   </section>
 
@@ -176,7 +194,7 @@ a{text-decoration:none;color:inherit}
     <div class="chips" id="chips"></div>
   </div>
 
-  <div class="grid" id="grid"></div>
+  <div id="caps"></div>
 
   <footer class="footer">
     <span class="dot"></span><span>EVERSTEAD · RISK-PERSON KNOWLEDGE BASE</span>
@@ -188,34 +206,38 @@ a{text-decoration:none;color:inherit}
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
 
 <script>
-var DATA = [];
+var DATA = [];          /* 全部档案(跨能力) */
 var CHIP = '全部';
 
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 
 function load(){
-  fetch('kb-data.json').then(function(r){return r.json()}).then(function(d){
+  fetch('kb-all.json').then(function(r){return r.json()}).then(function(d){
     DATA = d;
-    renderStats(); renderChips(); render();
+    renderStats(); renderChips(); renderCaps();
   }).catch(function(e){
-    document.getElementById('grid').innerHTML =
+    document.getElementById('caps').innerHTML =
       '<p style="color:#c9a227">⚠️ 数据加载失败: '+esc(e)+'</p>';
   });
 }
 
 function renderStats(){
-  var orgs = DATA.length;
-  var xz = 0, zy = 0, resume = 0;
+  var orgs = new Set(), names = new Set();
   DATA.forEach(function(r){
-    if(r.xz && r.xz.name){xz++}
-    if(r.zy && r.zy.name){zy++}
-    if((r.xz&&r.xz.resume)||(r.zy&&r.zy.resume)){resume++}
+    orgs.add(r.org);
+    if(r.xz && r.xz.name) names.add(r.org+'|'+r.xz.name);
+    if(r.zy && r.zy.name) names.add(r.org+'|'+r.zy.name);
+  });
+  var caps = new Set(DATA.map(function(r){return r.cap}));
+  var resume = 0;
+  DATA.forEach(function(r){
+    if((r.xz&&r.xz.resume)||(r.zy&&r.zy.resume)) resume++;
   });
   document.getElementById('stats').innerHTML =
-    '<div class="stat"><div class="v">'+orgs+'</div><div class="k">覆盖机构</div></div>'+
-    '<div class="stat"><div class="v">'+xz+'</div><div class="k">行政责任人</div></div>'+
-    '<div class="stat"><div class="v">'+zy+'</div><div class="k">专业责任人</div></div>'+
-    '<div class="stat"><div class="v">'+resume+'</div><div class="k">含从业经历档案</div></div>';
+    '<div class="stat"><div class="v">'+caps.size+'</div><div class="k">能力类型</div></div>'+
+    '<div class="stat"><div class="v">'+orgs.size+'</div><div class="k">覆盖机构</div></div>'+
+    '<div class="stat"><div class="v">'+names.size+'</div><div class="k">责任人档案</div></div>'+
+    '<div class="stat"><div class="v">'+resume+'</div><div class="k">含从业经历</div></div>';
 }
 
 function renderChips(){
@@ -225,43 +247,73 @@ function renderChips(){
     '<div class="chip'+(CHIP==='有变更'?' on':'')+'" data-v="有变更">有变更记录</div>';
   el.querySelectorAll('.chip').forEach(function(c){
     c.addEventListener('click', function(){
-      CHIP = c.dataset.v; renderChips(); render();
+      CHIP = c.dataset.v; renderChips(); renderCaps();
     });
   });
 }
 
-function matchRow(r, q){
-  if(!q) return true;
-  var hay = r.org + ' ' + (r.xz?r.xz.name+' '+r.xz.title:'') + ' ' + (r.zy?r.zy.name+' '+r.zy.title:'');
-  return hay.toLowerCase().indexOf(q.toLowerCase()) >= 0;
+function filterRows(rows){
+  var q = document.getElementById('q').value.trim();
+  return rows.filter(function(r){
+    if(q){
+      var hay = r.org + ' ' + (r.xz?r.xz.name+' '+r.xz.title:'') + ' ' + (r.zy?r.zy.name+' '+r.zy.title:'');
+      if(hay.toLowerCase().indexOf(q.toLowerCase()) < 0) return false;
+    }
+    if(CHIP==='有简历' && !((r.xz&&r.xz.resume)||(r.zy&&r.zy.resume))) return false;
+    if(CHIP==='有变更' && !(r.changes && r.changes.length)) return false;
+    return true;
+  });
 }
 
-function render(){
-  var q = document.getElementById('q').value.trim();
-  var rows = DATA.filter(function(r){return matchRow(r,q)});
-  if(CHIP==='有简历') rows = rows.filter(function(r){return (r.xz&&r.xz.resume)||(r.zy&&r.zy.resume)});
-  if(CHIP==='有变更') rows = rows.filter(function(r){return r.changes && r.changes.length});
+var CAP_META = {
+  '债权投资计划产品管理能力': {ico:'📡', en:'DEBT INVESTMENT PLAN'},
+  '股权投资计划产品管理能力': {ico:'📈', en:'EQUITY INVESTMENT PLAN'},
+  '股票投资管理能力':       {ico:'📊', en:'STOCK INVESTMENT'},
+  '信用风险管理能力':       {ico:'🛡️', en:'CREDIT RISK'},
+  '衍生品运用管理能力':     {ico:'🧮', en:'DERIVATIVES'}
+};
+
+function renderCaps(){
+  var caps = [];
+  var seen = new Set();
+  DATA.forEach(function(r){ if(!seen.has(r.cap)){ seen.add(r.cap); caps.push(r.cap); } });
   var html = '';
-  rows.forEach(function(r){
-    html += cardHtml(r);
+  caps.forEach(function(cap){
+    var rows = filterRows(DATA.filter(function(r){return r.cap===cap}));
+    var meta = CAP_META[cap] || {ico:'📁', en:'CAPABILITY'};
+    var isDebt = cap === '债权投资计划产品管理能力';
+    html += '<div class="cap-block'+(isDebt?'':' open')+'">'+
+      '<div class="cap-head" onclick="toggleCap(this)">'+
+      '<div class="ico">'+meta.ico+'</div>'+
+      '<div><div class="t">'+esc(cap)+'</div><div class="en">'+meta.en+'</div></div>'+
+      '<div class="cnt">'+rows.length+' 家</div>'+
+      '<span class="caret">▶</span></div>'+
+      '<div class="cap-body"><div class="grid">'+
+      rows.map(cardHtml).join('')+
+      (rows.length? '':'<p style="color:var(--muted);grid-column:1/-1">无匹配结果</p>')+
+      '</div></div></div>';
   });
-  document.getElementById('grid').innerHTML = html || '<p style="color:var(--muted)">无匹配结果</p>';
+  document.getElementById('caps').innerHTML = html;
+}
+
+function toggleCap(head){
+  head.parentElement.classList.toggle('open');
 }
 
 function cardHtml(r){
   var h = '<div class="card" onclick="openDetail('+DATA.indexOf(r)+')">';
   h += '<div class="org">'+esc(r.org)+'</div>';
-  h += '<div class="meta">债权投资计划产品管理能力</div>';
+  if(r.sub) h += '<div class="sub">'+esc(r.sub)+'</div>';
   h += '<div class="persons">';
-  if(r.xz) h += personHtml(r.xz, 'xz', '行政责任人');
-  if(r.zy) h += personHtml(r.zy, 'zy', '专业责任人');
+  if(r.xz) h += personHtml(r.xz, 'xz', '行政');
+  if(r.zy) h += personHtml(r.zy, 'zy', '专业');
   h += '</div><span class="more">→</span></div>';
   return h;
 }
 
 function personHtml(p, cls, roleName){
   var brief = [p.birth, p.edu, p.join].filter(function(x){return x && x!=='无'}).join(' · ');
-  return '<div class="person"><div class="role '+cls+'">'+roleName+'</div>'+
+  return '<div class="person"><div class="role '+cls+'">'+roleName+'责任人</div>'+
     '<div class="info"><div class="name">'+esc(p.name)+'</div>'+
     '<div class="title">'+esc(p.title||'')+'</div>'+
     '<div class="brief">'+esc(brief)+'</div></div></div>';
@@ -272,13 +324,13 @@ function openDetail(i){
   var m = document.getElementById('modal');
   var h = '<button class="close" onclick="closeDetail()">✕</button>';
   h += '<h2>'+esc(r.org)+'</h2>';
-  h += '<div class="m-meta">债权投资计划产品管理能力 · 数据更新 '+(r.time||'')+'</div>';
+  h += '<div class="m-meta">'+esc(r.cap)+(r.sub?' · '+esc(r.sub):'')+' · 数据更新 '+(r.time||'')+'</div>';
   if(r.xz) h += detailPerson(r.xz, '行政责任人');
   if(r.zy) h += detailPerson(r.zy, '专业责任人');
   if(r.changes && r.changes.length){
     h += '<div class="block"><div class="block-t">任职变更历史</div><div class="tl">';
     r.changes.forEach(function(c){
-      h += '<div class="tl-item item"><div class="d">'+esc(c.date||'')+' · '+esc(c.role==='行政'?'行政':'专业')+'责任人</div>'+
+      h += '<div class="item"><div class="d">'+esc(c.date||'')+' · '+esc(c.role==='行政'?'行政':'专业')+'责任人</div>'+
            '<div class="c"><b>'+esc(c.from||'')+'</b> → '+esc(c.to||'')+'</div></div>';
     });
     h += '</div></div>';
@@ -292,7 +344,6 @@ function openDetail(i){
 }
 
 function detailPerson(p, roleName){
-  var cls = roleName==='行政责任人'?'xz':'zy';
   var f = function(k, v){return v && v!=='无' ? '<div class="f"><span class="k">'+k+'</span><span class="val">'+esc(v)+'</span></div>' : ''};
   var h = '<div class="block"><div class="block-t">'+roleName+'</div><div class="pdetail">';
   h += '<div class="h"><span class="n">'+esc(p.name)+'</span><span class="t">'+esc(p.title||'')+'</span></div>';
@@ -308,7 +359,7 @@ function closeDetail(){
   document.getElementById('overlay').className = 'overlay';
 }
 
-document.getElementById('q').addEventListener('input', render);
+document.getElementById('q').addEventListener('input', renderCaps);
 load();
 </script>
 </body>

@@ -6,28 +6,30 @@
 <title>税后收益率计算 · everstead</title>
 <style>
 body{font-family:'Microsoft YaHei',sans-serif;background:#f6f8f7;margin:0;padding:36px 16px 64px;color:#1f2937}
-.wrap{max-width:980px;margin:0 auto}
+.wrap{max-width:720px;margin:0 auto}
 .back{display:inline-block;margin-bottom:14px;color:#6b7280;font-size:13px;text-decoration:none}
 .back:hover{color:#1a7f5c}
 h1{font-size:24px;color:#14532d;margin:0 0 6px}
 .sub{color:#6b7280;font-size:13px;margin-bottom:22px}
 .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px 20px;margin-bottom:18px}
-.card h2{font-size:15px;color:#14532d;margin:0 0 12px}
-table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{border:1px solid #d1d5db;padding:7px 8px;text-align:center}
+.card h2{font-size:15px;color:#14532d;margin:0 0 14px}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border:1px solid #d1d5db;padding:9px 10px;text-align:left}
 th{background:#f0fdf4;color:#14532d;font-weight:600;white-space:nowrap}
-td.name{background:#f9fafb;font-weight:600;white-space:nowrap}
-td.out{background:#f6f8f7;font-variant-numeric:tabular-nums;font-weight:600}
-td.final{background:#ecfdf5;color:#14532d;font-weight:700;font-variant-numeric:tabular-nums}
-input{width:82px;padding:5px 6px;border:1px solid #d1d5db;border-radius:6px;text-align:right;
-font-size:13px;color:#2563eb;background:#fffbeb;font-family:inherit;font-variant-numeric:tabular-nums}
+td.label{background:#f9fafb;font-weight:600;white-space:nowrap;width:220px}
+td.out{background:#f6f8f7;font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+td.final{background:#ecfdf5;color:#14532d;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;font-size:15px}
+input{width:140px;padding:6px 8px;border:1px solid #d1d5db;border-radius:6px;text-align:right;
+font-size:14px;color:#2563eb;background:#fffbeb;font-family:inherit;font-variant-numeric:tabular-nums}
 input:focus{outline:2px solid #1a7f5c;outline-offset:-1px}
 input.fixed{color:#9ca3af;background:#f9fafb}
+.toolbar{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 button{font-family:inherit;font-size:13px;background:#1a7f5c;color:#fff;border:none;
-border-radius:6px;padding:7px 14px;cursor:pointer;margin-right:8px}
+border-radius:6px;padding:7px 14px;cursor:pointer}
 button:hover{background:#14532d}
 button.ghost{background:#fff;color:#1a7f5c;border:1px solid #1a7f5c}
 button.ghost:hover{background:#f0fdf4}
+select{font-family:inherit;font-size:13px;padding:6px 8px;border:1px solid #d1d5db;border-radius:6px;color:#1f2937}
 .tips{font-size:12px;color:#6b7280;line-height:1.8;margin:0;padding-left:18px}
 .tips li{margin:4px 0}
 .dl{margin-top:10px;font-size:13px}
@@ -37,52 +39,65 @@ button.ghost:hover{background:#f0fdf4}
 <body>
 <div class="wrap">
 <a class="back" href="index.html">← everstead 成果站</a>
-<h1>税后收益率计算表</h1>
-<div class="sub">增值税价税分离 + 附加税 · 产品层面口径 · 黄色格可编辑，改动即自动重算</div>
+<h1>税后收益率计算</h1>
+<div class="sub">黄色格填写后自动生成税后收益率及对应金额 · 增值税价税分离（财税〔2017〕56 号）</div>
 
 <div class="card">
-<h2>产品税后收益率计算</h2>
-<table id="calc">
-<thead>
-<tr>
-<th>项目</th><th>投资收益率<br>（含税 %）</th><th>产品收益率<br>（含税 %）</th><th>增值税率<br>（%）</th><th>增值税附加<br>税率（%）</th>
-<th>增值税<br>（%）</th><th>附加税<br>（%）</th><th>税后产品<br>收益率（%）</th>
-</tr>
-</thead>
+<h2>① 填写参数（黄色格）</h2>
+<table>
 <tbody>
-<tr data-name="光大"><td class="name">光大</td>
-<td><input type="number" step="0.0001" value="5.98"></td>
-<td><input type="number" step="0.0001" value="5.50"></td>
-<td><input type="number" step="0.0001" value="3" class="fixed"></td>
-<td><input type="number" step="0.0001" value="10"></td>
-<td class="out"></td><td class="out"></td><td class="final"></td></tr>
-<tr data-name="海保"><td class="name">海保</td>
-<td><input type="number" step="0.0001" value="6.30"></td>
-<td><input type="number" step="0.0001" value="5.50"></td>
-<td><input type="number" step="0.0001" value="3" class="fixed"></td>
-<td><input type="number" step="0.0001" value="10"></td>
-<td class="out"></td><td class="out"></td><td class="final"></td></tr>
-<tr data-name="恒邦"><td class="name">恒邦</td>
-<td><input type="number" step="0.0001" value="3.30"></td>
-<td><input type="number" step="0.0001" value="3.1135"></td>
-<td><input type="number" step="0.0001" value="3" class="fixed"></td>
-<td><input type="number" step="0.0001" value="12"></td>
-<td class="out"></td><td class="out"></td><td class="final"></td></tr>
+<tr><td class="label">投资本金（元）</td><td><input id="principal" type="number" step="1000" value="10000000"></td></tr>
+<tr><td class="label">投资期限（年）</td><td><input id="years" type="number" step="0.5" value="1"></td></tr>
+<tr><td class="label">投资收益率（含税 %）</td><td><input id="invPct" type="number" step="0.0001" value="5.98"></td></tr>
+<tr><td class="label">产品收益率（含税 %）</td><td><input id="prodPct" type="number" step="0.0001" value="5.50"></td></tr>
+<tr><td class="label">增值税率（%）</td><td><input id="vatRate" type="number" step="0.0001" value="3" class="fixed"></td></tr>
+<tr><td class="label">增值税附加税率（%）</td><td><input id="surRate" type="number" step="0.0001" value="10"></td></tr>
 </tbody>
 </table>
-<div style="margin-top:12px">
-<button id="addRow">+ 新增产品</button>
-<button id="reset" class="ghost">恢复默认（光大/海保/恒邦）</button>
+<div class="toolbar">
+<select id="preset">
+<option value="">— 预填示例（可选）—</option>
+<option value="gd">光大</option>
+<option value="hb">海保</option>
+<option value="hb2">恒邦</option>
+</select>
+<button id="reset" class="ghost">清空重填</button>
 </div>
+</div>
+
+<div class="card">
+<h2>② 税后收益率（自动生成）</h2>
+<table>
+<tbody>
+<tr><td class="label">增值税</td><td class="out" id="outVat">—</td></tr>
+<tr><td class="label">增值税附加税</td><td class="out" id="outSur">—</td></tr>
+<tr><td class="label">税后产品收益率</td><td class="final" id="outAfter">—</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>③ 对应金额（按本金 × 期限自动生成）</h2>
+<table>
+<tbody>
+<tr><td class="label">投资收益额（税前）</td><td class="out" id="outInvAmt">—</td></tr>
+<tr><td class="label">产品收益额（税前）</td><td class="out" id="outProdAmt">—</td></tr>
+<tr><td class="label">增值税额</td><td class="out" id="outVatAmt">—</td></tr>
+<tr><td class="label">附加税额</td><td class="out" id="outSurAmt">—</td></tr>
+<tr><td class="label">税后收益额</td><td class="final" id="outAfterAmt">—</td></tr>
+<tr><td class="label">本息合计</td><td class="final" id="outTotal">—</td></tr>
+</tbody>
+</table>
 </div>
 
 <div class="card">
 <h2>口径说明</h2>
 <ul class="tips">
 <li><b>增值税</b> = 增值税率 ÷ (1 + 增值税率) × 投资收益率（含税）——财税〔2017〕56 号，资管产品运营应税行为按简易计税 3% 价税分离，由产品财产列支。</li>
-<li><b>附加税</b> = 增值税 × 附加税率（光大/海保 10%；恒邦 12%，含城建/教育/地方教育，异地受托人按当地标准）。</li>
+<li><b>附加税</b> = 增值税 × 附加税率（含城建/教育/地方教育，异地受托人按当地标准，如 10% 或 12%）。</li>
 <li><b>税后产品收益率</b> = 产品收益率（含税）− 增值税 − 附加税。</li>
-<li>投资收益率与产品收益率之差即产品自身的费用损耗，不在本表逐项展开；逐项费用（认购费/管理费/托管费/销售服务费）及<b>企业所得税</b>见下方完整版计算表。</li>
+<li><b>金额口径</b> = 本金 × 对应年化收益率 × 期限；本息合计 = 本金 + 税后收益额。</li>
+<li>投资收益率与产品收益率之差为产品自身的费用损耗，本工具不逐项展开；逐项费用（认购费/管理费/托管费/销售服务费）及<b>企业所得税</b>见完整版计算表。</li>
 </ul>
 <div class="dl">📥 下载完整版（含费用明细 + 所得税，Excel 公式自动算）：
 <a href="信托税后收益率计算表.xlsx" download>信托税后收益率计算表.xlsx</a></div>
@@ -90,49 +105,69 @@ button.ghost:hover{background:#f0fdf4}
 </div>
 
 <script>
-// 增值税 = 增值税率/(1+增值税率) × 投资收益率(含税)
-// 附加税 = 增值税 × 附加税率
-// 税后产品收益率 = 产品收益率 − 增值税 − 附加税
-function calcRow(tr) {
-  var inputs = tr.querySelectorAll('input');
-  var inv = parseFloat(inputs[0].value);   // 投资收益率（含税 %）
-  var prod = parseFloat(inputs[1].value);  // 产品收益率（含税 %）
-  var vat = parseFloat(inputs[2].value);   // 增值税率（%）
-  var sur = parseFloat(inputs[3].value);   // 附加税率（%）
-  var cells = tr.querySelectorAll('td');
-  if ([inv, prod, vat, sur].some(isNaN)) {
-    cells[5].textContent = cells[6].textContent = cells[7].textContent = '—';
+var PRESETS = {
+  gd:  {invPct: 5.98,  prodPct: 5.50,   vatRate: 3, surRate: 10},
+  hb:  {invPct: 6.30,  prodPct: 5.50,   vatRate: 3, surRate: 10},
+  hb2: {invPct: 3.30,  prodPct: 3.1135, vatRate: 3, surRate: 12}
+};
+var $ = function (id) { return document.getElementById(id); };
+var fmtPct = function (v) { return v.toFixed(4) + '%'; };
+var fmtMoney = function (v) { return v.toLocaleString('zh-CN', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' 元'; };
+
+function calc() {
+  var principal = parseFloat($('principal').value);
+  var years = parseFloat($('years').value);
+  var invPct = parseFloat($('invPct').value);
+  var prodPct = parseFloat($('prodPct').value);
+  var vatRate = parseFloat($('vatRate').value);
+  var surRate = parseFloat($('surRate').value);
+  if ([principal, years, invPct, prodPct, vatRate, surRate].some(isNaN)) {
+    ['outVat', 'outSur', 'outAfter', 'outInvAmt', 'outProdAmt', 'outVatAmt', 'outSurAmt', 'outAfterAmt', 'outTotal']
+      .forEach(function (id) { $(id).textContent = '—'; });
     return;
   }
-  var vatAmt = vat / (100 + vat) * inv;    // 价税分离后的增值税（百分点）
-  var surAmt = vatAmt * sur / 100;
-  var after = prod - vatAmt - surAmt;
-  cells[5].textContent = vatAmt.toFixed(4);
-  cells[6].textContent = surAmt.toFixed(4);
-  cells[7].textContent = after.toFixed(4);
+  // 收益率（百分点）
+  var vat = vatRate / (100 + vatRate) * invPct;   // 增值税 = 率/(1+率) × 投资收益
+  var sur = vat * surRate / 100;                   // 附加税 = 增值税 × 附加税率
+  var after = prodPct - vat - sur;                 // 税后 = 产品收益 − 增值税 − 附加税
+  $('outVat').textContent = fmtPct(vat);
+  $('outSur').textContent = fmtPct(sur);
+  $('outAfter').textContent = fmtPct(after);
+  // 金额（本金 × 年化 × 期限）
+  $('outInvAmt').textContent = fmtMoney(principal * invPct / 100 * years);
+  $('outProdAmt').textContent = fmtMoney(principal * prodPct / 100 * years);
+  $('outVatAmt').textContent = fmtMoney(principal * vat / 100 * years);
+  $('outSurAmt').textContent = fmtMoney(principal * sur / 100 * years);
+  $('outAfterAmt').textContent = fmtMoney(principal * after / 100 * years);
+  $('outTotal').textContent = fmtMoney(principal + principal * after / 100 * years);
 }
-function calcAll() {
-  document.querySelectorAll('#calc tbody tr').forEach(calcRow);
-}
-document.querySelectorAll('#calc tbody').forEach(function (tbody) {
-  tbody.addEventListener('input', function (e) {
-    if (e.target.tagName === 'INPUT') calcRow(e.target.closest('tr'));
-  });
+
+['principal', 'years', 'invPct', 'prodPct', 'vatRate', 'surRate'].forEach(function (id) {
+  $(id).addEventListener('input', calc);
 });
-document.getElementById('addRow').addEventListener('click', function () {
-  var tbody = document.querySelector('#calc tbody');
-  var tr = document.createElement('tr');
-  tr.innerHTML = '<td class="name" contenteditable="true">新产品</td>' +
-    '<td><input type="number" step="0.0001" value="5.00"></td>' +
-    '<td><input type="number" step="0.0001" value="4.50"></td>' +
-    '<td><input type="number" step="0.0001" value="3"></td>' +
-    '<td><input type="number" step="0.0001" value="10"></td>' +
-    '<td class="out"></td><td class="out"></td><td class="final"></td>';
-  tbody.appendChild(tr);
-  calcRow(tr);
+
+$('preset').addEventListener('change', function () {
+  var p = PRESETS[this.value];
+  if (!p) return;
+  $('invPct').value = p.invPct;
+  $('prodPct').value = p.prodPct;
+  $('vatRate').value = p.vatRate;
+  $('surRate').value = p.surRate;
+  calc();
 });
-document.getElementById('reset').addEventListener('click', function () { location.reload(); });
-calcAll();
+
+$('reset').addEventListener('click', function () {
+  $('principal').value = 10000000;
+  $('years').value = 1;
+  $('invPct').value = 5.98;
+  $('prodPct').value = 5.50;
+  $('vatRate').value = 3;
+  $('surRate').value = 10;
+  $('preset').value = '';
+  calc();
+});
+
+calc();
 </script>
 </body>
 </html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保险资管风险责任人知识库 · everstead</title>
+<style>
+/* 与成果站同源科技风: 深空底 + 青蓝紫辉光 */
+:root{
+  --bg:#03060c; --panel:rgba(10,20,38,.55); --panel2:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16); --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee; --blue:#3b82f6; --violet:#8b5cf6; --pink:#f472b6;
+  --text:#e2ecf7; --muted:#7d92ad;
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:var(--bg);color:var(--text);
+  background-image:radial-gradient(1100px 600px at 75% -10%,rgba(59,130,246,.14),transparent 60%),
+  radial-gradient(900px 500px at -10% 110%,rgba(139,92,246,.10),transparent 60%);
+  background-attachment:fixed;min-height:100vh;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px 60px}
+
+/* 顶栏 */
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0;flex-wrap:wrap}
+.topbar .back{font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:999px;
+  padding:6px 14px;transition:all .2s}
+.topbar .back:hover{color:var(--cyan);border-color:var(--line-strong)}
+.topbar .brand{font-family:var(--mono);letter-spacing:.24em;font-size:14px;font-weight:700}
+.topbar .brand em{font-style:normal;background:linear-gradient(90deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .badge{margin-left:auto;font-size:11px;color:var(--muted);border:1px solid var(--line);
+  border-radius:999px;padding:5px 12px;font-family:var(--mono)}
+
+/* Hero */
+.hero{padding:56px 0 36px}
+.hero .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--cyan);margin-bottom:14px}
+.hero .kicker::before{content:'// ';opacity:.6}
+.hero h1{font-size:clamp(30px,5vw,48px);font-weight:800;line-height:1.15;
+  background:linear-gradient(92deg,#e8f6ff 10%,var(--cyan) 45%,var(--violet) 90%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 20px rgba(34,211,238,.2))}
+.hero .desc{margin-top:16px;color:var(--muted);font-size:14px;line-height:1.8;max-width:640px}
+.hero .desc b{color:var(--text)}
+
+/* 统计条 */
+.stats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px}
+.stat{flex:1;min-width:140px;border:1px solid var(--line);border-radius:12px;
+  background:var(--panel);backdrop-filter:blur(10px);padding:14px 18px;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(var(--cyan),transparent)}
+.stat .v{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--cyan);
+  text-shadow:0 0 12px rgba(34,211,238,.35);font-variant-numeric:tabular-nums}
+.stat .k{font-size:12px;color:var(--muted);margin-top:3px}
+
+/* 搜索与筛选 */
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:30px 0 22px;align-items:center}
+.search{flex:1;min-width:260px;display:flex;align-items:center;gap:10px;
+  border:1px solid var(--line);border-radius:10px;background:var(--panel);
+  padding:10px 16px;transition:all .2s}
+.search:focus-within{border-color:var(--line-strong);box-shadow:0 0 0 3px rgba(34,211,238,.12)}
+.search input{flex:1;background:none;border:none;outline:none;color:var(--text);
+  font-size:14px;font-family:inherit}
+.search input::placeholder{color:var(--muted)}
+.search .ico{color:var(--cyan);font-family:var(--mono);font-size:13px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font-size:12.5px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);
+  color:var(--muted);cursor:pointer;transition:all .2s;user-select:none;background:var(--panel)}
+.chip:hover{color:var(--cyan);border-color:var(--line-strong)}
+.chip.on{background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(139,92,246,.18));
+  color:var(--cyan);border-color:var(--line-strong)}
+
+/* 卡片网格 */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+.card{position:relative;border:1px solid var(--line);border-radius:14px;
+  background:var(--panel);backdrop-filter:blur(10px);padding:20px 22px;cursor:pointer;
+  transition:all .22s;overflow:hidden}
+.card::before{content:'';position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0;transition:opacity .25s}
+.card:hover{transform:translateY(-4px);border-color:var(--line-strong);
+  background:var(--panel2);box-shadow:0 10px 36px rgba(0,0,0,.5),0 0 22px rgba(34,211,238,.15)}
+.card:hover::before{opacity:1}
+.card .org{font-size:16.5px;font-weight:700;line-height:1.45}
+.card .meta{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:.05em}
+.persons{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.person{display:flex;align-items:flex-start;gap:12px;border:1px solid var(--line);
+  border-radius:10px;padding:10px 14px;background:rgba(8,17,32,.5)}
+.person .role{flex-shrink:0;font-size:10.5px;letter-spacing:.1em;border-radius:6px;
+  padding:3px 8px;margin-top:2px;font-family:var(--mono)}
+.person .role.xz{color:#0e7490;background:rgba(34,211,238,.15);border:1px solid rgba(34,211,238,.3)}
+.person .role.zy{color:#7c3aed;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.3)}
+.person .info{flex:1;min-width:0}
+.person .name{font-size:14.5px;font-weight:700}
+.person .title{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+.person .brief{font-family:var(--mono);font-size:11px;color:#9db4cd;margin-top:4px}
+.card .more{position:absolute;right:18px;bottom:14px;color:var(--cyan);font-size:14px;
+  opacity:0;transform:translateX(-6px);transition:all .25s}
+.card:hover .more{opacity:1;transform:none}
+
+/* 详情弹层 */
+.overlay{position:fixed;inset:0;background:rgba(2,4,10,.75);backdrop-filter:blur(6px);
+  z-index:50;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 16px}
+.overlay.open{display:flex}
+.modal{width:820px;max-width:100%;border:1px solid var(--line-strong);border-radius:16px;
+  background:linear-gradient(170deg,#0a1426,#071021);box-shadow:0 24px 80px rgba(0,0,0,.7);
+  padding:30px 34px;position:relative;animation:pop .25s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.modal .close{position:absolute;top:18px;right:20px;width:34px;height:34px;border-radius:50%;
+  border:1px solid var(--line);color:var(--muted);background:none;cursor:pointer;
+  font-size:16px;transition:all .2s}
+.modal .close:hover{color:var(--cyan);border-color:var(--line-strong)}
+.modal h2{font-size:21px;font-weight:800}
+.modal .m-meta{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:6px}
+.modal .block{margin-top:22px}
+.modal .block-t{font-size:13px;color:var(--cyan);letter-spacing:.16em;font-weight:700;
+  border-left:3px solid var(--cyan);padding-left:10px;margin-bottom:12px}
+.pdetail{border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:14px;
+  background:rgba(8,17,32,.45)}
+.pdetail .h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.pdetail .n{font-size:17px;font-weight:800}
+.pdetail .t{font-size:12.5px;color:var(--muted)}
+.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px 16px;
+  font-size:12.5px;margin-top:6px}
+.fields .f{display:flex;gap:6px}
+.fields .k{color:var(--muted);flex-shrink:0}
+.fields .val{color:var(--text)}
+.resume{margin-top:12px;font-size:12.5px;color:#b9cbe0;line-height:1.9;
+  white-space:pre-wrap;border-top:1px dashed var(--line);padding-top:10px}
+.tl{position:relative;padding-left:18px;border-left:1px solid var(--line);margin-left:8px}
+.tl .item{position:relative;padding:8px 0}
+.tl .item::before{content:'';position:absolute;left:-22px;top:14px;width:7px;height:7px;
+  border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan)}
+.tl .d{font-family:var(--mono);font-size:11.5px;color:var(--cyan)}
+.tl .c{font-size:13px;margin-top:2px}
+.tl .c b{color:var(--pink)}
+.note{margin-top:16px;font-size:12px;color:#c9a227;border:1px dashed rgba(201,162,39,.4);
+  border-radius:10px;padding:12px 16px;line-height:1.8}
+
+.footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;color:var(--muted);display:flex;gap:12px;align-items:center}
+.footer .dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);
+  box-shadow:0 0 6px var(--cyan)}
+@media (max-width:640px){
+  .wrap{padding:0 16px 40px}
+  .hero{padding:40px 0 26px}
+  .grid{grid-template-columns:1fr}
+  .modal{padding:24px 18px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="back" href="index.html">← 成果站</a>
+    <div class="brand"><em>RISK-PERSON KB</em></div>
+    <div class="badge">保险资管风险责任人知识库 · 2026</div>
+  </header>
+
+  <section class="hero">
+    <div class="kicker">DEBT INVESTMENT PLAN CAPABILITY</div>
+    <h1>债权投资计划风险责任人<br>知识库</h1>
+    <p class="desc">
+      覆盖 <b>36 家保险资管机构</b>的<b>债权投资计划产品管理能力</b>风险责任人档案：
+      行政责任人 + 专业责任人的职务、学历、从业经历与任职变更历史。
+      数据来源: 中国保险资产管理业协会投资管理能力信息披露系统（ir.iamac.org.cn）+ 内部档案 PDF。
+    </p>
+  </section>
+
+  <section class="stats" id="stats"></section>
+
+  <div class="toolbar">
+    <div class="search">
+      <span class="ico">⌕</span>
+      <input id="q" type="text" placeholder="搜索机构 / 责任人姓名 / 职务…">
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer class="footer">
+    <span class="dot"></span><span>EVERSTEAD · RISK-PERSON KNOWLEDGE BASE</span>
+    <span>数据更新 2026-01 批披露</span>
+  </footer>
+</div>
+
+<!-- 详情弹层 -->
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+
+<script>
+var DATA = [];
+var CHIP = '全部';
+
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function load(){
+  fetch('kb-data.json').then(function(r){return r.json()}).then(function(d){
+    DATA = d;
+    renderStats(); renderChips(); render();
+  }).catch(function(e){
+    document.getElementById('grid').innerHTML =
+      '<p style="color:#c9a227">⚠️ 数据加载失败: '+esc(e)+'</p>';
+  });
+}
+
+function renderStats(){
+  var orgs = DATA.length;
+  var xz = 0, zy = 0, resume = 0;
+  DATA.forEach(function(r){
+    if(r.xz && r.xz.name){xz++}
+    if(r.zy && r.zy.name){zy++}
+    if((r.xz&&r.xz.resume)||(r.zy&&r.zy.resume)){resume++}
+  });
+  document.getElementById('stats').innerHTML =
+    '<div class="stat"><div class="v">'+orgs+'</div><div class="k">覆盖机构</div></div>'+
+    '<div class="stat"><div class="v">'+xz+'</div><div class="k">行政责任人</div></div>'+
+    '<div class="stat"><div class="v">'+zy+'</div><div class="k">专业责任人</div></div>'+
+    '<div class="stat"><div class="v">'+resume+'</div><div class="k">含从业经历档案</div></div>';
+}
+
+function renderChips(){
+  var el = document.getElementById('chips');
+  el.innerHTML = '<div class="chip'+(CHIP==='全部'?' on':'')+'" data-v="全部">全部</div>'+
+    '<div class="chip'+(CHIP==='有简历'?' on':'')+'" data-v="有简历">含从业经历</div>'+
+    '<div class="chip'+(CHIP==='有变更'?' on':'')+'" data-v="有变更">有变更记录</div>';
+  el.querySelectorAll('.chip').forEach(function(c){
+    c.addEventListener('click', function(){
+      CHIP = c.dataset.v; renderChips(); render();
+    });
+  });
+}
+
+function matchRow(r, q){
+  if(!q) return true;
+  var hay = r.org + ' ' + (r.xz?r.xz.name+' '+r.xz.title:'') + ' ' + (r.zy?r.zy.name+' '+r.zy.title:'');
+  return hay.toLowerCase().indexOf(q.toLowerCase()) >= 0;
+}
+
+function render(){
+  var q = document.getElementById('q').value.trim();
+  var rows = DATA.filter(function(r){return matchRow(r,q)});
+  if(CHIP==='有简历') rows = rows.filter(function(r){return (r.xz&&r.xz.resume)||(r.zy&&r.zy.resume)});
+  if(CHIP==='有变更') rows = rows.filter(function(r){return r.changes && r.changes.length});
+  var html = '';
+  rows.forEach(function(r){
+    html += cardHtml(r);
+  });
+  document.getElementById('grid').innerHTML = html || '<p style="color:var(--muted)">无匹配结果</p>';
+}
+
+function cardHtml(r){
+  var h = '<div class="card" onclick="openDetail('+DATA.indexOf(r)+')">';
+  h += '<div class="org">'+esc(r.org)+'</div>';
+  h += '<div class="meta">债权投资计划产品管理能力</div>';
+  h += '<div class="persons">';
+  if(r.xz) h += personHtml(r.xz, 'xz', '行政责任人');
+  if(r.zy) h += personHtml(r.zy, 'zy', '专业责任人');
+  h += '</div><span class="more">→</span></div>';
+  return h;
+}
+
+function personHtml(p, cls, roleName){
+  var brief = [p.birth, p.edu, p.join].filter(function(x){return x && x!=='无'}).join(' · ');
+  return '<div class="person"><div class="role '+cls+'">'+roleName+'</div>'+
+    '<div class="info"><div class="name">'+esc(p.name)+'</div>'+
+    '<div class="title">'+esc(p.title||'')+'</div>'+
+    '<div class="brief">'+esc(brief)+'</div></div></div>';
+}
+
+function openDetail(i){
+  var r = DATA[i];
+  var m = document.getElementById('modal');
+  var h = '<button class="close" onclick="closeDetail()">✕</button>';
+  h += '<h2>'+esc(r.org)+'</h2>';
+  h += '<div class="m-meta">债权投资计划产品管理能力 · 数据更新 '+(r.time||'')+'</div>';
+  if(r.xz) h += detailPerson(r.xz, '行政责任人');
+  if(r.zy) h += detailPerson(r.zy, '专业责任人');
+  if(r.changes && r.changes.length){
+    h += '<div class="block"><div class="block-t">任职变更历史</div><div class="tl">';
+    r.changes.forEach(function(c){
+      h += '<div class="tl-item item"><div class="d">'+esc(c.date||'')+' · '+esc(c.role==='行政'?'行政':'专业')+'责任人</div>'+
+           '<div class="c"><b>'+esc(c.from||'')+'</b> → '+esc(c.to||'')+'</div></div>';
+    });
+    h += '</div></div>';
+  }
+  if(r.note) h += '<div class="note">📌 '+esc(r.note)+'</div>';
+  if(r.pdf) h += '<div class="block"><div class="block-t">源文件</div>'+
+    '<div style="font-size:12.5px;color:var(--muted)">📄 <a style="color:#67e8f9;text-decoration:underline" '+
+    'href="kb-pdfs/'+encodeURIComponent(r.pdf)+'" target="_blank" rel="noopener">'+esc(r.pdf)+'</a></div></div>';
+  m.innerHTML = h;
+  document.getElementById('overlay').className = 'overlay open';
+}
+
+function detailPerson(p, roleName){
+  var cls = roleName==='行政责任人'?'xz':'zy';
+  var f = function(k, v){return v && v!=='无' ? '<div class="f"><span class="k">'+k+'</span><span class="val">'+esc(v)+'</span></div>' : ''};
+  var h = '<div class="block"><div class="block-t">'+roleName+'</div><div class="pdetail">';
+  h += '<div class="h"><span class="n">'+esc(p.name)+'</span><span class="t">'+esc(p.title||'')+'</span></div>';
+  h += '<div class="fields">'+
+    f('性别',p.gender)+f('出生',p.birth)+f('学历',p.edu)+f('学位',p.degree)+
+    f('入司',p.join)+f('部门',p.dept)+f('资质',p.cert)+'</div>';
+  if(p.resume) h += '<div class="resume">'+esc(p.resume)+'</div>';
+  h += '</div></div>';
+  return h;
+}
+
+function closeDetail(){
+  document.getElementById('overlay').className = 'overlay';
+}
+
+document.getElementById('q').addEventListener('input', render);
+load();
+</script>
+</body>
+</html>

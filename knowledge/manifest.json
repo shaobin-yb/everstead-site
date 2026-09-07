@@ -412,24 +412,6 @@
       "url": null
     },
     {
-      "slug": "debt-plan-monthly-trend",
-      "topic": "insurance-debt",
-      "title": "债权投资计划月度登记动态(2016-2026)",
-      "type": "html",
-      "date": "2026-09-07",
-      "desc": "每月登记数量/规模/同比,1-12月全年累计单独标记,含发行缴款与平均收益率;98个月度数据点",
-      "tags": [
-        "月度动态",
-        "同比",
-        "登记数据"
-      ],
-      "original": "debt-plan-monthly-trend.html",
-      "file": "debt-plan-monthly-trend.html",
-      "size": 19260,
-      "pages": 0,
-      "url": null
-    },
-    {
       "slug": "debt-plan-company-annual",
       "topic": "insurance-debt",
       "title": "各公司债权投资计划年度情况表(2024-2026)",
@@ -605,6 +587,24 @@
       "file": "2026年世界投资报告（英）.pdf",
       "size": 11926751,
       "pages": 227,
+      "url": null
+    },
+    {
+      "slug": "debt-plan-monthly-trend",
+      "topic": "insurance-debt",
+      "title": "债权投资计划月度登记动态(2016-2026)",
+      "type": "html",
+      "date": "2026-09-07",
+      "desc": "每月登记数量/规模/同比,11个年度累计行单独标记,按时间倒序;127个月度数据点",
+      "tags": [
+        "月度动态",
+        "同比",
+        "登记数据"
+      ],
+      "original": "debt-plan-monthly-trend.html",
+      "file": "debt-plan-monthly-trend.html",
+      "size": 26274,
+      "pages": 0,
       "url": null
     }
   ]

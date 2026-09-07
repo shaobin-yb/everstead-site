@@ -36,6 +36,8 @@ ROOT_ARTIFACTS = [
      "上市公司闲置资金理财公告全景统计"),
     ("知识库", "knowledge/index.html", "2026-09-07", "📚", "knowledge",
      "PPT/PDF 翻页预览 + 原文件下载，按主题归档"),
+    ("CRM 客户关系管理系统", "http://192.168.100.148:3000", "2026-09-07", "👥", "external",
+     "公司局域网 · 账号 wangshaobin · 客户/商机/拜访纪要"),
 ]
 
 PAGE_CSS = """
@@ -181,9 +183,10 @@ def build_index(reports: list) -> None:
     html = tpl.read_text(encoding="utf-8")
     kb_count, kb_date = load_kb_stats()
 
-    def card(name, href, date, icon, kind, desc, delay):
+    def card(name, href, date, icon, kind, desc, delay, external=False):
+        ext = ' target="_blank" rel="noopener"' if external else ''
         return (f'<a class="card" data-type="{kind}" style="animation-delay:{delay:.2f}s" '
-                f'href="{href}">'
+                f'href="{href}"{ext}>'
                 f'<span class="corner c1"></span><span class="corner c2"></span>'
                 f'<span class="corner c3"></span><span class="corner c4"></span>'
                 f'<div class="card-top"><div class="card-ico">{icon}</div>'
@@ -193,12 +196,17 @@ def build_index(reports: list) -> None:
                 f'<div class="d">{date}</div>'
                 f'<span class="arrow">→</span></a>')
 
+    def exists(path: str) -> bool:
+        """外链(局域网 CRM 等)直接视为存在; 本地路径查文件。"""
+        return path.startswith(("http://", "https://")) or (SITE / path).exists()
+
     cards, delay = [], 0.35
     for name, path, date, icon, kind, desc in ROOT_ARTIFACTS:
-        if (SITE / path).exists():
+        if exists(path):
             if kind == "knowledge" and kb_date:
                 date = kb_date  # 知识库卡片日期取最新条目日期
-            cards.append(card(name, path, date, icon, kind, desc, delay))
+            cards.append(card(name, path, date, icon, kind, desc, delay,
+                              external=path.startswith(("http://", "https://"))))
             delay += 0.06
     for f in reports:
         rdate = datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d")
@@ -207,11 +215,11 @@ def build_index(reports: list) -> None:
         delay += 0.06
 
     total = len(cards)
-    radar_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "radar" and (SITE / a[1]).exists())
-    report_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "report" and (SITE / a[1]).exists()) + len(reports)
-    tool_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "tool" and (SITE / a[1]).exists())
+    radar_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "radar" and exists(a[1]))
+    report_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "report" and exists(a[1])) + len(reports)
+    tool_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "tool" and exists(a[1]))
     last_date = max(
-        [a[2] for a in ROOT_ARTIFACTS if (SITE / a[1]).exists()]
+        [a[2] for a in ROOT_ARTIFACTS if exists(a[1])]
         + [datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d") for f in reports]
     )
 

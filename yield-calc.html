@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>税后收益率计算 · everstead</title>
+<style>
+body{font-family:'Microsoft YaHei',sans-serif;background:#f6f8f7;margin:0;padding:36px 16px 64px;color:#1f2937}
+.wrap{max-width:980px;margin:0 auto}
+.back{display:inline-block;margin-bottom:14px;color:#6b7280;font-size:13px;text-decoration:none}
+.back:hover{color:#1a7f5c}
+h1{font-size:24px;color:#14532d;margin:0 0 6px}
+.sub{color:#6b7280;font-size:13px;margin-bottom:22px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px 20px;margin-bottom:18px}
+.card h2{font-size:15px;color:#14532d;margin:0 0 12px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border:1px solid #d1d5db;padding:7px 8px;text-align:center}
+th{background:#f0fdf4;color:#14532d;font-weight:600;white-space:nowrap}
+td.name{background:#f9fafb;font-weight:600;white-space:nowrap}
+td.out{background:#f6f8f7;font-variant-numeric:tabular-nums;font-weight:600}
+td.final{background:#ecfdf5;color:#14532d;font-weight:700;font-variant-numeric:tabular-nums}
+input{width:82px;padding:5px 6px;border:1px solid #d1d5db;border-radius:6px;text-align:right;
+font-size:13px;color:#2563eb;background:#fffbeb;font-family:inherit;font-variant-numeric:tabular-nums}
+input:focus{outline:2px solid #1a7f5c;outline-offset:-1px}
+input.fixed{color:#9ca3af;background:#f9fafb}
+button{font-family:inherit;font-size:13px;background:#1a7f5c;color:#fff;border:none;
+border-radius:6px;padding:7px 14px;cursor:pointer;margin-right:8px}
+button:hover{background:#14532d}
+button.ghost{background:#fff;color:#1a7f5c;border:1px solid #1a7f5c}
+button.ghost:hover{background:#f0fdf4}
+.tips{font-size:12px;color:#6b7280;line-height:1.8;margin:0;padding-left:18px}
+.tips li{margin:4px 0}
+.dl{margin-top:10px;font-size:13px}
+.dl a{color:#1a7f5c}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">← everstead 成果站</a>
+<h1>税后收益率计算表</h1>
+<div class="sub">增值税价税分离 + 附加税 · 产品层面口径 · 黄色格可编辑，改动即自动重算</div>
+
+<div class="card">
+<h2>产品税后收益率计算</h2>
+<table id="calc">
+<thead>
+<tr>
+<th>项目</th><th>投资收益率<br>（含税 %）</th><th>产品收益率<br>（含税 %）</th><th>增值税率<br>（%）</th><th>增值税附加<br>税率（%）</th>
+<th>增值税<br>（%）</th><th>附加税<br>（%）</th><th>税后产品<br>收益率（%）</th>
+</tr>
+</thead>
+<tbody>
+<tr data-name="光大"><td class="name">光大</td>
+<td><input type="number" step="0.0001" value="5.98"></td>
+<td><input type="number" step="0.0001" value="5.50"></td>
+<td><input type="number" step="0.0001" value="3" class="fixed"></td>
+<td><input type="number" step="0.0001" value="10"></td>
+<td class="out"></td><td class="out"></td><td class="final"></td></tr>
+<tr data-name="海保"><td class="name">海保</td>
+<td><input type="number" step="0.0001" value="6.30"></td>
+<td><input type="number" step="0.0001" value="5.50"></td>
+<td><input type="number" step="0.0001" value="3" class="fixed"></td>
+<td><input type="number" step="0.0001" value="10"></td>
+<td class="out"></td><td class="out"></td><td class="final"></td></tr>
+<tr data-name="恒邦"><td class="name">恒邦</td>
+<td><input type="number" step="0.0001" value="3.30"></td>
+<td><input type="number" step="0.0001" value="3.1135"></td>
+<td><input type="number" step="0.0001" value="3" class="fixed"></td>
+<td><input type="number" step="0.0001" value="12"></td>
+<td class="out"></td><td class="out"></td><td class="final"></td></tr>
+</tbody>
+</table>
+<div style="margin-top:12px">
+<button id="addRow">+ 新增产品</button>
+<button id="reset" class="ghost">恢复默认（光大/海保/恒邦）</button>
+</div>
+</div>
+
+<div class="card">
+<h2>口径说明</h2>
+<ul class="tips">
+<li><b>增值税</b> = 增值税率 ÷ (1 + 增值税率) × 投资收益率（含税）——财税〔2017〕56 号，资管产品运营应税行为按简易计税 3% 价税分离，由产品财产列支。</li>
+<li><b>附加税</b> = 增值税 × 附加税率（光大/海保 10%；恒邦 12%，含城建/教育/地方教育，异地受托人按当地标准）。</li>
+<li><b>税后产品收益率</b> = 产品收益率（含税）− 增值税 − 附加税。</li>
+<li>投资收益率与产品收益率之差即产品自身的费用损耗，不在本表逐项展开；逐项费用（认购费/管理费/托管费/销售服务费）及<b>企业所得税</b>见下方完整版计算表。</li>
+</ul>
+<div class="dl">📥 下载完整版（含费用明细 + 所得税，Excel 公式自动算）：
+<a href="信托税后收益率计算表.xlsx" download>信托税后收益率计算表.xlsx</a></div>
+</div>
+</div>
+
+<script>
+// 增值税 = 增值税率/(1+增值税率) × 投资收益率(含税)
+// 附加税 = 增值税 × 附加税率
+// 税后产品收益率 = 产品收益率 − 增值税 − 附加税
+function calcRow(tr) {
+  var inputs = tr.querySelectorAll('input');
+  var inv = parseFloat(inputs[0].value);   // 投资收益率（含税 %）
+  var prod = parseFloat(inputs[1].value);  // 产品收益率（含税 %）
+  var vat = parseFloat(inputs[2].value);   // 增值税率（%）
+  var sur = parseFloat(inputs[3].value);   // 附加税率（%）
+  var cells = tr.querySelectorAll('td');
+  if ([inv, prod, vat, sur].some(isNaN)) {
+    cells[5].textContent = cells[6].textContent = cells[7].textContent = '—';
+    return;
+  }
+  var vatAmt = vat / (100 + vat) * inv;    // 价税分离后的增值税（百分点）
+  var surAmt = vatAmt * sur / 100;
+  var after = prod - vatAmt - surAmt;
+  cells[5].textContent = vatAmt.toFixed(4);
+  cells[6].textContent = surAmt.toFixed(4);
+  cells[7].textContent = after.toFixed(4);
+}
+function calcAll() {
+  document.querySelectorAll('#calc tbody tr').forEach(calcRow);
+}
+document.querySelectorAll('#calc tbody').forEach(function (tbody) {
+  tbody.addEventListener('input', function (e) {
+    if (e.target.tagName === 'INPUT') calcRow(e.target.closest('tr'));
+  });
+});
+document.getElementById('addRow').addEventListener('click', function () {
+  var tbody = document.querySelector('#calc tbody');
+  var tr = document.createElement('tr');
+  tr.innerHTML = '<td class="name" contenteditable="true">新产品</td>' +
+    '<td><input type="number" step="0.0001" value="5.00"></td>' +
+    '<td><input type="number" step="0.0001" value="4.50"></td>' +
+    '<td><input type="number" step="0.0001" value="3"></td>' +
+    '<td><input type="number" step="0.0001" value="10"></td>' +
+    '<td class="out"></td><td class="out"></td><td class="final"></td>';
+  tbody.appendChild(tr);
+  calcRow(tr);
+});
+document.getElementById('reset').addEventListener('click', function () { location.reload(); });
+calcAll();
+</script>
+</body>
+</html>

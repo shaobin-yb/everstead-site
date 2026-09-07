@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EVERSTEAD · 成果展示平台</title>
+<style>
+/* ============================================================
+   EVERSTEAD 科技感展示平台 · v1.0
+   深空底 + 粒子星座 + 雷达扫描 + 玻璃拟态卡片
+   零外部依赖(无 CDN)，GitHub Pages 国内直连友好
+   卡片区由 publish.py 注入 <!--CARDS-->
+   ============================================================ */
+:root{
+  --bg:#03060c;
+  --bg2:#071021;
+  --panel:rgba(10,20,38,.55);
+  --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --violet:#8b5cf6;
+  --text:#e2ecf7;
+  --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+
+/* ---- 背景层: 深空渐变 + 网格 ---- */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
+    var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+}
+/* 粒子星座画布 */
+#particles{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+/* ---- 扫描线纹理 ---- */
+.scanline{
+  position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,.008) 2px 3px);
+}
+
+/* ---- 页面主体 ---- */
+.wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 56px}
+
+/* ---- 顶栏 ---- */
+.topbar{
+  display:flex;align-items:center;gap:14px;
+  padding:22px 0 0;
+}
+.topbar .logo{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:19px;color:#03101f;
+  box-shadow:var(--glow);
+  font-family:var(--mono);
+}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.28em;font-size:15px}
+.topbar .brand em{font-style:normal;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.status{
+  margin-left:auto;display:flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;
+  background:rgba(10,20,38,.4);
+}
+.status .dot{
+  width:7px;height:7px;border-radius:50%;background:#34d399;
+  box-shadow:0 0 8px #34d399;
+  animation:blink 2.2s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ---- Hero ---- */
+.hero{position:relative;padding:72px 0 56px}
+.hero .kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.34em;color:var(--cyan);
+  margin-bottom:18px;text-transform:uppercase;
+  animation:fadeUp .7s ease-out both;
+}
+.hero .kicker::before{content:'// ';opacity:.6}
+.hero h1{
+  font-size:clamp(38px,7vw,64px);line-height:1.12;font-weight:800;
+  letter-spacing:.02em;
+  background:linear-gradient(92deg,#e8f6ff 8%,var(--cyan) 38%,var(--blue) 62%,var(--violet) 92%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 26px rgba(34,211,238,.22));
+  animation:fadeUp .7s .08s ease-out both;
+}
+.hero .desc{
+  margin-top:20px;font-size:15px;color:var(--muted);line-height:1.9;max-width:560px;
+  animation:fadeUp .7s .16s ease-out both;
+}
+.hero .desc b{color:var(--text);font-weight:600}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* ---- 雷达扫描(hero 右侧装饰) ---- */
+.radar{
+  position:absolute;right:-40px;top:34px;
+  width:340px;height:340px;pointer-events:none;
+  animation:fadeUp .7s .24s ease-out both;
+}
+.radar .ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:1px solid rgba(56,189,248,.14);
+}
+.radar .ring.r2{inset:22%;border-color:rgba(56,189,248,.2)}
+.radar .ring.r3{inset:44%;border-color:rgba(139,92,246,.22)}
+.radar .cross-h{position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(56,189,248,.1)}
+.radar .cross-v{position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(56,189,248,.1)}
+.radar .sweep{
+  position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg, rgba(34,211,238,.4), rgba(34,211,238,.05) 14%, transparent 34%);
+  animation:sweep 4.2s linear infinite;
+}
+.radar .blip{
+  position:absolute;width:5px;height:5px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 10px var(--cyan);
+  animation:blip 3.6s ease-in-out infinite;
+}
+.radar .blip.b2{animation-delay:1.2s}
+.radar .blip.b3{animation-delay:2.4s}
+@keyframes sweep{to{transform:rotate(360deg)}}
+@keyframes blip{0%,100%{opacity:.15}45%,55%{opacity:1}}
+@media (max-width:900px){.radar{display:none}}
+
+/* ---- 数据条 ---- */
+.stats{
+  display:flex;gap:14px;flex-wrap:wrap;
+  animation:fadeUp .7s .3s ease-out both;
+}
+.stat{
+  flex:1;min-width:150px;
+  border:1px solid var(--line);border-radius:12px;
+  background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:16px 20px;position:relative;overflow:hidden;
+}
+.stat::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(var(--cyan),transparent);
+}
+.stat .v{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--cyan);
+  font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(34,211,238,.4)}
+.stat .k{margin-top:4px;font-size:12px;color:var(--muted);letter-spacing:.08em}
+
+/* ---- 成果卡片区 ---- */
+.section{margin-top:64px}
+.section-head{
+  display:flex;align-items:center;gap:12px;margin-bottom:26px;
+  animation:fadeUp .7s .34s ease-out both;
+}
+.section-head .bar{width:4px;height:22px;border-radius:2px;
+  background:linear-gradient(var(--cyan),var(--violet));box-shadow:var(--glow)}
+.section-head h2{font-size:19px;letter-spacing:.12em;font-weight:700}
+.section-head .en{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.22em;margin-top:2px}
+.section-head .count{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted);
+  border:1px solid var(--line);padding:4px 12px;border-radius:999px}
+
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;
+}
+.card{
+  position:relative;display:block;
+  border:1px solid var(--line);border-radius:14px;
+  background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:22px 22px 18px;
+  transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
+  animation:fadeUp .6s ease-out both;
+  overflow:hidden;
+}
+/* 顶部辉光扫描线(悬停) */
+.card::before{
+  content:'';position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:0;transition:opacity .25s;
+}
+.card::after{
+  content:'';position:absolute;left:20%;right:20%;top:0;height:1px;
+  background:rgba(255,255,255,.5);
+  transform:translateX(-160%);
+  transition:transform .5s ease;
+}
+.card:hover{
+  transform:translateY(-5px);
+  border-color:var(--line-strong);
+  background:var(--panel-hover);
+  box-shadow:0 10px 40px rgba(0,0,0,.5), var(--glow);
+}
+.card:hover::before{opacity:1}
+.card:hover::after{transform:translateX(160%)}
+/* 四角科技括号 */
+.card .corner{position:absolute;width:12px;height:12px;border:1px solid var(--cyan);
+  opacity:0;transition:opacity .25s;pointer-events:none}
+.card .corner.c1{top:6px;left:6px;border-right:none;border-bottom:none}
+.card .corner.c2{top:6px;right:6px;border-left:none;border-bottom:none}
+.card .corner.c3{bottom:6px;left:6px;border-right:none;border-top:none}
+.card .corner.c4{bottom:6px;right:6px;border-left:none;border-top:none}
+.card:hover .corner{opacity:.9}
+
+.card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.card-ico{
+  width:42px;height:42px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  border:1px solid var(--line-strong);
+  background:linear-gradient(160deg, rgba(34,211,238,.14), rgba(139,92,246,.14));
+}
+.card-tag{
+  margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  border:1px solid var(--line);color:var(--cyan);border-radius:999px;padding:3px 10px;
+}
+.card .t{font-size:15.5px;font-weight:700;line-height:1.55}
+.card .d{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:12px;
+  display:flex;align-items:center;gap:8px}
+.card .d::before{content:'';width:14px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
+.card .arrow{
+  position:absolute;right:20px;bottom:16px;color:var(--cyan);font-size:15px;
+  opacity:0;transform:translateX(-6px);transition:all .25s;
+}
+.card:hover .arrow{opacity:1;transform:none}
+
+/* 卡片类型配色变体 */
+.card[data-type="radar"] .card-ico{background:linear-gradient(160deg, rgba(34,211,238,.2), rgba(59,130,246,.14))}
+.card[data-type="report"] .card-ico{background:linear-gradient(160deg, rgba(139,92,246,.2), rgba(59,130,246,.12))}
+.card[data-type="tool"] .card-ico{background:linear-gradient(160deg, rgba(52,211,153,.2), rgba(34,211,238,.12))}
+.card[data-type="radar"] .card-tag{color:#7dd3fc}
+.card[data-type="report"] .card-tag{color:#c4b5fd}
+.card[data-type="tool"] .card-tag{color:#6ee7b7}
+
+/* ---- 页脚 ---- */
+.footer{
+  margin-top:84px;padding-top:26px;border-top:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);
+}
+.footer .dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);
+  box-shadow:0 0 6px var(--cyan);animation:blink 2.2s ease-in-out infinite}
+.footer .sep{opacity:.4}
+
+@media (max-width:640px){
+  .wrap{padding:0 16px 40px}
+  .hero{padding:48px 0 36px}
+  .status{display:none}
+  .grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<canvas id="particles"></canvas>
+<div class="scanline"></div>
+
+<div class="wrap">
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <div class="logo">E</div>
+    <div class="brand"><em>EVERSTEAD</em></div>
+    <div class="status"><span class="dot"></span>SYSTEM ONLINE</div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="kicker">Data Intelligence Workspace</div>
+    <h1>成果展示平台</h1>
+    <p class="desc">
+      这里集中归档<b>老板与铁蛋</b>的日常工作成果 ——
+      客户情报雷达、行业调研报告、数据工具与专题研究。
+      每一项成果都是真实数据驱动的产出，持续更新中。
+    </p>
+    <div class="radar" aria-hidden="true">
+      <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+      <div class="cross-h"></div><div class="cross-v"></div>
+      <div class="sweep"></div>
+      <div class="blip" style="left:68%;top:30%"></div>
+      <div class="blip b2" style="left:24%;top:62%"></div>
+      <div class="blip b3" style="left:52%;top:76%"></div>
+    </div>
+  </section>
+
+  <!-- 数据条 -->
+  <section class="stats">
+    <div class="stat"><div class="v">{{TOTAL}}</div><div class="k">归档成果</div></div>
+    <div class="stat"><div class="v">{{RADAR_COUNT}}</div><div class="k">雷达 / 站点</div></div>
+    <div class="stat"><div class="v">{{REPORT_COUNT}}</div><div class="k">专题报告</div></div>
+    <div class="stat"><div class="v">{{LAST_DATE}}</div><div class="k">最近更新</div></div>
+  </section>
+
+  <!-- 成果卡片 -->
+  <section class="section">
+    <div class="section-head">
+      <div class="bar"></div>
+      <div>
+        <h2>成果展厅</h2>
+        <div class="en">ARTIFACT GALLERY</div>
+      </div>
+      <div class="count">{{TOTAL}} ITEMS</div>
+    </div>
+    <div class="grid">
+      <!--CARDS-->
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="footer">
+    <span class="dot"></span>
+    <span>EVERSTEAD · 2026</span>
+    <span class="sep">|</span>
+    <span>日常成果归档 · 持续更新</span>
+    <span class="sep">|</span>
+    <span>everstead.cn</span>
+  </footer>
+</div>
+
+<script>
+/* ---- 粒子星座背景 ---- */
+(function(){
+  var cv=document.getElementById('particles'),ctx=cv.getContext('2d');
+  var W,H,pts=[],N=0,mouse={x:-9999,y:-9999};
+  function resize(){
+    W=cv.width=innerWidth;H=cv.height=innerHeight;
+    N=Math.min(90,Math.max(40,Math.round(W*H/22000)));
+    pts=[];
+    for(var i=0;i<N;i++)pts.push({x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+.6});
+  }
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    var LINK=130;
+    for(var i=0;i<N;i++){
+      var p=pts[i];
+      if(!reduced){p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0||p.x>W)p.vx*=-1;
+        if(p.y<0||p.y>H)p.vy*=-1;}
+      var md=p.r*1.2;
+      var dm=Math.hypot(p.x-mouse.x,p.y-mouse.y);
+      if(dm<160){ctx.strokeStyle='rgba(34,211,238,'+(0.5*(1-dm/160)).toFixed(3)+')';
+        ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke();}
+      ctx.beginPath();ctx.arc(p.x,p.y,md,0,6.2832);
+      ctx.fillStyle='rgba(148,205,255,.8)';ctx.fill();
+    }
+    for(var a=0;a<N;a++)for(var b=a+1;b<N;b++){
+      var dx=pts[a].x-pts[b].x,dy=pts[a].y-pts[b].y,d=dx*dx+dy*dy;
+      if(d<LINK*LINK){
+        ctx.strokeStyle='rgba(56,189,248,'+(0.13*(1-d/(LINK*LINK))).toFixed(3)+')';
+        ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(pts[a].x,pts[a].y);ctx.lineTo(pts[b].x,pts[b].y);ctx.stroke();
+      }
+    }
+    if(!reduced)requestAnimationFrame(tick);
+  }
+  resize();addEventListener('resize',resize);
+  addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
+  tick();
+})();
+</script>
+</body>
+</html>

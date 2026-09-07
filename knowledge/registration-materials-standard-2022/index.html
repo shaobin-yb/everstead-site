@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品登记材料规范(2022版) · 知识库</title>
+<link rel="stylesheet" href="../../zy-tech.css">
+</head>
+<body>
+<div class="kb-bread"><a href="../../index.html">成果站</a> / <a href="../index.html">知识库</a> / 条目</div>
+<h1 class="kb-h1">产品登记材料规范(2022版)</h1>
+<div class="kb-infoline"><a class="kb-chip" href="../index.html">保险债权投资计划</a><span class="kb-chip">文档</span><span class="kb-chip">2026-09-07</span><span class="kb-chip">登记材料</span><span class="kb-chip">规范</span></div>
+<div class="kb-fileline">6.产品登记材料规范-2022版.docx · 70 KB</div>
+<a class="kb-btn" href="../files/registration-materials-standard-2022/6.%E4%BA%A7%E5%93%81%E7%99%BB%E8%AE%B0%E6%9D%90%E6%96%99%E8%A7%84%E8%8C%83-2022%E7%89%88.docx" download>⬇ 下载原文件</a>
+<div class="viewer"><img id="pg" src="../pages/registration-materials-standard-2022/p001.jpg" alt="产品登记材料规范(2022版)"></div><div class="viewer-nav"><button class="viewer-btn" id="prev" onclick="go(i-1)">‹ 上一页</button><span class="viewer-pg" id="ind">1 / 44</span><button class="viewer-btn" id="next" onclick="go(i+1)">下一页 ›</button></div><script>
+const PAGES = ["../pages/registration-materials-standard-2022/p001.jpg", "../pages/registration-materials-standard-2022/p002.jpg", "../pages/registration-materials-standard-2022/p003.jpg", "../pages/registration-materials-standard-2022/p004.jpg", "../pages/registration-materials-standard-2022/p005.jpg", "../pages/registration-materials-standard-2022/p006.jpg", "../pages/registration-materials-standard-2022/p007.jpg", "../pages/registration-materials-standard-2022/p008.jpg", "../pages/registration-materials-standard-2022/p009.jpg", "../pages/registration-materials-standard-2022/p010.jpg", "../pages/registration-materials-standard-2022/p011.jpg", "../pages/registration-materials-standard-2022/p012.jpg", "../pages/registration-materials-standard-2022/p013.jpg", "../pages/registration-materials-standard-2022/p014.jpg", "../pages/registration-materials-standard-2022/p015.jpg", "../pages/registration-materials-standard-2022/p016.jpg", "../pages/registration-materials-standard-2022/p017.jpg", "../pages/registration-materials-standard-2022/p018.jpg", "../pages/registration-materials-standard-2022/p019.jpg", "../pages/registration-materials-standard-2022/p020.jpg", "../pages/registration-materials-standard-2022/p021.jpg", "../pages/registration-materials-standard-2022/p022.jpg", "../pages/registration-materials-standard-2022/p023.jpg", "../pages/registration-materials-standard-2022/p024.jpg", "../pages/registration-materials-standard-2022/p025.jpg", "../pages/registration-materials-standard-2022/p026.jpg", "../pages/registration-materials-standard-2022/p027.jpg", "../pages/registration-materials-standard-2022/p028.jpg", "../pages/registration-materials-standard-2022/p029.jpg", "../pages/registration-materials-standard-2022/p030.jpg", "../pages/registration-materials-standard-2022/p031.jpg", "../pages/registration-materials-standard-2022/p032.jpg", "../pages/registration-materials-standard-2022/p033.jpg", "../pages/registration-materials-standard-2022/p034.jpg", "../pages/registration-materials-standard-2022/p035.jpg", "../pages/registration-materials-standard-2022/p036.jpg", "../pages/registration-materials-standard-2022/p037.jpg", "../pages/registration-materials-standard-2022/p038.jpg", "../pages/registration-materials-standard-2022/p039.jpg", "../pages/registration-materials-standard-2022/p040.jpg", "../pages/registration-materials-standard-2022/p041.jpg", "../pages/registration-materials-standard-2022/p042.jpg", "../pages/registration-materials-standard-2022/p043.jpg", "../pages/registration-materials-standard-2022/p044.jpg"];
+let i = 0;
+const img = document.getElementById('pg');
+const ind = document.getElementById('ind');
+const prevB = document.getElementById('prev');
+const nextB = document.getElementById('next');
+function go(n){
+  if(n < 0 || n >= PAGES.length) return;
+  i = n;
+  img.src = PAGES[i];
+  ind.textContent = (i+1) + ' / ' + PAGES.length;
+  prevB.classList.toggle('off', i === 0);
+  nextB.classList.toggle('off', i === PAGES.length-1);
+  if(i+1 < PAGES.length){ new Image().src = PAGES[i+1]; }
+  if(i-1 >= 0){ new Image().src = PAGES[i-1]; }
+}
+document.addEventListener('keydown', function(e){
+  if(e.key === 'ArrowRight' || e.key === 'PageDown'){ go(i+1); }
+  if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ go(i-1); }
+});
+let tx = null;
+document.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive: true});
+document.addEventListener('touchend', function(e){
+  if(tx === null) return;
+  const dx = e.changedTouches[0].clientX - tx; tx = null;
+  if(Math.abs(dx) > 50){ go(i + (dx < 0 ? 1 : -1)); }
+}, {passive: true});
+</script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+{
+  "version": 1,
+  "topics": [
+    {
+      "slug": "insurance-debt",
+      "name": "保险债权投资计划",
+      "desc": "保债计划合规、登记与监管制度文件汇编",
+      "order": 1
+    }
+  ],
+  "items": [
+    {
+      "slug": "compliance-assessment-table",
+      "topic": "insurance-debt",
+      "title": "保债计划合规性评估表",
+      "type": "doc",
+      "date": "2026-09-07",
+      "desc": "债权投资计划合规性评估工具表",
+      "tags": [
+        "合规",
+        "评估"
+      ],
+      "original": "0.保债计划-合规性评估表.doc",
+      "file": "0.保债计划-合规性评估表.doc",
+      "size": 100864,
+      "pages": 5,
+      "url": null
+    },
+    {
+      "slug": "order-2-infrastructure-measures",
+      "topic": "insurance-debt",
+      "title": "2号令:保险资金间接投资基础设施项目管理办法",
+      "type": "doc",
+      "date": "2026-09-07",
+      "desc": "保监会2号令,保险资金间接投资基础设施项目的监管办法原文",
+      "tags": [
+        "监管",
+        "2号令"
+      ],
+      "original": "1.2号令-保险资金间接投资基础设施项目管理办法.docx",
+      "file": "1.2号令-保险资金间接投资基础设施项目管理办法.docx",
+      "size": 36421,
+      "pages": 25,
+      "url": null
+    },
+    {
+      "slug": "csic-registration-standard-2022",
+      "topic": "insurance-debt",
+      "title": "中资协产品登记材料规范(2022年修订)",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "中资协产品管理指引第1号:产品登记材料规范2022修订版",
+      "tags": [
+        "中资协",
+        "登记材料"
+      ],
+      "original": "12. 20220819（中资协）关于印发《产品管理指引第1号：产品登记材料规范（2022年修订）》的通知.pdf",
+      "file": "12. 20220819（中资协）关于印发《产品管理指引第1号：产品登记材料规范（2022年修订）》的通知.pdf",
+      "size": 1309093,
+      "pages": 42,
+      "url": null
+    },
+    {
+      "slug": "implementation-rules-key-points",
+      "topic": "insurance-debt",
+      "title": "债权投资计划实施细则要点分析(王少斌)",
+      "type": "doc",
+      "date": "2026-09-07",
+      "desc": "王少斌对债权投资计划实施细则的要点分析",
+      "tags": [
+        "分析",
+        "要点"
+      ],
+      "original": "2.《债权投资计划实施细则》要点分析-王少斌.docx",
+      "file": "2.《债权投资计划实施细则》要点分析-王少斌.docx",
+      "size": 60175,
+      "pages": 13,
+      "url": null
+    },
+    {
+      "slug": "order-80-real-estate-measures",
+      "topic": "insurance-debt",
+      "title": "80号文:保险资金投资不动产暂行办法",
+      "type": "doc",
+      "date": "2026-09-07",
+      "desc": "保险资金投资不动产的监管办法原文",
+      "tags": [
+        "监管",
+        "80号文"
+      ],
+      "original": "3.80号文-保险资金投资不动产暂行办法.docx",
+      "file": "3.80号文-保险资金投资不动产暂行办法.docx",
+      "size": 27699,
+      "pages": 15,
+      "url": null
+    },
+    {
+      "slug": "registration-guidance-no1-2023",
+      "topic": "insurance-debt",
+      "title": "债权投资计划登记业务指引(第1号)(2023年版)",
+      "type": "doc",
+      "date": "2026-09-07",
+      "desc": "债权投资计划登记业务指引2023年版",
+      "tags": [
+        "登记",
+        "业务指引"
+      ],
+      "original": "4. 关于印发《债权投资计划登记业务指引（第1号）（2023年版）》的通知.docx",
+      "file": "4. 关于印发《债权投资计划登记业务指引（第1号）（2023年版）》的通知.docx",
+      "size": 67681,
+      "pages": 13,
+      "url": null
+    },
+    {
+      "slug": "registration-management-rules",
+      "topic": "insurance-debt",
+      "title": "债权投资计划及股权投资计划产品登记管理规则",
+      "type": "doc",
+      "date": "2026-09-07",
+      "desc": "债权投资计划与股权投资计划产品登记管理规则原文",
+      "tags": [
+        "登记",
+        "管理规则"
+      ],
+      "original": "5.关于印发债权投资计划及股权投资计划产品登记管理规则的通知.docx",
+      "file": "5.关于印发债权投资计划及股权投资计划产品登记管理规则的通知.docx",
+      "size": 58409,
+      "pages": 10,
+      "url": null
+    },
+    {
+      "slug": "registration-materials-standard-2022",
+      "topic": "insurance-debt",
+      "title": "产品登记材料规范(2022版)",
+      "type": "doc",
+      "date": "2026-09-07",
+      "desc": "产品登记材料规范2022版原文",
+      "tags": [
+        "登记材料",
+        "规范"
+      ],
+      "original": "6.产品登记材料规范-2022版.docx",
+      "file": "6.产品登记材料规范-2022版.docx",
+      "size": 72075,
+      "pages": 44,
+      "url": null
+    },
+    {
+      "slug": "prospectus-disclosure-guidance",
+      "topic": "insurance-debt",
+      "title": "募集说明书信息披露指引(附件2)",
+      "type": "doc",
+      "date": "2026-09-07",
+      "desc": "债权投资计划募集说明书信息披露指引",
+      "tags": [
+        "信息披露",
+        "募集说明书"
+      ],
+      "original": "8.附件2：债权投资计划募集说明书信息披露指引.docx",
+      "file": "8.附件2：债权投资计划募集说明书信息披露指引.docx",
+      "size": 20817,
+      "pages": 11,
+      "url": null
+    },
+    {
+      "slug": "registration-qna-vol6",
+      "topic": "insurance-debt",
+      "title": "债权投资计划注册系列问题与解答(第六期)",
+      "type": "xls",
+      "date": "2026-09-07",
+      "desc": "债权投资计划注册常见问题与官方解答第六期",
+      "tags": [
+        "问答",
+        "注册"
+      ],
+      "original": "9.债权投资计划注册系列问题与解答-第六期.xlsx",
+      "file": "9.债权投资计划注册系列问题与解答-第六期.xlsx",
+      "size": 23946,
+      "pages": 5,
+      "url": null
+    },
+    {
+      "slug": "supervision-letter-2024",
+      "topic": "insurance-debt",
+      "title": "关于进一步加强保险资管公司债权投资计划规范管理有关要求的函",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "监管关于加强保债计划规范管理的函",
+      "tags": [
+        "监管",
+        "规范管理"
+      ],
+      "original": "关于进一步加强保险资管公司债权投资计划规范管理有关要求的函(2).pdf",
+      "file": "关于进一步加强保险资管公司债权投资计划规范管理有关要求的函(2).pdf",
+      "size": 697507,
+      "pages": 2,
+      "url": null
+    },
+    {
+      "slug": "capital-guofa-26",
+      "topic": "insurance-debt",
+      "title": "资本金-国发26号",
+      "type": "doc",
+      "date": "2026-09-07",
+      "desc": "国发26号文:资本金相关要求",
+      "tags": [
+        "国发文",
+        "资本金"
+      ],
+      "original": "资本金-国发26号.docx",
+      "file": "资本金-国发26号.docx",
+      "size": 17542,
+      "pages": 3,
+      "url": null
+    },
+    {
+      "slug": "debt-plan-internal-exchange",
+      "topic": "insurance-debt",
+      "title": "债权投资计划内部交流(王少斌)",
+      "type": "ppt",
+      "date": "2026-09-07",
+      "desc": "债权投资计划业务内部交流材料,含全套演示文稿",
+      "tags": [
+        "内部交流",
+        "业务培训"
+      ],
+      "original": "0.债权投资计划内部交流-王少斌.pptx",
+      "file": "0.债权投资计划内部交流-王少斌.pptx",
+      "size": 16832184,
+      "pages": 33,
+      "url": null
+    }
+  ]
+}

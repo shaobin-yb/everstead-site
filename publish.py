@@ -9,6 +9,7 @@ everstead 成果站发布脚本
 流程：md → html（内置轻量转换，无外部依赖）→ 重建 index.html 成果列表
       → git add/commit/push（GitHub Pages 自动发布）
 """
+import json
 import re
 import sys
 import subprocess
@@ -33,6 +34,8 @@ ROOT_ARTIFACTS = [
      "按省/公司分级的公告雷达站点，381 家公司明细"),
     ("上市公司购买理财产品情况", "上市公司购买理财产品情况.html", "2026-08-31", "📊", "report",
      "上市公司闲置资金理财公告全景统计"),
+    ("知识库", "knowledge/index.html", "2026-09-07", "📚", "knowledge",
+     "PPT/PDF 翻页预览 + 原文件下载，按主题归档"),
 ]
 
 PAGE_CSS = """
@@ -154,6 +157,20 @@ def build_report(md_file: Path) -> None:
     print(f"[build] {md_file.name} → html")
 
 
+def load_kb_stats() -> tuple[int, str]:
+    """读知识库 manifest: 返回(条目数, 最新日期); 不存在返回 (0, "")。"""
+    kb_manifest = SITE / "knowledge" / "manifest.json"
+    if not kb_manifest.exists():
+        return 0, ""
+    try:
+        m = json.loads(kb_manifest.read_text(encoding="utf-8"))
+        items = m.get("items", [])
+        latest = max((it.get("date", "") for it in items), default="")
+        return len(items), latest
+    except Exception:
+        return 0, ""
+
+
 def build_index(reports: list) -> None:
     """从 index-template.html 科技感模板渲染首页(注入卡片 + 统计)。"""
     tpl = SITE / "index-template.html"
@@ -162,6 +179,7 @@ def build_index(reports: list) -> None:
         print("[warn] index-template.html 不存在, 跳过首页重建")
         return
     html = tpl.read_text(encoding="utf-8")
+    kb_count, kb_date = load_kb_stats()
 
     def card(name, href, date, icon, kind, desc, delay):
         return (f'<a class="card" data-type="{kind}" style="animation-delay:{delay:.2f}s" '
@@ -178,6 +196,8 @@ def build_index(reports: list) -> None:
     cards, delay = [], 0.35
     for name, path, date, icon, kind, desc in ROOT_ARTIFACTS:
         if (SITE / path).exists():
+            if kind == "knowledge" and kb_date:
+                date = kb_date  # 知识库卡片日期取最新条目日期
             cards.append(card(name, path, date, icon, kind, desc, delay))
             delay += 0.06
     for f in reports:
@@ -199,6 +219,7 @@ def build_index(reports: list) -> None:
                 .replace("{{TOTAL}}", str(total))
                 .replace("{{RADAR_COUNT}}", str(radar_n))
                 .replace("{{REPORT_COUNT}}", str(report_n))
+                .replace("{{KB_COUNT}}", str(kb_count))
                 .replace("{{LAST_DATE}}", last_date))
     (SITE / "index.html").write_text(html, encoding="utf-8")
     print(f"[build] index.html ({total} 个成果卡片, 最近更新 {last_date})")

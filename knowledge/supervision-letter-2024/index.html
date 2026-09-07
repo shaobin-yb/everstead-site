@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于进一步加强保险资管公司债权投资计划规范管理有关要求的函 · 知识库</title>
+<link rel="stylesheet" href="../../zy-tech.css">
+</head>
+<body>
+<div class="kb-bread"><a href="../../index.html">成果站</a> / <a href="../index.html">知识库</a> / 条目</div>
+<h1 class="kb-h1">关于进一步加强保险资管公司债权投资计划规范管理有关要求的函</h1>
+<div class="kb-infoline"><a class="kb-chip" href="../index.html">保险债权投资计划</a><span class="kb-chip">PDF</span><span class="kb-chip">2026-09-07</span><span class="kb-chip">监管</span><span class="kb-chip">规范管理</span></div>
+<div class="kb-fileline">关于进一步加强保险资管公司债权投资计划规范管理有关要求的函(2).pdf · 681 KB</div>
+<a class="kb-btn" href="../files/supervision-letter-2024/%E5%85%B3%E4%BA%8E%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%8A%A0%E5%BC%BA%E4%BF%9D%E9%99%A9%E8%B5%84%E7%AE%A1%E5%85%AC%E5%8F%B8%E5%80%BA%E6%9D%83%E6%8A%95%E8%B5%84%E8%AE%A1%E5%88%92%E8%A7%84%E8%8C%83%E7%AE%A1%E7%90%86%E6%9C%89%E5%85%B3%E8%A6%81%E6%B1%82%E7%9A%84%E5%87%BD%282%29.pdf" download>⬇ 下载原文件</a>
+<div class="viewer"><img id="pg" src="../pages/supervision-letter-2024/p001.jpg" alt="关于进一步加强保险资管公司债权投资计划规范管理有关要求的函"></div><div class="viewer-nav"><button class="viewer-btn" id="prev" onclick="go(i-1)">‹ 上一页</button><span class="viewer-pg" id="ind">1 / 2</span><button class="viewer-btn" id="next" onclick="go(i+1)">下一页 ›</button></div><script>
+const PAGES = ["../pages/supervision-letter-2024/p001.jpg", "../pages/supervision-letter-2024/p002.jpg"];
+let i = 0;
+const img = document.getElementById('pg');
+const ind = document.getElementById('ind');
+const prevB = document.getElementById('prev');
+const nextB = document.getElementById('next');
+function go(n){
+  if(n < 0 || n >= PAGES.length) return;
+  i = n;
+  img.src = PAGES[i];
+  ind.textContent = (i+1) + ' / ' + PAGES.length;
+  prevB.classList.toggle('off', i === 0);
+  nextB.classList.toggle('off', i === PAGES.length-1);
+  if(i+1 < PAGES.length){ new Image().src = PAGES[i+1]; }
+  if(i-1 >= 0){ new Image().src = PAGES[i-1]; }
+}
+document.addEventListener('keydown', function(e){
+  if(e.key === 'ArrowRight' || e.key === 'PageDown'){ go(i+1); }
+  if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ go(i-1); }
+});
+let tx = null;
+document.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; }, {passive: true});
+document.addEventListener('touchend', function(e){
+  if(tx === null) return;
+  const dx = e.changedTouches[0].clientX - tx; tx = null;
+  if(Math.abs(dx) > 50){ go(i + (dx < 0 ? 1 : -1)); }
+}, {passive: true});
+</script>
+</body>
+</html>

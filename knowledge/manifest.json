@@ -482,6 +482,130 @@
       "size": 1047,
       "pages": 0,
       "url": null
+    },
+    {
+      "slug": "gaoshanwen-2022-07",
+      "topic": "stay-foolish",
+      "title": "高善文：吹尽狂沙始到金（2022-07）",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "安信证券高善文宏观演讲",
+      "tags": [
+        "宏观",
+        "高善文",
+        "演讲"
+      ],
+      "original": "高善文-吹尽狂沙始到金-220702.pdf",
+      "file": "高善文-吹尽狂沙始到金-220702.pdf",
+      "size": 1334175,
+      "pages": 33,
+      "url": null
+    },
+    {
+      "slug": "gaoshanwen-2024-05",
+      "topic": "stay-foolish",
+      "title": "高善文：奋楫逐浪天地宽（2024-05）",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "安信证券高善文宏观演讲",
+      "tags": [
+        "宏观",
+        "高善文",
+        "演讲"
+      ],
+      "original": "高善文-奋楫逐浪天地宽-240531.pdf",
+      "file": "高善文-奋楫逐浪天地宽-240531.pdf",
+      "size": 1481466,
+      "pages": 34,
+      "url": null
+    },
+    {
+      "slug": "gaoshanwen-2022-12",
+      "topic": "stay-foolish",
+      "title": "高善文：物转星移又一秋（2022-12）",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "安信证券高善文宏观演讲",
+      "tags": [
+        "宏观",
+        "高善文",
+        "演讲"
+      ],
+      "original": "高善文-物转星移又一秋-221220.pdf",
+      "file": "高善文-物转星移又一秋-221220.pdf",
+      "size": 1501230,
+      "pages": 32,
+      "url": null
+    },
+    {
+      "slug": "gaoshanwen-inflation-2022-11",
+      "topic": "stay-foolish",
+      "title": "高善文：中国通胀形成机制的几点观察（2022-11）",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "安信证券高善文宏观研究",
+      "tags": [
+        "宏观",
+        "高善文",
+        "通胀"
+      ],
+      "original": "高善文-中国通胀形成机制的几点观察-221114.pdf",
+      "file": "高善文-中国通胀形成机制的几点观察-221114.pdf",
+      "size": 937619,
+      "pages": 26,
+      "url": null
+    },
+    {
+      "slug": "reading-list-2026-09",
+      "topic": "stay-foolish",
+      "title": "阅读参考书目（2026-09）",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "阅读书目推荐清单",
+      "tags": [
+        "阅读",
+        "书单"
+      ],
+      "original": "阅读参考书目_V2026_09.pdf",
+      "file": "阅读参考书目_V2026_09.pdf",
+      "size": 412693,
+      "pages": 10,
+      "url": null
+    },
+    {
+      "slug": "zhu-rongji-biography",
+      "topic": "stay-foolish",
+      "title": "朱镕基传（第二版）",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "龙安志著，朱镕基与现代中国的转型",
+      "tags": [
+        "传记",
+        "历史"
+      ],
+      "original": "朱镕基传：朱镕基与现代中国的转型（第二版） (（美）龙安志（LaurenceJ.Brahm）著；丁力译).pdf",
+      "file": "朱镕基传：朱镕基与现代中国的转型（第二版） (（美）龙安志（LaurenceJ.Brahm）著；丁力译).pdf",
+      "size": 10518031,
+      "pages": 357,
+      "url": null
+    },
+    {
+      "slug": "world-investment-report-2026",
+      "topic": "stay-foolish",
+      "title": "2026年世界投资报告（英文）",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "UNCTAD 世界投资报告英文版",
+      "tags": [
+        "投资",
+        "联合国",
+        "外资"
+      ],
+      "original": "2026年世界投资报告（英）.pdf",
+      "file": "2026年世界投资报告（英）.pdf",
+      "size": 11926751,
+      "pages": 227,
+      "url": null
     }
   ]
 }

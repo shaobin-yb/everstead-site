@@ -20,6 +20,14 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 SITE = Path(__file__).parent
 REPORTS = SITE / "reports"
 
+# 站点根目录固定展品（不经过 md 转换，直接列出卡片）
+# 第三项为内容生成日期（拷贝会刷新 mtime，故固定写死，避免卡片日期失真）
+ROOT_ARTIFACTS = [
+    ("客户情报雷达 · 总览报告", "radar.html", "2026-09-03"),
+    ("客户情报雷达 · 分级站点", "radar-site/index.html", "2026-09-03"),
+    ("上市公司购买理财产品情况", "上市公司购买理财产品情况.html", "2026-08-31"),
+]
+
 PAGE_CSS = """
 body{font-family:'Microsoft YaHei',sans-serif;max-width:860px;margin:0 auto;padding:24px 20px 60px;color:#1f2937;background:#fff;line-height:1.7}
 h1{font-size:1.7em;border-bottom:2px solid #1a7f5c;padding-bottom:8px}
@@ -137,7 +145,11 @@ def build_report(md_file: Path) -> None:
 
 
 def build_index(reports: list) -> None:
-    items = "".join(
+    artifacts = "".join(
+        f'<a class="card" href="{path}"><div class="t">{name}</div>'
+        f'<div class="m">{date}</div></a>'
+        for name, path, date in ROOT_ARTIFACTS if (SITE / path).exists())
+    items = artifacts + "".join(
         f'<a class="card" href="reports/{f.stem}.html"><div class="t">{f.stem}</div>'
         f'<div class="m">{datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d")}</div></a>'
         for f in reports)

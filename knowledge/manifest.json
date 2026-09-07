@@ -19,13 +19,15 @@
       "slug": "ai",
       "name": "AI 学习",
       "desc": "AI 前沿与学习资料（stay hungry/ai 文件夹）",
-      "order": 3
+      "order": 3,
+      "collapsed": true
     },
     {
       "slug": "stay-foolish",
       "name": "stay foolish 投资研读",
       "desc": "投资与宏观经济研读（stay hungry/stay foolish 文件夹）",
-      "order": 4
+      "order": 4,
+      "collapsed": true
     }
   ],
   "items": [
@@ -252,7 +254,7 @@
     },
     {
       "slug": "claude-code-deepseek-guide",
-      "topic": "stay-hungry",
+      "topic": "ai",
       "title": "Claude Code + DeepSeek 安装指南",
       "type": "pdf",
       "date": "2026-09-07",
@@ -287,7 +289,7 @@
     },
     {
       "slug": "science-golden-age",
-      "topic": "stay-hungry",
+      "topic": "ai",
       "title": "科学：一个全新的黄金时代",
       "type": "pdf",
       "date": "2026-09-07",
@@ -305,7 +307,7 @@
     },
     {
       "slug": "ai-learning-hub",
-      "topic": "stay-hungry",
+      "topic": "ai",
       "title": "AI 时代三份重磅文档精读",
       "type": "html",
       "date": "2026-09-07",
@@ -339,7 +341,7 @@
     },
     {
       "slug": "waic-2026-speeches",
-      "topic": "stay-hungry",
+      "topic": "ai",
       "title": "2026 世界人工智能大会演讲全录",
       "type": "pdf",
       "date": "2026-09-07",
@@ -442,6 +444,42 @@
       "original": "debt-plan-company-annual.html",
       "file": "debt-plan-company-annual.html",
       "size": 21600,
+      "pages": 0,
+      "url": null
+    },
+    {
+      "slug": "industrial-ai-agent-report-2026",
+      "topic": "stay-foolish",
+      "title": "2026 工业 AI 智能体研究报告",
+      "type": "pdf",
+      "date": "2026-09-07",
+      "desc": "打造工厂原生的 AI 智能体",
+      "tags": [
+        "AI",
+        "工业",
+        "报告"
+      ],
+      "original": "2026工业AI智能体研究报告：打造工厂原生的AI智能体.pdf",
+      "file": "2026工业AI智能体研究报告：打造工厂原生的AI智能体.pdf",
+      "size": 16513784,
+      "pages": 41,
+      "url": null
+    },
+    {
+      "slug": "dept-kb-rag-service",
+      "topic": "ai",
+      "title": "部门知识库 RAG 服务接入说明",
+      "type": "md",
+      "date": "2026-09-07",
+      "desc": "MCP 配置 + 分数解读 + 办公内网边界（192.168.100.148:8100/sse）",
+      "tags": [
+        "部门",
+        "MCP",
+        "RAG"
+      ],
+      "original": "部门知识库-RAG服务.md",
+      "file": "部门知识库-RAG服务.md",
+      "size": 1047,
       "pages": 0,
       "url": null
     }

@@ -21,12 +21,18 @@ SITE = Path(__file__).parent
 REPORTS = SITE / "reports"
 
 # 站点根目录固定展品（不经过 md 转换，直接列出卡片）
-# 第三项为内容生成日期（拷贝会刷新 mtime，故固定写死，避免卡片日期失真）
+# 每项: (名称, 路径, 日期, 图标, 类型, 描述)
+# 类型: radar=雷达/站点  report=专题报告  tool=数据工具
+# 日期写死（拷贝会刷新 mtime，避免卡片日期失真）
 ROOT_ARTIFACTS = [
-    ("税后收益率计算表", "yield-calc.html", "2026-09-07"),
-    ("客户情报雷达 · 总览报告", "radar.html", "2026-09-03"),
-    ("客户情报雷达 · 分级站点", "radar-site/index.html", "2026-09-03"),
-    ("上市公司购买理财产品情况", "上市公司购买理财产品情况.html", "2026-08-31"),
+    ("税后收益率计算表", "yield-calc.html", "2026-09-07", "🧮", "tool",
+     "资管产品税后收益率一键计算"),
+    ("客户情报雷达 · 总览报告", "radar.html", "2026-09-03", "📡", "radar",
+     "巨潮每日公告抓取 + 受托方解析 + iFind 打分，客户线索早报"),
+    ("客户情报雷达 · 分级站点", "radar-site/index.html", "2026-09-03", "🗺️", "radar",
+     "按省/公司分级的公告雷达站点，381 家公司明细"),
+    ("上市公司购买理财产品情况", "上市公司购买理财产品情况.html", "2026-08-31", "📊", "report",
+     "上市公司闲置资金理财公告全景统计"),
 ]
 
 PAGE_CSS = """
@@ -146,34 +152,53 @@ def build_report(md_file: Path) -> None:
 
 
 def build_index(reports: list) -> None:
-    artifacts = "".join(
-        f'<a class="card" href="{path}"><div class="t">{name}</div>'
-        f'<div class="m">{date}</div></a>'
-        for name, path, date in ROOT_ARTIFACTS if (SITE / path).exists())
-    items = artifacts + "".join(
-        f'<a class="card" href="reports/{f.stem}.html"><div class="t">{f.stem}</div>'
-        f'<div class="m">{datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d")}</div></a>'
-        for f in reports)
-    html = (f"""<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>everstead · 成果站</title><style>
-body{{font-family:'Microsoft YaHei',sans-serif;background:#f6f8f7;margin:0;padding:48px 20px;color:#1f2937}}
-.wrap{{max-width:900px;margin:0 auto}}
-h1{{font-size:26px;color:#14532d;margin:0 0 4px}}
-.sub{{color:#6b7280;font-size:13px;margin-bottom:28px}}
-.grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}}
-a.card{{display:block;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:16px 18px;
-text-decoration:none;color:#1f2937;transition:all .15s}}
-a.card:hover{{border-color:#1a7f5c;box-shadow:0 3px 12px rgba(26,127,92,.12);transform:translateY(-2px)}}
-.t{{font-weight:700;font-size:15px;line-height:1.5}}
-.m{{font-size:12px;color:#9ca3af;margin-top:6px}}
-</style></head><body><div class="wrap">
-<h1>everstead · 成果站</h1>
-<div class="sub">日常成果归档 · 持续更新</div>
-<div class="grid">{items}</div>
-</div></body></html>""")
+    """从 index-template.html 科技感模板渲染首页(注入卡片 + 统计)。"""
+    tpl = SITE / "index-template.html"
+    if not tpl.exists():
+        # 模板缺失时仍保证可发布: 复制现有 index.html 作为模板(纯卡片增量的场景)
+        print("[warn] index-template.html 不存在, 跳过首页重建")
+        return
+    html = tpl.read_text(encoding="utf-8")
+
+    def card(name, href, date, icon, kind, desc, delay):
+        return (f'<a class="card" data-type="{kind}" style="animation-delay:{delay:.2f}s" '
+                f'href="{href}">'
+                f'<span class="corner c1"></span><span class="corner c2"></span>'
+                f'<span class="corner c3"></span><span class="corner c4"></span>'
+                f'<div class="card-top"><div class="card-ico">{icon}</div>'
+                f'<div class="card-tag">{kind.upper()}</div></div>'
+                f'<div class="t">{name}</div>'
+                f'<div class="m">{desc}</div>'
+                f'<div class="d">{date}</div>'
+                f'<span class="arrow">→</span></a>')
+
+    cards, delay = [], 0.35
+    for name, path, date, icon, kind, desc in ROOT_ARTIFACTS:
+        if (SITE / path).exists():
+            cards.append(card(name, path, date, icon, kind, desc, delay))
+            delay += 0.06
+    for f in reports:
+        rdate = datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d")
+        cards.append(card(f.stem, f"reports/{f.stem}.html", rdate,
+                          "📄", "report", "专题调研 · 工作汇报", delay))
+        delay += 0.06
+
+    total = len(cards)
+    radar_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "radar" and (SITE / a[1]).exists())
+    report_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "report" and (SITE / a[1]).exists()) + len(reports)
+    tool_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "tool" and (SITE / a[1]).exists())
+    last_date = max(
+        [a[2] for a in ROOT_ARTIFACTS if (SITE / a[1]).exists()]
+        + [datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d") for f in reports]
+    )
+
+    html = (html.replace("<!--CARDS-->", "\n".join(cards))
+                .replace("{{TOTAL}}", str(total))
+                .replace("{{RADAR_COUNT}}", str(radar_n))
+                .replace("{{REPORT_COUNT}}", str(report_n))
+                .replace("{{LAST_DATE}}", last_date))
     (SITE / "index.html").write_text(html, encoding="utf-8")
-    print(f"[build] index.html ({len(reports)} 篇成果)")
+    print(f"[build] index.html ({total} 个成果卡片, 最近更新 {last_date})")
 
 
 def main():

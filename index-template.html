@@ -229,8 +229,9 @@ a{text-decoration:none;color:inherit}
   border:1px solid var(--line);color:var(--cyan);border-radius:999px;padding:3px 10px;
 }
 .card .t{font-size:15.5px;font-weight:700;line-height:1.55}
-.card .d{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:12px;
-  display:flex;align-items:center;gap:8px}
+.card .m{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:7px}
+.card .d{font-family:var(--mono);font-size:12px;color:var(--cyan);margin-top:13px;
+  display:flex;align-items:center;gap:8px;opacity:.85}
 .card .d::before{content:'';width:14px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
 .card .arrow{
   position:absolute;right:20px;bottom:16px;color:var(--cyan);font-size:15px;
@@ -347,6 +348,7 @@ a{text-decoration:none;color:inherit}
   }
   var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function tick(){
+    if(W!==innerWidth||H!==innerHeight)resize();  /* 自愈: 隐藏标签页等首屏 0 尺寸场景 */
     ctx.clearRect(0,0,W,H);
     var LINK=130;
     for(var i=0;i<N;i++){

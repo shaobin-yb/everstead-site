@@ -358,6 +358,7 @@ a{text-decoration:none;color:inherit}
   }
   var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   function tick(){
+    if(W!==innerWidth||H!==innerHeight)resize();  /* 自愈: 隐藏标签页等首屏 0 尺寸场景 */
     ctx.clearRect(0,0,W,H);
     var LINK=130;
     for(var i=0;i<N;i++){

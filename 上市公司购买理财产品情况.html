@@ -4,65 +4,67 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>全国上市公司闲置资金理财情报 · 2026-08-31</title>
 <style>
-body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:#F5EEDC;
-color:#2B2012;margin:0;padding:0;line-height:1.6}
-.hd{background:#FDF6E8;border-bottom:2px solid #B08F1C;padding:10px 16px;
-position:sticky;top:0;z-index:9;box-shadow:0 2px 8px rgba(176,143,28,.12)}
-.hd .brand{font-size:11px;color:#8A6F45}
-.hd .ttl{font-size:17px;font-weight:700;color:#2B2012}
-.hd .sub{font-size:11px;color:#8A6F45}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:#03060c;
+background-image:radial-gradient(1100px 600px at 75% -10%,rgba(59,130,246,.14),transparent 60%),
+radial-gradient(900px 500px at -10% 110%,rgba(139,92,246,.10),transparent 60%);
+background-attachment:fixed;color:#e2ecf7;margin:0;padding:0;line-height:1.6}
+.hd{background:rgba(10,20,38,.92);border-bottom:1px solid rgba(56,189,248,.4);padding:10px 16px;
+position:sticky;top:0;z-index:9;backdrop-filter:blur(10px);
+box-shadow:0 2px 14px rgba(0,0,0,.5)}
+.hd .brand{font-size:11px;color:#7d92ad}
+.hd .ttl{font-size:17px;font-weight:700;color:#f0f7ff}
+.hd .sub{font-size:11px;color:#7d92ad}
 .wrap{max-width:900px;margin:0 auto;padding:14px 12px 60px}
-h1{font-size:20px;color:#B08F1C;margin:8px 0 2px}
-.sub{color:#8A6F45;font-size:12px;margin-bottom:16px}
-h2.region{font-size:13px;color:#8C2F22;border-bottom:1px solid #E8D9B6;
+h1{font-size:20px;color:#22d3ee;margin:8px 0 2px;text-shadow:0 0 14px rgba(34,211,238,.35)}
+.sub{color:#7d92ad;font-size:12px;margin-bottom:16px}
+h2.region{font-size:13px;color:#7dd3fc;border-bottom:1px solid rgba(56,189,248,.2);
 padding-bottom:5px;margin:18px 0 10px;letter-spacing:.1em}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-a.card{display:block;background:#FDF6E8;border:1px solid #E8D9B6;border-radius:8px;
-padding:10px 12px;text-decoration:none;color:#2B2012}
-a.card:active{border-color:#B08F1C}
+a.card{display:block;background:rgba(10,20,38,.55);border:1px solid rgba(56,189,248,.16);border-radius:8px;
+padding:10px 12px;text-decoration:none;color:#e2ecf7;transition:all .2s}
+a.card:hover{border-color:rgba(56,189,248,.5);box-shadow:0 4px 18px rgba(0,0,0,.5),0 0 16px rgba(34,211,238,.15);
+transform:translateY(-2px)}
 .card .name{font-weight:700;font-size:14px}
-.card .meta{font-size:11px;color:#8A6F45;margin-top:2px}
-.card.nat{background:linear-gradient(135deg,#FDF6E8,#F3E7CC);border-color:#B08F1C;
-margin-bottom:10px}
-.back{display:inline-block;font-size:12px;color:#96751A;text-decoration:none;
-margin-bottom:8px}
+.card .meta{font-size:11px;color:#7d92ad;margin-top:2px}
+.card.nat{background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(139,92,246,.12));
+border-color:rgba(56,189,248,.5);margin-bottom:10px}
+.back{display:inline-block;font-size:12px;color:#67e8f9;text-decoration:none;margin-bottom:8px}
 .stats{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.stats .c{flex:1;min-width:100px;background:#FDF6E8;border:1px solid #E8D9B6;
+.stats .c{flex:1;min-width:100px;background:rgba(10,20,38,.55);border:1px solid rgba(56,189,248,.16);
 border-radius:8px;padding:8px 12px;text-align:center}
-.stats .v{font-size:20px;font-weight:700;color:#B08F1C}
-.stats .k{font-size:11px;color:#8A6F45}
-.comp{border:1px solid #EDE3CE;border-radius:6px;margin-bottom:6px;background:#fff;
-overflow:hidden}
+.stats .v{font-size:20px;font-weight:700;color:#22d3ee;text-shadow:0 0 12px rgba(34,211,238,.35)}
+.stats .k{font-size:11px;color:#7d92ad}
+.comp{border:1px solid rgba(56,189,248,.16);border-radius:6px;margin-bottom:6px;
+background:rgba(8,17,32,.9);overflow:hidden}
 .comp-h{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;
-background:#fff;flex-wrap:wrap}
-.comp-h:active{background:#F2E6CB}
+background:rgba(8,17,32,.9);flex-wrap:wrap}
+.comp-h:active{background:rgba(34,211,238,.12)}
 .comp-h .cn{font-weight:600;font-size:14px}
-.comp-h .code{color:#96751A;font-size:11px}
+.comp-h .code{color:#a5b4fc;font-size:11px}
 .comp-b{display:none;padding:6px 12px 10px 22px}
 .comp.open .comp-b{display:block}
-.caret{color:#D9B64C;font-size:12px;display:inline-block;transition:transform .2s}
+.caret{color:#8b5cf6;font-size:12px;display:inline-block;transition:transform .2s}
 .comp.open .caret{transform:rotate(90deg)}
-.badge{display:inline-block;padding:1px 8px;border-radius:999px;background:#F3E7CC;
-color:#96751A;font-size:10.5px;font-weight:600;margin-left:4px}
-.badge.blue{background:#C9A227;color:#2B2012}
-.badge.gold{background:#F2E6CB;color:#8A6F45}
-.badge.cyan{background:#F2E6CB;color:#96751A}
-.hit{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:4px;
-font-size:12.5px}
-.hit:nth-child(odd){background:#F2E6CB}
-.hit .d{color:#8A6F45;white-space:nowrap;font-size:11.5px}
+.badge{display:inline-block;padding:1px 8px;border-radius:999px;background:rgba(34,211,238,.12);
+color:#22d3ee;font-size:10.5px;font-weight:600;margin-left:4px}
+.badge.blue{background:rgba(139,92,246,.18);color:#c4b5fd}
+.badge.gold{background:rgba(244,114,182,.12);color:#f472b6}
+.badge.cyan{background:rgba(59,130,246,.14);color:#7dd3fc}
+.hit{display:flex;gap:8px;align-items:baseline;padding:6px 8px;border-radius:4px;font-size:12.5px}
+.hit:nth-child(odd){background:rgba(13,26,48,.8)}
+.hit .d{color:#7d92ad;white-space:nowrap;font-size:11.5px}
 .hit .t{flex:1}
-.hit a{color:#96751A;font-size:11.5px}
+.hit a{color:#67e8f9;font-size:11.5px}
 table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12.5px}
-th,td{border-bottom:1px solid #EDE3CE;padding:5px 8px;text-align:left;vertical-align:top}
-th{background:#F3E7CC;color:#96751A;font-weight:600}
-tr:nth-child(even) td{background:#F9F3E5}
-.panel{background:#FDF6E8;border:1px solid #E8D9B6;border-radius:8px;
+th,td{border-bottom:1px solid rgba(56,189,248,.1);padding:5px 8px;text-align:left;vertical-align:top}
+th{background:rgba(34,211,238,.1);color:#7dd3fc;font-weight:600}
+tr:nth-child(even) td{background:rgba(59,130,246,.06)}
+.panel{background:rgba(10,20,38,.55);border:1px solid rgba(56,189,248,.16);border-radius:8px;
 margin-bottom:12px;overflow:hidden}
-.panel-t{font-size:13px;font-weight:700;color:#8C2F22;padding:8px 12px;
-border-bottom:1px solid #E8D9B6;background:#F3E7CC}
+.panel-t{font-size:13px;font-weight:700;color:#7dd3fc;padding:8px 12px;
+border-bottom:1px solid rgba(56,189,248,.16);background:rgba(139,92,246,.1)}
 .panel-b{padding:8px 12px}
-.note{font-size:11px;color:#8A6F45}
+.note{font-size:11px;color:#7d92ad}
 </style>
 </head>
 <body>

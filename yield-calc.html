@@ -5,35 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>税后收益率计算 · everstead</title>
 <style>
-body{font-family:'Microsoft YaHei',sans-serif;background:#f6f8f7;margin:0;padding:36px 16px 64px;color:#1f2937}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:#03060c;
+background-image:radial-gradient(1100px 600px at 75% -10%,rgba(59,130,246,.14),transparent 60%),
+radial-gradient(900px 500px at -10% 110%,rgba(139,92,246,.10),transparent 60%);
+background-attachment:fixed;margin:0;padding:36px 16px 64px;color:#e2ecf7}
 .wrap{max-width:720px;margin:0 auto}
-.back{display:inline-block;margin-bottom:14px;color:#6b7280;font-size:13px;text-decoration:none}
-.back:hover{color:#1a7f5c}
-h1{font-size:24px;color:#14532d;margin:0 0 6px}
-.sub{color:#6b7280;font-size:13px;margin-bottom:22px}
-.card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:18px 20px;margin-bottom:18px}
-.card h2{font-size:15px;color:#14532d;margin:0 0 14px}
+.back{display:inline-block;margin-bottom:14px;color:#7d92ad;font-size:13px;text-decoration:none}
+.back:hover{color:#22d3ee}
+h1{font-size:24px;color:#22d3ee;margin:0 0 6px;text-shadow:0 0 16px rgba(34,211,238,.35)}
+.sub{color:#7d92ad;font-size:13px;margin-bottom:22px}
+.card{background:rgba(10,20,38,.55);border:1px solid rgba(56,189,248,.16);border-radius:10px;
+padding:18px 20px;margin-bottom:18px;backdrop-filter:blur(8px)}
+.card h2{font-size:15px;color:#7dd3fc;margin:0 0 14px}
 table{border-collapse:collapse;width:100%;font-size:14px}
-th,td{border:1px solid #d1d5db;padding:9px 10px;text-align:left}
-th{background:#f0fdf4;color:#14532d;font-weight:600;white-space:nowrap}
-td.label{background:#f9fafb;font-weight:600;white-space:nowrap;width:220px}
-td.out{background:#f6f8f7;font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
-td.final{background:#ecfdf5;color:#14532d;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;font-size:15px}
-input{width:140px;padding:6px 8px;border:1px solid #d1d5db;border-radius:6px;text-align:right;
-font-size:14px;color:#2563eb;background:#fffbeb;font-family:inherit;font-variant-numeric:tabular-nums}
-input:focus{outline:2px solid #1a7f5c;outline-offset:-1px}
-input.fixed{color:#9ca3af;background:#f9fafb}
+th,td{border:1px solid rgba(56,189,248,.14);padding:9px 10px;text-align:left}
+th{background:rgba(34,211,238,.1);color:#7dd3fc;font-weight:600;white-space:nowrap}
+td.label{background:rgba(59,130,246,.08);font-weight:600;white-space:nowrap;width:220px}
+td.out{background:rgba(13,26,48,.8);font-variant-numeric:tabular-nums;text-align:right;font-weight:600}
+td.final{background:rgba(34,211,238,.14);color:#67e8f9;font-weight:700;
+font-variant-numeric:tabular-nums;text-align:right;font-size:15px;
+text-shadow:0 0 12px rgba(34,211,238,.3)}
+input{width:140px;padding:6px 8px;border:1px solid rgba(56,189,248,.3);border-radius:6px;text-align:right;
+font-size:14px;color:#7dd3fc;background:rgba(34,211,238,.07);
+font-family:inherit;font-variant-numeric:tabular-nums}
+input:focus{outline:2px solid #8b5cf6;outline-offset:-1px;background:rgba(34,211,238,.1)}
+input.fixed{color:#7d92ad;background:rgba(13,26,48,.8)}
 .toolbar{margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-button{font-family:inherit;font-size:13px;background:#1a7f5c;color:#fff;border:none;
-border-radius:6px;padding:7px 14px;cursor:pointer}
-button:hover{background:#14532d}
-button.ghost{background:#fff;color:#1a7f5c;border:1px solid #1a7f5c}
-button.ghost:hover{background:#f0fdf4}
-select{font-family:inherit;font-size:13px;padding:6px 8px;border:1px solid #d1d5db;border-radius:6px;color:#1f2937}
-.tips{font-size:12px;color:#6b7280;line-height:1.8;margin:0;padding-left:18px}
+button{font-family:inherit;font-size:13px;background:#8b5cf6;color:#fff;border:none;
+border-radius:6px;padding:7px 14px;cursor:pointer;box-shadow:0 0 12px rgba(139,92,246,.35)}
+button:hover{background:#7c3aed}
+button.ghost{background:transparent;color:#7dd3fc;border:1px solid rgba(56,189,248,.4);
+box-shadow:none}
+button.ghost:hover{background:rgba(34,211,238,.1)}
+select{font-family:inherit;font-size:13px;padding:6px 8px;border:1px solid rgba(56,189,248,.3);
+border-radius:6px;color:#e2ecf7;background:#0d1a30}
+.tips{font-size:12px;color:#7d92ad;line-height:1.8;margin:0;padding-left:18px}
 .tips li{margin:4px 0}
 .dl{margin-top:10px;font-size:13px}
-.dl a{color:#1a7f5c}
+.dl a{color:#67e8f9}
 </style>
 </head>
 <body>

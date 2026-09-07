@@ -342,6 +342,42 @@
       "size": 13235939,
       "pages": 230,
       "url": null
+    },
+    {
+      "slug": "insurance-debt-registration-xlsx",
+      "topic": "insurance-debt",
+      "title": "保险债权投资计划登记汇总表(2016-2024)",
+      "type": "xls",
+      "date": "2026-09-07",
+      "desc": "协会产品注册动态公开登记数据合并整理:3195条登记记录,9年全量,Excel可筛选",
+      "tags": [
+        "登记数据",
+        "汇总表",
+        "Excel"
+      ],
+      "original": "保险债权投资计划登记汇总-2016-2024.xlsx",
+      "file": "保险债权投资计划登记汇总-2016-2024.xlsx",
+      "size": 190661,
+      "pages": 0,
+      "url": null
+    },
+    {
+      "slug": "insurance-debt-registration-data",
+      "topic": "insurance-debt",
+      "title": "保险债权投资计划登记数据检索",
+      "type": "html",
+      "date": "2026-09-07",
+      "desc": "3195条登记数据在线检索:年份/项目类型/管理人/关键词筛选,规模排序,2016-2024全量",
+      "tags": [
+        "登记数据",
+        "在线检索",
+        "可视化"
+      ],
+      "original": "insurance-debt-registration-data.html",
+      "file": "insurance-debt-registration-data.html",
+      "size": 676960,
+      "pages": 0,
+      "url": null
     }
   ]
 }

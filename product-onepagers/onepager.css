@@ -1,0 +1,106 @@
+/* ============================================================
+   中邮资管 产品一页通 · 共用皮肤 (暖白金 v3)
+   四张一页通共用: 国新红利价值/国新深度价值/中邮红利质量/中邮价值1号
+   ============================================================ */
+:root {
+  --bg: #F5EEDC; --card: #FDF6E8; --inner: #F2E6CB;
+  --primary: #B08F1C; --secondary: #D9B64C; --light: #C9A227;
+  --pale: #F0E2C4; --deep: #96751A; --muted: #8A6F45;
+  --text: #2B2012; --border: #E8D9B6;
+  --shadow: 0 4px 20px rgba(90,74,40,.08); --radius: 6px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Microsoft YaHei','微软雅黑','PingFang SC',sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7; padding: 1.6rem 1rem 2.4rem; }
+.page { max-width: 920px; margin: 0 auto; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow);
+  padding: 1.8rem 2rem 1.5rem; }
+
+/* 头部 */
+.head { display: flex; justify-content: space-between; align-items: flex-start;
+  border-bottom: 2px solid var(--secondary); padding-bottom: .7rem; margin-bottom: 1rem; }
+.head .corp { font-size: .98rem; color: var(--deep); font-weight: 700; letter-spacing: .12em; }
+.head .corp small { display: block; font-weight: 400; font-size: .68rem;
+  color: var(--muted); letter-spacing: .06em; margin-top: .15rem; }
+.head .meta { text-align: right; font-size: .8rem; color: var(--muted); }
+.head .meta b { color: var(--primary); font-size: .95rem; }
+
+/* 产品名 */
+.pname { text-align: center; margin-bottom: .3rem; }
+.pname h1 { font-size: 1.42rem; font-weight: 700; color: var(--text); }
+.pname .sub { color: var(--muted); font-size: .86rem; margin-top: .25rem; }
+.pname .badge { display: inline-block; margin-top: .5rem; padding: .14rem .8rem;
+  border: 1px solid var(--primary); color: var(--deep); border-radius: 999px;
+  font-size: .76rem; background: var(--pale); }
+
+/* 章节 */
+h2.sec { font-size: 1.02rem; color: var(--deep); margin: 1.3rem 0 .6rem;
+  padding-left: .6rem; border-left: 4px solid var(--primary); }
+
+/* 概述与策略核心 */
+.overview { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .8rem; }
+.ov-card { background: #FBF3E0; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: .75rem .85rem; font-size: .82rem; }
+.ov-card h3 { font-size: .88rem; color: var(--deep); margin-bottom: .3rem; }
+.ov-card p { color: var(--text); }
+.ov-intro { font-size: .9rem; margin-bottom: .8rem; padding: .7rem .9rem;
+  background: var(--pale); border-radius: var(--radius); border-left: 3px solid var(--primary); }
+.ov-intro b { color: var(--deep); }
+
+/* 策略关键词 */
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { padding: .22rem .85rem; background: var(--inner); border: 1px solid var(--border);
+  border-radius: 999px; font-size: .8rem; color: var(--deep); font-weight: 600; }
+
+/* 产品要素 */
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem; }
+.fact { background: #FBF3E0; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: .55rem .7rem; }
+.fact .k { font-size: .72rem; color: var(--muted); }
+.fact .v { font-size: .95rem; font-weight: 700; color: var(--text); margin-top: .1rem; }
+.fact .v.hl { color: var(--primary); }
+.fact .n { font-size: .68rem; color: var(--muted); margin-top: .05rem; }
+
+/* KPI 大数字 */
+.kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: .6rem; }
+.kpi { text-align: center; background: #FBF3E0; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: .7rem .3rem .55rem; }
+.kpi .v { font-size: 1.45rem; font-weight: 700; color: var(--primary); font-variant-numeric: tabular-nums; }
+.kpi .k { font-size: .74rem; color: var(--muted); margin-top: .15rem; }
+.kpi .n { font-size: .68rem; color: var(--muted); margin-top: .1rem; }
+.bench-note { text-align: center; font-size: .76rem; color: var(--muted); margin-top: .5rem; }
+.bench-note b { color: var(--deep); }
+
+/* 对照表 */
+table.cmp { width: 100%; border-collapse: collapse; font-size: .85rem;
+  background: #FBF3E0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+table.cmp th, table.cmp td { padding: .42rem .6rem; border: 1px solid var(--border); text-align: center; }
+table.cmp thead th { background: var(--inner); color: var(--deep); font-weight: 700; }
+table.cmp td.rowk { text-align: left; background: var(--pale); font-weight: 600; color: var(--muted); width: 8rem; }
+table.cmp td.me { color: var(--primary); font-weight: 700; }
+
+/* 曲线 */
+.chart { background: #FBF3E0; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: .8rem; }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart .legend { font-size: .76rem; color: var(--muted); margin-top: .3rem; text-align: center; }
+
+/* 费用与托管（国新型） */
+.custody { font-size: .86rem; background: #FBF3E0; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: .8rem 1rem; }
+.custody b { color: var(--deep); }
+
+/* 提示 */
+.note { font-size: .72rem; color: var(--muted); border-top: 1px dashed var(--border);
+  margin-top: 1.3rem; padding-top: .6rem; }
+.warn-tag { display: inline-block; background: #FBF3E0; border: 1px dashed var(--primary);
+  border-radius: 4px; padding: .1rem .6rem; margin-right: .4rem; color: var(--deep); }
+
+@media (max-width: 760px) {
+  .overview, .facts { grid-template-columns: 1fr 1fr; }
+  .kpis { grid-template-columns: repeat(3, 1fr); }
+}
+@media print {
+  body { background: #fff; padding: 0; }
+  .page { border: none; box-shadow: none; }
+}

@@ -99,7 +99,8 @@ function renderChart(navs, bench) {
     if (v != null && b != null) { if (x0 === null) x0 = d; x1 = d; }
   }
   if (!x0) return;
-  const pts = [], vmin = Infinity, vmax = -Infinity, bmin = Infinity, bmax = -Infinity;
+  const pts = [];
+  let vmin = Infinity, vmax = -Infinity, bmin = Infinity, bmax = -Infinity;
   for (const d of joined) {
     const v = get(navs, d), b = getb(bench, d);
     if (v == null || b == null || d < x0 || d > x1) continue;

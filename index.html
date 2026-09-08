@@ -332,6 +332,238 @@ a{text-decoration:none;color:inherit}
     <div class="stat"><div class="v">2026-09-07</div><div class="k">最近更新</div></div>
   </section>
 
+  <!-- 重点产品绩效面板(由 update_nav.py 驱动) -->
+  <!-- 重点产品绩效面板 · 由 update_nav.py 更新 nav-data.json 驱动 -->
+<section class="section" id="products">
+  <div class="section-head">
+    <div class="bar"></div>
+    <div>
+      <h2>重点产品 · 每日净值</h2>
+      <div class="en">KEY PRODUCTS · DAILY NAV</div>
+    </div>
+    <div class="count" id="nav-updated">—</div>
+  </div>
+
+  <div class="pp-grid">
+    <div class="pp-card" id="pp-ZY0049">
+      <div class="pp-card-head">
+        <span class="pp-code">ZY0049</span>
+        <span class="pp-name">中邮资管价值策略1号</span>
+      </div>
+      <div class="pp-nav-row">
+        <span class="pp-nav" id="pp-nav-ZY0049">—</span>
+        <span class="pp-pct" id="pp-pct-ZY0049">—</span>
+      </div>
+      <div class="pp-kpis" id="pp-kpis-ZY0049">
+        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">—</div></div>
+        <div class="pp-kpi"><div class="k">年化</div><div class="v">—</div></div>
+        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">—</div></div>
+      </div>
+    </div>
+    <div class="pp-card" id="pp-ZY0053">
+      <div class="pp-card-head">
+        <span class="pp-code">ZY0053</span>
+        <span class="pp-name">中邮资管红利质量量化选股策略</span>
+      </div>
+      <div class="pp-nav-row">
+        <span class="pp-nav" id="pp-nav-ZY0053">—</span>
+        <span class="pp-pct" id="pp-pct-ZY0053">—</span>
+      </div>
+      <div class="pp-kpis" id="pp-kpis-ZY0053">
+        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">—</div></div>
+        <div class="pp-kpi"><div class="k">年化</div><div class="v">—</div></div>
+        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pp-chart-wrap">
+    <div class="pp-chart-title">
+      <span>净值走势 · 归一化对比（首日 = 1.0000）</span>
+      <span class="pp-chart-sub" id="pp-chart-sub">—</span>
+    </div>
+    <svg id="pp-chart" viewBox="0 0 1000 380" preserveAspectRatio="xMidYMid meet" aria-label="产品净值走势图"></svg>
+    <div class="pp-legend" id="pp-legend"></div>
+  </div>
+
+  <div class="pp-note">
+    数据来源：同花顺 iFinD（产品净值） · 扶摇 API（沪深300基准） · 每日 10:00 自动更新 ·
+    历史自 <span id="pp-since">—</span> 起逐日积累
+  </div>
+</section>
+
+<style>
+/* ---- 重点产品面板(科技风,与主题一致) ---- */
+.pp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+@media (max-width:760px){.pp-grid{grid-template-columns:1fr}}
+.pp-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;position:relative;overflow:hidden;
+  transition:border-color .3s,box-shadow .3s;
+}
+.pp-card:hover{border-color:var(--line-strong);box-shadow:var(--glow)}
+.pp-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  opacity:.7;
+}
+.pp-card-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.pp-code{
+  font-family:var(--mono);font-size:12px;color:var(--cyan);
+  border:1px solid rgba(34,211,238,.35);border-radius:5px;padding:2px 8px;letter-spacing:.08em;
+}
+.pp-name{font-size:14px;color:var(--text);font-weight:600}
+.pp-nav-row{display:flex;align-items:baseline;gap:12px}
+.pp-nav{font-family:var(--mono);font-size:30px;font-weight:700;color:var(--text)}
+.pp-pct{font-family:var(--mono);font-size:15px;font-weight:600}
+.pp-pct.up{color:#ef4444}   /* A股习惯: 红涨 */
+.pp-pct.down{color:#22c55e} /* 绿跌 */
+.pp-kpis{display:flex;gap:8px;margin-top:14px}
+.pp-kpi{
+  flex:1;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.12);
+  border-radius:8px;padding:8px 10px;text-align:center;
+}
+.pp-kpi .k{font-size:11px;color:var(--muted);margin-bottom:3px}
+.pp-kpi .v{font-family:var(--mono);font-size:14px;color:var(--cyan);font-weight:600}
+.pp-kpi .v.neg{color:#22c55e}
+.pp-chart-wrap{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px 14px;
+}
+.pp-chart-title{
+  display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;
+  font-size:13px;color:var(--muted);margin-bottom:8px;
+}
+.pp-chart-sub{font-family:var(--mono);font-size:11px;color:var(--muted);opacity:.8}
+#pp-chart{width:100%;height:auto;display:block}
+#pp-chart .grid-line{stroke:rgba(56,189,248,.08);stroke-width:1}
+#pp-chart .axis-label{fill:var(--muted);font-size:11px;font-family:var(--mono)}
+#pp-chart .series-line{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+#pp-chart .end-dot{stroke:none}
+#pp-chart .end-label{font-size:11px;font-family:var(--mono)}
+.pp-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--muted)}
+.pp-legend .lg{display:flex;align-items:center;gap:6px}
+.pp-legend .sw{width:14px;height:3px;border-radius:2px}
+.pp-note{margin-top:12px;font-size:11px;color:var(--muted);opacity:.75;line-height:1.7}
+</style>
+
+<script>
+(function () {
+  var COLORS = {ZY0049: '#22d3ee', ZY0053: '#8b5cf6', HS300: '#f59e0b'};
+  var NAMES = {ZY0049: '中邮资管价值策略1号', ZY0053: '中邮资管红利质量量化选股策略', HS300: '沪深300'};
+
+  function fmt(x) { return x == null ? '—' : (x >= 0 ? '+' : '') + x.toFixed(2) + '%'; }
+
+  fetch('product-panel/nav-data.json', {cache: 'no-store'})
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      document.getElementById('nav-updated').textContent = '更新 ' + (d.updated || '—');
+      var since = '—';
+      Object.keys(d.products || {}).forEach(function (code) {
+        var p = d.products[code];
+        document.getElementById('pp-nav-' + code).textContent = p.nav.toFixed(4);
+        var pct = document.getElementById('pp-pct-' + code);
+        pct.textContent = fmt(p.daily_pct);
+        pct.className = 'pp-pct ' + (p.daily_pct == null ? '' : p.daily_pct >= 0 ? 'up' : 'down');
+        var kpis = document.getElementById('pp-kpis-' + code).querySelectorAll('.v');
+        kpis[0].textContent = fmt(p.cum_return);
+        kpis[1].textContent = fmt(p.annualized);
+        kpis[2].textContent = fmt(p.max_drawdown);
+        kpis[2].className = 'v ' + (p.max_drawdown < 0 ? 'neg' : '');
+        since = since === '—' ? p.since : since;
+      });
+      document.getElementById('pp-since').textContent = since;
+      drawChart(d);
+    })
+    .catch(function () { document.getElementById('nav-updated').textContent = '数据未就绪'; });
+
+  function drawChart(d) {
+    var svg = document.getElementById('pp-chart');
+    var W = 1000, H = 380, padL = 56, padR = 90, padT = 20, padB = 34;
+
+    // 汇总所有序列点,按产品日期轴(两产品同频,基准按日期对齐)
+    var prods = Object.keys(d.products || {});
+    if (!prods.length) return;
+    var dates = d.products[prods[0]].nav_series.map(function (s) { return s.d; });
+    var benchByDate = {};
+    (d.benchmark || []).forEach(function (b) { benchByDate[b.date] = b.close; });
+
+    function normSeries(code) {
+      var s = d.products[code].nav_series;
+      var first = s[0].v;
+      return dates.map(function (dt) {
+        var hit = null;
+        for (var i = 0; i < s.length; i++) if (s[i].d === dt) { hit = s[i].v; break; }
+        return hit == null ? null : hit / first;
+      });
+    }
+    var bFirst = null, bDates = [];
+    var bSeries = dates.map(function (dt) {
+      var v = benchByDate[dt];
+      if (v == null) return null;
+      if (bFirst == null) bFirst = v;
+      return v / bFirst;
+    });
+
+    var series = {ZY0049: normSeries('ZY0049'), ZY0053: normSeries('ZY0053'), HS300: bSeries};
+    var hasBench = bSeries.some(function (v) { return v != null; });
+    if (!hasBench) delete series.HS300;
+
+    // 值域(含 1.0000 基线)
+    var allVals = [1];
+    Object.keys(series).forEach(function (k) { series[k].forEach(function (v) { if (v != null) allVals.push(v); }); });
+    var vmin = Math.min.apply(null, allVals), vmax = Math.max.apply(null, allVals);
+    if (vmax - vmin < 1e-9) { vmax += 0.01; vmin -= 0.01; }
+    var pad = 0.08 * (vmax - vmin);
+    vmin -= pad; vmax += pad;
+
+    function X(i) { return padL + i * (W - padL - padR) / Math.max(dates.length - 1, 1); }
+    function Y(v) { return padT + (1 - (v - vmin) / (vmax - vmin)) * (H - padT - padB); }
+
+    var parts = [];
+
+    // 网格: 5 条水平线
+    for (var g = 0; g <= 4; g++) {
+      var gv = vmin + (vmax - vmin) * g / 4;
+      var gy = Y(gv);
+      parts.push('<line class="grid-line" x1="' + padL + '" y1="' + gy + '" x2="' + (W - padR) + '" y2="' + gy + '"/>');
+      parts.push('<text class="axis-label" x="' + (padL - 8) + '" y="' + (gy + 4) + '" text-anchor="end">' + gv.toFixed(4) + '</text>');
+    }
+    // 日期轴: 首/中/尾
+    [0, Math.floor((dates.length - 1) / 2), dates.length - 1].forEach(function (i) {
+      parts.push('<text class="axis-label" x="' + X(i) + '" y="' + (H - padB + 18) + '" text-anchor="middle">' + dates[i] + '</text>');
+    });
+
+    // 折线
+    Object.keys(series).forEach(function (k) {
+      var pts = [], lastX = null, lastY = null;
+      series[k].forEach(function (v, i) {
+        if (v == null) return;
+        pts.push(X(i).toFixed(1) + ',' + Y(v).toFixed(1));
+        lastX = X(i); lastY = Y(v);
+      });
+      if (pts.length > 1) {
+        parts.push('<polyline class="series-line" points="' + pts.join(' ') + '" style="stroke:' + COLORS[k] + '"/>');
+      }
+      if (lastX != null) {
+        parts.push('<circle class="end-dot" cx="' + lastX + '" cy="' + lastY + '" r="3.5" fill="' + COLORS[k] + '"/>');
+        parts.push('<text class="end-label" x="' + Math.min(lastX + 8, W - padR + 76) + '" y="' + (lastY + 4) + '" fill="' + COLORS[k] + '">' + k + '</text>');
+      }
+    });
+
+    svg.innerHTML = parts.join('');
+
+    // 图例
+    var lg = document.getElementById('pp-legend');
+    lg.innerHTML = Object.keys(series).map(function (k) {
+      return '<div class="lg"><span class="sw" style="background:' + COLORS[k] + '"></span>' + NAMES[k] + '</div>';
+    }).join('');
+    document.getElementById('pp-chart-sub').textContent = '数据点 ' + dates.length + ' 个 · 最新 ' + dates[dates.length - 1];
+  }
+})();
+</script>
+
+
   <!-- 成果卡片 -->
   <section class="section">
     <div class="section-head">

@@ -225,7 +225,14 @@ def build_index(reports: list) -> None:
         + [datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d") for f in reports]
     )
 
+    # 重点产品绩效面板(独立片段,update_nav.py 生成数据后由 publish 注入)
+    products_html = ""
+    panel = SITE / "product-panel" / "nav-panel.html"
+    if panel.exists():
+        products_html = panel.read_text(encoding="utf-8")
+
     html = (html.replace("<!--CARDS-->", "\n".join(cards))
+                .replace("<!--PRODUCTS-->", products_html)
                 .replace("{{TOTAL}}", str(total))
                 .replace("{{RADAR_COUNT}}", str(radar_n))
                 .replace("{{REPORT_COUNT}}", str(report_n))

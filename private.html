@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>私人专区 · EVERSTEAD</title>
+<style>
+/* ============================================================
+   私人专区 PRIVATE · 密码门 + 私人工具卡片
+   风格与首页/工具箱一致: 深空底 + 玻璃拟态, 零外部依赖
+   ============================================================ */
+:root{
+  --bg:#03060c;
+  --panel:rgba(10,20,38,.55);
+  --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --violet:#8b5cf6;
+  --rose:#f43f5e;
+  --text:#e2ecf7;
+  --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
+    var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+}
+
+.wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 56px}
+
+.topbar{
+  display:flex;align-items:center;gap:14px;
+  padding:22px 0 0;
+}
+.topbar .logo{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:19px;color:#03101f;
+  box-shadow:var(--glow);
+  font-family:var(--mono);
+}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.28em;font-size:15px}
+.topbar .brand em{font-style:normal;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .back{
+  margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;
+  background:rgba(10,20,38,.4);
+  transition:border-color .25s, color .25s;
+}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+
+/* ---- 密码门 ---- */
+.gate{
+  max-width:420px;margin:80px auto 0;
+  text-align:center;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:44px 32px;
+  background:var(--panel);
+  backdrop-filter:blur(10px);
+  box-shadow:0 8px 40px rgba(0,0,0,.35);
+}
+.gate .lock{font-size:44px;margin-bottom:14px}
+.gate h2{font-size:20px;font-weight:700;letter-spacing:.08em;margin-bottom:8px}
+.gate p{font-size:12px;color:var(--muted);margin-bottom:28px;line-height:1.8}
+.gate input{
+  width:100%;padding:12px 16px;
+  font-family:var(--mono);font-size:16px;letter-spacing:.35em;
+  color:var(--text);background:rgba(3,6,12,.6);
+  border:1px solid var(--line);border-radius:10px;
+  outline:none;text-align:center;
+  transition:border-color .25s, box-shadow .25s;
+}
+.gate input:focus{border-color:var(--line-strong);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+.gate button{
+  margin-top:16px;width:100%;padding:12px;
+  font-size:14px;font-weight:600;letter-spacing:.2em;
+  color:#03101f;cursor:pointer;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  border:none;border-radius:10px;
+  transition:transform .2s, box-shadow .2s;
+}
+.gate button:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.gate.err{animation:shake .4s}
+.gate .err-msg{
+  display:none;margin-top:12px;
+  font-family:var(--mono);font-size:12px;color:var(--rose);
+}
+.gate.err .err-msg{display:block}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%,60%{transform:translateX(-8px)}
+  40%,80%{transform:translateX(8px)}
+}
+
+/* ---- 私人卡片区(解锁后) ---- */
+.content{display:none}
+.content.open{display:block}
+.section-head{
+  display:flex;align-items:baseline;gap:12px;
+  padding-bottom:12px;margin:44px 0 20px;
+  border-bottom:1px solid var(--line);
+}
+.section-head .no{
+  font-family:var(--mono);font-weight:800;font-size:13px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.section-head h2{font-size:19px;font-weight:700;letter-spacing:.06em}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:16px;
+}
+.card{
+  position:relative;
+  display:block;
+  padding:20px 20px 16px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel);
+  backdrop-filter:blur(10px);
+  transition:transform .25s, border-color .25s, background .25s, box-shadow .25s;
+  overflow:hidden;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:var(--line-strong);
+  background:var(--panel-hover);
+  box-shadow:var(--glow);
+}
+.card-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.card-ico{font-size:22px;line-height:1}
+.card-tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--violet);
+  border:1px solid var(--line);border-radius:4px;padding:2px 7px;
+}
+.card .t{font-size:15px;font-weight:600;margin-bottom:6px}
+.card .m{font-size:12px;color:var(--muted);line-height:1.6}
+.card .arrow{
+  position:absolute;right:16px;top:18px;
+  font-family:var(--mono);color:var(--muted);
+  transition:transform .25s, color .25s;
+}
+.card:hover .arrow{transform:translateX(4px);color:var(--cyan)}
+
+.foot{
+  margin-top:56px;padding-top:16px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);
+  text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">🔒</div>
+    <div class="brand">PRIV<em>ATE</em> · 私人专区</div>
+    <a class="back" href="tools.html">← 返回工具箱</a>
+  </div>
+
+  <!-- 密码门 -->
+  <div class="gate" id="gate">
+    <div class="lock">🔐</div>
+    <h2>私人专区</h2>
+    <p>起名档案 · 幼儿园 · 孕期餐食 · 家庭资料<br>输入密码后解锁</p>
+    <input type="password" id="pw" placeholder="••••••" maxlength="16"
+           autocomplete="off" inputmode="numeric">
+    <button id="btn" type="button">解 锁</button>
+    <div class="err-msg" id="err">密码不对, 再试一次</div>
+  </div>
+
+  <!-- 私人卡片区 -->
+  <div class="content" id="content">
+    <div class="section-head">
+      <span class="no">LOCKED</span>
+      <h2>🏠 家庭与私人资料</h2>
+    </div>
+    <div class="grid">
+      <a class="card" href="tools/naming/index.html">
+        <div class="card-top"><div class="card-ico">🧧</div><div class="card-tag">PRIVATE</div></div>
+        <div class="t">起名档案 · 王家</div>
+        <div class="m">宝宝起名打分档案</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/baby-name-board/index.html">
+        <div class="card-top"><div class="card-ico">📋</div><div class="card-tag">PRIVATE</div></div>
+        <div class="t">好听名字榜单 · 起名参考</div>
+        <div class="m">宝宝版名字榜单</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/family-links/name-list.html">
+        <div class="card-top"><div class="card-ico">📇</div><div class="card-tag">PRIVATE</div></div>
+        <div class="t">名字榜单 · 家庭链接版</div>
+        <div class="m">家庭链接收集的名字清单</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/nursery/芽班王斯卯数据情况.html">
+        <div class="card-top"><div class="card-ico">🧒</div><div class="card-tag">PRIVATE</div></div>
+        <div class="t">芽年级数据统计分析 · 幼儿名单</div>
+        <div class="m">王斯卯班级数据统计</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/nursery-parents/index.html">
+        <div class="card-top"><div class="card-ico">🏫</div><div class="card-tag">PRIVATE</div></div>
+        <div class="t">芽三班 · 家长待办</div>
+        <div class="m">幼儿园家长待办事项</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/meal/尊贵的郑月涵女士一周餐食.html">
+        <div class="card-top"><div class="card-ico">🍚</div><div class="card-tag">PRIVATE</div></div>
+        <div class="t">尊贵的郑月涵女士 · 孕晚期一周餐食</div>
+        <div class="m">媳妇孕晚期一周餐单</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="knowledge/motherland-100/index.html">
+        <div class="card-top"><div class="card-ico">🇨🇳</div><div class="card-tag">PRIVATE</div></div>
+        <div class="t">祖国 100 对</div>
+        <div class="m">祖国 100 岁 · 知识库</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="knowledge/union-card-handbook-2026/index.html">
+        <div class="card-top"><div class="card-ico">🎫</div><div class="card-tag">PRIVATE</div></div>
+        <div class="t">2026 年联合年卡使用手册</div>
+        <div class="m">年卡使用 · 知识库</div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="foot">EVERSTEAD PRIVATE · 2026-09-09</div>
+</div>
+
+<!-- DOM 就绪后再绑事件(脚本放末尾, 元素已解析) -->
+<script>
+/* ============================================================
+   纯 JS SHA-256(紧凑实现) — 源码只存哈希不存明文
+   验证通过后 sessionStorage 记住本会话
+   ============================================================ */
+var PASSWORD_HASH = "a68afcaa33dc88de7217371b041b422543aa16e2958365dde8112487475e37cd";
+
+function sha256(ascii) {
+  function rightRotate(value, amount) { return (value>>>amount) | (value<<(32-amount)); }
+  var mathPow = Math.pow;
+  var maxWord = mathPow(2, 32);
+  var result = '';
+  var words = [];
+  var asciiBitLength = ascii.length*8;
+  var hash = sha256.h = sha256.h || [];
+  var k = sha256.k = sha256.k || [];
+  var primeCounter = k.length;
+  var isComposite = {};
+  for (var candidate = 2; primeCounter < 64; candidate++) {
+    if (!isComposite[candidate]) {
+      for (var i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+      hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+      k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
+    }
+  }
+  ascii += '\x80';
+  while (ascii.length%64 - 56) ascii += '\x00';
+  for (var i = 0; i < ascii.length; i++) {
+    var j = ascii.charCodeAt(i);
+    if (j>>8) return '';
+    words[i>>2] |= j << ((3 - i)%4)*8;
+  }
+  words[words.length] = ((asciiBitLength/maxWord)|0);
+  words[words.length] = (asciiBitLength);
+  for (var j = 0; j < words.length;) {
+    var w = words.slice(j, j += 16);
+    var oldHash = hash;
+    hash = hash.slice(0, 8);
+    for (var i = 0; i < 64; i++) {
+      var w15 = w[i - 15], w2 = w[i - 2];
+      var a = hash[0], e = hash[4];
+      var temp1 = hash[7]
+        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+        + ((e&hash[5])^((~e)&hash[6]))
+        + k[i]
+        + (w[i] = (i < 16) ? w[i] : (
+            w[i - 16]
+            + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3))
+            + w[i - 7]
+            + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10))
+          )|0
+        );
+      var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+        + ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+      hash = [(temp1 + temp2)|0].concat(hash);
+      hash[4] = (hash[4] + temp1)|0;
+    }
+    for (var i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i])|0;
+  }
+  for (var i = 0; i < 8; i++) {
+    for (var j = 3; j + 1; j--) {
+      var b = (hash[i]>>(j*8))&255;
+      result += ((b < 16) ? 0 : '') + b.toString(16);
+    }
+  }
+  return result;
+}
+
+function unlock() {
+  var gate = document.getElementById('gate');
+  var input = document.getElementById('pw');
+  if (sha256(input.value) === PASSWORD_HASH) {
+    sessionStorage.setItem('private_ok', '1');
+    gate.style.display = 'none';
+    document.getElementById('content').classList.add('open');
+  } else {
+    gate.classList.remove('err');
+    void gate.offsetWidth;  /* 重触发抖动动画 */
+    gate.classList.add('err');
+    input.value = '';
+    input.focus();
+  }
+}
+
+/* 回车提交 */
+document.getElementById('pw').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') unlock();
+});
+document.getElementById('btn').addEventListener('click', unlock);
+console.log('[private] 事件已绑定');
+
+/* 本会话已解锁过 → 直接显示 */
+if (sessionStorage.getItem('private_ok') === '1') {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('content').classList.add('open');
+}
+</script>
+</body>
+</html>

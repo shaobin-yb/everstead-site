@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《保险公司资产负债管理办法》概念梳理与指标扫盲</title>
+<style>
+:root{
+  --bg:#F5EEDC; --card:#FDF6E8; --inner:#F2E6CB;
+  --primary:#B08F1C; --secondary:#D9B64C; --pale:#F0E2C4; --deep:#96751A;
+  --muted:#8A6F45; --text:#2B2012; --border:#E8D9B6;
+  --shadow:0 4px 20px rgba(90,74,40,.08); --radius:8px;
+  --red:#C0392B; --green:#1E8449; --blue:#3A5488;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Microsoft YaHei','微软雅黑','PingFang SC',sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.85;padding:1.8rem 1.2rem 5rem}
+.wrap{max-width:1080px;margin:0 auto}
+
+/* 头部 */
+.header{text-align:center;margin-bottom:1.6rem}
+.header .brand{font-size:.95rem;color:var(--muted);letter-spacing:.25em;margin-bottom:.4rem}
+.header h1{font-size:1.75rem;font-weight:700;line-height:1.5}
+.header .docno{display:inline-block;margin-top:.7rem;padding:.15rem 1rem;border:1px solid var(--primary);
+  color:var(--deep);border-radius:999px;font-size:.82rem;background:var(--pale)}
+.header .sub{color:var(--muted);font-size:.88rem;margin-top:.5rem}
+
+/* 目录 */
+.toc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:1rem 1.4rem;margin-bottom:1.6rem}
+.toc b{color:var(--deep);font-size:.95rem}
+.toc ol{columns:2;margin-top:.5rem;padding-left:1.4rem;font-size:.9rem}
+.toc a{color:var(--text);text-decoration:none;border-bottom:1px dashed var(--secondary)}
+.toc a:hover{color:var(--deep)}
+@media(max-width:720px){.toc ol{columns:1}}
+
+/* 板块 */
+section{margin-bottom:2rem}
+.sec-head{display:flex;align-items:baseline;gap:.6rem;margin:1.2rem 0 .7rem}
+.sec-head .bar{width:5px;height:1.15rem;background:var(--primary);border-radius:2px;align-self:center}
+.sec-head h2{font-size:1.18rem;color:var(--deep)}
+.sec-head .en{font-size:.76rem;color:var(--muted);letter-spacing:.14em}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:1.15rem 1.35rem}
+.card p{font-size:.94rem;margin:.35rem 0}
+.card li{font-size:.93rem;margin:.3rem 0 .3rem 1.2rem}
+.card ul{margin:.4rem 0}
+
+/* 概念卡 */
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:.9rem}
+.concept{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--primary);
+  border-radius:var(--radius);box-shadow:var(--shadow);padding:.9rem 1.05rem}
+.concept h4{font-size:.98rem;color:var(--deep);margin-bottom:.25rem}
+.concept h4 .tag{font-size:.7rem;color:var(--muted);font-weight:400;margin-left:.4rem}
+.concept .def{font-size:.88rem}
+.concept .eg{margin-top:.4rem;padding:.45rem .7rem;background:var(--pale);border-radius:5px;
+  font-size:.84rem;color:var(--deep)}
+.concept .eg::before{content:"举例 ";font-weight:700}
+
+/* 指标卡 */
+.metric{border:1px solid var(--border);border-radius:var(--radius);background:var(--card);
+  box-shadow:var(--shadow);margin-bottom:.9rem;overflow:hidden}
+.metric-head{display:flex;justify-content:space-between;align-items:center;gap:.8rem;
+  padding:.7rem 1.1rem;background:var(--inner);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.metric-head .m-name{font-weight:700;color:var(--deep);font-size:1rem}
+.metric-head .m-std{font-size:.8rem;padding:.1rem .7rem;border-radius:999px;
+  background:var(--primary);color:#fff;white-space:nowrap}
+.metric-head .m-std.monitor{background:var(--muted)}
+.metric-body{padding:.85rem 1.1rem;font-size:.9rem}
+.metric-body .formula{background:var(--pale);border:1px dashed var(--primary);border-radius:5px;
+  padding:.45rem .8rem;margin:.4rem 0;font-family:Consolas,'Courier New',monospace;font-size:.88rem;color:var(--deep)}
+.metric-body .plain{font-size:.88rem}
+.metric-body .guard{font-size:.85rem;color:var(--blue)}
+.metric-body .guard::before{content:"⚔ 监管防什么：";font-weight:700}
+
+/* 表格 */
+table{width:100%;border-collapse:collapse;font-size:.87rem;margin:.5rem 0;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+th,td{padding:.5rem .7rem;border:1px solid var(--border);text-align:left;vertical-align:top}
+thead th{background:var(--inner);color:var(--deep);font-weight:700}
+tbody tr:hover{background:#FBF3E0}
+td.hl{color:var(--red);font-weight:600}
+td.key{background:var(--pale);color:var(--muted);font-weight:600;white-space:nowrap;width:9rem}
+
+/* 标签 */
+.chip{display:inline-block;margin:.15rem .3rem .15rem 0;padding:.08rem .6rem;background:var(--pale);
+  border:1px solid var(--secondary);border-radius:999px;font-size:.8rem;color:var(--deep)}
+.chip.hot{background:#F9DCD9;border-color:#E0A7A1;color:var(--red)}
+
+/* 引用块 */
+.quote{border-left:3px solid var(--primary);background:var(--pale);padding:.6rem 1rem;
+  margin:.6rem 0;font-size:.88rem;color:var(--deep);border-radius:0 5px 5px 0}
+
+/* 提示框 */
+.tip{background:#FBF3E0;border:1px dashed var(--primary);border-radius:var(--radius);
+  padding:.8rem 1.1rem;margin:.8rem 0;font-size:.88rem}
+.tip b{color:var(--deep)}
+
+.foot{text-align:center;color:var(--muted);font-size:.78rem;margin-top:2.5rem;line-height:2}
+.foot a{color:var(--deep)}
+.up{color:var(--red);font-weight:600}
+.down{color:var(--green);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="header">
+  <div class="brand">中邮保险资产管理有限公司 · 内部学习材料</div>
+  <h1>《保险公司资产负债管理办法》<br>概念梳理与监管指标扫盲</h1>
+  <div class="docno">国家金融监督管理总局令 2026年第4号 · 2026年8月20日公布</div>
+  <div class="sub">自 2027年1月1日起施行 · 共6章46条 · 整理于 2026-09-09</div>
+</div>
+
+<div class="toc">
+  <b>📑 目录</b>
+  <ol>
+    <li><a href="#s1">新规是什么，为什么现在出</a></li>
+    <li><a href="#s2">基础概念定义（扫盲）</a></li>
+    <li><a href="#s3">人身险 4 项监管指标</a></li>
+    <li><a href="#s4">财产险 3 项监管指标</a></li>
+    <li><a href="#s5">监测指标（预警仪表盘）</a></li>
+    <li><a href="#s6">新会计准则扫盲（IFRS9/17）</a></li>
+    <li><a href="#s7">市场观点汇总</a></li>
+    <li><a href="#s8">保险资金产品化：指标→产品映射</a></li>
+    <li><a href="#s9">过渡期与报送节奏</a></li>
+    <li><a href="#s10">概念速查卡片</a></li>
+  </ol>
+</div>
+
+<!-- ============ 1 新规概览 ============ -->
+<section id="s1">
+  <div class="sec-head"><div class="bar"></div><h2>一、新规是什么，为什么现在出</h2><div class="en">WHY NOW</div></div>
+  <div class="card">
+    <p><b>2026年8月21日</b>，金融监管总局正式发布《保险公司资产负债管理办法》（以下简称《办法》）及配套《实施通知》，2027年1月1日起施行，同时废止2021年《保险资产负债管理监管暂行办法》。</p>
+    <p style="margin-top:.6rem"><b>一句话概括</b>：把"资产收益能不能覆盖负债成本、资产期限能不能匹配负债期限"这件事，从抽象原则变成<span class="chip hot">有数字门槛的、要定期报送的监管硬约束</span>。</p>
+    <p style="margin-top:.6rem">三大出台背景：</p>
+    <ul>
+      <li><b>低利率环境下的利差损风险</b>：过去靠"短债长投"赚期限利差的模式，在利率持续下行后难以为继。保险资金平均负债成本偏高，资产端收益率持续走低。</li>
+      <li><b>2024年保险"新国十条"</b>明确提出"强化资产负债联动监管"——资产负债管理从"公司自觉"升级为"监管硬约束"。</li>
+      <li><b>2026年保险业全面实施新会计准则</b>（IFRS9/IFRS17）：资产端按公允价值计量后波动大幅放大，监管指标与会计口径需要统一衔接。</li>
+    </ul>
+    <div class="tip">📐 <b>制度框架</b>：共 6 章 46 条——总则、治理结构、政策和程序、监管指标和监测指标、监督管理、附则。核心治理要求：<b>董事会负最终责任</b>、高级管理层直接领导、资产负债管理牵头部门统筹协调、内部审计检查监督。公开征求意见共收到 <b>341 条</b>意见，绝大多数已采纳。</div>
+  </div>
+</section>
+
+<!-- ============ 2 基础概念 ============ -->
+<section id="s2">
+  <div class="sec-head"><div class="bar"></div><h2>二、基础概念定义（扫盲）</h2><div class="en">CORE CONCEPTS</div></div>
+  <div class="concept-grid">
+
+    <div class="concept">
+      <h4>资产负债管理（ALM）<span class="tag">Asset-Liability Management</span></h4>
+      <div class="def">保险公司根据发展战略、经营目标和风险偏好，制定、执行、评估和调整资产负债相关政策，将资产和负债作为一个整体管理，目标包括<b>期限结构匹配、成本收益匹配、流动性匹配</b>。</div>
+      <div class="eg">收了保费就有了"负债"（未来要给客户赔付/给付/分红），拿保费去投资就有了"资产"。ALM 就是让资产端和负债端在期限、成本、流动性三个维度上对得上。</div>
+    </div>
+
+    <div class="concept">
+      <h4>久期（Duration）<span class="tag">含修正久期 / 有效久期</span></h4>
+      <div class="def">衡量一笔现金流"平均多久能收回来"，同时近似衡量价格对利率的敏感度。<b>久期越长，越怕利率上升</b>（价格跌得越多）；久期越短，对利率越不敏感。</div>
+      <div class="eg">30年国债久期约20+年，利率每升1%，价格跌约20%；1年期存单久期接近1年，利率波动影响极小。注意区分：<b>修正久期</b>不考虑含权因素；<b>有效久期</b>考虑了分红、万能、退保等含权因素，更接近真实风险，监管指标计算采用有效久期。</div>
+    </div>
+
+    <div class="concept">
+      <h4>利差损<span class="tag">保险业最核心的风险</span></h4>
+      <div class="def">"赚的赶不上承诺的"：资产端实际投资收益率低于负债端成本导致的亏损。利差 = 投资收益率 − 负债成本率，利差为负即利差损。</div>
+      <div class="eg">承诺给客户的保证利率 3.0%（预定利率），资产端实际收益率只有 2.5%，中间的 0.5 个百分点就是利差损——每 100 亿规模一年亏 5000 万。</div>
+    </div>
+
+    <div class="concept">
+      <h4>OCI（其他综合收益）<span class="tag">Other Comprehensive Income</span></h4>
+      <div class="def">资产负债表上的"影子科目"：浮盈浮亏先记在这里，<b>不进当期利润表</b>；只有卖出或发生减值时才结转进利润。</div>
+      <div class="eg">高股息股票买入价10元涨到12元：2元浮盈进 OCI，利润表毫无波动；股价跌回8元并计提减值，才从 OCI 结转亏损。这就是会计"平滑"的载体。</div>
+    </div>
+
+    <div class="concept">
+      <h4>IFRS9 金融资产三分类<span class="tag">AC / FVOCI / FVTPL</span></h4>
+      <div class="def">按"业务模式 + 现金流特征"把金融资产分成三类，关键是"价格波动去哪了"：<b>AC</b>（摊余成本，不盯市，波动不体现）、<b>FVOCI</b>（按市价记账，浮盈浮亏进OCI不进利润）、<b>FVTPL</b>（按市价记账，波动直接进利润表）。</div>
+      <div class="eg">同一只高股息股票放 FVOCI：股息进利润表，股价波动进 OCI，卖出才结转——利润表只体现稳定收益，这正是险资配置高股息股票的会计动机。</div>
+    </div>
+
+    <div class="concept">
+      <h4>摊余成本法（AC）<span class="tag">Amortized Cost</span></h4>
+      <div class="def">按买入成本记账，加上按实际利率摊销的利息，净值曲线平滑、不随市价波动。期末账面 = 期初成本 + 票息摊销 ± 折溢价摊余。</div>
+      <div class="eg">货币基金、现金管理类产品常用摊余成本法——买了利率债即使市价下跌，产品净值也不回撤（除非信用事件），这就是"稳定净值"的会计来源。</div>
+    </div>
+
+    <div class="concept">
+      <h4>保证成本 vs 资金成本<span class="tag">两个分母的区别</span></h4>
+      <div class="def"><b>保证成本</b>：保单中约定的刚性最低回报（预定利率、最低保证利率），无法人为调整，只能靠老保单自然到期缓慢下降。<b>资金成本</b>：含分红险红利、万能结算成本在内的整体负债成本，相对可调。</div>
+      <div class="eg">分红险保证利率2.0%是"保证成本"（刚性）；实际给客户的分红3.5%里多出的1.5%属于"资金成本"（可调）——承压时公司可以下调分红实现率。</div>
+    </div>
+
+    <div class="concept">
+      <h4>预定利率<span class="tag">产品定价的关键假设</span></h4>
+      <div class="def">保险产品定价时锁定假设的投资收益率，决定保费高低与保证成本。行业预定利率与市场利率挂钩并动态调整。</div>
+      <div class="eg">预定利率从3.5%降到2.5%：同样的保额，保费更贵；但保险公司未来承担的刚性成本也降了——利差损风险随之缓解。</div>
+    </div>
+
+    <div class="concept">
+      <h4>分红实现率 / 万能结算利率<span class="tag">可调节的"软成本"</span></h4>
+      <div class="def">分红险每年实际派发的红利比例（实现率）、万能险公布的结算利率，两者都是公司可调节的负债成本组成部分。</div>
+      <div class="eg">监管框架下，承压时可下调分红实现率与万能结算利率——守住综合投资收益覆盖率（分母含这部分）。这正是两个覆盖率"分母不对称"的关键。</div>
+    </div>
+
+    <div class="concept">
+      <h4>利率风险对冲率<span class="tag">替代久期缺口的新指标</span></h4>
+      <div class="def">现金流流入利率敏感度 ÷ 现金流流出利率敏感度。衡量利率变动时资产端现金流的"反应幅度"和负债端是否对得上——对上了，利率怎么动都不怕。</div>
+      <div class="eg">负债是30年期的，资产全配1年存单：利率一降，负债成本降不了、资产收益跟着跌，对冲率就低。配超长债或做国债期货多头合成久期，对冲率就上来。</div>
+    </div>
+
+    <div class="concept">
+      <h4>压力测试与回溯分析<span class="tag">治理工具</span></h4>
+      <div class="def"><b>压力测试</b>（第二十三条）：定期分析利率、信用、退保等极端情景下资产负债的承压情况。<b>回溯分析</b>（第二十四条）：对保费、收益率假设、负债成本等与实际的偏差做归因。</div>
+      <div class="eg">办法明确要求压力测试情景要结合宏观经济变化、合理审慎设定，并用于制定业务规划和资产配置计划——不是走过场的报告。</div>
+    </div>
+
+    <div class="concept">
+      <h4>长周期考核<span class="tag">防止短期主义</span></h4>
+      <div class="def">《办法》第十二条：保险公司实施长周期考核评价，避免为追求短期利润牺牲长周期资产负债匹配。</div>
+      <div class="eg">和"推动中长期资金入市"政策形成合力——红利资产从"阶段性防御工具"升级为"跨周期配置底仓"的制度支撑。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ 3 人身险指标 ============ -->
+<section id="s3">
+  <div class="sec-head"><div class="bar"></div><h2>三、人身险 4 项监管指标（重点）</h2><div class="en">LIFE INSURANCE · 4 METRICS</div></div>
+  <div class="tip">《办法》第三十条：人身保险公司监管指标包括<b>利率风险对冲率、综合投资收益覆盖率、净投资收益覆盖率、流动性覆盖率</b>，均设最低监管标准。</div>
+
+  <div class="metric">
+    <div class="metric-head"><span class="m-name">① 利率风险对冲率</span><span class="m-std">最低 50% · 最高 150%</span></div>
+    <div class="metric-body">
+      <div class="formula">利率风险对冲率 = 现金流流入利率敏感度 ÷ 现金流流出利率敏感度</div>
+      <div class="plain">白话：利率变动时，资产端现金流的"反应幅度"要和负债端"对得上"。资产和负债对利率同向、同幅度反应，对冲率就是100%。</div>
+      <div class="guard">负债30年期、资产全配1年存单的"裸奔"——利率一降，负债成本降不了、资产收益跟着跌，两头受伤。</div>
+      <div class="plain" style="margin-top:.4rem">⚙️ <b>关键变化</b>：征求意见稿的"有效久期缺口"正式稿降级为监测指标，换成对冲率。久期缺口看"差多少"，对冲率看"对没对上"。<b>衍生品利好</b>：国债期货多头、IRS收固定可合成久期，名义本金入公式、资金占用极低。</div>
+    </div>
+  </div>
+
+  <div class="metric">
+    <div class="metric-head"><span class="m-name">② 综合投资收益覆盖率</span><span class="m-std">≥100% · 5年周期</span></div>
+    <div class="metric-body">
+      <div class="formula">综合投资收益覆盖率 = 综合投资收益 ÷ 负债资金成本</div>
+      <div class="plain">白话：最近5年投资收益和负债成本算总账，看赚的能不能覆盖欠的。<b>重要细节</b>：正式稿计算时<b>剔除 OCI 债券的公允价值变动</b>——利率下行时OCI债的浮盈不再算数（因为险企不会卖，且负债端预定利率不随市场降）。</div>
+      <div class="guard">分母含分红险保户红利、万能结算成本——<b>可调</b>。承压时可下调分红实现率和结算利率达标，属于"弹性约束"。</div>
+    </div>
+  </div>
+
+  <div class="metric">
+    <div class="metric-head"><span class="m-name">③ 净投资收益覆盖率 ⭐ 最硬约束</span><span class="m-std">≥100% · 3年周期</span></div>
+    <div class="metric-body">
+      <div class="formula">净投资收益覆盖率 = 净投资收益 ÷ 负债保证成本</div>
+      <div class="plain">白话：全办法最"硬"的指标。分子只算<b>最稳定、最能落袋的收益——票息 + 股息 + 租金</b>（不含公允价值变动、不含买卖价差）；分母是<b>刚性的保证成本</b>（预定利率/最低保证利率），只能靠老保单自然到期慢慢降。</div>
+      <div class="guard">利率下行 + 存量高票息资产到期再投资，分子持续被侵蚀，分母降不动——这是所有险企中长期的最大压力点。</div>
+      <div class="plain" style="margin-top:.4rem">📊 参考：2025年上市险企净投资收益率——平安 3.7%、人保 3.6%、太保 3.4%、太平 3.2%、国寿 3.1%、新华 2.8%（华泰固收口径），多数高于或接近此前 3.5% 的预定利率高点，头部险企短期达标压力有限。</div>
+    </div>
+  </div>
+
+  <div class="metric">
+    <div class="metric-head"><span class="m-name">④ 流动性覆盖率</span><span class="m-std">≥100%</span></div>
+    <div class="metric-body">
+      <div class="plain">白话：短期（未来90天量级）需要支付的时候，手里高流动性资产够不够。计算方法按流动性风险监管规则执行。</div>
+      <div class="guard">保单集中到期、分红给付高峰时拿不出钱——流动性危机比亏损更致命。</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p><b>两个覆盖率对比（分母不对称是关键洞察）：</b></p>
+    <table>
+      <thead><tr><th>对比项</th><th>综合投资收益覆盖率</th><th>净投资收益覆盖率</th></tr></thead>
+      <tbody>
+        <tr><td class="key">观察周期</td><td>5年</td><td>3年</td></tr>
+        <tr><td class="key">分子口径</td><td>综合投资收益（剔除OCI债公允价值变动）</td><td>净投资收益（票息+股息+租金）</td></tr>
+        <tr><td class="key">分母口径</td><td>负债资金成本（含分红/万能结算，<span class="up">可调</span>）</td><td>负债保证成本（预定/最低保证利率，<span class="down">刚性</span>）</td></tr>
+        <tr><td class="key">性质</td><td>弹性约束——承压时可调分红和结算利率</td><td class="hl">刚性约束——只能靠老保单自然到期慢慢降</td></tr>
+      </tbody>
+    </table>
+    <div class="tip">💡 <b>华泰固收三个配置结论</b>：① 偏好高票息品种（超长地方债、长久期高等级信用、REITs）② 抑制交易——卖出高票息老券的价差不计入净投资收益，卖掉后票息消失 ③ <b>高股息权益监管顺风</b>——股息计入净投资收益，OCI权益浮盈计入综合收益，而OCI债浮盈被剔除："高股息OCI股票严格优于低票息利率债"。</div>
+  </div>
+</section>
+
+<!-- ============ 4 财险指标 ============ -->
+<section id="s4">
+  <div class="sec-head"><div class="bar"></div><h2>四、财产险 3 项监管指标</h2><div class="en">P&amp;C INSURANCE · 3 METRICS</div></div>
+  <div class="card">
+    <table>
+      <thead><tr><th>指标</th><th>公式要点</th><th>最低标准</th><th>防什么</th></tr></thead>
+      <tbody>
+        <tr><td class="key">沉淀资金覆盖率</td><td>沉淀资金 ÷ 中长期资产</td><td class="hl">≥100%</td><td>防止以短期业务为主的财险公司拿短期资金做长期投资（短钱长投）</td></tr>
+        <tr><td class="key">收入覆盖率</td><td>（保险服务收入 + 综合投资收益）÷ 综合成本</td><td class="hl">≥100%</td><td>综合收入能否覆盖综合成本</td></tr>
+        <tr><td class="key">流动性覆盖率</td><td>按流动性风险监管规则计算</td><td class="hl">≥100%</td><td>短期支付能力</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:.85rem;color:var(--muted)">注：财险公司还要建立沉淀资金预测与管理评估机制（《办法》第十六条）。</p>
+  </div>
+</section>
+
+<!-- ============ 5 监测指标 ============ -->
+<section id="s5">
+  <div class="sec-head"><div class="bar"></div><h2>五、监测指标（预警仪表盘）</h2><div class="en">MONITORING METRICS</div></div>
+  <div class="card">
+    <p>监管指标是"<b>及格线</b>"，监测指标是"<b>仪表盘</b>"——不达标不处罚，但监管会看会问，用于预警。</p>
+    <ul>
+      <li><b>人身险监测指标</b>：有效久期缺口（从监管指标降级而来）、基点价值变动等。</li>
+      <li><b>财产险监测指标</b>：利差一（综合投资收益率 − 负债资金成本率）、利差二（口径另算）等。</li>
+    </ul>
+    <div class="tip">🛠️ 金融监管总局可以根据审慎监管需要，<b>调整指标口径或增设新指标</b>（第三十三条）——这套指标体系会持续进化。</div>
+  </div>
+</section>
+
+<!-- ============ 6 会计准则扫盲 ============ -->
+<section id="s6">
+  <div class="sec-head"><div class="bar"></div><h2>六、新会计准则扫盲（IFRS9 / IFRS17）</h2><div class="en">ACCOUNTING PRIMER</div></div>
+  <div class="card">
+    <p><b>为什么要懂会计准则</b>：2026年保险业全面实施新会计准则（中国版 IFRS9 + IFRS17）。新规的监管指标口径（尤其是两个覆盖率）直接建立在会计分类上——不懂三分类，就看不懂指标怎么算、产品该怎么做。</p>
+    <table>
+      <thead><tr><th>分类</th><th>记账方式</th><th>价格波动去哪了</th><th>什么收益进利润表</th></tr></thead>
+      <tbody>
+        <tr><td class="key">AC（摊余成本）</td><td>按买入成本+利息摊销，不盯市</td><td>不体现（除非减值）</td><td>利息收入</td></tr>
+        <tr><td class="key">FVOCI（公允进OCI）</td><td>按市价记账，浮盈浮亏进OCI</td><td>进"其他综合收益"，不进利润表；卖出/减值才结转</td><td>利息/股息 + 卖出时已实现损益</td></tr>
+        <tr><td class="key">FVTPL（公允进损益）</td><td>按市价记账</td><td class="hl">直接进利润表，每天波动都算数</td><td>利息 + 公允价值变动 + 买卖差价</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:.6rem"><b>为什么"高股息 OCI 股票"在新规下特别香</b>——三个逻辑串起来：</p>
+    <ul>
+      <li>净投资收益覆盖率（3年）的分子只算<b>股息+票息+租金</b>——高股息股票的股息直接贡献分子；</li>
+      <li>综合投资收益覆盖率（5年）剔除了OCI债的浮盈浮亏——但<b>OCI股票的浮盈计入综合投资收益</b>；</li>
+      <li>会计上高股息股票放 FVOCI：股息进利润表、股价波动进 OCI、卖出才结转——利润表和指标两头受益。</li>
+    </ul>
+    <div class="quote">华泰固收结论："高股息 OCI 股票严格优于低票息利率债"。这也是新规下保险资金配置范式转换的核心：<b>从"交易赚差价"转向"持有赚票息股息"</b>。</div>
+    <p style="margin-top:.6rem"><b>IFRS17（负债端）</b>：保险负债按"当前利率"折现计量，利率变动会直接改变负债账面价值——负债端波动也放大了，所以资产端才需要 OCI 分类来对冲利润表波动。资产端三分类 + 负债端现行利率折现，"平滑"的本质是把剧烈波动用会计分类和估值方法抹平。</p>
+  </div>
+</section>
+
+<!-- ============ 7 市场观点 ============ -->
+<section id="s7">
+  <div class="sec-head"><div class="bar"></div><h2>七、市场观点汇总（四篇代表研报）</h2><div class="en">MARKET VIEWS</div></div>
+  <div class="card">
+    <ul>
+      <li><b>华泰固收《对债市的影响》</b>：长久期利率债仍是"刚需"，但匹配压力边际下降（对冲率替代久期缺口）；利率衍生品直接进久期分子，利好30年国债期货（TL）与长端IRS；两个覆盖率分母不对称是关键机制；节奏上首次报送为2026年四季度与2026年度报告，回溯口径。</li>
+      <li><b>《40万亿险资迎来资负新规，影响几何？》</b>：2026年上半年保险资金运用余额突破40万亿（约40.82万亿，创历史新高）；头部险企治理、系统、精算能力齐备，短期影响有限；低利率+新准则下，险资通过资产配置结构调整应对。</li>
+      <li><b>《超长债或"短多长空"》</b>：短多——长久期利率债刚需、衍生品合成久期新工具、过渡期缓冲；长空——债券端并非激进拉久期而是"合理匹配"；结论：短期影响有限，长期加速险资向高股息蓝筹和超长债集中。</li>
+      <li><b>《保险买债真的变少了吗？》</b>："量没少、结构变了"——买债仍是刚需（尤其长久期中票），但结构向高票息迁移；高股息股票承接部分配置需求（华创测算欠配约2000亿）；净投资收益覆盖率是压力口径。</li>
+    </ul>
+    <table style="margin-top:.7rem">
+      <thead><tr><th>维度</th><th>核心结论</th></tr></thead>
+      <tbody>
+        <tr><td class="key">监管框架</td><td>从"能力评估+量化评分"升级为定量指标硬约束（人身险4项、财险3项）</td></tr>
+        <tr><td class="key">配置方向</td><td>高票息品种（超长地方债、长久期高等级信用、REITs）、高股息OCI权益</td></tr>
+        <tr><td class="key">交易行为</td><td>卖盘意愿下降、长债换手率承压、结构重于总量</td></tr>
+        <tr><td class="key">行业分化</td><td>头部险企受益、中小险企靠过渡期补课</td></tr>
+        <tr><td class="key">节奏</td><td>短期（2026年内）无交易层面冲击；中期品种结构影响；2027年3月底前报送达标规划</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 8 产品化映射 ============ -->
+<section id="s8">
+  <div class="sec-head"><div class="bar"></div><h2>八、保险资金产品化：监管指标 → 产品工具映射</h2><div class="en">PRODUCTIZATION</div></div>
+  <div class="card">
+    <table>
+      <thead><tr><th>大账诉求 / 监管指标</th><th>组合产品抓手</th><th>产品形态示例</th></tr></thead>
+      <tbody>
+        <tr><td class="key">净投资收益覆盖率 ≥100%<br><span style="font-weight:400">（票息+股息+租金）</span></td><td>高票息+高股息双轮</td><td>固收+红利策略产品、红利低波指数增强、高等级信用债+REITs组合</td></tr>
+        <tr><td class="key">综合投资收益覆盖率 ≥100%<br><span style="font-weight:400">（5年，剔除OCI债波动）</span></td><td>OCI配置与估值管理</td><td>OCI账户债券组合、FVOCI高股息股票组合、绝对收益型产品</td></tr>
+        <tr><td class="key">利率风险对冲率 50%–150%</td><td>久期合成与衍生品</td><td>超长债产品（30Y/50Y地方债利差）、国债期货/IRS配套策略</td></tr>
+        <tr><td class="key">流动性覆盖率 ≥100%</td><td>高流动高安全资产</td><td>货币型/现金管理类（摊余成本法）、利率债+存单组合</td></tr>
+        <tr><td class="key">分红/结算支撑</td><td>分红险账户专属方案</td><td>按负债成本+分红目标倒推收益的组合方案，兼顾5年综合与3年净收益</td></tr>
+        <tr><td class="key">新会计准则平滑</td><td>OCI/AC分类管理</td><td>AC持有到期+OCI浮盈管理，平滑利润表与净资产波动</td></tr>
+      </tbody>
+    </table>
+    <div class="tip">🎯 <b>落地打法（从"卖产品"到"交方案"）</b>：① 产品货架按指标分层——每个组合产品标注"指标贡献"（久期、票息、股息率、流动性）② 分红支持型方案——针对问"年底能不能分红"的保险资金，做"负债成本+分红目标"倒推方案 ③ 衍生品与久期服务 ④ 数据与报送能力——《办法》第二十二条要求受托人"配合保险公司开展资产负债管理"。</div>
+    <div class="quote">新规下"能不能分红" = 综合投资收益覆盖率的弹性 + 净投资收益覆盖率的刚性。对保险资金（大账）而言，能提升净投资收益、能增厚综合收益的组合产品，就是指标友好的产品。</div>
+  </div>
+</section>
+
+<!-- ============ 9 过渡期与报送 ============ -->
+<section id="s9">
+  <div class="sec-head"><div class="bar"></div><h2>九、过渡期与报送节奏</h2><div class="en">TRANSITION &amp; REPORTING</div></div>
+  <div class="card">
+    <ul>
+      <li><b>过渡期</b>：监管指标不达标的公司可设<b>3年过渡期</b>；达标规划经董事会批准后于<b>2027年3月底前</b>报监管机构。</li>
+      <li><b>季度报告</b>：季度结束后 <b>30日</b>内报送。</li>
+      <li><b>年度报告</b>：次年 <b>4月30日</b>前报送，须<b>独立第三方机构核验</b>。</li>
+      <li><b>能力评估</b>：每年评估一次资产负债管理能力，结果纳入监管评级体系。</li>
+      <li><b>监管措施</b>（第三十九条）：指标不达标可触发——监管谈话、监管意见书、更严格压力测试、增加报告内容、扩大现场检查范围；到期整改不到位可采取进一步措施（第四十条）。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 10 速查卡片 ============ -->
+<section id="s10">
+  <div class="sec-head"><div class="bar"></div><h2>十、概念速查卡片（一页扫盲）</h2><div class="en">CHEAT SHEET</div></div>
+  <div class="card">
+    <table>
+      <thead><tr><th>概念</th><th>一句话解释</th></tr></thead>
+      <tbody>
+        <tr><td class="key">资产负债管理（ALM）</td><td>让资产端收益/期限/流动性与负债端（保单义务）匹配的管理体系</td></tr>
+        <tr><td class="key">久期</td><td>现金流"平均回收时间"，近似衡量价格对利率的敏感度</td></tr>
+        <tr><td class="key">有效久期 vs 修正久期</td><td>有效久期考虑含权因素（分红/万能/退保），更接近真实风险，监管指标用它</td></tr>
+        <tr><td class="key">利差损</td><td>资产收益率低于负债成本的亏损，保险业最核心的风险</td></tr>
+        <tr><td class="key">利率风险对冲率</td><td>资产现金流利率敏感度 ÷ 负债现金流利率敏感度（50%–150%）</td></tr>
+        <tr><td class="key">综合投资收益覆盖率</td><td>5年综合投资收益 ÷ 负债资金成本（含分红/结算，可调），≥100%</td></tr>
+        <tr><td class="key">净投资收益覆盖率</td><td>3年净投资收益（票息+股息+租金）÷ 刚性保证成本，≥100%，最硬的约束</td></tr>
+        <tr><td class="key">沉淀资金覆盖率</td><td>财险指标：沉淀资金 ÷ 中长期资产 ≥100%，防短钱长投</td></tr>
+        <tr><td class="key">OCI（其他综合收益）</td><td>不进利润表的"影子账户"，浮盈浮亏先放这里，卖出/减值才结转利润</td></tr>
+        <tr><td class="key">AC / FVOCI / FVTPL</td><td>IFRS9三分类：摊余成本（不盯市）/公允进OCI（波动不进利润）/公允进损益</td></tr>
+        <tr><td class="key">摊余成本法</td><td>按买入成本+利息摊销记账，净值平滑不随市价波动</td></tr>
+        <tr><td class="key">保证成本</td><td>保单约定的刚性最低回报（预定/最低保证利率），不可调</td></tr>
+        <tr><td class="key">资金成本</td><td>含分红红利、万能结算的整体负债成本，可调</td></tr>
+        <tr><td class="key">新会计准则（IFRS9/17）</td><td>2026年保险业全面实施：资产端三分类 + 负债端按当前利率折现</td></tr>
+        <tr><td class="key">保险资金产品化</td><td>把大账的资金需求（收益/久期/流动性/分红）转成标准化组合产品方案</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="foot">
+  <b>资料来源</b><br>
+  ① 《保险公司资产负债管理办法》（金融监管总局令2026年第4号，2026-08-20公布）原文<br>
+  ② 金融监管总局有关司局答记者问（2026-08-24，吉林省委金融办等转载）<br>
+  ③ 《办法》深度解读：监管指标扫盲与保险资金产品化（2026-08-27，内部材料）<br>
+  ④ 华泰固收《保险公司资产负债管理办法》对债市的影响（2026-08）<br>
+  ⑤ 公开报道：<a href="https://finance.eastmoney.com/a/202608223849824855.html" target="_blank">东方财富·新规出台</a> ·
+     <a href="https://jr.jl.gov.cn/jrzc/zcjd/202608/t20260824_3664926.html" target="_blank">答记者问全文</a> ·
+     <a href="http://vip.stock.finance.sina.com.cn/q/go.php/vReport_Show/kind/lastest/rptid/841043653926/index.phtml" target="_blank">华泰固收研报</a><br>
+  ⚠️ 本文仅供内部学习参考，指标口径以《办法》正式稿及监管后续口径解释为准，不构成投资建议
+</div>
+
+</div>
+</body>
+</html>

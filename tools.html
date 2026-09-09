@@ -279,5 +279,55 @@ a{text-decoration:none;color:inherit}
 
   <div class="foot">EVERSTEAD TOOLBOX · 2026-09-09</div>
 </div>
+
+<script>
+/* ============================================================
+   本地工具唤起: Chrome 会静默拦截 <a href="launch://"> 的顶级导航,
+   改用隐藏 iframe 触发外部协议(腾讯会议/Steam 同款做法), 浏览器弹确认框
+   ============================================================ */
+(function() {
+  var cards = document.querySelectorAll('a.card.local');
+  for (var i = 0; i < cards.length; i++) {
+    (function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        var url = a.getAttribute('href');
+        var name = a.querySelector('.t') ? a.querySelector('.t').textContent : url;
+        // 隐藏 iframe 触发协议
+        var ifr = document.createElement('iframe');
+        ifr.style.display = 'none';
+        ifr.src = url;
+        document.body.appendChild(ifr);
+        setTimeout(function() {
+          if (ifr.parentNode) ifr.parentNode.removeChild(ifr);
+        }, 3000);
+        // 顶部浮条提示
+        showTip('正在唤起「' + name + '」 → 若浏览器弹确认框请点「允许」(可勾选记住)。没反应? Win+R 输入 ' + url + ' 回车, 允许一次后网页点击即通');
+      });
+    })(cards[i]);
+  }
+})();
+
+function showTip(text) {
+  var old = document.getElementById('launch-tip');
+  if (old) old.parentNode.removeChild(old);
+  var tip = document.createElement('div');
+  tip.id = 'launch-tip';
+  tip.textContent = text;
+  tip.style.cssText = [
+    'position:fixed', 'left:50%', 'top:18px', 'transform:translateX(-50%)',
+    'z-index:99', 'max-width:86%', 'padding:10px 18px',
+    'font-size:13px', 'color:#e2ecf7',
+    'background:rgba(10,20,38,.92)', 'border:1px solid rgba(56,189,248,.45)',
+    'border-radius:10px', 'box-shadow:0 0 24px rgba(34,211,238,.25)',
+    'transition:opacity .4s', 'text-align:center'
+  ].join(';');
+  document.body.appendChild(tip);
+  setTimeout(function() {
+    tip.style.opacity = '0';
+    setTimeout(function() { if (tip.parentNode) tip.parentNode.removeChild(tip); }, 500);
+  }, 6000);
+}
+</script>
 </body>
 </html>

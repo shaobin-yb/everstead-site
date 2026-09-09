@@ -167,7 +167,7 @@ a{text-decoration:none;color:inherit}
     <div class="section-head">
       <span class="no">SECTION 01</span>
       <h2>⚡ 本地工具</h2>
-      <span class="cnt">launch:// 协议唤起本机应用</span>
+      <span class="cnt" id="svc-status">调度器检测中…</span>
     </div>
     <div class="grid">
       <a class="card local" href="launch://mimo">
@@ -220,8 +220,8 @@ a{text-decoration:none;color:inherit}
       </a>
     </div>
     <div class="tip">
-      <b>使用说明</b> · 点击「本地工具」卡片, 浏览器会弹出 <b>「打开 小米MiMo玩票站?」</b> 之类的确认框 → 选允许(可勾选记住)。<br>
-      <span class="warn">⚠️ 本地工具只在注册过 launch:// 协议的这台电脑上生效</span>; 手机或别的设备点了没反应。注册/新增工具找铁蛋。
+      <b>使用说明</b> · 点击卡片 → 本机调度服务直接启动应用, <b>无需任何确认框</b>。页面右上角有调度器状态灯, 显示「调度在线」即可点。<br>
+      <span class="warn">⚠️ 本地工具只在开着调度服务的这台电脑上生效</span>; 状态灯显示离线时: Win+R 输入 <b>launch://mimo</b> 回车(首次允许一次), 或让铁蛋重启调度服务。手机点本地工具无效果属正常。
     </div>
   </div>
 
@@ -282,27 +282,48 @@ a{text-decoration:none;color:inherit}
 
 <script>
 /* ============================================================
-   本地工具唤起: Chrome 会静默拦截 <a href="launch://"> 的顶级导航,
-   改用隐藏 iframe 触发外部协议(腾讯会议/Steam 同款做法), 浏览器弹确认框
+   本地工具唤起 v3 — 图片信标方案
+   Chrome 拦截 launch:// 协议导航(顶级+iframe 都拦),
+   本方案改走 http://localhost:18999 本机调度服务:
+   网页请求一个像素图 → 服务端顺手启动工具, 不碰协议机制, 零确认框。
+   调度服务离线时回退: Win+R 输入 launch://xxx 提示。
    ============================================================ */
+var LAUNCH_SERVICE = "http://localhost:18999";
+
+/* 状态灯: 调度服务在线检测 (fetch, 服务端已开 CORS) */
+(function checkService() {
+  var statusEl = document.getElementById('svc-status');
+  function set(txt, color) {
+    if (statusEl) { statusEl.textContent = txt; statusEl.style.color = color || ''; }
+  }
+  fetch(LAUNCH_SERVICE + "/health", {cache: 'no-store'})
+    .then(function(r) { return r.ok ? set('调度在线', '#34d399') : set('调度离线 — 点卡片会提示手动路径', '#fb923c'); })
+    .catch(function() { set('调度离线 — 点卡片会提示手动路径', '#fb923c'); });
+})();
+
 (function() {
   var cards = document.querySelectorAll('a.card.local');
   for (var i = 0; i < cards.length; i++) {
     (function(a) {
       a.addEventListener('click', function(e) {
         e.preventDefault();
-        var url = a.getAttribute('href');
-        var name = a.querySelector('.t') ? a.querySelector('.t').textContent : url;
-        // 隐藏 iframe 触发协议
-        var ifr = document.createElement('iframe');
-        ifr.style.display = 'none';
-        ifr.src = url;
-        document.body.appendChild(ifr);
-        setTimeout(function() {
-          if (ifr.parentNode) ifr.parentNode.removeChild(ifr);
-        }, 3000);
-        // 顶部浮条提示
-        showTip('正在唤起「' + name + '」 → 若浏览器弹确认框请点「允许」(可勾选记住)。没反应? Win+R 输入 ' + url + ' 回车, 允许一次后网页点击即通');
+        var url = a.getAttribute('href');           // 形如 launch://mimo
+        var appId = url.replace('launch://', '').replace(/\/+$/, '');
+        var name = a.querySelector('.t') ? a.querySelector('.t').textContent : appId;
+
+        // 主路径: fetch → 本机调度服务(状态灯已验证 fetch 通路 OK, 服务端开 CORS)
+        fetch(LAUNCH_SERVICE + '/launch?id=' + encodeURIComponent(appId), {cache: 'no-store'})
+          .then(function(r) {
+            if (r.ok) {
+              showTip('正在启动「' + name + '」…');
+            } else {
+              showTip('调度服务拒绝启动「' + name + '」, 让铁蛋查 launch_log.txt');
+            }
+          })
+          .catch(function() {
+            // 调度服务没开 → 引导用协议路径
+            showTip('调度服务离线。「' + name + '」启动方法: Win+R 输入 ' + url + ' 回车(首次允许一次); 或让铁蛋重启调度服务');
+          });
       });
     })(cards[i]);
   }

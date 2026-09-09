@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>芽年级数据统计分析 · 幼儿名单</title>
+<style>
+/* ─── 主题变量（dataviz 参考色板，浅色/深色双套） ─── */
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface-1: #fcfcfb;
+  --surface-2: #ffffff;
+  --text-1: #0b0b0b;
+  --text-2: #52514e;
+  --muted: #898781;
+  --grid: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11,11,11,0.10);
+  --c1: #2a78d6;          /* 蓝：芽一班 / 男生 / 2022年 / 兔 */
+  --c2: #eb6834;          /* 橙：芽二班 / 女生 / 2023年 / 虎 */
+  --c3: #1baf7a;          /* 青：芽三班 */
+  --bar: #3987e5;         /* 量值柱 */
+  --bar-top: #2a78d6;     /* 量值柱（最高项强调） */
+  --tip-bg: #ffffff;
+  --shadow: 0 1px 2px rgba(11,11,11,0.05), 0 4px 16px rgba(11,11,11,0.07);
+}
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface-1: #1a1a19;
+    --surface-2: #212120;
+    --text-1: #ffffff;
+    --text-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255,255,255,0.10);
+    --c1: #3987e5;
+    --c2: #d95926;
+    --c3: #199e70;
+    --bar: #5598e7;
+    --bar-top: #6da7ec;
+    --tip-bg: #242423;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.4);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface-1: #1a1a19;
+  --surface-2: #212120;
+  --text-1: #ffffff;
+  --text-2: #c3c2b7;
+  --muted: #898781;
+  --grid: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255,255,255,0.10);
+  --c1: #3987e5;
+  --c2: #d95926;
+  --c3: #199e70;
+  --bar: #5598e7;
+  --bar-top: #6da7ec;
+  --tip-bg: #242423;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.4);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--page);
+  color: var(--text-1);
+  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  line-height: 1.55;
+}
+
+/* ─── 顶栏 ─── */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: 1120px; margin: 0 auto; padding: 10px 24px;
+  display: flex; align-items: center; gap: 18px;
+}
+.topbar-title { font-weight: 650; font-size: 15px; }
+.topbar nav { display: flex; gap: 4px; flex: 1; }
+.topbar nav a {
+  color: var(--text-2); text-decoration: none; font-size: 13px;
+  padding: 5px 12px; border-radius: 999px;
+}
+.topbar nav a:hover { background: var(--border); color: var(--text-1); }
+#themeBtn {
+  border: 1px solid var(--border); background: var(--surface-1); color: var(--text-2);
+  border-radius: 999px; padding: 5px 12px; font-size: 13px; cursor: pointer;
+}
+#themeBtn:hover { color: var(--text-1); }
+
+/* ─── 页头 ─── */
+header.page-head { max-width: 1120px; margin: 0 auto; padding: 48px 24px 8px; }
+.page-head .kicker { color: var(--muted); font-size: 13px; letter-spacing: 0.04em; }
+.page-head h1 { font-size: 30px; font-weight: 700; margin: 6px 0 4px; }
+.page-head .sub { color: var(--text-2); font-size: 14px; }
+
+/* ─── Hero 数字 ─── */
+.hero-row {
+  max-width: 1120px; margin: 24px auto 0; padding: 0 24px;
+  display: flex; align-items: flex-end; gap: 40px;
+}
+.hero-num { font-size: 64px; font-weight: 650; line-height: 1; letter-spacing: -0.02em; }
+.hero-label { color: var(--text-2); font-size: 14px; margin-top: 6px; }
+.hero-notes { color: var(--muted); font-size: 13px; padding-bottom: 10px; }
+
+/* ─── 章节 ─── */
+main { max-width: 1120px; margin: 0 auto; padding: 16px 24px 64px; }
+section.block { margin-top: 44px; }
+section.block > h2 {
+  font-size: 20px; font-weight: 700; padding-bottom: 10px;
+  border-bottom: 1px solid var(--axis); margin-bottom: 16px;
+}
+section.block > h2 .en { color: var(--muted); font-size: 12px; font-weight: 400; margin-left: 8px; }
+
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.card {
+  background: var(--surface-1); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; box-shadow: var(--shadow);
+}
+.card h3 { font-size: 15px; font-weight: 650; margin-bottom: 4px; }
+.card .desc { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+.card.wide { grid-column: 1 / -1; }
+
+/* ─── 王斯卯信息卡 ─── */
+.info-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.info-item { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.info-item .k { color: var(--muted); font-size: 11px; margin-bottom: 2px; }
+.info-item .v { font-size: 14px; font-weight: 600; }
+
+/* ─── 统计块 ─── */
+.tile-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.tile { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+.tile .tv { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.tile .tv small { font-size: 13px; font-weight: 400; color: var(--muted); }
+.tile .tl { color: var(--text-2); font-size: 12px; margin-top: 4px; }
+.tile .ts { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+/* ─── 图例 ─── */
+.legend { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+.legend .li { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-2); }
+.legend .sw { width: 10px; height: 10px; border-radius: 3px; }
+
+/* ─── 纵向分组柱 ─── */
+.vbar-wrap { display: flex; gap: 24px; justify-content: space-around; padding-top: 8px; }
+.vbar-group { display: flex; flex-direction: column; align-items: center; gap: 8px; flex: 1; }
+.vbar-bars { display: flex; gap: 2px; align-items: flex-end; height: 168px; }
+.vbar { width: 22px; border-radius: 4px 4px 0 0; position: relative; cursor: default; }
+.vbar .cap {
+  position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+  font-size: 11px; color: var(--text-2); white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.vbar-group .gl { font-size: 13px; color: var(--text-2); }
+.vbar-group .gs { font-size: 11px; color: var(--muted); }
+
+/* ─── 横向条形 ─── */
+.hbar-chart { display: flex; flex-direction: column; gap: 2px; }
+.hbar-row { display: flex; align-items: center; gap: 10px; }
+.hbar-label { width: 58px; text-align: right; color: var(--text-2); font-size: 12.5px; flex-shrink: 0; }
+.hbar-track { flex: 1; height: 20px; position: relative; }
+.hbar {
+  height: 20px; background: var(--bar); border-radius: 0 4px 4px 0;
+  display: flex; align-items: center;
+}
+.hbar.top { background: var(--bar-top); }
+.hbar-val { font-size: 11.5px; color: var(--text-2); width: 92px; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+/* ─── 月龄区间图 ─── */
+.range-row { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
+.range-label { width: 58px; text-align: right; font-size: 13px; color: var(--text-2); flex-shrink: 0; }
+.range-track { flex: 1; height: 24px; position: relative; border-bottom: 1px solid var(--axis); }
+.range-seg { position: absolute; top: 10px; height: 4px; border-radius: 2px; opacity: 0.35; }
+.range-tick { position: absolute; top: 7px; width: 2px; height: 10px; border-radius: 1px; }
+.range-dot {
+  position: absolute; top: 8px; width: 8px; height: 8px; border-radius: 50%;
+  transform: translateX(-50%);
+  border: 2px solid var(--surface-1);
+}
+.range-val { width: 150px; font-size: 12px; color: var(--text-2); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+/* ─── Top5 卡片 ─── */
+.top5-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+.top5-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.top5-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+.top5-rank { font-size: 12px; color: var(--muted); }
+.top5-score { font-size: 26px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.top5-name { font-size: 16px; font-weight: 650; }
+.top5-meta { font-size: 11.5px; color: var(--text-2); margin: 2px 0 10px; }
+.mini-bar { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 11px; color: var(--text-2); }
+.mini-bar .mk { width: 34px; flex-shrink: 0; }
+.mini-bar .mt { flex: 1; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.mini-bar .mf { height: 100%; border-radius: 3px; background: var(--bar); }
+.mini-bar .mv { width: 20px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.top5-extra { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 8px; font-size: 11.5px; color: var(--text-2); }
+.top5-extra div { margin: 1px 0; }
+
+/* ─── 表格 ─── */
+.table-tools { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+.search-input {
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text-1);
+  border-radius: 8px; padding: 7px 12px; font-size: 13px; width: 220px; outline: none;
+}
+.search-input:focus { border-color: var(--c1); }
+.table-count { color: var(--muted); font-size: 12px; }
+.table-scroll { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.data th {
+  text-align: left; color: var(--muted); font-weight: 500; font-size: 12px;
+  padding: 8px 10px; border-bottom: 1px solid var(--axis); white-space: nowrap;
+}
+table.data th.sortable { cursor: pointer; user-select: none; }
+table.data th.sortable:hover { color: var(--text-1); }
+table.data td { padding: 8px 10px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+table.data tbody tr:hover { background: var(--border); }
+td.num { text-align: right; }
+.cls-tag { font-size: 11px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-2); white-space: nowrap; }
+
+/* ─── 列表卡片 ─── */
+.list-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+.list-card h4 { font-size: 13px; font-weight: 650; margin-bottom: 6px; }
+.list-card p { font-size: 13px; color: var(--text-2); }
+.chip { display: inline-block; background: var(--surface-1); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; margin: 2px 3px 2px 0; font-size: 12.5px; color: var(--text-2); }
+
+/* ─── 工具提示 ─── */
+#tip {
+  position: fixed; z-index: 100; pointer-events: none;
+  background: var(--tip-bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px 10px; font-size: 12px; box-shadow: var(--shadow);
+  opacity: 0; transition: opacity 0.1s;
+}
+#tip .tt { font-weight: 600; }
+#tip .ts { color: var(--muted); font-size: 11px; }
+
+/* ─── 页脚 ─── */
+footer { max-width: 1120px; margin: 0 auto; padding: 24px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); }
+
+/* ─── 响应式 ─── */
+@media (max-width: 900px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .info-grid { grid-template-columns: repeat(2, 1fr); }
+  .tile-row { grid-template-columns: repeat(2, 1fr); }
+  .top5-row { grid-template-columns: repeat(2, 1fr); }
+  .hero-row { flex-direction: column; gap: 12px; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <span class="topbar-title">芽年级统计</span>
+    <nav>
+      <a href="#smao">王斯卯专题</a>
+      <a href="#stats">年级统计</a>
+    </nav>
+    <button id="themeBtn" title="切换深色/浅色">🌙 深色</button>
+  </div>
+</div>
+
+<header class="page-head">
+  <div class="kicker">芽三班幼儿名单 · 统计分析页</div>
+  <h1>芽年级数据统计分析</h1>
+  <div class="sub">芽一班 / 芽二班 / 芽三班 · 数据截至 2026-08-17</div>
+</header>
+
+<div class="hero-row">
+  <div>
+    <div class="hero-num">74</div>
+    <div class="hero-label">全年级幼儿总数</div>
+  </div>
+  <div class="hero-notes">
+    3 个班级 · 40 名男生 · 34 名女生<br>
+    2022 年出生 28 人 · 2023 年出生 46 人 · 年龄跨度 376 天
+  </div>
+</div>
+
+<main>
+
+<!-- ═══════════ 王斯卯专题 ═══════════ -->
+<section class="block" id="smao">
+  <h2>王斯卯专题 <span class="en">AGE &amp; MATCH</span></h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>基本信息</h3>
+      <div class="desc">王斯卯 · 芽三班</div>
+      <div class="info-grid">
+        <div class="info-item"><div class="k">出生日期</div><div class="v">2023-02-23</div></div>
+        <div class="info-item"><div class="k">星座</div><div class="v">双鱼座</div></div>
+        <div class="info-item"><div class="k">八字（六字）</div><div class="v">癸卯 甲寅 癸丑</div></div>
+        <div class="info-item"><div class="k">五行分布</div><div class="v">木3 水2 土1<br><span style="color:var(--muted);font-weight:400;font-size:12px">缺金、缺火</span></div></div>
+        <div class="info-item"><div class="k">名字五行</div><div class="v">王(土) 斯(金) 卯(木)</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>年龄排序</h3>
+      <div class="desc">全年级按出生日期从大到小排</div>
+      <div class="tile-row">
+        <div class="tile">
+          <div class="tv">42<small> / 74</small></div>
+          <div class="tl">全年级排名</div>
+          <div class="ts">从大到小</div>
+        </div>
+        <div class="tile">
+          <div class="tv">41<small> 人</small></div>
+          <div class="tl">比他大</div>
+        </div>
+        <div class="tile">
+          <div class="tv">32<small> 人</small></div>
+          <div class="tl">比他小</div>
+        </div>
+        <div class="tile">
+          <div class="tv">15<small> / 25</small></div>
+          <div class="tl">班内排名</div>
+          <div class="ts">中等偏下（后 43%）</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card wide">
+      <h3>全年级玩伴匹配度 · Top 10</h3>
+      <div class="desc">综合分 = 星座 40% + 八字互补 35% + 名字互补 25%（满分 100）</div>
+      <div class="top5-row" id="top5Row"></div>
+    </div>
+
+    <div class="card wide">
+      <h3>全年级玩伴匹配度排名</h3>
+      <div class="desc">共 73 人（全年级幼儿，含男生）· 按综合分排序 · 点击「综合分」表头可重排</div>
+      <div class="table-tools">
+        <input class="search-input" id="matchSearch" placeholder="搜索姓名 / 性别 / 班级 / 星座…">
+        <span class="table-count" id="matchCount"></span>
+      </div>
+      <div class="table-scroll">
+        <table class="data" id="matchTable">
+          <thead>
+            <tr>
+              <th>排名</th><th>姓名</th><th>性别</th><th>班级</th><th>出生日期</th><th>星座</th>
+              <th class="num">星座分</th><th class="num">八字互补</th><th class="num">名字互补</th>
+              <th class="num sortable" id="thTotal">综合分 ⇅</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 年级统计 ═══════════ -->
+<section class="block" id="stats">
+  <h2>年级整体统计 <span class="en">GRADE OVERVIEW</span></h2>
+  <div class="card-grid">
+
+    <div class="card">
+      <h3>一、男女比例</h3>
+      <div class="desc">各班级及全年级男女构成</div>
+      <div class="legend">
+        <span class="li"><span class="sw" style="background:var(--c1)"></span>男生</span>
+        <span class="li"><span class="sw" style="background:var(--c2)"></span>女生</span>
+      </div>
+      <div class="vbar-wrap" id="genderChart"></div>
+    </div>
+
+    <div class="card">
+      <h3>二、出生年份比例</h3>
+      <div class="desc">2022 / 2023 年出生人数占比</div>
+      <div class="legend">
+        <span class="li"><span class="sw" style="background:var(--c1)"></span>2022 年</span>
+        <span class="li"><span class="sw" style="background:var(--c2)"></span>2023 年</span>
+      </div>
+      <div class="vbar-wrap" id="yearChart"></div>
+    </div>
+
+    <div class="card">
+      <h3>三、出生月份分布</h3>
+      <div class="desc">全年级 74 人按出生月份 · 12 月最多（12 人）</div>
+      <div class="hbar-chart" id="monthChart"></div>
+    </div>
+
+    <div class="card">
+      <h3>四、星座分布</h3>
+      <div class="desc">全年级 74 人按星座 · 射手座最多（11 人）</div>
+      <div class="hbar-chart" id="zodiacChart"></div>
+    </div>
+
+    <div class="card">
+      <h3>五、姓氏分布 Top 10</h3>
+      <div class="desc">全年级共 46 个不同姓氏 · 李姓最多（7 人）</div>
+      <div class="hbar-chart" id="surnameChart"></div>
+    </div>
+
+    <div class="card">
+      <h3>六、名字用字高频 Top 15</h3>
+      <div class="desc">名字（不含姓）中出现最多的字 · 「嘉」4 次居首</div>
+      <div class="hbar-chart" id="charChart"></div>
+    </div>
+
+    <div class="card">
+      <h3>七、名字长度分布</h3>
+      <div class="desc">3 个字的名字占绝大多数（90.5%）</div>
+      <div class="hbar-chart" id="lenChart"></div>
+    </div>
+
+    <div class="card">
+      <h3>十、生肖分布</h3>
+      <div class="desc">兔（2023 年）与虎（2022 年）</div>
+      <div class="hbar-chart" id="zodiac2Chart"></div>
+    </div>
+
+    <div class="card wide">
+      <h3>九、各班平均月龄（截至 2026-08-17）</h3>
+      <div class="desc">区间 = 班内最大~最小月龄 · 圆点 = 平均月龄</div>
+      <div class="legend">
+        <span class="li"><span class="sw" style="background:var(--c1)"></span>芽一班</span>
+        <span class="li"><span class="sw" style="background:var(--c2)"></span>芽二班</span>
+        <span class="li"><span class="sw" style="background:var(--c3)"></span>芽三班</span>
+      </div>
+      <div id="ageRangeChart"></div>
+      <div class="table-scroll" style="margin-top:14px">
+        <table class="data">
+          <thead>
+            <tr><th>班级</th><th class="num">平均月龄</th><th class="num">中位月龄</th><th class="num">最大</th><th class="num">最小</th><th class="num">班内跨度</th></tr>
+          </thead>
+          <tbody id="ageRangeTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card wide">
+      <h3>八、年龄跨度</h3>
+      <div class="desc">全年级出生日期范围</div>
+      <div class="tile-row">
+        <div class="tile"><div class="tv" style="font-size:20px">刘墨凡</div><div class="tl">最大孩子</div><div class="ts">芽一班 · 2022-08-08</div></div>
+        <div class="tile"><div class="tv" style="font-size:20px">种一凡</div><div class="tl">最小孩子</div><div class="ts">芽一班 · 2023-08-19</div></div>
+        <div class="tile"><div class="tv">376<small> 天</small></div><div class="tl">年龄差</div><div class="ts">≈ 12.4 个月</div></div>
+        <div class="tile"><div class="tv">0</div><div class="tl">8月25日后压线出生</div><div class="ts">无</div></div>
+      </div>
+    </div>
+
+    <div class="card wide">
+      <h3>十一、入学年龄 Cutoff 分析</h3>
+      <div class="desc">按出生月份划分的大龄 / 小龄两批</div>
+      <div class="card-grid">
+        <div class="list-card">
+          <h4>9 月出生（最大一批）· 7 人</h4>
+          <p><span class="chip">邵嘉懿</span><span class="chip">陈敬一</span><span class="chip">熊浩林</span><span class="chip">李昕阳</span><span class="chip">修洛宜</span><span class="chip">陈亦聪</span><span class="chip">卢韵安</span></p>
+        </div>
+        <div class="list-card">
+          <h4>8 月出生（最小一批）· 5 人</h4>
+          <p><span class="chip">刘墨凡</span><span class="chip">郭桐佑</span><span class="chip">许舒禾</span><span class="chip">邓安</span><span class="chip">种一凡</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>十二、名字性别倾向</h3>
+      <div class="desc">按用字出现频次归类</div>
+      <div class="list-card" style="margin-bottom:10px">
+        <h4>明显偏男孩</h4>
+        <p><span class="chip">之 ×2</span><span class="chip">子 ×2</span><span class="chip">沐 ×2</span><span class="chip">泽 ×2</span><span class="chip">珩 ×2</span><span class="chip">聿 ×2</span><span class="chip">辰 ×2</span></p>
+      </div>
+      <div class="list-card" style="margin-bottom:10px">
+        <h4>明显偏女孩</h4>
+        <p><span class="chip">瑾 ×3</span><span class="chip">安 ×2</span><span class="chip">玥 ×2</span><span class="chip">瑀 ×2</span><span class="chip">禾 ×2</span><span class="chip">茉 ×2</span></p>
+      </div>
+      <div class="list-card">
+        <h4>中性字</h4>
+        <p><span class="chip">嘉</span><span class="chip">一</span><span class="chip">佑</span><span class="chip">凡</span><span class="chip">宁</span><span class="chip">尧</span><span class="chip">阳</span></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>十三、姓名重合度</h3>
+      <div class="desc">全年级姓名重复情况检查</div>
+      <div class="list-card" style="margin-bottom:10px">
+        <h4>完全同名</h4><p>无</p>
+      </div>
+      <div class="list-card" style="margin-bottom:10px">
+        <h4>同音不同字</h4><p>无</p>
+      </div>
+      <div class="list-card" style="margin-bottom:10px">
+        <h4>尾字相同 · 10 组</h4>
+        <p><span class="chip">宁</span><span class="chip">尧</span><span class="chip">泽</span><span class="chip">凡</span><span class="chip">禾</span><span class="chip">珩</span><span class="chip">阳</span><span class="chip">辰</span><span class="chip">安</span><span class="chip">玥</span></p>
+      </div>
+      <div class="list-card">
+        <h4>首字相同（不含姓）</h4>
+        <p>嘉（4 人）、瑾（3 人）、沐 / 一 / 子 / 瑀 / 之（各 2 人）</p>
+      </div>
+    </div>
+
+    <div class="card wide">
+      <h3>十四、同月同日生</h3>
+      <div class="desc">全年级共 9 组同生日 · 含 3 组疑似双胞胎</div>
+      <div class="card-grid" id="sameBirth"></div>
+    </div>
+
+  </div>
+</section>
+</main>
+
+<footer>
+  数据来源：数据分析更新.xlsx · 「统计分析」sheet · 数据截至 2026-08-17<br>
+  由铁蛋生成 · 所有数字均来自原始表格，未作任何改动
+</footer>
+
+<div id="tip"></div>
+
+<script>
+/* ═══════════ 数据（全部取自 xlsx「统计分析」sheet，逐字核对，2026-08-17 更新版） ═══════════ */
+
+const MATCH = [
+  {r:1, name:'成瑾玥', g:'女', cls:'芽二班', birth:'2023-07-21', zod:'巨蟹座', xz:100, bz:30, mz:40, t:60.5},
+  {r:2, name:'刘瑾伊', g:'女', cls:'芽二班', birth:'2023-07-21', zod:'巨蟹座', xz:100, bz:30, mz:40, t:60.5},
+  {r:3, name:'陆牧扬', g:'女', cls:'芽二班', birth:'2022-11-12', zod:'天蝎座', xz:100, bz:40, mz:20, t:59},
+  {r:4, name:'郑陶然', g:'男', cls:'芽三班', birth:'2023-02-19', zod:'双鱼座', xz:100, bz:15, mz:40, t:55.2},
+  {r:5, name:'徐沐钒', g:'男', cls:'芽一班', birth:'2023-06-27', zod:'巨蟹座', xz:100, bz:25, mz:20, t:53.8},
+  {r:6, name:'张妤农', g:'男', cls:'芽一班', birth:'2023-04-21', zod:'金牛座', xz:90, bz:30, mz:20, t:51.5},
+  {r:7, name:'邵嘉懿', g:'女', cls:'芽一班', birth:'2022-09-01', zod:'处女座', xz:90, bz:30, mz:20, t:51.5},
+  {r:8, name:'陈敬一', g:'男', cls:'芽二班', birth:'2022-09-01', zod:'处女座', xz:90, bz:30, mz:20, t:51.5},
+  {r:9, name:'李昕阳', g:'女', cls:'芽三班', birth:'2022-09-12', zod:'处女座', xz:90, bz:30, mz:20, t:51.5},
+  {r:10, name:'孙嘉彤', g:'女', cls:'芽二班', birth:'2023-01-18', zod:'摩羯座', xz:90, bz:15, mz:40, t:51.2},
+  {r:11, name:'王昱宁', g:'男', cls:'芽一班', birth:'2022-11-04', zod:'天蝎座', xz:100, bz:15, mz:20, t:50.2},
+  {r:12, name:'刘子愉', g:'男', cls:'芽二班', birth:'2023-02-21', zod:'双鱼座', xz:100, bz:15, mz:20, t:50.2},
+  {r:13, name:'郎美璐', g:'女', cls:'芽二班', birth:'2022-10-25', zod:'天蝎座', xz:100, bz:15, mz:20, t:50.2},
+  {r:14, name:'贾佑礼', g:'女', cls:'芽三班', birth:'2023-07-22', zod:'巨蟹座', xz:100, bz:15, mz:20, t:50.2},
+  {r:15, name:'陈亦聪', g:'男', cls:'芽一班', birth:'2022-09-24', zod:'天秤座', xz:65, bz:40, mz:40, t:50},
+  {r:16, name:'袁小易', g:'男', cls:'芽一班', birth:'2023-02-24', zod:'双鱼座', xz:100, bz:0, mz:40, t:50},
+  {r:17, name:'尚璟禾', g:'女', cls:'芽一班', birth:'2023-03-17', zod:'双鱼座', xz:100, bz:0, mz:40, t:50},
+  {r:18, name:'李聿璋', g:'男', cls:'芽二班', birth:'2023-01-01', zod:'摩羯座', xz:90, bz:25, mz:20, t:49.8},
+  {r:19, name:'修洛宜', g:'女', cls:'芽二班', birth:'2022-09-15', zod:'处女座', xz:90, bz:25, mz:20, t:49.8},
+  {r:20, name:'于同越', g:'男', cls:'芽三班', birth:'2023-05-03', zod:'金牛座', xz:90, bz:25, mz:20, t:49.8},
+  {r:21, name:'周嘉珩', g:'男', cls:'芽二班', birth:'2022-12-30', zod:'摩羯座', xz:90, bz:15, mz:20, t:46.2},
+  {r:22, name:'尚雍', g:'男', cls:'芽三班', birth:'2022-12-23', zod:'摩羯座', xz:90, bz:15, mz:20, t:46.2},
+  {r:23, name:'尚玥', g:'女', cls:'芽三班', birth:'2022-12-23', zod:'摩羯座', xz:90, bz:15, mz:20, t:46.2},
+  {r:24, name:'沈天泽', g:'男', cls:'芽二班', birth:'2023-06-21', zod:'双子座', xz:75, bz:30, mz:20, t:45.5},
+  {r:25, name:'许景尧', g:'男', cls:'芽一班', birth:'2022-11-10', zod:'天蝎座', xz:100, bz:15, mz:0, t:45.2},
+  {r:26, name:'马涵苏', g:'女', cls:'芽一班', birth:'2022-11-21', zod:'天蝎座', xz:100, bz:15, mz:0, t:45.2},
+  {r:27, name:'华子昂', g:'男', cls:'芽二班', birth:'2023-03-13', zod:'双鱼座', xz:100, bz:15, mz:0, t:45.2},
+  {r:28, name:'李瑾棠', g:'女', cls:'芽三班', birth:'2023-02-25', zod:'双鱼座', xz:100, bz:0, mz:20, t:45},
+  {r:29, name:'吴勉', g:'男', cls:'芽二班', birth:'2023-05-07', zod:'金牛座', xz:90, bz:25, mz:0, t:44.8},
+  {r:30, name:'陈中阳', g:'男', cls:'芽二班', birth:'2023-05-23', zod:'双子座', xz:75, bz:25, mz:20, t:43.8},
+  {r:31, name:'刘墨凡', g:'男', cls:'芽一班', birth:'2022-08-08', zod:'狮子座', xz:70, bz:30, mz:20, t:43.5},
+  {r:32, name:'李佳熹', g:'女', cls:'芽三班', birth:'2023-04-02', zod:'白羊座', xz:70, bz:30, mz:20, t:43.5},
+  {r:33, name:'赵成颉', g:'男', cls:'芽一班', birth:'2023-03-28', zod:'白羊座', xz:70, bz:15, mz:40, t:43.2},
+  {r:34, name:'郭桐佑', g:'男', cls:'芽三班', birth:'2023-08-02', zod:'狮子座', xz:70, bz:40, mz:0, t:42},
+  {r:35, name:'刘茉凝', g:'女', cls:'芽一班', birth:'2023-04-17', zod:'白羊座', xz:70, bz:25, mz:20, t:41.8},
+  {r:36, name:'许舒禾', g:'女', cls:'芽一班', birth:'2023-08-13', zod:'狮子座', xz:70, bz:25, mz:20, t:41.8},
+  {r:37, name:'种一凡', g:'女', cls:'芽一班', birth:'2023-08-19', zod:'狮子座', xz:70, bz:25, mz:20, t:41.8},
+  {r:38, name:'邓安', g:'女', cls:'芽三班', birth:'2023-08-17', zod:'狮子座', xz:70, bz:25, mz:20, t:41.8},
+  {r:39, name:'卢韵安', g:'女', cls:'芽二班', birth:'2022-09-29', zod:'天秤座', xz:65, bz:30, mz:20, t:41.5},
+  {r:40, name:'邱皓泽', g:'男', cls:'芽一班', birth:'2023-04-30', zod:'金牛座', xz:90, bz:15, mz:0, t:41.2},
+  {r:41, name:'熊浩林', g:'男', cls:'芽三班', birth:'2022-09-06', zod:'处女座', xz:90, bz:15, mz:0, t:41.2},
+  {r:42, name:'艾诗尧', g:'女', cls:'芽二班', birth:'2023-01-09', zod:'摩羯座', xz:90, bz:0, mz:20, t:41},
+  {r:43, name:'李修齐', g:'男', cls:'芽三班', birth:'2023-01-05', zod:'摩羯座', xz:90, bz:0, mz:20, t:41},
+  {r:44, name:'李格聿', g:'男', cls:'芽二班', birth:'2023-06-19', zod:'双子座', xz:75, bz:30, mz:0, t:40.5},
+  {r:45, name:'缪一辰', g:'男', cls:'芽二班', birth:'2023-06-08', zod:'双子座', xz:75, bz:15, mz:20, t:40.2},
+  {r:46, name:'刘恩谕', g:'男', cls:'芽一班', birth:'2022-10-03', zod:'天秤座', xz:65, bz:25, mz:20, t:39.8},
+  {r:47, name:'唐嘉宁', g:'女', cls:'芽三班', birth:'2022-11-29', zod:'射手座', xz:60, bz:30, mz:20, t:39.5},
+  {r:48, name:'张嫄浠', g:'女', cls:'芽一班', birth:'2023-01-27', zod:'水瓶座', xz:60, bz:15, mz:40, t:39.2},
+  {r:49, name:'杜雨灵', g:'女', cls:'芽一班', birth:'2023-07-26', zod:'狮子座', xz:70, bz:15, mz:20, t:38.2},
+  {r:50, name:'董南北', g:'男', cls:'芽二班', birth:'2023-03-27', zod:'白羊座', xz:70, bz:15, mz:20, t:38.2},
+  {r:51, name:'赵启桓', g:'男', cls:'芽二班', birth:'2023-03-29', zod:'白羊座', xz:70, bz:15, mz:20, t:38.2},
+  {r:52, name:'廖洺赫', g:'男', cls:'芽三班', birth:'2023-04-03', zod:'白羊座', xz:70, bz:15, mz:20, t:38.2},
+  {r:53, name:'马千雅', g:'女', cls:'芽三班', birth:'2023-03-28', zod:'白羊座', xz:70, bz:15, mz:20, t:38.2},
+  {r:54, name:'于樾珩', g:'男', cls:'芽三班', birth:'2023-01-09', zod:'摩羯座', xz:90, bz:0, mz:0, t:36},
+  {r:55, name:'余滟鸿', g:'女', cls:'芽三班', birth:'2023-01-04', zod:'摩羯座', xz:90, bz:0, mz:0, t:36},
+  {r:56, name:'李隽蒙', g:'女', cls:'芽二班', birth:'2022-12-09', zod:'射手座', xz:60, bz:30, mz:0, t:34.5},
+  {r:57, name:'傅兆和', g:'男', cls:'芽一班', birth:'2023-02-01', zod:'水瓶座', xz:60, bz:15, mz:20, t:34.2},
+  {r:58, name:'徐穆清', g:'女', cls:'芽一班', birth:'2022-12-19', zod:'射手座', xz:60, bz:15, mz:20, t:34.2},
+  {r:59, name:'蔡知白', g:'男', cls:'芽二班', birth:'2023-02-17', zod:'水瓶座', xz:60, bz:15, mz:20, t:34.2},
+  {r:60, name:'林瑀青', g:'女', cls:'芽二班', birth:'2022-12-05', zod:'射手座', xz:60, bz:15, mz:20, t:34.2},
+  {r:61, name:'宋楷轩', g:'男', cls:'芽三班', birth:'2022-12-03', zod:'射手座', xz:60, bz:15, mz:20, t:34.2},
+  {r:62, name:'刘育丞', g:'男', cls:'芽三班', birth:'2023-02-17', zod:'水瓶座', xz:60, bz:15, mz:20, t:34.2},
+  {r:63, name:'唐瑀宣', g:'女', cls:'芽二班', birth:'2023-01-24', zod:'水瓶座', xz:60, bz:0, mz:40, t:34},
+  {r:64, name:'陈浚', g:'女', cls:'芽一班', birth:'2023-03-31', zod:'白羊座', xz:70, bz:0, mz:20, t:33},
+  {r:65, name:'陈茉', g:'女', cls:'芽一班', birth:'2023-03-31', zod:'白羊座', xz:70, bz:0, mz:20, t:33},
+  {r:66, name:'林芮旸', g:'女', cls:'芽一班', birth:'2023-07-28', zod:'狮子座', xz:70, bz:0, mz:20, t:33},
+  {r:67, name:'冯芊悦', g:'女', cls:'芽三班', birth:'2023-07-28', zod:'狮子座', xz:70, bz:0, mz:20, t:33},
+  {r:68, name:'朱方杰', g:'男', cls:'芽一班', birth:'2022-11-25', zod:'射手座', xz:60, bz:15, mz:0, t:29.2},
+  {r:69, name:'张熠遥', g:'男', cls:'芽一班', birth:'2022-12-11', zod:'射手座', xz:60, bz:0, mz:20, t:29},
+  {r:70, name:'范之弈', g:'男', cls:'芽三班', birth:'2022-12-01', zod:'射手座', xz:60, bz:0, mz:20, t:29},
+  {r:71, name:'范之恒', g:'男', cls:'芽三班', birth:'2022-12-01', zod:'射手座', xz:60, bz:0, mz:20, t:29},
+  {r:72, name:'潘沐辰', g:'男', cls:'芽三班', birth:'2022-12-07', zod:'射手座', xz:60, bz:0, mz:0, t:24},
+  {r:73, name:'柳沁', g:'女', cls:'芽三班', birth:'2022-12-14', zod:'射手座', xz:60, bz:0, mz:0, t:24},
+];
+
+const TOP5_DETAIL = {
+  '成瑾玥': {bazi:'癸卯 己未 辛巳', wx:'金1 木1 水1 火1 土2', nwx:'金1 木0 水0 火1 土1'},
+  '刘瑾伊': {bazi:'癸卯 己未 辛巳', wx:'金1 木1 水1 火1 土2', nwx:'金1 木0 水0 火1 土1'},
+  '陆牧扬': {bazi:'壬寅 辛亥 庚午', wx:'金2 木1 水2 火1 土0', nwx:'金0 木0 水1 火2 土0'},
+  '郑陶然': {bazi:'癸卯 甲寅 己酉', wx:'金1 木3 水1 火0 土1', nwx:'金1 木0 水0 火2 土0'},
+  '徐沐钒': {bazi:'癸卯 戊午 丁巳', wx:'金0 木1 水1 火3 土1', nwx:'金2 木0 水1 火0 土0'},
+  '张妤农': {bazi:'癸卯 丙辰 庚戌', wx:'金1 木1 水1 火1 土2', nwx:'金0 木0 水1 火2 土0'},
+  '邵嘉懿': {bazi:'壬寅 己酉 戊午', wx:'金1 木1 水1 火1 土2', nwx:'金1 木1 水0 火0 土1'},
+  '陈敬一': {bazi:'壬寅 己酉 戊午', wx:'金1 木1 水1 火1 土2', nwx:'金0 木1 水0 火1 土1'},
+  '李昕阳': {bazi:'壬寅 己酉 己巳', wx:'金1 木1 水1 火1 土2', nwx:'金0 木1 水0 火1 土1'},
+  '孙嘉彤': {bazi:'癸卯 乙丑 丁丑', wx:'金0 木2 水1 火1 土2', nwx:'金1 木1 水0 火1 土0'},
+};
+
+const GENDER = [
+  {g:'芽一班', m:13, f:12},
+  {g:'芽二班', m:13, f:11},
+  {g:'芽三班', m:14, f:11},
+  {g:'全年级', m:40, f:34},
+];
+const YEAR = [
+  {g:'芽一班', y22:10, y23:15},
+  {g:'芽二班', y22:8,  y23:16},
+  {g:'芽三班', y22:10, y23:15},
+  {g:'全年级', y22:28, y23:46},
+];
+const MONTHS = [
+  {m:'1月', n:8, p:'10.8%'},{m:'2月', n:8, p:'10.8%'},{m:'3月', n:8, p:'10.8%'},
+  {m:'4月', n:5, p:'6.8%'},{m:'5月', n:3, p:'4.1%'},{m:'6月', n:4, p:'5.4%'},
+  {m:'7月', n:6, p:'8.1%'},{m:'8月', n:5, p:'6.8%'},{m:'9月', n:7, p:'9.5%'},
+  {m:'10月', n:2, p:'2.7%'},{m:'11月', n:6, p:'8.1%'},{m:'12月', n:12, p:'16.2%'},
+];
+const ZODIACS = [
+  {z:'射手座', n:11, p:'14.9%'},{z:'白羊座', n:9, p:'12.2%'},{z:'摩羯座', n:9, p:'12.2%'},
+  {z:'狮子座', n:8, p:'10.8%'},{z:'双鱼座', n:7, p:'9.5%'},{z:'天蝎座', n:5, p:'6.8%'},
+  {z:'水瓶座', n:5, p:'6.8%'},{z:'处女座', n:5, p:'6.8%'},{z:'金牛座', n:4, p:'5.4%'},
+  {z:'巨蟹座', n:4, p:'5.4%'},{z:'双子座', n:4, p:'5.4%'},{z:'天秤座', n:3, p:'4.1%'},
+];
+const SURNAMES = ['李','刘','陈','张','尚','王','许','赵','徐','马'];
+const SURNAME_N = [7,6,5,3,3,2,2,2,2,2];
+const CHARS = ['嘉','一','瑾','宁','尧','泽','沐','凡','禾','茉','珩','聿','子','阳','辰'];
+const CHAR_N = [4,3,3,2,2,2,2,2,2,2,2,2,2,2,2];
+const NAME_LEN = [{l:'2个字', n:7, p:'9.5%'}, {l:'3个字', n:67, p:'90.5%'}];
+const SHENGXIAO = [{s:'兔（2023年）', n:46, p:'62.2%', c:'var(--c1)'}, {s:'虎（2022年）', n:28, p:'37.8%', c:'var(--c2)'}];
+const AGE_RANGE = [
+  {cls:'芽一班', avg:42.0, med:41.8, max:48.3, min:35.9, span:12.4, c:'var(--c1)'},
+  {cls:'芽二班', avg:42.0, med:42.8, max:47.5, min:36.9, span:10.7, c:'var(--c2)'},
+  {cls:'芽三班', avg:42.1, med:43.3, max:47.4, min:36.0, span:11.4, c:'var(--c3)'},
+];
+const SAME_BIRTH = [
+  {d:'2022-09-01', kids:'邵嘉懿（芽一班）、陈敬一（芽二班）'},
+  {d:'2022-12-01', kids:'范之弈、范之恒（芽三班，疑似双胞胎）'},
+  {d:'2022-12-23', kids:'尚雍、尚玥（芽三班，疑似双胞胎/兄妹）'},
+  {d:'2023-01-09', kids:'艾诗尧（芽二班）、于樾珩（芽三班）'},
+  {d:'2023-02-17', kids:'蔡知白（芽二班）、刘育丞（芽三班）'},
+  {d:'2023-03-28', kids:'赵成颉（芽一班）、马千雅（芽三班）'},
+  {d:'2023-03-31', kids:'陈浚、陈茉（芽一班，疑似双胞胎）'},
+  {d:'2023-07-21', kids:'成瑾玥、刘瑾伊（芽二班）'},
+  {d:'2023-07-28', kids:'林芮旸（芽一班）、冯芊悦（芽三班）'},
+];
+
+/* ═══════════ 工具提示 ═══════════ */
+const tip = document.getElementById('tip');
+function bindTip(el, title, sub) {
+  el.addEventListener('mouseenter', () => {
+    tip.innerHTML = `<div class="tt">${title}</div><div class="ts">${sub}</div>`;
+    tip.style.opacity = '1';
+  });
+  el.addEventListener('mousemove', (e) => {
+    const pad = 14, w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = e.clientX + pad, y = e.clientY + pad;
+    if (x + w > innerWidth - 8) x = e.clientX - w - pad;
+    if (y + h > innerHeight - 8) y = e.clientY - h - pad;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  });
+  el.addEventListener('mouseleave', () => { tip.style.opacity = '0'; });
+}
+
+/* ═══════════ 纵向分组柱 ═══════════ */
+function renderVBar(elId, data, keys, colors, tips) {
+  const el = document.getElementById(elId);
+  const maxV = Math.max(...data.flatMap(d => keys.map(k => d[k])));
+  el.innerHTML = data.map(d => {
+    const bars = keys.map((k, i) => {
+      const h = Math.round(d[k] / maxV * 148);
+      const v = tips ? tips(k, d[k]) : `${d[k]}`;
+      return `<div class="vbar" style="height:${h}px;background:${colors[i]}" data-r="${k}:${d.g}">
+        <span class="cap">${d[k]}</span></div>`;
+    }).join('');
+    const sub = tips ? '' : '';
+    return `<div class="vbar-group"><div class="vbar-bars">${bars}</div><div class="gl">${d.g}</div><div class="gs">${d.g === '全年级' ? (d.m !== undefined ? '共74人' : '共74人') : ''}</div></div>`;
+  }).join('');
+  el.querySelectorAll('.vbar').forEach(b => {
+    bindTip(b, b.dataset.r.replace(':', ' '), '');
+  });
+}
+
+/* 男女比例 */
+(function () {
+  const el = document.getElementById('genderChart');
+  const maxV = Math.max(...GENDER.flatMap(d => [d.m, d.f]));
+  const tot = {g:'全年级', m:40, f:34};
+  el.innerHTML = GENDER.map(d => {
+    const hm = Math.round(d.m / maxV * 148), hf = Math.round(d.f / maxV * 148);
+    const total = d.m + d.f;
+    return `<div class="vbar-group">
+      <div class="vbar-bars">
+        <div class="vbar" style="height:${hm}px;background:var(--c1)"><span class="cap">${d.m}</span></div>
+        <div class="vbar" style="height:${hf}px;background:var(--c2)"><span class="cap">${d.f}</span></div>
+      </div>
+      <div class="gl">${d.g}</div>
+      <div class="gs">共${total}人</div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.vbar').forEach((b, i) => {
+    const g = GENDER[Math.floor(i / 2)].g, kind = i % 2 === 0 ? '男生' : '女生';
+    const v = i % 2 === 0 ? GENDER[Math.floor(i / 2)].m : GENDER[Math.floor(i / 2)].f;
+    bindTip(b, `${g} · ${kind}`, `${v} 人`);
+  });
+})();
+
+/* 出生年份 */
+(function () {
+  const el = document.getElementById('yearChart');
+  const maxV = Math.max(...YEAR.flatMap(d => [d.y22, d.y23]));
+  el.innerHTML = YEAR.map(d => {
+    const h1 = Math.round(d.y22 / maxV * 148), h2 = Math.round(d.y23 / maxV * 148);
+    const p1 = (d.y22 / (d.y22 + d.y23) * 100).toFixed(1), p2 = (d.y23 / (d.y22 + d.y23) * 100).toFixed(1);
+    return `<div class="vbar-group">
+      <div class="vbar-bars">
+        <div class="vbar" style="height:${h1}px;background:var(--c1)"><span class="cap">${d.y22}</span></div>
+        <div class="vbar" style="height:${h2}px;background:var(--c2)"><span class="cap">${d.y23}</span></div>
+      </div>
+      <div class="gl">${d.g}</div>
+      <div class="gs">${p1}% / ${p2}%</div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.vbar').forEach((b, i) => {
+    const d = YEAR[Math.floor(i / 2)], kind = i % 2 === 0 ? '2022年出生' : '2023年出生';
+    const v = i % 2 === 0 ? d.y22 : d.y23;
+    bindTip(b, `${d.g} · ${kind}`, `${v} 人`);
+  });
+})();
+
+/* ═══════════ 横向条形 ═══════════ */
+function renderHBar(elId, rows, opt) {
+  const el = document.getElementById(elId);
+  const maxV = Math.max(...rows.map(r => r.n));
+  el.innerHTML = rows.map(r => {
+    const w = Math.max(2, Math.round(r.n / maxV * 100));
+    const top = r.n === maxV && opt && opt.markTop ? ' top' : '';
+    const bg = r.c ? r.c : '';
+    return `<div class="hbar-row">
+      <div class="hbar-label">${r.k}</div>
+      <div class="hbar-track">
+        <div class="hbar${top}" style="width:${w}%;${bg ? `background:${bg}` : ''}"></div>
+      </div>
+      <div class="hbar-val">${r.n} · ${r.p || ''}</div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.hbar-row').forEach((row, i) => {
+    const r = rows[i];
+    bindTip(row.querySelector('.hbar'), r.k, `${r.n} 人${r.p ? ' · ' + r.p : ''}`);
+  });
+}
+
+renderHBar('monthChart', MONTHS.map(m => ({k: m.m, n: m.n, p: m.p})), {markTop: true});
+renderHBar('zodiacChart', ZODIACS.map(z => ({k: z.z, n: z.n, p: z.p})), {markTop: true});
+renderHBar('surnameChart', SURNAMES.map((s, i) => ({k: s, n: SURNAME_N[i], p: ''})), {markTop: true});
+renderHBar('charChart', CHARS.map((c, i) => ({k: c, n: CHAR_N[i], p: ''})), {markTop: true});
+renderHBar('lenChart', NAME_LEN.map(l => ({k: l.l, n: l.n, p: l.p})), {markTop: true});
+renderHBar('zodiac2Chart', SHENGXIAO.map(s => ({k: s.s, n: s.n, p: s.p, c: s.c})), {});
+
+/* ═══════════ 月龄区间图 ═══════════ */
+(function () {
+  const el = document.getElementById('ageRangeChart');
+  const lo = 35.5, hi = 48.5, span = hi - lo;
+  el.innerHTML = AGE_RANGE.map(r => {
+    const L = (r.min - lo) / span * 100;
+    const W = (r.max - r.min) / span * 100;
+    const A = (r.avg - lo) / span * 100;
+    return `<div class="range-row">
+      <div class="range-label">${r.cls}</div>
+      <div class="range-track">
+        <div class="range-seg" style="left:${L}%;width:${W}%;background:${r.c}"></div>
+        <div class="range-tick" style="left:${L}%;background:${r.c}"></div>
+        <div class="range-tick" style="left:${L + W}%;background:${r.c}"></div>
+        <div class="range-dot" style="left:${A}%;background:${r.c}"></div>
+      </div>
+      <div class="range-val">平均 ${r.avg}月 · 区间 ${r.min}~${r.max}月</div>
+    </div>`;
+  }).join('');
+  document.getElementById('ageRangeTable').innerHTML = AGE_RANGE.map(r =>
+    `<tr><td>${r.cls}</td><td class="num">${r.avg}</td><td class="num">${r.med}</td><td class="num">${r.max}</td><td class="num">${r.min}</td><td class="num">${r.span}</td></tr>`
+  ).join('');
+})();
+
+/* ═══════════ Top10 卡片 ═══════════ */
+(function () {
+  const el = document.getElementById('top5Row');
+  el.innerHTML = MATCH.slice(0, 10).map(d => {
+    const det = TOP5_DETAIL[d.name] || {};
+    const bars = [
+      ['星座', d.xz], ['八字', d.bz], ['名字', d.mz],
+    ].map(([k, v]) =>
+      `<div class="mini-bar"><span class="mk">${k}</span><span class="mt"><span class="mf" style="width:${v}%"></span></span><span class="mv">${v}</span></div>`
+    ).join('');
+    return `<div class="top5-card">
+      <div class="top5-head"><span class="top5-rank">#${d.r}</span><span class="top5-score">${d.t}</span></div>
+      <div class="top5-name">${d.name}</div>
+      <div class="top5-meta">${d.g} · ${d.cls} · ${d.birth} · ${d.zod}</div>
+      ${bars}
+      <div class="top5-extra">
+        <div>八字：${det.bazi || '—'}</div>
+        <div>五行：${det.wx || '—'}</div>
+        <div>名字五行：${det.nwx || '—'}</div>
+      </div>
+    </div>`;
+  }).join('');
+})();
+
+/* ═══════════ 匹配度表格（搜索 + 排序） ═══════════ */
+const tbody = document.querySelector('#matchTable tbody');
+const countEl = document.getElementById('matchCount');
+let sortKey = 'r', sortDir = 1;
+
+function renderMatchTable() {
+  const q = document.getElementById('matchSearch').value.trim();
+  let rows = MATCH.filter(d =>
+    !q || d.name.includes(q) || d.g.includes(q) || d.cls.includes(q) || d.zod.includes(q));
+  rows = rows.slice().sort((a, b) => (a[sortKey] - b[sortKey]) * sortDir);
+  tbody.innerHTML = rows.map(d =>
+    `<tr>
+      <td>${d.r}</td><td style="font-weight:600">${d.name}</td>
+      <td>${d.g}</td>
+      <td><span class="cls-tag">${d.cls}</span></td>
+      <td>${d.birth}</td><td>${d.zod}</td>
+      <td class="num">${d.xz}</td><td class="num">${d.bz}</td><td class="num">${d.mz}</td>
+      <td class="num" style="font-weight:650">${d.t}</td>
+    </tr>`).join('');
+  countEl.textContent = `显示 ${rows.length} / ${MATCH.length} 人`;
+}
+document.getElementById('matchSearch').addEventListener('input', renderMatchTable);
+document.getElementById('thTotal').addEventListener('click', () => {
+  if (sortKey === 't') { sortDir = -sortDir; }
+  else { sortKey = 't'; sortDir = -1; }
+  renderMatchTable();
+});
+renderMatchTable();
+
+/* ═══════════ 同月同日生 ═══════════ */
+document.getElementById('sameBirth').innerHTML = SAME_BIRTH.map(s =>
+  `<div class="list-card"><h4 style="font-variant-numeric:tabular-nums">${s.d}</h4><p>${s.kids}</p></div>`
+).join('');
+
+/* ═══════════ 深色切换 ═══════════ */
+const themeBtn = document.getElementById('themeBtn');
+function syncTheme() {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+    (!document.documentElement.getAttribute('data-theme') &&
+     matchMedia('(prefers-color-scheme: dark)').matches);
+  themeBtn.textContent = dark ? '☀️ 浅色' : '🌙 深色';
+}
+themeBtn.addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const darkNow = cur === 'dark' || (!cur && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.setAttribute('data-theme', darkNow ? 'light' : 'dark');
+  try { localStorage.setItem('nursery-theme', darkNow ? 'light' : 'dark'); } catch (e) {}
+  syncTheme();
+});
+(function () {
+  let saved = null;
+  try { saved = localStorage.getItem('nursery-theme'); } catch (e) {}
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  syncTheme();
+})();
+</script>
+</body>
+</html>

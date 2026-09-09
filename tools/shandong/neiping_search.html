@@ -1,0 +1,3540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>内评情况 - 企业搜索</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  background: #f0f2f5;
+  color: #333;
+  min-height: 100vh;
+}
+
+.header {
+  background: linear-gradient(135deg, #1a3a5c 0%, #2d6aa0 100%);
+  color: #fff;
+  padding: 32px 24px;
+  text-align: center;
+}
+.header h1 { font-size: 28px; font-weight: 600; margin-bottom: 6px; }
+.header p { font-size: 14px; opacity: 0.8; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
+
+/* Search */
+.search-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+.search-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.search-input {
+  flex: 1;
+  min-width: 280px;
+  height: 48px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+.search-input:focus {
+  outline: none;
+  border-color: #2d6aa0;
+}
+.search-input::placeholder { color: #b0b0b0; }
+.search-hint {
+  font-size: 13px;
+  color: #999;
+  margin-top: 8px;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  flex: 1;
+  min-width: 140px;
+  text-align: center;
+}
+.stat-card .num { font-size: 32px; font-weight: 700; color: #1a3a5c; }
+.stat-card .label { font-size: 13px; color: #888; margin-top: 2px; }
+
+/* Table */
+.table-wrap {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead { background: #f7f8fa; }
+th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 2px solid #e8e8e8;
+  white-space: nowrap;
+}
+td {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+tr:hover td { background: #f0f6fb; }
+.name-col { font-weight: 500; color: #1a3a5c; }
+.prov-col { color: #666; }
+
+/* Rating badges */
+.rating {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "SF Mono", "Consolas", "Menlo", monospace;
+}
+.r-aaa { background: #e8f5e9; color: #2e7d32; }
+.r-aa-plus { background: #e8f5e9; color: #388e3c; }
+.r-aa { background: #f1f8e9; color: #558b2f; }
+.r-aa-minus { background: #f9fbe7; color: #827717; }
+.r-a-plus { background: #fff8e1; color: #f57f17; }
+.r-a { background: #fff8e1; color: #f9a825; }
+.r-a-minus { background: #fff3e0; color: #e65100; }
+.r-bbb-plus { background: #fce4ec; color: #c62828; }
+.r-bbb { background: #fce4ec; color: #c62828; }
+.r-bbb-minus { background: #fce4ec; color: #c62828; }
+.r-bb-plus { background: #f3e5f5; color: #6a1b9a; }
+.r-b-plus { background: #f3e5f5; color: #6a1b9a; }
+
+.no-result {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+.no-result .icon { font-size: 48px; margin-bottom: 12px; }
+
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: #999;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>内评情况 — 企业搜索</h1>
+  <p>直接交易对手库汇总表 · 内部评级 & 外部评级</p>
+</div>
+
+<div class="container">
+
+<div class="search-box">
+  <div class="search-row">
+    <input type="text" class="search-input" id="searchInput"
+           placeholder="输入企业名称或注册地搜索…" autofocus>
+  </div>
+  <div class="search-hint">支持模糊搜索：输入企业名称中任意文字即可匹配，也可按省份/直辖市/自治区筛选</div>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th style="width:60px">序号</th>
+        <th>企业名称</th>
+        <th style="width:140px">注册地</th>
+        <th style="width:100px">外部评级</th>
+        <th style="width:100px">内部评级</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <div class="no-result" id="noResult" style="display:none">
+    <div class="icon">🔍</div>
+    <p>未找到匹配的企业</p>
+    <p style="font-size:12px;margin-top:4px">试试输入企业名称的简称或关键词</p>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  数据来源：内评情况-分地域.xls · 共 <span id="totalCount">468</span> 家企业
+</div>
+
+<script>
+// All data embedded from the source file
+const DATA = [
+  {
+    "seq": "299",
+    "name": "国泰君安证券股份有限公司",
+    "province": "-",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "316",
+    "name": "绍兴市城市建设投资集团有限公司",
+    "province": "-",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "401",
+    "name": "中航国际实业控股有限公司",
+    "province": "-",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "430",
+    "name": "唐山冀东水泥股份有限公司",
+    "province": "-",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "461",
+    "name": "宁波市北仑区国有资本运营有限公司",
+    "province": "-",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "55",
+    "name": "合肥市建设投资控股(集团)有限公司",
+    "province": "安徽省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "104",
+    "name": "徽商银行股份有限公司",
+    "province": "安徽省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "123",
+    "name": "安徽省交通控股集团有限公司",
+    "province": "安徽省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "205",
+    "name": "淮南矿业(集团)有限责任公司",
+    "province": "安徽省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "143",
+    "name": "北控水务集团有限公司",
+    "province": "百慕大",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "390",
+    "name": "越秀交通基建有限公司",
+    "province": "百慕大",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "2",
+    "name": "中国国家铁路集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "7",
+    "name": "中央汇金投资有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "8",
+    "name": "北京京能电力股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "11",
+    "name": "国家电网有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "12",
+    "name": "中国石油天然气股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "13",
+    "name": "中国石油天然气集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "15",
+    "name": "北京国有资本运营管理有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "16",
+    "name": "中国光大集团股份公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "17",
+    "name": "中国信达资产管理股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "18",
+    "name": "中国兵器工业集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "20",
+    "name": "中国兵器装备集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "21",
+    "name": "中国石油化工股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "26",
+    "name": "招商局集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "28",
+    "name": "北京市基础设施投资有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "29",
+    "name": "中国建材股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "31",
+    "name": "北京能源集团有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "32",
+    "name": "中国冶金科工股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "33",
+    "name": "北京首都旅游集团有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "37",
+    "name": "北京首都创业集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "43",
+    "name": "金融街控股股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "44",
+    "name": "北京城建投资发展股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "45",
+    "name": "北京控股集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "48",
+    "name": "中国五矿集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "49",
+    "name": "中国中车集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "52",
+    "name": "北京汽车集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "53",
+    "name": "大唐国际发电股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "56",
+    "name": "北京首农食品集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "58",
+    "name": "中国中煤能源股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "61",
+    "name": "中国建筑股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "63",
+    "name": "中国有色矿业集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "70",
+    "name": "幸福人寿保险股份有限公司",
+    "province": "北京市",
+    "extRating": "A-",
+    "intRating": "BB+"
+  },
+  {
+    "seq": "73",
+    "name": "中国人寿再保险有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "77",
+    "name": "国家能源投资集团有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "79",
+    "name": "北京金隅集团股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "81",
+    "name": "首钢集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "83",
+    "name": "中国工商银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "84",
+    "name": "中国建设银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "85",
+    "name": "中国农业银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "86",
+    "name": "中国银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "88",
+    "name": "中国邮政储蓄银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "91",
+    "name": "中国民生银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "92",
+    "name": "中信银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "93",
+    "name": "中国光大银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "95",
+    "name": "华夏银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "96",
+    "name": "北京银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "127",
+    "name": "国家电力投资集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "128",
+    "name": "中国核工业集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "130",
+    "name": "中国中信有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "147",
+    "name": "中国铝业股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "149",
+    "name": "中国航空集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "151",
+    "name": "中国航空工业集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "152",
+    "name": "中国国新控股有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "153",
+    "name": "中国东方资产管理股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "167",
+    "name": "中国铁建股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "168",
+    "name": "中国铝业集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "169",
+    "name": "泰康养老保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AA+",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "170",
+    "name": "泰康保险集团股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "172",
+    "name": "国家开发投资集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "174",
+    "name": "中国交通建设股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "175",
+    "name": "中国建材集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "177",
+    "name": "农银人寿保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "181",
+    "name": "中国长江电力股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "182",
+    "name": "新华人寿保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "183",
+    "name": "中广核风电有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "185",
+    "name": "国投电力控股股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "186",
+    "name": "中国邮政集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "188",
+    "name": "新兴际华集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "193",
+    "name": "中国节能环保集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "194",
+    "name": "中化能源股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "208",
+    "name": "中国大唐集团新能源股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "219",
+    "name": "中国交通建设集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "226",
+    "name": "中交房地产集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "236",
+    "name": "北京金融街资本运营集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "242",
+    "name": "龙源电力集团股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "245",
+    "name": "中国通用技术(集团)控股有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "250",
+    "name": "中国国际金融股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "255",
+    "name": "中国石油化工集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "258",
+    "name": "中国财产再保险有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "265",
+    "name": "中信保诚人寿保险有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "266",
+    "name": "中国人寿保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "268",
+    "name": "中国中煤能源集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "273",
+    "name": "中国银河证券股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "284",
+    "name": "英大泰和人寿保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "291",
+    "name": "中信建投证券股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "294",
+    "name": "中国中铁股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "296",
+    "name": "中国人寿财产保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "302",
+    "name": "中国三峡新能源(集团)股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "306",
+    "name": "中国中信集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "307",
+    "name": "北京市国有资产经营有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "308",
+    "name": "北京保障房中心有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "314",
+    "name": "中国人民财产保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "315",
+    "name": "中国人民人寿保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "327",
+    "name": "北京农村商业银行股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "332",
+    "name": "三峡资本控股有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "333",
+    "name": "中国电力建设股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "334",
+    "name": "中国能源建设股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "335",
+    "name": "中国人民保险集团股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "336",
+    "name": "英大泰和财产保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "339",
+    "name": "中国核能电力股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "345",
+    "name": "中国电子科技集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "346",
+    "name": "中国航天科技集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "347",
+    "name": "中国机械工业集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "355",
+    "name": "建信金融租赁有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "358",
+    "name": "华电煤业集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "361",
+    "name": "中国北方工业有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "391",
+    "name": "华润医药控股有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "394",
+    "name": "国网信息通信产业集团有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "396",
+    "name": "北京金融街投资(集团)有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "414",
+    "name": "中核汇能有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "420",
+    "name": "北京建工集团有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "422",
+    "name": "华能新能源股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "443",
+    "name": "中国中化股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "447",
+    "name": "中英人寿保险有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "451",
+    "name": "泰康人寿保险有限责任公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "453",
+    "name": "中银三星人寿保险有限公司",
+    "province": "北京市",
+    "extRating": "AA+",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "454",
+    "name": "北京亦庄投资控股有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "458",
+    "name": "京东方科技集团股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "464",
+    "name": "电投融和新能源发展有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "466",
+    "name": "中邮人寿保险股份有限公司",
+    "province": "北京市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "89",
+    "name": "兴业银行股份有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "118",
+    "name": "厦门国际银行股份有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "122",
+    "name": "福建省高速公路集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "162",
+    "name": "厦门市政集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "179",
+    "name": "福建省投资开发集团有限责任公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "198",
+    "name": "建发房地产集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "199",
+    "name": "厦门建发股份有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "200",
+    "name": "厦门建发集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "213",
+    "name": "福州城市建设投资集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "220",
+    "name": "厦门轨道建设发展集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "293",
+    "name": "兴业证券股份有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "340",
+    "name": "福建华电福瑞能源发展有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "372",
+    "name": "漳州市九龙江集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "395",
+    "name": "福州新区开发投资集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "402",
+    "name": "泉州城建集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "403",
+    "name": "福州地铁集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "406",
+    "name": "泉州交通发展集团有限责任公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "423",
+    "name": "华电新能源集团股份有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "427",
+    "name": "福建省港口集团有限责任公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "431",
+    "name": "福州水务集团有限公司",
+    "province": "福建省",
+    "extRating": "AA+",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "438",
+    "name": "福州左海控股集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "450",
+    "name": "厦门金圆投资集团有限公司",
+    "province": "福建省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "40",
+    "name": "甘肃省公路航空旅游投资集团有限公司",
+    "province": "甘肃省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "114",
+    "name": "甘肃银行股份有限公司",
+    "province": "甘肃省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "3",
+    "name": "广东省公路建设有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "4",
+    "name": "保利发展控股集团股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "5",
+    "name": "招商局蛇口工业区控股股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "10",
+    "name": "深圳华侨城股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "14",
+    "name": "中海企业发展集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "19",
+    "name": "华润股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "22",
+    "name": "广东省能源集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "38",
+    "name": "广东省路桥建设发展有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "50",
+    "name": "中国广核集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "51",
+    "name": "广东省高速公路有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "57",
+    "name": "广东恒健投资控股有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "71",
+    "name": "珠海华发综合发展有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "74",
+    "name": "招商证券股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "82",
+    "name": "广州越秀集团股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "90",
+    "name": "招商银行股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "94",
+    "name": "平安银行股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "97",
+    "name": "广发银行股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "107",
+    "name": "广州农村商业银行股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "117",
+    "name": "广州银行股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "119",
+    "name": "深圳市投资控股有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "125",
+    "name": "华商银行",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "129",
+    "name": "中国广核电力股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "135",
+    "name": "珠海华发集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "165",
+    "name": "中国南方电网有限责任公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "171",
+    "name": "太平财产保险有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "180",
+    "name": "中国平安人寿保险股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "187",
+    "name": "广州开发区控股集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "206",
+    "name": "广东粤海控股集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "215",
+    "name": "深圳能源集团股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "218",
+    "name": "广东省交通集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "224",
+    "name": "广州地铁集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "229",
+    "name": "深圳市地铁集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "239",
+    "name": "广东电力发展股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "241",
+    "name": "中信证券股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "244",
+    "name": "广州发展集团股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "249",
+    "name": "深业集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "259",
+    "name": "广州交通投资集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "272",
+    "name": "深圳高速公路集团股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "280",
+    "name": "深圳市安居集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "297",
+    "name": "广发证券股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "312",
+    "name": "国信证券股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "322",
+    "name": "知识城(广州)投资集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "329",
+    "name": "华侨城集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "337",
+    "name": "佛山市投资控股集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "344",
+    "name": "深圳市特区建设发展集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "350",
+    "name": "深圳市水务(集团)有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "351",
+    "name": "广州市水务投资集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "352",
+    "name": "深圳市燃气集团股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "363",
+    "name": "广东省广新控股集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "367",
+    "name": "中国平安财产保险股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "369",
+    "name": "国投证券股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "371",
+    "name": "中建国际投资集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "374",
+    "name": "广东粤财投资控股有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "375",
+    "name": "广州医药集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "379",
+    "name": "广州越秀资本控股集团股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "380",
+    "name": "广州市城市建设开发有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "385",
+    "name": "广州市城市建设投资集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "387",
+    "name": "深圳市创新投资集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "407",
+    "name": "广州港股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "426",
+    "name": "中国南方航空股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "428",
+    "name": "深圳港集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "435",
+    "name": "广州产业投资控股集团有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "437",
+    "name": "招商局港口集团股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "441",
+    "name": "大悦城控股集团股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "445",
+    "name": "东莞银行股份有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "463",
+    "name": "华润置地控股有限公司",
+    "province": "广东省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "364",
+    "name": "广西交通投资集团有限公司",
+    "province": "广西壮族自治区",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "436",
+    "name": "北部湾港股份有限公司",
+    "province": "广西壮族自治区",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "110",
+    "name": "贵阳银行股份有限公司",
+    "province": "贵州省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "121",
+    "name": "贵州高速公路集团有限公司",
+    "province": "贵州省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "261",
+    "name": "阳光人寿保险股份有限公司",
+    "province": "海南省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "283",
+    "name": "中国旅游集团有限公司",
+    "province": "海南省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "6",
+    "name": "中国诚通控股集团有限公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "23",
+    "name": "华能国际电力股份有限公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "34",
+    "name": "中国华能集团有限公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "35",
+    "name": "中国大唐集团有限公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "36",
+    "name": "中国华电集团有限公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "137",
+    "name": "河北建设投资集团有限责任公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "191",
+    "name": "石家庄国控城市发展投资集团有限责任公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "207",
+    "name": "河钢集团有限公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "238",
+    "name": "河钢股份有限公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "400",
+    "name": "河北高速公路集团有限公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "444",
+    "name": "中国雄安集团有限公司",
+    "province": "河北省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "72",
+    "name": "中原豫资投资控股集团有限公司",
+    "province": "河南省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "109",
+    "name": "中原银行股份有限公司",
+    "province": "河南省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "154",
+    "name": "郑州城建集团投资有限公司",
+    "province": "河南省",
+    "extRating": "AA+",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "157",
+    "name": "郑州城市发展集团有限公司",
+    "province": "河南省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "305",
+    "name": "郑州发展投资集团有限公司",
+    "province": "河南省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "411",
+    "name": "河南水利投资集团有限公司",
+    "province": "河南省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "24",
+    "name": "长江产业投资集团有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "75",
+    "name": "湖北交通投资集团有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "78",
+    "name": "武汉市城市建设投资开发集团有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "131",
+    "name": "湖北能源集团股份有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "141",
+    "name": "中国长江三峡集团有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "150",
+    "name": "武汉城市建设集团有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "158",
+    "name": "武汉地铁集团有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "201",
+    "name": "湖北省科技投资集团有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "393",
+    "name": "中国信息通信科技集团有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "412",
+    "name": "中国葛洲坝集团有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "429",
+    "name": "中信泰富特钢集团股份有限公司",
+    "province": "湖北省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "116",
+    "name": "长沙银行股份有限公司",
+    "province": "湖南省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "211",
+    "name": "长沙市轨道交通集团有限公司",
+    "province": "湖南省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "248",
+    "name": "湖南省高速公路集团有限公司",
+    "province": "湖南省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "277",
+    "name": "长沙市城市建设投资开发集团有限公司",
+    "province": "湖南省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "285",
+    "name": "长沙城市发展集团有限公司",
+    "province": "湖南省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "362",
+    "name": "湖南湘江新区发展集团有限公司",
+    "province": "湖南省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "397",
+    "name": "湖南财信金融控股集团有限公司",
+    "province": "湖南省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "449",
+    "name": "湖南钢铁集团有限公司",
+    "province": "湖南省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "30",
+    "name": "江苏交通控股有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "76",
+    "name": "南京安居建设集团有限责任公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "99",
+    "name": "江苏银行股份有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "101",
+    "name": "南京银行股份有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "134",
+    "name": "无锡市国联发展(集团)有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "156",
+    "name": "江苏省国信集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "160",
+    "name": "江苏洋河集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "196",
+    "name": "徐州市交通控股集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "204",
+    "name": "南京地铁集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "214",
+    "name": "南京市河西新城区国有资产经营控股(集团)有限责任公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "216",
+    "name": "苏州市轨道交通集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "221",
+    "name": "常州市城市建设(集团)有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "230",
+    "name": "苏州工业园区国有资本投资运营控股有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "232",
+    "name": "江苏宁沪高速公路股份有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "234",
+    "name": "无锡市市政公用产业集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "275",
+    "name": "南京市交通建设投资控股(集团)有限责任公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "289",
+    "name": "华泰证券股份有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "310",
+    "name": "南京市城市建设投资控股(集团)有限责任公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "319",
+    "name": "无锡市交通产业集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "320",
+    "name": "无锡市太湖新城发展集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "321",
+    "name": "常高新集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "323",
+    "name": "无锡市建设发展投资有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "325",
+    "name": "苏州城市建设投资发展(集团)有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "330",
+    "name": "南京市国有资产投资管理控股(集团)有限责任公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "331",
+    "name": "南京紫金投资集团有限责任公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "389",
+    "name": "南京扬子国资投资集团有限责任公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "415",
+    "name": "扬州市城建国有资产控股(集团)有限责任公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "433",
+    "name": "苏州银行股份有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "439",
+    "name": "无锡产业发展集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "456",
+    "name": "无锡城建发展集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "457",
+    "name": "常熟市国有资本投资运营集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "459",
+    "name": "昆山城市建设投资发展集团有限公司",
+    "province": "江苏省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "66",
+    "name": "南昌轨道交通集团有限公司",
+    "province": "江西省",
+    "extRating": "AA+",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "69",
+    "name": "江西省水利投资集团有限公司",
+    "province": "江西省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "145",
+    "name": "江西省交通投资集团有限责任公司",
+    "province": "江西省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "298",
+    "name": "南昌市政公用集团有限公司",
+    "province": "江西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "359",
+    "name": "江西铜业股份有限公司",
+    "province": "江西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "365",
+    "name": "南昌市交通投资集团有限公司",
+    "province": "江西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "366",
+    "name": "九江市国有投资控股集团有限公司",
+    "province": "江西省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "54",
+    "name": "大连港集团有限公司",
+    "province": "辽宁省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "80",
+    "name": "辽宁港口股份有限公司",
+    "province": "辽宁省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "202",
+    "name": "辽宁港口集团有限公司",
+    "province": "辽宁省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "338",
+    "name": "国电电力发展股份有限公司",
+    "province": "辽宁省",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "64",
+    "name": "北方联合电力有限责任公司",
+    "province": "内蒙古自治区",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "161",
+    "name": "宁夏国有资本运营集团有限责任公司",
+    "province": "宁夏回族自治区",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "27",
+    "name": "山东高速集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "39",
+    "name": "山东能源集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "67",
+    "name": "青岛华通国有资本投资运营集团有限公司",
+    "province": "山东省",
+    "extRating": "AA+",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "113",
+    "name": "青岛银行股份有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "126",
+    "name": "华电国际电力股份有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "136",
+    "name": "青岛国信发展(集团)有限责任公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "140",
+    "name": "鲁能集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "146",
+    "name": "山东省鲁信投资控股集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "184",
+    "name": "济南城市投资集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "189",
+    "name": "青岛城市建设投资(集团)有限责任公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "212",
+    "name": "济南轨道交通集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "222",
+    "name": "青岛城投城金控股集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "228",
+    "name": "新汶矿业集团有限责任公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "246",
+    "name": "青岛地铁集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "247",
+    "name": "兖矿能源集团股份有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "295",
+    "name": "济南城市建设集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "300",
+    "name": "烟台国丰投资控股集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "384",
+    "name": "山东黄金集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "388",
+    "name": "山东省新动能基金管理有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "399",
+    "name": "山东港口青岛港集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "408",
+    "name": "山东省财金投资集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "413",
+    "name": "山东省国有资产投资控股有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "417",
+    "name": "恒丰银行股份有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "424",
+    "name": "山东铁路发展基金有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "434",
+    "name": "齐鲁银行股份有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "455",
+    "name": "山东黄金矿业股份有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "465",
+    "name": "山东出版集团有限公司",
+    "province": "山东省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "41",
+    "name": "山西焦煤集团有限责任公司",
+    "province": "山西省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "68",
+    "name": "太原市龙城发展投资集团有限公司",
+    "province": "山西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "225",
+    "name": "晋能控股电力集团有限公司",
+    "province": "山西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "227",
+    "name": "晋能控股装备制造集团有限公司",
+    "province": "山西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "231",
+    "name": "山西潞安矿业(集团)有限责任公司",
+    "province": "山西省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "257",
+    "name": "山西焦煤能源集团股份有限公司",
+    "province": "山西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "360",
+    "name": "太原钢铁(集团)有限公司",
+    "province": "山西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "421",
+    "name": "大秦铁路股份有限公司",
+    "province": "山西省",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "62",
+    "name": "陕西投资集团有限公司",
+    "province": "陕西省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "120",
+    "name": "陕西煤业化工集团有限责任公司",
+    "province": "陕西省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "124",
+    "name": "陕西交通控股集团有限公司",
+    "province": "陕西省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "243",
+    "name": "陕西延长石油(集团)有限责任公司",
+    "province": "陕西省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "252",
+    "name": "陕西有色金属控股集团有限责任公司",
+    "province": "陕西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "317",
+    "name": "西安城市基础设施建设投资集团有限公司",
+    "province": "陕西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "405",
+    "name": "西安市轨道交通集团有限公司",
+    "province": "陕西省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "410",
+    "name": "中邮证券有限责任公司",
+    "province": "陕西省",
+    "extRating": "AA+",
+    "intRating": "B+"
+  },
+  {
+    "seq": "1",
+    "name": "东方证券股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "46",
+    "name": "上海振华重工(集团)股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "47",
+    "name": "光明食品(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "59",
+    "name": "中国东方航空股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "87",
+    "name": "交通银行股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "98",
+    "name": "上海银行股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "115",
+    "name": "上海浦东发展银行股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "132",
+    "name": "上海建工集团股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "138",
+    "name": "上海国际港务(集团)股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "139",
+    "name": "申能(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "142",
+    "name": "百联集团有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "148",
+    "name": "上海上实(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "164",
+    "name": "宝山钢铁股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "166",
+    "name": "中国远洋海运集团有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "173",
+    "name": "上海浦东发展(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "178",
+    "name": "平安国际融资租赁有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "197",
+    "name": "远东国际融资租赁有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "210",
+    "name": "国药控股股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AA"
+  },
+  {
+    "seq": "217",
+    "name": "上海张江(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "223",
+    "name": "上海陆家嘴金融贸易区开发股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "233",
+    "name": "上海久事(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "253",
+    "name": "中远海运发展股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "260",
+    "name": "中国核工业建设股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "262",
+    "name": "建信人寿保险股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "270",
+    "name": "申万宏源证券有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "271",
+    "name": "海通证券股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "274",
+    "name": "交银人寿保险有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "278",
+    "name": "上海国际集团有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "279",
+    "name": "上海国盛(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "281",
+    "name": "上海国有资产经营有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "292",
+    "name": "上海城投(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "301",
+    "name": "光大证券股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "303",
+    "name": "工银安盛人寿保险有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "304",
+    "name": "太平人寿保险有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "309",
+    "name": "上海农村商业银行股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "311",
+    "name": "上海临港经济发展(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "328",
+    "name": "中航国际融资租赁有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "348",
+    "name": "上海汽车集团股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "349",
+    "name": "上海城投水务(集团)有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "353",
+    "name": "中国太平洋财产保险股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "356",
+    "name": "交银金融租赁有限责任公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "357",
+    "name": "招银金融租赁有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "404",
+    "name": "上海电力股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "416",
+    "name": "中国宝武钢铁集团有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "AA+"
+  },
+  {
+    "seq": "418",
+    "name": "中国太平洋人寿保险股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "425",
+    "name": "国投资本股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "432",
+    "name": "上海联和投资有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "442",
+    "name": "先正达集团股份有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "467",
+    "name": "上海国有资本投资有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "468",
+    "name": "中国建筑第八工程局有限公司",
+    "province": "上海市",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "9",
+    "name": "成都市兴蓉环境股份有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "25",
+    "name": "宜宾发展控股集团有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "42",
+    "name": "蜀道投资集团有限责任公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "111",
+    "name": "成都银行股份有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "133",
+    "name": "四川发展(控股)有限责任公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "144",
+    "name": "四川高速公路建设开发集团有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "155",
+    "name": "成都轨道交通集团有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "264",
+    "name": "成都交通投资集团有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "267",
+    "name": "泸州老窖集团有限责任公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "286",
+    "name": "成都兴城投资集团有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "287",
+    "name": "中国东方电气集团有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "324",
+    "name": "四川省能源投资集团有限责任公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "341",
+    "name": "雅砻江流域水电开发有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "376",
+    "name": "成都城建投资管理集团有限责任公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "377",
+    "name": "成都高新投资集团有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "383",
+    "name": "成都产业投资集团有限公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "392",
+    "name": "四川省港航投资集团有限责任公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "448",
+    "name": "四川省投资集团有限责任公司",
+    "province": "四川省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "103",
+    "name": "渤海银行股份有限公司",
+    "province": "天津市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "108",
+    "name": "天津银行股份有限公司",
+    "province": "天津市",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "176",
+    "name": "光大永明人寿保险有限公司",
+    "province": "天津市",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "192",
+    "name": "天津轨道交通集团有限公司",
+    "province": "天津市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "254",
+    "name": "中海油田服务股份有限公司",
+    "province": "天津市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "343",
+    "name": "招商局公路网络科技控股股份有限公司",
+    "province": "天津市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "354",
+    "name": "工银金融租赁有限公司",
+    "province": "天津市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "368",
+    "name": "北京控股有限公司",
+    "province": "香港特别行政区",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "409",
+    "name": "中国海洋石油有限公司",
+    "province": "香港特别行政区",
+    "extRating": "AAA",
+    "intRating": "AAA"
+  },
+  {
+    "seq": "251",
+    "name": "中国铜业有限公司",
+    "province": "云南省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "342",
+    "name": "华能澜沧江水电股份有限公司",
+    "province": "云南省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "60",
+    "name": "浙江省交通投资集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "65",
+    "name": "绿城房地产集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "100",
+    "name": "浙商银行股份有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "102",
+    "name": "宁波银行股份有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "AA-"
+  },
+  {
+    "seq": "106",
+    "name": "杭州银行股份有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "159",
+    "name": "浙江沪杭甬高速公路股份有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "163",
+    "name": "中国巨石股份有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "190",
+    "name": "杭州市交通投资集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "195",
+    "name": "杭州市城市建设投资集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "237",
+    "name": "浙江省机场集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "256",
+    "name": "浙江省能源集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "263",
+    "name": "宁波交通投资集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "269",
+    "name": "宁波舟山港集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "282",
+    "name": "宁波通商控股集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "288",
+    "name": "浙江省国有资本运营有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "290",
+    "name": "浙江省国际贸易集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "318",
+    "name": "浙江嘉兴国有资本投资运营有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "326",
+    "name": "杭州西湖城市建设投资集团有限公司",
+    "province": "浙江省",
+    "extRating": "AA+",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "370",
+    "name": "杭州萧山国有资产经营集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "373",
+    "name": "杭州上城区城市建设投资集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "378",
+    "name": "宁波城建投资集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "382",
+    "name": "杭州市城市建设发展集团有限公司",
+    "province": "浙江省",
+    "extRating": "AA+",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "386",
+    "name": "杭州上城区国有资本运营集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "398",
+    "name": "华数数字电视传媒集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "440",
+    "name": "温州市城市建设发展集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "446",
+    "name": "杭州余杭城市发展投资集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB"
+  },
+  {
+    "seq": "452",
+    "name": "杭州市拱墅区城市建设发展控股集团有限公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "462",
+    "name": "宁波市鄞开投资集团有限责任公司",
+    "province": "浙江省",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "105",
+    "name": "重庆农村商业银行股份有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "A+"
+  },
+  {
+    "seq": "112",
+    "name": "重庆银行股份有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "A"
+  },
+  {
+    "seq": "203",
+    "name": "重庆市城市建设投资(集团)有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "209",
+    "name": "重庆水务集团股份有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "235",
+    "name": "重庆两江新区开发投资集团有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "240",
+    "name": "重庆城市交通开发投资(集团)有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "276",
+    "name": "重庆高速公路集团有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "313",
+    "name": "重庆水务环境控股集团有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "A-"
+  },
+  {
+    "seq": "381",
+    "name": "重庆渝富资本运营集团有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "BBB-"
+  },
+  {
+    "seq": "419",
+    "name": "重庆市轨道交通(集团)有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  },
+  {
+    "seq": "460",
+    "name": "重庆渝富控股集团有限公司",
+    "province": "重庆市",
+    "extRating": "AAA",
+    "intRating": "BBB+"
+  }
+];
+
+function getRatingClass(rating) {
+  const key = 'r-' + rating.toLowerCase()
+    .replace(/\+/g, '-plus')
+    .replace(/\-/g, '-minus');
+  return key;
+}
+
+function renderStats(filtered) {
+  const total = DATA.length;
+  const shown = filtered.length;
+  const provinces = new Set(filtered.map(d => d.province)).size;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card"><div class="num">${shown}</div><div class="label">匹配企业</div></div>
+    <div class="stat-card"><div class="num">${total}</div><div class="label">总企业数</div></div>
+    <div class="stat-card"><div class="num">${provinces}</div><div class="label">涉及地域</div></div>
+  `;
+  document.getElementById('totalCount').textContent = total;
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('tableBody');
+  const noResult = document.getElementById('noResult');
+
+  if (data.length === 0) {
+    tbody.innerHTML = '';
+    noResult.style.display = 'block';
+    return;
+  }
+  noResult.style.display = 'none';
+
+  tbody.innerHTML = data.map(d => `
+    <tr>
+      <td>${d.seq.replace('.0', '')}</td>
+      <td class="name-col">${d.name}</td>
+      <td class="prov-col">${d.province}</td>
+      <td><span class="rating ${getRatingClass(d.extRating)}">${d.extRating}</span></td>
+      <td><span class="rating ${getRatingClass(d.intRating)}">${d.intRating}</span></td>
+    </tr>
+  `).join('');
+}
+
+function doSearch(query) {
+  const q = query.trim().toLowerCase();
+  if (!q) {
+    renderStats(DATA);
+    renderTable(DATA);
+    return;
+  }
+  const filtered = DATA.filter(d =>
+    d.name.toLowerCase().includes(q) ||
+    d.province.toLowerCase().includes(q)
+  );
+  renderStats(filtered);
+  renderTable(filtered);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  doSearch('');
+});
+
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  doSearch(e.target.value);
+});
+</script>
+</body>
+</html>

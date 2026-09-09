@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工具箱 · EVERSTEAD</title>
+<style>
+/* ============================================================
+   工具箱 TOOLBOX · 两板块: 网页工具 + 本地工具(launch:// 唤起)
+   风格与首页一致: 深空底 + 玻璃拟态卡片, 零外部依赖
+   ============================================================ */
+:root{
+  --bg:#03060c;
+  --panel:rgba(10,20,38,.55);
+  --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --violet:#8b5cf6;
+  --green:#34d399;
+  --orange:#fb923c;
+  --text:#e2ecf7;
+  --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+
+/* ---- 背景层 ---- */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
+    var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+}
+
+/* ---- 页面主体 ---- */
+.wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 56px}
+
+/* ---- 顶栏 ---- */
+.topbar{
+  display:flex;align-items:center;gap:14px;
+  padding:22px 0 0;
+}
+.topbar .logo{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:19px;color:#03101f;
+  box-shadow:var(--glow);
+  font-family:var(--mono);
+}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.28em;font-size:15px}
+.topbar .brand em{font-style:normal;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .back{
+  margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;
+  background:rgba(10,20,38,.4);
+  transition:border-color .25s, color .25s;
+}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+
+/* ---- 板块标题 ---- */
+.section{
+  margin-top:44px;
+}
+.section-head{
+  display:flex;align-items:baseline;gap:12px;
+  padding-bottom:12px;margin-bottom:20px;
+  border-bottom:1px solid var(--line);
+}
+.section-head .no{
+  font-family:var(--mono);font-weight:800;font-size:13px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.section-head h2{font-size:19px;font-weight:700;letter-spacing:.06em}
+.section-head .cnt{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em}
+
+/* ---- 卡片网格 ---- */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:16px;
+}
+.card{
+  position:relative;
+  display:block;
+  padding:20px 20px 16px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--panel);
+  backdrop-filter:blur(10px);
+  transition:transform .25s, border-color .25s, background .25s, box-shadow .25s;
+  overflow:hidden;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:var(--line-strong);
+  background:var(--panel-hover);
+  box-shadow:var(--glow);
+}
+.card-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.card-ico{font-size:22px;line-height:1}
+.card-tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--cyan);
+  border:1px solid var(--line);border-radius:4px;padding:2px 7px;
+}
+.card.local .card-tag{color:var(--orange)}
+.card .t{font-size:15px;font-weight:600;margin-bottom:6px}
+.card .m{font-size:12px;color:var(--muted);line-height:1.6}
+.card .arrow{
+  position:absolute;right:16px;top:18px;
+  font-family:var(--mono);color:var(--muted);
+  transition:transform .25s, color .25s;
+}
+.card:hover .arrow{transform:translateX(4px);color:var(--cyan)}
+
+/* ---- 提示条 ---- */
+.tip{
+  margin-top:16px;padding:12px 16px;
+  border:1px dashed var(--line);
+  border-radius:10px;
+  font-size:12px;color:var(--muted);line-height:1.8;
+}
+.tip b{color:var(--cyan)}
+.tip .warn{color:var(--orange)}
+
+/* ---- 页脚 ---- */
+.foot{
+  margin-top:56px;padding-top:16px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);
+  text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">🧰</div>
+    <div class="brand">TOOL<em>BOX</em> · 工具箱</div>
+    <a class="back" href="./">← 返回首页</a>
+  </div>
+
+  <!-- 板块一: 网页工具 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="no">SECTION 01</span>
+      <h2>🌐 网页工具</h2>
+      <span class="cnt">全部托管在本站, 手机也能开</span>
+    </div>
+    <div class="grid">
+      <a class="card" href="tools/naming/index.html">
+        <div class="card-top"><div class="card-ico">🧧</div><div class="card-tag">WEB</div></div>
+        <div class="t">起名档案 · 王家</div>
+        <div class="m">宝宝起名打分档案</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/baby-name-board/index.html">
+        <div class="card-top"><div class="card-ico">📋</div><div class="card-tag">WEB</div></div>
+        <div class="t">好听名字榜单 · 起名参考</div>
+        <div class="m">宝宝版名字榜单</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/family-links/name-list.html">
+        <div class="card-top"><div class="card-ico">📇</div><div class="card-tag">WEB</div></div>
+        <div class="t">名字榜单 · 家庭链接版</div>
+        <div class="m">家庭链接收集的名字清单</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/nursery/芽班王斯卯数据情况.html">
+        <div class="card-top"><div class="card-ico">🧒</div><div class="card-tag">WEB</div></div>
+        <div class="t">芽年级数据统计分析 · 幼儿名单</div>
+        <div class="m">王斯卯班级数据统计</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/nursery-parents/index.html">
+        <div class="card-top"><div class="card-ico">🏫</div><div class="card-tag">WEB</div></div>
+        <div class="t">芽三班 · 家长待办</div>
+        <div class="m">幼儿园家长待办事项</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/shandong/shandong_investment_chart.html">
+        <div class="card-top"><div class="card-ico">📈</div><div class="card-tag">WEB</div></div>
+        <div class="t">中邮资管固收部 · 山东省投资分布</div>
+        <div class="m">山东投资分布图表</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/shandong/shandong_company_list.html">
+        <div class="card-top"><div class="card-ico">📊</div><div class="card-tag">WEB</div></div>
+        <div class="t">山东省投资企业名单</div>
+        <div class="m">山东项目企业清单</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/shandong/neiping_search.html">
+        <div class="card-top"><div class="card-ico">🔍</div><div class="card-tag">WEB</div></div>
+        <div class="t">内评情况 · 企业搜索</div>
+        <div class="m">内评数据企业搜索</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/meal/尊贵的郑月涵女士一周餐食.html">
+        <div class="card-top"><div class="card-ico">🍚</div><div class="card-tag">WEB</div></div>
+        <div class="t">尊贵的郑月涵女士 · 孕晚期一周餐食</div>
+        <div class="m">媳妇孕晚期一周餐单</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/zodiac/index.html">
+        <div class="card-top"><div class="card-ico">🐉</div><div class="card-tag">WEB</div></div>
+        <div class="t">十二生肖 Logo 简图</div>
+        <div class="m">生肖系列简笔画</div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 板块二: 本地工具 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="no">SECTION 02</span>
+      <h2>⚡ 本地工具</h2>
+      <span class="cnt">launch:// 协议唤起本机应用</span>
+    </div>
+    <div class="grid">
+      <a class="card local" href="launch://mimo">
+        <div class="card-top"><div class="card-ico">🤖</div><div class="card-tag">LOCAL</div></div>
+        <div class="t">小米 MiMo 玩票站</div>
+        <div class="m">多模态 AI: API 聊天/看图 + 本地 7B</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card local" href="launch://ledger">
+        <div class="card-top"><div class="card-ico">🗂️</div><div class="card-tag">LOCAL</div></div>
+        <div class="t">客户拜访台账</div>
+        <div class="m">拜访记录 / 客户画像 / 跟进提醒</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card local" href="launch://codex">
+        <div class="card-top"><div class="card-ico">🔨</div><div class="card-tag">LOCAL</div></div>
+        <div class="t">Codex 铁锤</div>
+        <div class="m">OpenAI Codex CLI 编程助手</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card local" href="launch://obsidian">
+        <div class="card-top"><div class="card-ico">📓</div><div class="card-tag">LOCAL</div></div>
+        <div class="t">Obsidian 个人操作系统</div>
+        <div class="m">笔记 / 日记 / 知识库 vault</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card local" href="launch://dashboard">
+        <div class="card-top"><div class="card-ico">🎛️</div><div class="card-tag">LOCAL</div></div>
+        <div class="t">铁蛋控制面板</div>
+        <div class="m">启动后访问 http://localhost:18930</div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+    <div class="tip">
+      <b>使用说明</b> · 点击「本地工具」卡片, 浏览器会弹出 <b>「打开 小米MiMo玩票站?」</b> 之类的确认框 → 选允许(可勾选记住)。<br>
+      <span class="warn">⚠️ 本地工具只在注册过 launch:// 协议的这台电脑上生效</span>; 手机或别的设备点了没反应。注册/新增工具找铁蛋。
+    </div>
+  </div>
+
+  <div class="foot">EVERSTEAD TOOLBOX · 2026-09-09</div>
+</div>
+</body>
+</html>

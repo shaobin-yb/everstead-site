@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>芽三班 · 家长待办</title>
+<style>
+/* 色板沿用 dataviz 验证通过的 4 槽：朱砂/鎏金/青瓷/黛紫 */
+:root {
+  color-scheme: light;
+  --surf: #fcfcfb; --page: #f9f9f7;
+  --ink: #0b0b0b; --ink2: #52514e; --muted: #898781; --line: #e1e0d9;
+  --celadon: #0F9678;  /* 青瓷 · 主色 */
+  --cinnabar: #C23B2E; /* 朱砂 · 紧急 */
+  --gold: #C79A2B;     /* 鎏金 · 日期 */
+  --purple: #6F5EA8;   /* 黛紫 · 沟通 */
+  --s4:#2a78d6; --s3:#3987e5; --s2:#6da7ec; --s1:#86b6ef;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--page); color: var(--ink); line-height: 1.65;
+  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  padding-bottom: 56px;
+}
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+header { padding: 40px 0 10px; }
+.title-row { display: flex; align-items: center; gap: 14px; }
+.seal {
+  width: 54px; height: 54px; flex: none; background: var(--celadon); color: #fff;
+  display: grid; place-items: center; font-size: 19px; font-weight: 700;
+  border-radius: 8px; line-height: 1.25;
+}
+h1 { font-size: 26px; font-weight: 700; }
+.sub { color: var(--ink2); font-size: 13px; margin-top: 4px; }
+
+/* 倒计时 */
+.countdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin: 24px 0 6px; }
+.cd {
+  background: var(--surf); border: 1px solid var(--line); border-radius: 10px;
+  padding: 13px 16px; display: flex; justify-content: space-between; align-items: center;
+}
+.cd .lbl { color: var(--ink2); font-size: 13px; }
+.cd .num { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cd .num small { font-size: 13px; font-weight: 400; color: var(--ink2); }
+
+h2 {
+  font-size: 19px; font-weight: 700; margin: 34px 0 12px;
+  padding-left: 10px; border-left: 4px solid var(--celadon);
+}
+h2.h-红 { border-color: var(--cinnabar); }
+h2.h-金 { border-color: var(--gold); }
+h2.h-紫 { border-color: var(--purple); }
+
+/* 时间轴 */
+.timeline { display: flex; flex-direction: column; gap: 12px; }
+.t-item {
+  background: var(--surf); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 18px; display: flex; gap: 14px; align-items: flex-start;
+}
+.t-date {
+  flex: none; min-width: 84px; background: var(--gold); color: #1d1603;
+  border-radius: 8px; text-align: center; padding: 7px 10px; font-weight: 700;
+  font-size: 13.5px; line-height: 1.4;
+}
+.t-date.now { background: var(--cinnabar); color: #fff; }
+.t-body { flex: 1; }
+.t-title { font-weight: 700; font-size: 15.5px; }
+.t-desc { color: var(--ink2); font-size: 14px; margin-top: 3px; }
+.t-todo { font-size: 13px; color: var(--muted); margin-top: 6px; }
+.t-todo b { color: var(--ink2); }
+
+/* 清单 */
+.checks { display: flex; flex-direction: column; gap: 8px; }
+.ck {
+  display: flex; gap: 10px; align-items: flex-start; background: var(--surf);
+  border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px;
+  cursor: pointer; transition: box-shadow .12s;
+}
+.ck:hover { box-shadow: 0 2px 10px rgba(11,11,11,.06); }
+.ck input { margin-top: 4px; width: 18px; height: 18px; accent-color: var(--celadon); flex: none; cursor: pointer; }
+.ck .t { font-size: 14.5px; }
+.ck .t b { color: var(--cinnabar); }
+.ck .d { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.ck.done .t { color: var(--muted); text-decoration: line-through; }
+.ck.done .d { color: #c5c4be; }
+.progress { font-size: 13px; color: var(--ink2); margin-bottom: 10px; }
+
+/* 信息卡 */
+.info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.info {
+  background: var(--surf); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+}
+.info h3 { font-size: 15px; margin-bottom: 6px; }
+.info h3::before { content: ''; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 7px; background: var(--celadon); }
+.info ul { padding-left: 18px; }
+.info li { font-size: 14px; margin: 4px 0; }
+.info li b { color: var(--cinnabar); }
+.info .src { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+footer { margin-top: 46px; color: var(--muted); font-size: 12.5px; }
+footer p { margin: 5px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="title-row">
+    <div class="seal">芽<br>三</div>
+    <div>
+      <h1>芽三班 · 家长未来两周待办</h1>
+      <div class="sub">2026-08-25 新生家长会纪要 + PPT 合并梳理 · 勾选状态保存在本机 · 手机可直接用</div>
+    </div>
+  </div>
+</header>
+
+<div class="countdown">
+  <div class="cd"><span class="lbl">距欢迎仪式（9/1）</span><span class="num" id="cd1">—</span></div>
+  <div class="cd"><span class="lbl">距全天入园（9/16）</span><span class="num" id="cd2">—</span></div>
+  <div class="cd"><span class="lbl">见面会（8/27 起）</span><span class="num" id="cd3">—</span></div>
+</div>
+
+<h2 class="h-红">📅 关键节点（硬日子，一个都别漏）</h2>
+<div class="timeline">
+  <div class="t-item"><div class="t-date now">会后即刻</div><div class="t-body">
+    <div class="t-title">会后三件事</div>
+    <div class="t-desc">①按视频指引绑定「健康童帮」请假小程序；②腾讯文档报名亲子见面会（每时段限5组，先报先占）；③想进家委会的私信老师「岗位+理由」，先到先得</div>
+  </div></div>
+  <div class="t-item"><div class="t-date">8/27-28</div><div class="t-body">
+    <div class="t-title">亲子见面会</div>
+    <div class="t-desc">三个时段（9:00-10:00 / 10:20-11:20 / 15:00-16:00），仅 1 位家长陪同</div>
+    <div class="t-todo"><b>携带：</b>被褥全套（清洗晾晒+贴名字，枕套/褥子/被套套好）· 孩子室内鞋 · 女生梳子</div>
+  </div></div>
+  <div class="t-item"><div class="t-date">8/29</div><div class="t-body">
+    <div class="t-title">AB 班报名（腾讯文档）</div>
+    <div class="t-desc">A班13人 · B班12人。不得超序号填写、不得修改他人报名信息</div>
+  </div></div>
+  <div class="t-item"><div class="t-date">9/1</div><div class="t-body">
+    <div class="t-title">新生欢迎仪式（亲子半日）</div>
+    <div class="t-desc">上午 9:00-11:00，1 位家长陪同（最好爸爸或妈妈），感受幼儿园半日生活</div>
+    <div class="t-todo"><b>孩子自己背书包入园：</b>书包透明框写好姓名+班级，内装 2-3 套备用衣物+袜子+小内裤（分袋放置、全部标名）</div>
+  </div></div>
+  <div class="t-item"><div class="t-date">9/2-15</div><div class="t-body">
+    <div class="t-title">AB 班分批次入园（半日适应）</div>
+    <div class="t-desc">按报名班次入园，作息、饮食全部按正式标准执行。午休 12:00-14:00，适应期实际会睡到 14:20-14:30</div>
+  </div></div>
+  <div class="t-item"><div class="t-date">9/16 起</div><div class="t-body">
+    <div class="t-title">全体全天入园</div>
+    <div class="t-desc">除生病等不可抗力外不得缺勤；出游安排统一放假期时段</div>
+  </div></div>
+</div>
+
+<h2>✅ 待办清单（点一下勾选，自动保存）</h2>
+<div class="progress" id="prog"></div>
+<div class="checks" id="checks"></div>
+
+<h2 class="h-紫">🏠 日常规矩（入园即生效）</h2>
+<div class="info-grid">
+  <div class="info"><h3>接送</h3><ul>
+    <li>来园 <b>7:40-8:00</b>，离园 <b>16:40</b> 指定区域，不迟到不早到</li>
+    <li>前 2-3 周接园<b>必须持蓝色接送卡</b>（卡上有孩子照片/姓名/班级）</li>
+    <li>接送人固定；换人需<b>提前提交委托书</b>，未核验身份不得接走</li>
+    <li>按序号排队接娃（序号全年固定；本学期从小到大）</li>
+    <li>车不停园门口，停麦当劳附近步行入园</li>
+  </ul></div>
+  <div class="info"><h3>健康请假</h3><ul>
+    <li><b>逢症必休</b>：咳嗽/流涕/发烧/呕吐居家休息，不瞒报</li>
+    <li>返园标准：发烧后<b>48h</b>、呕吐后<b>72h</b>无症状；传染病持<b>社区复课证明</b></li>
+    <li>请假走小程序，<b>提前一天晚 8 点前</b>提交，只请整假（无半天假）</li>
+    <li>病假报清：症状/是否就医/医院/诊断</li>
+    <li>被褥月末退回换洗；牙杯 9 月末退回，10 月起隔周退回并检查牙刷牙膏</li>
+  </ul></div>
+  <div class="info"><h3>物品准备</h3><ul>
+    <li>所有私人物品<b>标姓名</b>：衣裤、内裤、袜子、书包、被褥一件不落</li>
+    <li>被褥备<b>两套</b>提前清洗，用可插换名签；尿湿频繁可多备一套</li>
+    <li>备用衣物 2-3 套分袋装；若 9-10 月未动用，11 月起可逐步不带</li>
+    <li>禁带：小珠子、硬币、尖发卡等细小物；不戴任何首饰入园</li>
+  </ul></div>
+  <div class="info"><h3>着装</h3><ul>
+    <li>舒适运动款；长裤或七分裤<b>护膝</b>（男女都要）</li>
+    <li>❌ 纱裙、露膝短裤、紧身裤、牛仔裤；帽衫抽绳<b>打结收进衣内或抽出</b></li>
+    <li>❌ 皮鞋、系带鞋、洞洞鞋、露趾凉拖——选合脚运动鞋</li>
+    <li>女生不戴发卡，头绳两三个即可；园方每周为女孩编一次发型</li>
+    <li>❌ 驱蚊手环；✅ 后背粘贴式驱蚊贴</li>
+  </ul></div>
+  <div class="info"><h3>沟通</h3><ul>
+    <li>老师带班期间不看手机，非紧急留言等回复；<b>急事直接打电话</b></li>
+    <li>群通知收到<b>及时回复</b>（尊重老师，也帮老师判断内容）</li>
+    <li>孩子私人问题<b>私信</b>沟通，不在群里讨论</li>
+    <li>孩子回家说的话（"老师不喜欢我"等）先与老师核实，不公开质问</li>
+    <li>信任老师的专业与师德——误会是信任最大的杀手</li>
+  </ul></div>
+  <div class="info"><h3>育儿配合</h3><ul>
+    <li><b>坚持出勤</b>：哭就不送会延长适应期，让孩子觉得"哭有用"</li>
+    <li>周末作息对齐幼儿园，避免「5+2=0」</li>
+    <li>自理放手：早晨多留 15 分钟，表扬努力、不苛求完美，全家口径一致</li>
+    <li>冲突不贴标签（"爱打人"），家里不"打着玩"；有疑虑第一时间找老师</li>
+    <li>分离焦虑五招：自己平静 · 告别仪式后立刻离开 · 准时接 · 允许哭 · 回家高质量陪伴</li>
+  </ul></div>
+</div>
+
+<h2 class="h-金">🏛️ 家委会（自愿，先到先得）</h2>
+<div class="info-grid">
+  <div class="info"><h3>主任</h3><ul><li>协调家园对接，反馈家长意见，代表班级参加园级家委会会议</li></ul></div>
+  <div class="info"><h3>宣传委员</h3><ul><li>传达班级通知，督促家长完成信息采集、费用缴纳</li></ul></div>
+  <div class="info"><h3>财务委员（已投票定）</h3><ul><li>统一采买寄到幼儿园，公开账单明细，群收款结算——家长不用自己买</li></ul></div>
+  <div class="info"><h3>组织委员</h3><ul><li>配合大型活动，可任家长助教；有拍摄/活动组织特长优先</li></ul></div>
+</div>
+<div class="info" style="margin-top:12px"><h3>家长护学岗</h3><ul>
+  <li>各班轮值：早间 2 个值守位、晚间 4 个值守位；帮扶电动车家长、指挥交通、留意可疑人员——欢迎报名</li>
+</ul></div>
+
+<footer>
+  <p><b>数据来源</b>：《2026年8月芽三班家长会.pptx》（园方 PPT）+《智能纪要：芽班新生家长会-2026年8月25日.docx》（录音纪要）</p>
+  <p>⚠️ 两文件口径差异：见面会 PPT 写 8/27-28、纪要提"27-29 号"；请假小程序 PPT 写「健康童帮」、纪要写「健康同邦」——均以班级群最终通知为准。</p>
+  <p>⚠️ 纪要（AI 生成）中有明显笔误已纠正："8月2号至15号分AB班入园"应为 9/2-15，"8月16号起全天"应为 9/16 起（以 PPT 及关键决策为准）。PPT 第 54 页落款年份写成 2028，应为 2026。</p>
+  <p>🍼 铁蛋整理 · 2026-08-25</p>
+</footer>
+
+</div>
+
+<script>
+'use strict';
+const CHECKS = [
+  // [分类, 事项, 说明]
+  ['会后', '绑定「健康童帮」请假小程序', '会后按视频指引完成绑定'],
+  ['会后', '腾讯文档报名亲子见面会', '每时段限 5 组家庭，先报先占'],
+  ['会后', '家委会报名（如参加）', '私信老师：岗位+理由，先到先得'],
+  ['见面会', '洗晒被褥并贴好名字', '枕套/褥子/被套套好，带去见面会'],
+  ['见面会', '准备孩子室内鞋', '见面会携带'],
+  ['见面会', '女生备好梳子', '见面会携带'],
+  ['8/29', 'AB 班报名（腾讯文档）', 'A班13人 / B班12人，按序号填，勿改他人'],
+  ['9/1', '书包透明框写姓名+班级', '欢迎仪式当天孩子自己背书包'],
+  ['9/1', '备 2-3 套备用衣物+袜子+小内裤', '分袋放置、全部标名，装进书包'],
+  ['物品', '所有私人物品写名字', '衣裤、内裤、袜子、书包、被褥，一件不落'],
+  ['物品', '被褥备两套提前清洗', '用可插换名签；尿湿频繁可多备一套'],
+  ['着装', '清点孩子衣物合规性', '无纱裙/露膝短裤/紧身裤/牛仔裤；帽衫抽绳处理'],
+  ['着装', '准备合脚运动鞋', '禁皮鞋、系带鞋、洞洞鞋、露趾凉拖'],
+  ['着装', '女生头绳两三个、不戴发卡', '禁驱蚊手环，可用后背式驱蚊贴'],
+  ['接送', '确认接送卡（蓝色）在手', '前 2-3 周接园必须持卡'],
+  ['接送', '和家人对齐接送安排', '固定接送人；换人提前交委托书；不停园门口'],
+  ['沟通', '群通知开接收提醒', '收到及时回复'],
+  ['育儿', '全家对齐：哭也坚持送园', '不因哭闹请假'],
+  ['育儿', '周末作息对齐幼儿园', '避免 5+2=0'],
+  ['育儿', '早晨多留 15 分钟练自理', '表扬努力，不苛求完美'],
+];
+
+const el = document.getElementById('checks');
+const STORE_KEY = 'yasan-todo-v1';
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { state = {}; }
+
+const cats = {};
+CHECKS.forEach(([cat, t, d]) => {
+  (cats[cat] = cats[cat] || []).push([t, d]);
+});
+
+let html = '';
+for (const [cat, items] of Object.entries(cats)) {
+  html += `<div style="font-weight:700;font-size:14px;color:var(--ink2);margin:10px 0 2px">${cat}</div>`;
+  items.forEach(([t, d]) => {
+    const done = !!state[t];
+    html += `<label class="ck${done ? ' done' : ''}">
+      <input type="checkbox" ${done ? 'checked' : ''} data-t="${t}">
+      <span><span class="t">${t}</span><br><span class="d">${d}</span></span>
+    </label>`;
+  });
+}
+el.innerHTML = html;
+
+function updateProg() {
+  const boxes = [...el.querySelectorAll('input')];
+  const done = boxes.filter(b => b.checked).length;
+  const pct = Math.round(done / boxes.length * 100);
+  document.getElementById('prog').textContent =
+    `进度：${done} / ${boxes.length}（${pct}%）`;
+}
+updateProg();
+
+el.addEventListener('change', e => {
+  if (e.target.matches('input')) {
+    const t = e.target.dataset.t;
+    state[t] = e.target.checked;
+    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    e.target.closest('.ck').classList.toggle('done', e.target.checked);
+    updateProg();
+  }
+});
+
+// 倒计时
+(function countdown() {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const mk = (m, d) => new Date(2026, m - 1, d);
+  const days = (t) => Math.round((mk(...t) - today) / 86400000);
+  const fmt = (n) => n < 0 ? '<small>已过</small>' : n === 0 ? '<small>就是今天！</small>' : n + '<small> 天</small>';
+  document.getElementById('cd1').innerHTML = fmt(days([9, 1]));
+  document.getElementById('cd2').innerHTML = fmt(days([9, 16]));
+  document.getElementById('cd3').innerHTML = fmt(days([8, 27]));
+})();
+</script>
+</body>
+</html>

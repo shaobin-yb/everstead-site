@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>起名档案 · 王家</title>
+<style>
+/* ── 色板（dataviz 验证通过：朱砂/鎏金/青瓷/黛紫 4 槽，浅色面）── */
+:root {
+  color-scheme: light;
+  --surf: #fcfcfb;
+  --page: #f9f9f7;
+  --ink: #0b0b0b;
+  --ink2: #52514e;
+  --muted: #898781;
+  --line: #e1e0d9;
+  --wang: #C23B2E;   /* 朱砂 · 王家 */
+  --gold: #C79A2B;   /* 鎏金 · 生肖彩蛋 */
+  --purple: #6F5EA8; /* 黛紫 · 典故 */
+  --s4: #2a78d6; --s3: #3987e5; --s2: #6da7ec; --s1: #86b6ef; /* 评分顺阶蓝 */
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  padding: 0 0 64px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+/* ── 头部 ── */
+header { padding: 48px 0 8px; }
+.title-row { display: flex; align-items: center; gap: 16px; }
+.seal {
+  width: 56px; height: 56px; flex: none;
+  background: var(--wang); color: #fff;
+  display: grid; place-items: center;
+  font-size: 22px; font-weight: 700; line-height: 1.2;
+  border-radius: 8px; letter-spacing: 0;
+}
+h1 { font-size: 30px; font-weight: 700; }
+.sub { color: var(--ink2); margin-top: 6px; font-size: 14px; }
+.sub b { color: var(--ink); }
+
+/* ── 统计格 ── */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 28px 0 8px; }
+.stat {
+  background: var(--surf); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.stat .num { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat .lbl { color: var(--ink2); font-size: 13px; }
+
+/* ── 筛选行 ── */
+.filters {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin: 24px 0 18px; padding: 12px;
+  background: var(--surf); border: 1px solid var(--line); border-radius: 10px;
+}
+.fbtn {
+  border: 1px solid var(--line); background: #fff; color: var(--ink2);
+  padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 14px;
+}
+.fbtn.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.fbtn:focus-visible { outline: 2px solid var(--s3); outline-offset: 2px; }
+.sort-sel {
+  margin-left: auto; border: 1px solid var(--line); border-radius: 8px;
+  padding: 6px 10px; font-size: 14px; background: #fff; color: var(--ink);
+}
+
+/* ── 卡片网格 ── */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(238px, 1fr)); gap: 14px; }
+.card {
+  position: relative; background: var(--surf); border: 1px solid var(--line);
+  border-radius: 10px; padding: 14px 16px 16px; cursor: pointer;
+  transition: box-shadow .15s, border-color .15s, transform .1s;
+  overflow: hidden;
+}
+.card:hover { box-shadow: 0 4px 16px rgba(11,11,11,.08); transform: translateY(-1px); }
+.card:focus-visible { outline: 2px solid var(--s3); outline-offset: 2px; }
+.accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.f-王 .accent { background: var(--wang); }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 6px; }
+.name { font-size: 22px; font-weight: 700; letter-spacing: .06em; }
+.badge {
+  flex: none; min-width: 44px; text-align: center;
+  border-radius: 8px; padding: 3px 8px; font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.b-90 { background: var(--s4); color: #fff; }
+.b-80 { background: var(--s3); color: #fff; }
+.b-70 { background: var(--s2); color: #0b0b0b; }
+.b-60 { background: var(--s1); color: #0b0b0b; }
+.line { color: var(--ink2); font-size: 13.5px; margin-top: 8px; min-height: 42px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip {
+  font-size: 12px; padding: 2px 8px; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--ink2); background: #fff;
+}
+.chip.tier-全绿 { border-color: var(--ren, #0F9678); color: #0a6b57; }
+.chip.tier-一⚠️, .chip.tier-多⚠️ { border-color: #d8a02a; color: #8a6410; }
+.chip.tier-慎用 { border-color: var(--wang); color: #9c2f24; }
+.chip.zodiac { background: var(--gold); border-color: var(--gold); color: #1d1603; }
+.chip.allusion { background: var(--purple); border-color: var(--purple); color: #fff; }
+.chip.phon { background: #fff; border-color: var(--purple); color: #4a3c7e; }
+.chip.girl { background: #fdf0f3; border-color: #e7b9c4; color: #8c4a5c; }
+.status-tag {
+  position: absolute; top: 10px; right: 10px; font-size: 11px; color: var(--muted);
+}
+
+/* ── 一览表 ── */
+.table-sec { margin-top: 48px; }
+h2 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+table { width: 100%; border-collapse: collapse; background: var(--surf); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+th, td { text-align: left; padding: 8px 14px; font-size: 14px; border-bottom: 1px solid var(--line); }
+th { background: #f3f2ee; color: var(--ink2); font-weight: 600; }
+tr:last-child td { border-bottom: none; }
+td.num { font-variant-numeric: tabular-nums; font-weight: 600; }
+.tier-txt { font-size: 12.5px; }
+
+/* ── 弹窗 ── */
+dialog {
+  border: none; border-radius: 14px; padding: 0; max-width: 640px; width: calc(100vw - 48px);
+  background: var(--surf); color: var(--ink); box-shadow: 0 12px 48px rgba(11,11,11,.25);
+}
+dialog::backdrop { background: rgba(11,11,11,.45); }
+.dlg-body { padding: 26px 28px 20px; max-height: 80vh; overflow-y: auto; }
+.dlg-top { display: flex; align-items: flex-start; gap: 14px; }
+.dlg-top .name { font-size: 28px; }
+.dlg-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.dlg-line { color: var(--ink2); font-size: 15px; margin: 14px 0 4px; }
+h3 { font-size: 15px; margin: 20px 0 8px; padding-left: 10px; border-left: 3px solid var(--ink); }
+p.meaning { font-size: 15px; }
+ul { padding-left: 22px; }
+li { margin: 4px 0; font-size: 14.5px; }
+li.warn { color: #8a6410; }
+.wuge-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px; }
+.wg {
+  border: 1px solid var(--line); border-radius: 8px; padding: 8px 6px; text-align: center;
+}
+.wg .k { font-size: 12px; color: var(--muted); }
+.wg .n { font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.wg .d { font-size: 11.5px; color: var(--ink2); }
+.wg .v { font-size: 11.5px; margin-top: 2px; }
+.v-吉 { color: #0a6b57; }
+.v-凶 { color: #9c2f24; }
+.v-⚠ { color: #8a6410; }
+.brk-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.brk-table th, .brk-table td { padding: 6px 10px; font-size: 13.5px; border-bottom: 1px solid var(--line); }
+.brk-table tr:last-child th, .brk-table tr:last-child td { border-bottom: none; font-weight: 700; }
+.brk-table th { background: transparent; }
+.wuge-str { font-size: 14px; margin-top: 8px; color: var(--ink2); }
+.wuge-note { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.dlg-close {
+  display: block; margin: 14px auto 0; border: 1px solid var(--line); background: #fff;
+  color: var(--ink); border-radius: 8px; padding: 7px 26px; cursor: pointer; font-size: 14px;
+}
+
+/* ── 页脚 ── */
+footer { margin-top: 56px; color: var(--muted); font-size: 13px; }
+footer p { margin: 6px 0; }
+footer a { color: var(--ink2); }
+.note-pool { margin-top: 12px; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="title-row">
+    <div class="seal">名<br>谱</div>
+    <div>
+      <h1>起名档案 · 王家</h1>
+      <div class="sub">康熙笔画 · 五格剖象 · 数理五行 — 2026-08 起名讨论全记录 · 点击任意名字卡片查看打分与寓意</div>
+    </div>
+  </div>
+</header>
+
+<div class="stats" id="stats"></div>
+
+<div class="filters" id="filters">
+  <button class="fbtn on" data-s="全部">全部状态</button>
+  <button class="fbtn" data-s="定名">已定名</button>
+  <button class="fbtn" data-s="候选">候选</button>
+  <button class="fbtn" data-s="女孩">女孩名</button>
+  <select class="sort-sel" id="sortSel" aria-label="排序方式">
+    <option value="score">按评分从高到低</option>
+    <option value="name">按姓名排序</option>
+  </select>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="table-sec">
+  <h2>一览表</h2>
+  <table id="fullTable">
+    <thead><tr><th>名字</th><th>类型</th><th>评分</th><th>数理档次</th><th>一句话</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<footer>
+  <p><b>方法说明</b>：笔画取康熙字典口径；评分表 = 三才30 + 人格20 + 地格15 + 总格15 + 外格10 + 音形义10；生肖喜忌为民俗口径。</p>
+  <p>81 数理吉凶各家表有出入（总格9/外格2 等为分歧数），标注「分歧⚠️」者宽松表判吉。三才权重最高。</p>
+  <p>女孩名单出自《女孩名字-王.xlsx》（2026-08-24 收录），出处/寓意为表格原文，数理未评分——需评分的名字跟我说。</p>
+  <p>笔画来源：<a href="https://kangxizidian.org/hanzi/dao/%E9%81%93.html">道·康熙字典</a> ·
+  <a href="https://www.kangxizidian.org/hanzi/xu/%E8%99%9A.html">虚·康熙字典</a> ·
+  <a href="https://m.xingming.com/zidian/hz1260.html">道·姓名学笔画</a></p>
+  <p>本页为浅色档案页（有意不提供深色模式）。内容仅供参考，定名以出生后生辰八字复核为准。</p>
+</footer>
+
+</div>
+
+<dialog id="dlg">
+  <div class="dlg-body" id="dlgBody"></div>
+</dialog>
+
+<script src="score_data.js"></script>
+<script>
+'use strict';
+/* ═══════════ 名字数据（全部数字源自 2026-08-17 会话记录，按康熙笔画） ═══════════ */
+/* 字段: n名字 f家族 score|null tier status g:'女'|undefined sancai三才 wuge{天/人/地/外/总:[数理名,吉凶]}或null
+   wugeStr原始记录串 wugeNote brk评分明细|null meaning寓意 eggs彩蛋 warns⚠️ line一句话 */
+const NAMES = [
+// ── 王家 · 已定名 ──
+{n:'王斯卯',f:'王',score:96,tier:'全绿',status:'定名',
+ sancai:'土土金 · 土土比和、土生金（吉配）',
+ wuge:{天:['5 种竹成林','大吉'],人:['16 厚德载物','吉'],地:['17 刚强','吉'],外:['6 安稳余庆','吉'],总:['21 明月中天','大吉']},
+ brk:[30,19,14,15,9,9],
+ meaning:'老大正式名，生于癸卯年（2023-02-23），名字藏生年地支「卯」——拆地支入名，全绿学霸。',
+ eggs:['生肖嵌名：癸卯兔年，卯字正拆','地格17过刚之兆，需柔济（-1分）'],
+ warns:[],
+ line:'癸卯地支入名，门门全绿'},
+{n:'王元一',f:'王',score:84,tier:'一⚠️',status:'定名',
+ sancai:'土金土 · 上下皆生中宫（吉配）',
+ wuge:{天:['5 种竹成林','大吉'],人:['8 坚刚','吉'],地:['5 种竹成林','大吉'],外:['2 混沌未定','分歧⚠️'],总:['9 破舟入海','分歧⚠️']},
+ brk:[30,18,15,8,4,9],
+ meaning:'老二正式名（预产期 2026-10-13）。抱元守一（道家内丹用语）——「元」「一」正是抱元守一的两个宾语，嵌字藏梗。老板 2026-08-17 亲口纠正：初衷是抱元守一。',
+ eggs:['典故嵌字：抱元守一四字占其二','兄弟对仗：斯卯拆地支 / 元一名字即典','三才满分，寓意全场最佳'],
+ warns:['总格9、外格2 是各家 81 数理分歧最大的两个数：严格熊崎表偏凶，宽松表全绿','调整建议：不动最稳——两处扣分在权重最低的总格外格，换字会拆掉典故','出生后按生辰八字复核'],
+ line:'抱元守一，名字即典'},
+// ── 王家 · 候选（男孩向） ──
+{n:'王驰元',f:'王',score:96,tier:'全绿',status:'候选',
+ sancai:'土金金 · 天土生人金、人地双金比和（吉配）',
+ wuge:{天:['5 种竹成林','大吉'],人:['17 刚强','吉'],地:['17 刚强','吉'],外:['5 种竹成林','大吉'],总:['21 明月中天','大吉']},
+ meaning:'三层彩蛋：驰带马字旁——马年宝宝藏生肖（与斯卯拆地支同一套手法，只是藏在偏旁里）；驰谐「持」=持元抱元；驰骋天地。',
+ eggs:['偏旁藏生肖：马字旁（丙午马年）','谐音梗：驰=持，持元=抱元'],
+ warns:['声调 2-2-2 略平','此前对话表中人格曾误写 8，本页按康熙笔画（王4+驰13）修正为 17'],
+ line:'马旁藏生肖，全绿黑马'},
+{n:'王元午',f:'王',score:87,tier:'一⚠️',status:'候选',
+ sancai:'土金金 · 天土生人金（吉配）',
+ wuge:{天:['5 种竹成林','大吉'],人:['8 坚刚','吉'],地:['8 坚刚','吉'],外:['5 种竹成林','大吉'],总:['12 掘井无泉','凶']},
+ meaning:'午=马，老二生在丙午马年，名字藏地支——与斯卯凑成「卯午兄弟」，起名系统闭环；元午=元气如日中天。',
+ eggs:['生肖嵌名：午=马，卯午兄弟对仗'],
+ warns:['总格12 各家一致凶（相对元一：外格2→5修好，总格9→12坐实）','三字纯火（火火火），丙午年亦双火——八字喜火加成、喜水减分'],
+ line:'马年藏午，卯午兄弟'},
+{n:'王元壹',f:'王',score:88,tier:'一⚠️',status:'候选',
+ sancai:'土金土（不变）',
+ wuge:{天:['5','大吉'],人:['8','吉'],地:['16 厚德','吉'],外:['13','吉'],总:['20','分歧⚠️']},
+ meaning:'「一」换大写「壹」——音和义一字不差，外格 2→13 修好、地格 5→16 升级；抱元守一的读音仍在。',
+ eggs:['起名界标准手法：大写字换笔画，不动读音'],
+ warns:['只剩总格20 一处（分歧数）','缺点：壹写着重，有点支票感','字形没了「一」，嵌字梗打折'],
+ line:'元一换大写，音义不变'},
+{n:'王元正',f:'王',score:89,tier:'一⚠️',status:'候选',
+ sancai:'土金水 · 顺生（吉）',
+ wuge:{天:['5','大吉'],人:['8','吉'],地:['9','分歧⚠️'],外:['6','吉'],总:['13','大吉']},
+ meaning:'元正=元旦古称（《晋书》「元正大会」），一元复始、万象更新，与抱元守一完全同源。',
+ warns:['只剩地格9 一处（分歧数）','缺点：名字本身变了，「一」字面没了'],
+ line:'元正=元旦古称'},
+{n:'王太一',f:'王',score:84,tier:'一⚠️',status:'候选',
+ sancai:'土金土（与王元一完全一致）',
+ wuge:null, wugeStr:'五格与王元一完全一致（天5·人8·地5·外2·总9）',
+ meaning:'「太一」道家至上概念：道之本源、北极星古称，屈原《九歌·东皇太一》。与元一凑兄弟对子，风格如出一辙。',
+ eggs:['典故：《东皇太一》','兄弟对子：五格与元一一致'],
+ warns:['有《数码宝贝》八神太一同名联想'],
+ line:'道家至上，五格同元一'},
+{n:'王齐一',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土金土（与元一同构）',
+ wuge:null, wugeStr:'总格 19 部分表偏凶⚠️',
+ meaning:'《庄子·齐物论》「天地与我并生，而万物与我为一」。',
+ eggs:['典故：《齐物论》'],
+ warns:['现代「整齐划一」联想会抢戏'],
+ line:'万物与我为一'},
+{n:'王惟一',f:'王',tier:'未评',status:'候选',
+ sancai:'土土火（吉）',
+ wuge:null, wugeStr:'惟简化11画口径会变⚠️',
+ meaning:'《尚书》十六字心传「惟精惟一」，亦内丹要诀。谐「唯一」（你是我的唯一）。',
+ eggs:['典故：《尚书》','谐音梗：唯一'],
+ warns:['宋针灸家王惟一同名'],
+ line:'惟精惟一'},
+{n:'王若朴',f:'王',tier:'未评',status:'候选',
+ sancai:'土土金（与斯卯同款）',
+ wuge:null, wugeStr:'若/朴按简化笔画口径会变⚠️',
+ meaning:'《道德经》「敦兮其若朴」「见素抱朴」——与老大斯卯同款三才。',
+ eggs:['典故：《道德经》','与斯卯三才同款'],
+ warns:[],
+ line:'敦兮其若朴'},
+{n:'王虚白',f:'王',tier:'未评',status:'候选',
+ sancai:'土土金（与斯卯同款）',
+ wuge:null, wugeStr:'总格 21 与斯卯同格（明月中天，吉）',
+ meaning:'《庄子·人间世》「虚室生白，吉祥止止」。',
+ eggs:['典故：《庄子》','与斯卯同三才同总格'],
+ warns:['「虚」现代字面偏负面，需家长能hold住'],
+ line:'虚室生白'},
+{n:'王抱朴',f:'王',tier:'未评',status:'候选',
+ sancai:'土火土（吉）',
+ wuge:null, wugeStr:'五格五行全齐（土·火·金·水…）',
+ meaning:'《道德经》「见素抱朴，少私寡欲」，葛洪《抱朴子》。',
+ eggs:['典故：《道德经》《抱朴子》'],
+ warns:['「抱」字做名罕见'],
+ line:'见素抱朴'},
+{n:'王善渊',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土土火（吉）',
+ wuge:null, wugeStr:'总格 28 部分表标凶⚠️（渊简化11画则总格27）',
+ meaning:'《道德经》「居善地，心善渊」。',
+ eggs:['典故：《道德经》'],
+ warns:[],
+ line:'心善渊'},
+{n:'王得一',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土土木（地木克人土⚠️）',
+ wuge:null, wugeStr:'人格15、总格16 皆吉数',
+ meaning:'《道德经》「天得一以清，地得一以宁」——与抱一同源。',
+ eggs:['典故：《道德经》','谐音梗：得意'],
+ warns:[],
+ line:'天得一以清'},
+{n:'王守一',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土水金（天土克人水⚠️）',
+ wuge:null, wugeStr:'',
+ meaning:'《庄子·在宥》「我守其一以处其和」；内丹术语「守一存真」。',
+ eggs:['典故：《庄子》','内丹术语'],
+ warns:[],
+ line:'守其一以处其和'},
+{n:'王道一',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土水金（天克人⚠️）',
+ wuge:null, wugeStr:'道康熙16画口径；若按简化12画则三才变土土火全吉',
+ meaning:'《道德经》「道生一，一生二…」名字直嵌原文。',
+ eggs:['典故：《道德经》原文直嵌'],
+ warns:['口径差异决定三才'],
+ line:'道生一'},
+{n:'王中和',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土金木（金克木⚠️）',
+ wuge:null, wugeStr:'总格 16 厚德（吉）',
+ meaning:'《中庸》「致中和，天地位焉」；道家「守中致和」。',
+ eggs:['典故：《中庸》'],
+ warns:[],
+ line:'致中和'},
+{n:'王知白',f:'王',tier:'多⚠️',status:'候选',
+ sancai:'土木火⚠️',
+ meaning:'《道德经》「知其白，守其黑」。', eggs:['典故：《道德经》'], warns:[],
+ line:'知其白守其黑'},
+{n:'王和光',f:'王',tier:'多⚠️',status:'候选',
+ sancai:'土木火⚠️',
+ meaning:'《道德经》「和其光，同其尘」。', eggs:['典故：《道德经》'], warns:[],
+ line:'和其光'},
+{n:'王玄一',f:'王',tier:'多⚠️',status:'候选',
+ sancai:'土水土（双克⚠️）',
+ meaning:'《道德经》「玄之又玄，众妙之门」。', eggs:['典故：《道德经》'], warns:[],
+ line:'玄之又玄'},
+{n:'王致一',f:'王',tier:'多⚠️',status:'候选',
+ sancai:'三才顺生（但人格14为凶数⚠️）',
+ meaning:'《易·系辞》「言致一也」。', eggs:['典故：《系辞》'], warns:[],
+ line:'言致一也'},
+{n:'王天一',f:'王',tier:'未评',status:'候选',
+ sancai:'五格同元一',
+ meaning:'天一：天一阁藏书楼、天一生水。', eggs:[], warns:['象棋特级大师王天一同名'],
+ line:'五格同元一'},
+{n:'王心一',f:'王',tier:'未评',status:'候选',
+ sancai:'五格同元一',
+ meaning:'心一=一心一意。', eggs:[], warns:['略偏柔'],
+ line:'一心一意'},
+{n:'王培元',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土土土（吉）',
+ wuge:null, wugeStr:'人8吉·地15大吉·总19⚠️·外5大吉',
+ meaning:'培元固本——中医名句，和「抱元」近义直击。',
+ eggs:['中医典故：培元固本'],
+ warns:[],
+ line:'培元固本'},
+{n:'王善元',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土土土（吉）',
+ wuge:null, wugeStr:'人8吉·地16大吉·总20⚠️·外5大吉',
+ meaning:'「元者，善之长也」《易·乾·文言》——名字即「元」的定义。',
+ eggs:['典故：《易·乾·文言》'],
+ warns:[],
+ line:'元者，善之长也'},
+{n:'王得元',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土土土（吉）',
+ wuge:null, wugeStr:'人8吉·地15大吉·总19⚠️·外5大吉',
+ meaning:'抱得元一。', eggs:[], warns:[],
+ line:'抱得元一'},
+{n:'王斯元',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'土土土（吉）',
+ wuge:null, wugeStr:'人8吉·地16大吉·总20⚠️·外5大吉',
+ meaning:'斯字辈联名：斯卯+斯元，兄弟共用「斯」（代价是弃掉「一」字）。',
+ eggs:['兄弟联名：斯字辈'], warns:[],
+ line:'斯字辈联名'},
+{n:'王元本',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'', wuge:null, wugeStr:'地格9⚠️',
+ meaning:'本元倒装：元者本也。', eggs:[], warns:[],
+ line:'本元倒装'},
+{n:'王元玄',f:'王',tier:'未评',status:'候选',
+ sancai:'', wuge:null, wugeStr:'',
+ meaning:'元玄：太上玄元皇帝尊号。', eggs:[], warns:['元玄同韵拗口'],
+ line:'太上玄元'},
+{n:'王元方',f:'王',tier:'一⚠️',status:'候选',
+ sancai:'', wuge:null, wugeStr:'总格12⚠️',
+ meaning:'陈元方（《世说新语》聪慧少年）典故。', eggs:['典故：《世说新语》'], warns:['「元方你怎么看」梗'],
+ line:'陈元方典故'},
+{n:'王川元',f:'王',tier:'未评',status:'候选',
+ sancai:'', wuge:null, wugeStr:'百川归元全绿',
+ meaning:'百川归元。', eggs:[], warns:['川元同韵'],
+ line:'百川归元'},
+{n:'王抱元',f:'王',tier:'未评',status:'候选',
+ sancai:'', wuge:null, wugeStr:'全绿 13·13·17·5',
+ meaning:'名字即「抱元」二字。', eggs:['直嵌：抱元'], warns:['抱字入名罕见'],
+ line:'名字即抱元'},
+{n:'王春元',f:'王',tier:'未评',status:'候选',
+ sancai:'', wuge:null, wugeStr:'全绿',
+ meaning:'春元：一元复始之春。', eggs:[], warns:['朴实'],
+ line:'一元复始之春'},
+{n:'王聿午',f:'王',score:46,tier:'慎用',status:'候选',
+ sancai:'土水水 · 天克人（土克水）⚠️',
+ wuge:{天:['5 种竹成林','大吉'],人:['10 零暗','凶'],地:['10 零暗','凶'],外:['5 种竹成林','大吉'],总:['14 破兆','凶']},
+ brk:[12,8,6,5,9,6],
+ meaning:'聿修厥德——《诗经·大雅·文王》，配「王」姓正对周文王；午=马，马年地支入名，与斯卯同款拆法。',
+ eggs:['典故：《诗经·大雅·文王》聿修厥德','生肖嵌名：午=马','铁蛋自创彩蛋（非典故）：笔+马=倚马可待'],
+ warns:['结构性硬伤：王+聿→人格必10（凶）；聿+午→地格10、总格14（皆凶）','「聿」生僻，自我介绍成本高','结论：典故选聿、对仗选午，别硬凑一起'],
+ line:'聿修厥德+马年，数理多凶'},
+// ── 王家 · 女孩名（《女孩名字-王.xlsx》2026-08-24 收录，未评数理） ──
+{n:'王瑾翕',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'瑾：美玉；翕：翕习，顺心惬意。人生如打磨的美玉，精心雕琢，顺遂圆满。',
+ eggs:['出处：瑾，美玉；翕，翕习'], warns:[],
+ line:'玉成顺遂'},
+{n:'王简盈',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'简约丰盈。', eggs:[], warns:[],
+ line:'简约丰盈'},
+{n:'王简饶',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'简约富足。', eggs:[], warns:[],
+ line:'简约富足'},
+{n:'王简傲',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'简约傲骨。', eggs:[], warns:[],
+ line:'简约傲骨'},
+{n:'王岁安',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'岁岁平安。', eggs:[], warns:[],
+ line:'岁岁平安'},
+{n:'王浅素',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'清浅素净。', eggs:[], warns:[],
+ line:'清浅素净'},
+{n:'王乔幽',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'出自幽谷，迁于乔木——清雅向上。',
+ eggs:['出处：出自幽谷，迁于乔木'], warns:[],
+ line:'迁于乔木'},
+{n:'王鹿芩',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'呦呦鹿鸣，食野之芩——灵动自然。',
+ eggs:['出处：呦呦鹿鸣，食野之芩'], warns:[],
+ line:'呦呦鹿鸣'},
+{n:'王安晓',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'长安远，渭流香腻，暗忆晓绿——温婉安宁。',
+ eggs:['出处：长安远，渭流香腻，暗忆晓绿'], warns:[],
+ line:'温婉安宁'},
+{n:'王月白',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'唯见江心秋月白——月色皎洁澄澈。',
+ eggs:['出处：唯见江心秋月白'], warns:[],
+ line:'江心秋月白'},
+{n:'王唯月',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'唯见江心秋月白（与王月白同源）。', eggs:['出处：唯见江心秋月白'], warns:[],
+ line:'唯见江心月'},
+{n:'王子鸢',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'莺飞鱼跃，才子佳人——活泼灵秀。',
+ eggs:['出处：莺飞鱼跃'], warns:[],
+ line:'活泼灵秀'},
+{n:'王沐恩',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'感恩向善。', eggs:[], warns:[],
+ line:'感恩向善'},
+{n:'王颂恩',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'颂扬恩德。', eggs:[], warns:[],
+ line:'颂扬恩德'},
+{n:'王安禾',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'安然禾苗，如花朵朵。', eggs:[], warns:[],
+ line:'安然禾苗'},
+{n:'王安隐',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'长夜安隐，多所饶益——安宁沉静。',
+ eggs:['出处：长夜安隐，多所饶益（佛经语）'], warns:[],
+ line:'长夜安隐'},
+{n:'王安饶',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'长夜安隐，多所饶益——宽厚富足。',
+ eggs:['出处：长夜安隐，多所饶益（佛经语）'], warns:[],
+ line:'宽厚富足'},
+{n:'王栀一',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'栀子花开，一笑倾城——明媚美好。',
+ eggs:['出处：栀子花开，一笑倾城'], warns:[],
+ line:'栀子一笑'},
+{n:'王清一',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'清净纯粹。', eggs:[], warns:[],
+ line:'清净纯粹'},
+{n:'王伊闻',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'文雅知闻。', eggs:[], warns:[],
+ line:'文雅知闻'},
+{n:'王苏漾',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'如水荡漾，柔和舒展。', eggs:[], warns:[],
+ line:'如水荡漾'},
+{n:'王简汀',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'水边清简，淡然。', eggs:[], warns:[],
+ line:'水边清简'},
+{n:'王晚萤',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'晚如流萤，温柔微光。', eggs:[], warns:[],
+ line:'晚如流萤'},
+{n:'王芸熹',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'芸草微光，熹光初现。', eggs:[], warns:[],
+ line:'芸草熹光'},
+{n:'王艾之',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'清雅艾草，安然。', eggs:[], warns:[],
+ line:'清雅艾草'},
+{n:'王染墨',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'书香笔墨，文雅。', eggs:[], warns:[],
+ line:'书香笔墨'},
+{n:'王点萤',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'点点流萤，灵动微光。', eggs:[], warns:[],
+ line:'点点流萤'},
+{n:'王芷凝',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'荷衣芷佩凝秋霜——芷草芬芳，凝霜高洁。',
+ eggs:['出处：《岩桂堂》湘峰峨峨湘水碧…荷衣芷佩凝秋霜'], warns:[],
+ line:'芷草凝霜'},
+{n:'王诗旅',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'诗意行旅。', eggs:[], warns:[],
+ line:'诗意行旅'},
+{n:'王枝意',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'枝叶含情，富有意趣。', eggs:[], warns:[],
+ line:'枝叶含情'},
+{n:'王亭晚',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'长亭向晚，静谧悠然。', eggs:[], warns:[],
+ line:'长亭向晚'},
+{n:'王朵萤',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'花朵流萤，娇俏灵动。', eggs:[], warns:[],
+ line:'花朵流萤'},
+{n:'王未抒',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'情愫未抒，含蓄内敛。', eggs:[], warns:[],
+ line:'情愫未抒'},
+{n:'王晚漾',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'晚风荡漾，柔和烂漫。',
+ eggs:['小名：小漾儿'], warns:[],
+ line:'晚风荡漾'},
+{n:'王之棠',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'海棠温润。', eggs:[], warns:[],
+ line:'海棠温润'},
+{n:'王素浅',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'素净清浅。', eggs:[], warns:[],
+ line:'素净清浅'},
+{n:'王温善',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'温良向善。', eggs:[], warns:[],
+ line:'温良向善'},
+{n:'王清夏',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'清和初夏。', eggs:[], warns:[],
+ line:'清和初夏'},
+{n:'王徽颀',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'风姿修美。', eggs:[], warns:[],
+ line:'风姿修美'},
+{n:'王清丹',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'清艳如丹。', eggs:[], warns:[],
+ line:'清艳如丹'},
+{n:'王听澜',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'静听波澜，心胸开阔。', eggs:[], warns:[],
+ line:'静听波澜'},
+{n:'王亦初',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'不忘初心，本真纯粹。', eggs:[], warns:[],
+ line:'不忘初心'},
+{n:'王荷穗',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'荷生穗实，清雅丰盈。', eggs:[], warns:[],
+ line:'荷生穗实'},
+{n:'王槿之',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'于后之旦，维槿始荣——木槿朝荣，生生不息。',
+ eggs:['出处：于后之旦，维槿始荣'], warns:[],
+ line:'木槿朝荣'},
+{n:'王染堤',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'风物染堤，诗意画面。', eggs:[], warns:[],
+ line:'风物染堤'},
+{n:'王初染',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'初见染韵，清新。', eggs:[], warns:[],
+ line:'初见染韵'},
+{n:'王若婳',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'女子娴雅美好。', eggs:[], warns:[],
+ line:'娴雅美好'},
+{n:'王语清',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'一切如来，身语意业，无不清净——言语清净，心性澄澈。',
+ eggs:['出处：一切如来，身语意业，无不清净（佛经语）'], warns:[],
+ line:'言语清净'},
+{n:'王仰灿',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'仰沐光辉，明媚灿烂。', eggs:[], warns:[],
+ line:'仰沐光辉'},
+{n:'王听禾',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'静听禾风，安然质朴。', eggs:[], warns:[],
+ line:'静听禾风'},
+{n:'王浅月',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'月浅灯深，梦里云归何处寻——月色浅淡，温柔朦胧。',
+ eggs:['出处：月浅灯深，梦里云归何处寻'], warns:[],
+ line:'月浅灯深'},
+{n:'王妤晴',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'妤：才华；晴：开朗聪慧优雅。',
+ eggs:['出处：妤风隔院动修竹，随意题诗倾碧琳'], warns:[],
+ line:'才情开朗'},
+{n:'王安之',f:'王',g:'女',tier:'未评',status:'女孩',
+ meaning:'既来之，则安之——随遇而安，心性平和。',
+ eggs:['出处：既来之，则安之'], warns:[],
+ line:'既来之则安之'},
+];
+
+/* ═══════════ 渲染 ═══════════ */
+const grid = document.getElementById('grid');
+const tbody = document.querySelector('#fullTable tbody');
+const statsEl = document.getElementById('stats');
+const dlg = document.getElementById('dlg');
+const dlgBody = document.getElementById('dlgBody');
+
+let statusFilter = '全部', sortBy = 'score';
+
+function scoreClass(s) {
+  if (s >= 90) return 'b-90'; if (s >= 80) return 'b-80';
+  if (s >= 70) return 'b-70'; return 'b-60';
+}
+function tierLabel(t) { return t && t !== '未评' ? t : ''; }
+
+function chipsHtml(n) {
+  const out = [];
+  if (n.g === '女') out.push('<span class="chip girl">女孩名</span>');
+  if (n.tier && n.tier !== '未评') out.push(`<span class="chip tier-${n.tier}">数理·${n.tier}</span>`);
+  const zodiac = /卯|午|马|兔/.test((n.eggs || []).join('')) && /生肖|地支|马旁|偏旁/.test((n.eggs || []).join(''));
+  if (zodiac) out.push('<span class="chip zodiac">生肖彩蛋</span>');
+  const hasAllusion = (n.eggs || []).some(e => e.startsWith('典故') || e.includes('内丹'));
+  if (hasAllusion) out.push('<span class="chip allusion">典故</span>');
+  const hasPhon = (n.eggs || []).some(e => e.startsWith('谐音') || e.includes('驰=持'));
+  if (hasPhon) out.push('<span class="chip phon">谐音梗</span>');
+  return out.join('');
+}
+
+function cardHtml(n) {
+  const sc = SCORE_DATA[n.n];
+  const badge = sc ? `<span class="badge ${scoreClass(sc.score)}">${sc.score}</span>` : '';
+  const statusTag = n.status === '定名' ? '<span class="status-tag">已定名</span>' : '';
+  return `<div class="card f-${n.f}" tabindex="0" role="button"
+        aria-label="${n.n}${sc ? '，评分' + sc.score : ''}，点击查看详情"
+        data-name="${n.n}">
+    <div class="accent"></div>${statusTag}
+    <div class="card-top"><span class="name">${n.n}</span>${badge}</div>
+    <div class="line">${n.line}</div>
+    <div class="chips">${chipsHtml(n)}</div>
+  </div>`;
+}
+
+function render() {
+  let list = NAMES.filter(n =>
+    (statusFilter === '全部' || n.status === statusFilter) ||
+    (statusFilter === '女孩' && n.g === '女'));
+  if (sortBy === 'score') {
+    list.sort((a, b) => {
+      const sa = SCORE_DATA[a.n] ? SCORE_DATA[a.n].score : -1;
+      const sb = SCORE_DATA[b.n] ? SCORE_DATA[b.n].score : -1;
+      return sb - sa || a.n.localeCompare(b.n, 'zh');
+    });
+  } else {
+    list.sort((a, b) => a.n.localeCompare(b.n, 'zh'));
+  }
+  grid.innerHTML = list.map(cardHtml).join('');
+  tbody.innerHTML = list.map(n => {
+    const sc = SCORE_DATA[n.n];
+    return `<tr>
+    <td><b>${n.n}</b></td>
+    <td>${n.g === '女' ? '女孩' : n.status === '定名' ? '定名' : '—'}</td>
+    <td class="num">${sc ? sc.score : '—'}</td>
+    <td><span class="tier-txt">${sc ? sc.tier : '未评分'}</span></td>
+    <td>${n.line}</td></tr>`;
+  }).join('');
+  // 统计格
+  const scored = NAMES.filter(n => SCORE_DATA[n.n]);
+  const girls = NAMES.filter(n => n.g === '女');
+  const named = NAMES.filter(n => n.status === '定名');
+  let maxN = null;
+  if (scored.length) maxN = scored.reduce((m, n) => (SCORE_DATA[n.n].score > SCORE_DATA[m.n].score ? n : m), scored[0]);
+  statsEl.innerHTML = `
+    <div class="stat"><div class="num">${NAMES.length}</div><div class="lbl">收录名字</div></div>
+    <div class="stat"><div class="num">${named.length}</div><div class="lbl">已定名</div></div>
+    <div class="stat"><div class="num">${girls.length}</div><div class="lbl">女孩名候选</div></div>
+    <div class="stat"><div class="num">${maxN ? SCORE_DATA[maxN.n].score : '—'}</div><div class="lbl">最高分（${maxN ? maxN.n : '—'}）</div></div>`;
+}
+
+/* ── 弹窗 ── */
+function vClass(v) { return v.includes('大吉') || v.includes('吉') ? 'v-吉' : v.includes('凶') ? 'v-凶' : 'v-⚠'; }
+
+function openModal(n) {
+  const sc = SCORE_DATA[n.n];
+  const badge = sc ? `<span class="badge ${scoreClass(sc.score)}">${sc.score}</span>` : '';
+  // 五格块：优先用 SCORE_DATA 的统一口径，仅个别会话定稿覆盖
+  const scWuge = sc && sc.wuge;
+  const wugeBlock = scWuge ? `
+    <div class="wuge-grid">
+      ${Object.entries(scWuge).map(([k, v]) => `
+        <div class="wg"><div class="k">${k}格</div>
+          <div class="n">${v[0].split(' ')[0]}</div>
+          <div class="d">${v[0].split(' ').slice(1).join(' ') || '—'}</div>
+          <div class="v ${vClass(v[1])}">${v[1]}</div></div>`).join('')}
+    </div>` : (n.wugeStr ? `<div class="wuge-str">五格数理：${n.wugeStr}</div>
+    <div class="wuge-note">候选名记录为原会话口径（人·地·总·外·天）；未逐格标注者以记录为准</div>` : '');
+  // 五行块（新）
+  const wuxingBlock = sc ? `
+    <div class="wuge-str">
+      三字五行：<b>${sc.wuxing.chars}</b> · 五格五行：${sc.wuxing.wuge} · 缺：${sc.wuxing.missing}
+    </div>
+    <div class="wuge-note">数理五行按笔画尾数推（1/2木 3/4火 5/6土 7/8金 9/10水）</div>` : '';
+  const brkBlock = sc && sc.brk ? `
+    <h3>评分明细（${sc.brk.reduce((a, b) => a + b, 0)} 分）</h3>
+    <table class="brk-table">
+      <thead><tr><th>项</th><th>权重</th><th>得分</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><th>三才配置</th><td>30</td><td>${sc.brk[0]}</td><td>${sc.sancai}</td></tr>
+        <tr><th>人格</th><td>20</td><td>${sc.brk[1]}</td><td>数理 ${sc.wuge.人[0]}</td></tr>
+        <tr><th>地格</th><td>15</td><td>${sc.brk[2]}</td><td>数理 ${sc.wuge.地[0]}</td></tr>
+        <tr><th>总格</th><td>15</td><td>${sc.brk[3]}</td><td>数理 ${sc.wuge.总[0]}</td></tr>
+        <tr><th>外格</th><td>10</td><td>${sc.brk[4]}</td><td>数理 ${sc.wuge.外[0]}</td></tr>
+        <tr><th>音形义</th><td>10</td><td>${sc.brk[5]}</td><td>声调/生僻/多音/典故加减</td></tr>
+        <tr><th>合计</th><td>100</td><td>${sc.brk.reduce((a, b) => a + b, 0)}</td><td>—</td></tr>
+      </tbody>
+    </table>` : '';
+  const eggs = (n.eggs && n.eggs.length)
+    ? `<h3>彩蛋 / 出处</h3><ul>${n.eggs.map(e => `<li>${e}</li>`).join('')}</ul>` : '';
+  const warns = (n.warns && n.warns.length)
+    ? `<h3>⚠️ 注意事项</h3><ul>${n.warns.map(w => `<li class="warn">${w}</li>`).join('')}</ul>` : '';
+  const noScore = !sc
+    ? `<h3>数理</h3><p class="meaning">未评分 —— 需要的话跟我说，按康熙笔画 + 五格口径打分。</p>` : '';
+  dlgBody.innerHTML = `
+    <div class="dlg-top"><span class="name">${n.n}</span>${badge}</div>
+    <div class="dlg-meta">
+      <span class="chip">${n.f}家</span>
+      ${n.g === '女' ? '<span class="chip girl">女孩名</span>' : ''}
+      <span class="chip">${n.status === '定名' ? '已定名' : '候选'}</span>
+      ${sc ? `<span class="chip tier-${sc.tier}">数理·${sc.tier}</span>` : '<span class="chip">数理未评分</span>'}
+      ${sc ? `<span class="chip">三字五行 ${sc.wuxing.chars}</span>` : ''}
+    </div>
+    <div class="dlg-line">${n.line}</div>
+    <h3>寓意</h3><p class="meaning">${n.meaning}</p>
+    ${sc ? `<h3>三才</h3><p class="meaning">${sc.sancai}</p>` : ''}
+    ${wugeBlock ? `<h3>五格</h3>${wugeBlock}` : ''}
+    ${wuxingBlock ? `<h3>五行</h3>${wuxingBlock}` : ''}
+    ${brkBlock}${noScore}${eggs}${warns}
+    <button class="dlg-close" id="dlgClose">关闭</button>`;
+  dlg.showModal();
+}
+
+/* ── 事件 ── */
+grid.addEventListener('click', e => {
+  const card = e.target.closest('.card');
+  if (card) {
+    const n = NAMES.find(x => x.n === card.dataset.name);
+    if (n) openModal(n);
+  }
+});
+grid.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    const card = e.target.closest('.card');
+    if (card) { e.preventDefault(); const n = NAMES.find(x => x.n === card.dataset.name); if (n) openModal(n); }
+  }
+});
+dlg.addEventListener('click', e => {
+  if (e.target === dlg || e.target.id === 'dlgClose') dlg.close();
+});
+dlg.addEventListener('close', () => { dlgBody.innerHTML = ''; });
+
+document.querySelectorAll('.fbtn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.fbtn[data-s]').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    statusFilter = btn.dataset.s;
+    render();
+  });
+});
+document.getElementById('sortSel').addEventListener('change', e => {
+  sortBy = e.target.value; render();
+});
+
+render();
+</script>
+</body>
+</html>

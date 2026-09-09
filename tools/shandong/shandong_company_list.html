@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山东省投资企业名单</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #fff;
+    font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  .container {
+    width: 820px;
+    max-width: 100%;
+  }
+
+  /* 标题区 */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 36px;
+    padding-left: 4px;
+  }
+  .header-bar {
+    width: 5px;
+    height: 36px;
+    background: linear-gradient(180deg, #C48804, #E8A317);
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d1f00;
+    letter-spacing: 1px;
+  }
+  .header .sub {
+    font-size: 13px;
+    color: #999;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  /* 分类 */
+  .section {
+    margin-bottom: 28px;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .section-dot {
+    width: 10px; height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .section-title h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #5d3900;
+    letter-spacing: 1px;
+  }
+  .section-count {
+    font-size: 12px;
+    color: #b8942f;
+    font-weight: 500;
+  }
+
+  /* 列表网格 */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 20px;
+    padding-left: 6px;
+  }
+  .grid.single {
+    grid-template-columns: 1fr;
+  }
+
+  /* 每项 */
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #f5ecd7;
+    transition: background 0.2s;
+  }
+  .item:hover {
+    background: #fef9ee;
+    border-color: #f0d78c;
+  }
+  .item-num {
+    width: 22px; height: 22px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #E8A317, #D4A017);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .item-num.secondary {
+    background: linear-gradient(135deg, #C48804, #A06C00);
+  }
+  .item-name {
+    font-size: 13px;
+    color: #3d2e0a;
+    line-height: 1.4;
+  }
+
+  /* 脚注 */
+  .footer {
+    margin-top: 32px;
+    padding: 14px 18px;
+    background: linear-gradient(90deg, #fef9ee, #fdf3d6);
+    border-radius: 8px;
+    border-left: 4px solid #E8A317;
+  }
+  .footer p {
+    font-size: 12px;
+    color: #8b6914;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <div class="header-bar"></div>
+    <div>
+      <h1>山东省投资企业名单</h1>
+      <div class="sub">中邮资管 · 投向分布</div>
+    </div>
+  </div>
+
+  <!-- 央企及省属企业 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-dot" style="background:#E8A317;"></div>
+      <h2>央企及省属企业</h2>
+      <span class="section-count">11 家</span>
+    </div>
+    <div class="grid">
+      <div class="item"><div class="item-num">01</div><span class="item-name">华电国际电力股份有限公司</span></div>
+      <div class="item"><div class="item-num">02</div><span class="item-name">山东出版集团有限公司</span></div>
+      <div class="item"><div class="item-num">03</div><span class="item-name">山东港口青岛港集团有限公司</span></div>
+      <div class="item"><div class="item-num">04</div><span class="item-name">山东高速集团有限公司</span></div>
+      <div class="item"><div class="item-num">05</div><span class="item-name">山东黄金集团有限公司</span></div>
+      <div class="item"><div class="item-num">06</div><span class="item-name">山东黄金矿业股份有限公司</span></div>
+      <div class="item"><div class="item-num">07</div><span class="item-name">山东能源集团有限公司</span></div>
+      <div class="item"><div class="item-num">08</div><span class="item-name">山东省财欣资产运营有限公司</span></div>
+      <div class="item"><div class="item-num secondary">09</div><span class="item-name">山东省国有资产投资控股有限公司</span></div>
+      <div class="item"><div class="item-num secondary">10</div><span class="item-name">山东省鲁信投资控股集团有限公司</span></div>
+      <div class="item"><div class="item-num secondary">11</div><span class="item-name">兖矿能源集团股份有限公司</span></div>
+    </div>
+  </div>
+
+  <!-- 市属企业 -->
+  <div class="section">
+    <div class="section-title">
+      <div class="section-dot" style="background:#C48804;"></div>
+      <h2>市属企业</h2>
+      <span class="section-count">4 家</span>
+    </div>
+    <div class="grid single">
+      <div class="item"><div class="item-num secondary">01</div><span class="item-name">济南城市建设集团有限公司</span></div>
+      <div class="item"><div class="item-num secondary">02</div><span class="item-name">济南城市投资集团有限公司</span></div>
+      <div class="item"><div class="item-num secondary">03</div><span class="item-name">济南轨道交通集团有限公司</span></div>
+      <div class="item"><div class="item-num secondary">04</div><span class="item-name">烟台国丰投资控股集团有限公司</span></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>数据截至 2026年7月 &nbsp;|&nbsp; 中邮资管</p>
+  </div>
+
+</div>
+
+</body>
+</html>

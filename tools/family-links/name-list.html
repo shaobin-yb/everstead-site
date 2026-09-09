@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>好听名字榜单 · 起名参考</title>
+<style>
+/* ── 色板（与起名档案页同族：朱砂/鎏金/青瓷/黛紫）── */
+:root {
+  color-scheme: light;
+  --surf: #fcfcfb;
+  --page: #f9f9f7;
+  --ink: #0b0b0b;
+  --ink2: #52514e;
+  --muted: #898781;
+  --line: #e1e0d9;
+  --wang: #C23B2E;   /* 朱砂 */
+  --gold: #C79A2B;   /* 鎏金 */
+  --purple: #6F5EA8; /* 黛紫 */
+  --ren: #0F9678;    /* 青瓷绿 */
+  --blue: #2a78d6;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  padding: 0 0 64px;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+/* ── 头部 ── */
+header { padding: 48px 0 8px; }
+.title-row { display: flex; align-items: center; gap: 16px; }
+.seal {
+  width: 56px; height: 56px; flex: none;
+  background: var(--wang); color: #fff;
+  display: grid; place-items: center;
+  font-size: 22px; font-weight: 700; line-height: 1.2;
+  border-radius: 8px;
+}
+h1 { font-size: 30px; font-weight: 700; }
+.sub { color: var(--ink2); margin-top: 6px; font-size: 14px; }
+.sub b { color: var(--ink); }
+
+/* ── 统计格 ── */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 28px 0 8px; }
+.stat {
+  background: var(--surf); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px;
+}
+.stat .num { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat .lbl { color: var(--ink2); font-size: 13px; }
+
+/* ── 避雷区 ── */
+.warn-sec {
+  margin-top: 28px; padding: 18px 20px 16px;
+  background: #fdf4f2; border: 1px solid #eccfc9; border-left: 4px solid var(--wang);
+  border-radius: 10px;
+}
+.warn-sec h2 { font-size: 18px; margin-bottom: 4px; }
+.warn-sec .desc { font-size: 13.5px; color: var(--ink2); margin-bottom: 12px; }
+.warn-group { margin: 10px 0; }
+.warn-group .gt { font-size: 13px; font-weight: 700; color: #9c2f24; margin-bottom: 6px; }
+.wchips { display: flex; flex-wrap: wrap; gap: 8px; }
+.wchip {
+  font-size: 14px; padding: 4px 12px; border-radius: 999px;
+  background: #fff; border: 1px solid #e0b8b0; color: #9c2f24;
+}
+.wchip.hl { background: #fbeae6; font-weight: 700; }
+
+/* ── 筛选行 ── */
+.filters {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  margin: 32px 0 18px; padding: 12px;
+  background: var(--surf); border: 1px solid var(--line); border-radius: 10px;
+}
+.fbtn {
+  border: 1px solid var(--line); background: #fff; color: var(--ink2);
+  padding: 6px 14px; border-radius: 999px; cursor: pointer; font-size: 14px;
+}
+.fbtn.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.fbtn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.search-in {
+  margin-left: auto; border: 1px solid var(--line); border-radius: 8px;
+  padding: 6px 12px; font-size: 14px; background: #fff; color: var(--ink);
+  width: 190px;
+}
+.sort-sel {
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 6px 10px; font-size: 14px; background: #fff; color: var(--ink);
+}
+
+/* ── 卡片网格 ── */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.card {
+  position: relative; background: var(--surf); border: 1px solid var(--line);
+  border-radius: 10px; padding: 14px 16px 16px; cursor: pointer;
+  transition: box-shadow .15s, border-color .15s, transform .1s;
+  overflow: hidden;
+}
+.card:hover { box-shadow: 0 4px 16px rgba(11,11,11,.08); transform: translateY(-1px); }
+.card:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.s-shijing .accent { background: var(--ren); }
+.s-chuci   .accent { background: var(--purple); }
+.s-tangshi .accent { background: var(--blue); }
+.s-songci  .accent { background: var(--gold); }
+.s-songshi .accent { background: #3987e5; }
+.s-other   .accent { background: var(--muted); }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-top: 6px; }
+.name { font-size: 22px; font-weight: 700; letter-spacing: .06em; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip {
+  font-size: 12px; padding: 2px 8px; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--ink2); background: #fff;
+}
+.chip.girl { background: #fdf0f3; border-color: #e7b9c4; color: #8c4a5c; }
+.chip.boy  { background: #eef4fd; border-color: #b9cfe8; color: #3c5f8c; }
+.chip.src  { background: var(--purple); border-color: var(--purple); color: #fff; }
+.line { color: var(--ink2); font-size: 13px; margin-top: 10px; }
+.quote { color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+.meaning { color: var(--ink); font-size: 13.5px; margin-top: 8px; }
+.empty { grid-column: 1/-1; text-align: center; color: var(--muted); padding: 40px 0; }
+
+/* ── 章节 ── */
+.sec { margin-top: 48px; }
+.sec h2 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+.sec .sub2 { color: var(--ink2); font-size: 14px; margin-bottom: 14px; }
+.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.box {
+  background: var(--surf); border: 1px solid var(--line); border-radius: 10px;
+  padding: 18px 20px;
+}
+.box h3 { font-size: 15px; margin-bottom: 10px; }
+.box.good h3 { color: #0a6b57; border-left: 3px solid var(--ren); padding-left: 10px; }
+.box.bad h3 { color: #9c2f24; border-left: 3px solid var(--wang); padding-left: 10px; }
+.box ul { padding-left: 20px; }
+.box li { margin: 5px 0; font-size: 14px; }
+.box li b { font-weight: 700; }
+.tag {
+  display: inline-block; font-size: 12px; background: #f3f2ee; border-radius: 4px;
+  padding: 0 6px; margin-right: 6px; color: var(--ink2);
+}
+
+/* ── 弹窗 ── */
+dialog {
+  border: none; border-radius: 14px; padding: 0; max-width: 560px; width: calc(100vw - 48px);
+  background: var(--surf); color: var(--ink); box-shadow: 0 12px 48px rgba(11,11,11,.25);
+}
+dialog::backdrop { background: rgba(11,11,11,.45); }
+.dlg-body { padding: 26px 28px 20px; max-height: 80vh; overflow-y: auto; }
+.dlg-top { display: flex; align-items: center; gap: 14px; }
+.dlg-top .name { font-size: 30px; }
+.dlg-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.dlg-line { color: var(--ink2); font-size: 15px; margin: 16px 0 4px; }
+.dlg-quote { color: var(--muted); font-size: 14px; margin: 4px 0 12px; }
+h3 { font-size: 15px; margin: 16px 0 8px; padding-left: 10px; border-left: 3px solid var(--ink); }
+p.meaning { font-size: 15px; }
+.dlg-close {
+  display: block; margin: 14px auto 0; border: 1px solid var(--line); background: #fff;
+  color: var(--ink); border-radius: 8px; padding: 7px 26px; cursor: pointer; font-size: 14px;
+}
+
+/* ── 页脚 ── */
+footer { margin-top: 56px; color: var(--muted); font-size: 13px; }
+footer p { margin: 6px 0; }
+footer a { color: var(--ink2); }
+
+@media (max-width: 720px) {
+  .cols2 { grid-template-columns: 1fr; }
+  .search-in { width: 100%; margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="title-row">
+    <div class="seal">名<br>榜</div>
+    <div>
+      <h1>好听名字榜单 · 起名参考</h1>
+      <div class="sub">诗经 · 楚辞 · 唐诗宋词 精选好名 <b>75 个</b>（含出处与寓意）＋ 2026 热门重名避雷榜 ＋ 生肖宜忌 — 2026-08-24 整理 · 点击名字卡片看详情</div>
+    </div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="num">75</div><div class="lbl">经典好名（含出处）</div></div>
+  <div class="stat"><div class="num">58</div><div class="lbl">男孩名</div></div>
+  <div class="stat"><div class="num">17</div><div class="lbl">女孩名</div></div>
+  <div class="stat"><div class="num">1384</div><div class="lbl">篇古典语料（本地库）</div></div>
+</div>
+
+<div class="warn-sec">
+  <h2>🚫 避雷区 · 2026 热门重名榜</h2>
+  <div class="desc">以下名字全国重名数千上万——"浩宇"一年就有约 2 万名男孩取名。大姓家庭建议直接避开这些字。</div>
+  <div class="warn-group">
+    <div class="gt">男孩热门 Top 10</div>
+    <div class="wchips">
+      <span class="wchip hl">浩宇</span><span class="wchip">浩然</span><span class="wchip">宇轩</span><span class="wchip">宇航</span><span class="wchip">铭泽</span><span class="wchip">子墨</span><span class="wchip">梓豪</span><span class="wchip">子睿</span><span class="wchip">子轩</span><span class="wchip">梓睿</span>
+    </div>
+    <div class="desc" style="margin:4px 0 0">"钉子户"：浩宇、星辰、瑞泽连续三年霸占前三；谐音重名奕辰/亦辰常见</div>
+  </div>
+  <div class="warn-group">
+    <div class="gt">女孩热门 Top 5</div>
+    <div class="wchips">
+      <span class="wchip hl">梓萱</span><span class="wchip">可馨</span><span class="wchip">若曦</span><span class="wchip">雨桐</span><span class="wchip">一诺</span>
+    </div>
+    <div class="desc" style="margin:4px 0 0">"一诺"重名率很高；带"沐"字的名字也扎堆</div>
+  </div>
+  <div class="warn-group">
+    <div class="gt">高频用字 Top 10（见到就绕行）</div>
+    <div class="wchips">
+      <span class="wchip">梓</span><span class="wchip">子</span><span class="wchip">宇</span><span class="wchip">泽</span><span class="wchip">涵</span><span class="wchip">晨</span><span class="wchip">佳</span><span class="wchip">一</span><span class="wchip">欣</span><span class="wchip">雨</span>
+    </div>
+  </div>
+</div>
+
+<div class="filters" id="filters">
+  <button class="fbtn on" data-g="全部">全部</button>
+  <button class="fbtn" data-g="男">男孩名</button>
+  <button class="fbtn" data-g="女">女孩名</button>
+  <span style="width:8px"></span>
+  <button class="fbtn on" data-s="全部">全部来源</button>
+  <button class="fbtn" data-s="shijing">诗经</button>
+  <button class="fbtn" data-s="chuci">楚辞</button>
+  <button class="fbtn" data-s="tangshi">唐诗</button>
+  <button class="fbtn" data-s="songci">宋词</button>
+  <button class="fbtn" data-s="songshi">宋诗</button>
+  <button class="fbtn" data-s="other">诸子典籍</button>
+  <input class="search-in" id="searchIn" type="search" placeholder="搜名字，如：景行" aria-label="搜索名字">
+  <select class="sort-sel" id="sortSel" aria-label="排序方式">
+    <option value="default">默认顺序</option>
+    <option value="name">按名字排序</option>
+  </select>
+</div>
+
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" hidden>没有匹配的名字，换个关键词试试</div>
+
+<div class="sec">
+  <h2>🐴 生肖马宜忌（2026 年出生属马）</h2>
+  <div class="sub2">民俗口径整理，仅供参考——定名建议以出生后生辰八字复核为准。</div>
+  <div class="cols2">
+    <div class="box good">
+      <h3>宜用字根</h3>
+      <ul>
+        <li><b>艹、豆、禾</b> 五谷类：茂、苗、芝、苏、艺、萱、荣、蔚、芳、颖 —— 衣食无忧</li>
+        <li><b>马字旁</b>：骏、驰、骋、骁、骅、骐、骥、骢 —— 同类相扶、志在千里</li>
+        <li><b>宀、广、门</b>：家、宸、瑭 —— 财库与家庭稳定</li>
+        <li><b>木、火</b> 部首 —— 健康与运势；<b>彡、糸、衣、巾</b> 彩衣类 —— 文昌运</li>
+        <li><b>三合字根</b> 寅（虎）、戌（狗）：岚、崴、诚、威、茂、然</li>
+      </ul>
+    </div>
+    <div class="box bad">
+      <h3>忌用字根</h3>
+      <ul>
+        <li><b>子、鼠、亥</b>（子午相冲）：子、孜、孝、学</li>
+        <li><b>氵、冫 水旁</b>（马怕水）：江、河、海、洋、洪、波、涛</li>
+        <li><b>牛、丑</b>（相害）；<b>田、米、山</b> 部首</li>
+        <li>双"口"（成"骂"，主口舌）；<b>小、少、幼、士</b>（主弱势）</li>
+        <li><b>心、忄</b>（与长辈关系紧张，一说）</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <h2>📝 取名通用要点</h2>
+  <div class="cols2">
+    <div class="box">
+      <h3>音韵与笔画</h3>
+      <ul>
+        <li>注意姓氏笔画与五格搭配，取名前先查姓氏笔画数</li>
+        <li>讲究<b>平仄搭配</b>：如"浩铭"（去声-阳平）读来朗朗上口</li>
+        <li>笔画不宜过多，便于书写识别</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h3>选字方向</h3>
+      <ul>
+        <li>智慧才华字：文、博、睿、智、彦、哲、思、明、晓、翰、墨、礼、贤、聪、颖</li>
+        <li>大姓家庭——<b>避高频字</b>是第一优先级</li>
+        <li>建议"姓 + 双字名"，重名率显著低于单字名</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p><b>方法说明</b>：榜单数据为 2026-08-24 公开渠道搜集；"75 个经典好名"全部注明出处；生肖宜忌为民俗口径，未经核实；命理部分仅供参考。</p>
+  <p>本地古典语料库 1384 篇（诗经 306 / 唐诗 320 / 古诗 269 / 宋词 222 / 乐府 203 / 辞赋 47 / 楚辞 17），源自开源项目 <a href="https://github.com/fthux/Nomely">fthux/Nomely</a>（MIT 许可），可用于名字出处检索。</p>
+  <p>主要来源：起名网站热门名统计 · <a href="http://www.360doc.com/content/20/0910/20/54179931_934994545.shtml">诗经楚辞男孩名 100 个</a> · <a href="https://zhuanlan.zhihu.com/p/421866554">诗经楚辞取名大全</a> · <a href="https://www.duoduoqiming.com/qiming/59422.html">好听女孩名字 30 个</a> · <a href="https://www.qiming5.com/gsqm/284310.html">王姓马年男孩名</a> · <a href="https://topick.hket.com/article/4086295/">BB 改名 2026 榜单</a></p>
+  <p>⚠️ 本页内容仅供参考，不构成任何起名决策建议；定名请结合出生信息与家庭意愿。</p>
+</footer>
+
+</div>
+
+<dialog id="dlg">
+  <div class="dlg-body" id="dlgBody"></div>
+</dialog>
+
+<script>
+'use strict';
+/* ═══════ 名字数据（75 个，全部有出处） ═══════
+   字段: n 名字 | g 男/女 | s 来源(shijing/chuci/tangshi/songci/songshi/other)
+         src 出处篇目 | q 引文 | m 寓意 */
+const NAMES = [
+// ── 诗经 · 男孩 35 ──
+{n:'维桢',g:'男',s:'shijing',src:'《大雅·文王》',q:'王国克生，维周之桢',m:'维系栋梁、国家支柱'},
+{n:'景行',g:'男',s:'shijing',src:'《小雅·车舝》',q:'高山仰止，景行行止',m:'品德崇高，光明磊落'},
+{n:'邦彦',g:'男',s:'shijing',src:'《郑风·羔裘》',q:'彼其之子，邦之彦兮',m:'杰出之人、为国争光'},
+{n:'思齐',g:'男',s:'shijing',src:'《大雅·思齐》',q:'思齐大任，文王之母',m:'见贤思齐、才思敏捷'},
+{n:'秉文',g:'男',s:'shijing',src:'《周颂·清庙》',q:'济济多士，秉文之德',m:'有文采、敢发声'},
+{n:'文德',g:'男',s:'shijing',src:'《周颂·清庙》',q:'济济多士，秉文之德',m:'道德高尚、有文采'},
+{n:'哲成',g:'男',s:'shijing',src:'《大雅·瞻卬》',q:'哲夫成城',m:'遵循真理、事业有成'},
+{n:'明哲',g:'男',s:'shijing',src:'《大雅·烝民》',q:'既明且哲，以保其身',m:'明智睿哲'},
+{n:'乔木',g:'男',s:'shijing',src:'《小雅·伐木》',q:'出自幽谷，迁于乔木',m:'超脱高雅、向上'},
+{n:'凯风',g:'男',s:'shijing',src:'《邶风·凯风》',q:'凯风自南，吹彼棘心',m:'温暖如南风'},
+{n:'长庚',g:'男',s:'shijing',src:'《小雅·大东》',q:'东有启明，西有长庚',m:'健康长寿'},
+{n:'国维',g:'男',s:'shijing',src:'《大雅·文王》',q:'王国克生，维周之桢',m:'爱国报国'},
+{n:'显德',g:'男',s:'shijing',src:'《周颂·维天之命》',q:'于乎不显，文王之德之纯',m:'锋芒不失仁爱'},
+{n:'子佩',g:'男',s:'shijing',src:'《郑风·子衿》',q:'青青子佩，悠悠我思',m:'男子玉佩、品德高洁'},
+{n:'其琛',g:'男',s:'shijing',src:'《鲁颂·泮水》',q:'来献其琛',m:'珍宝、珍贵'},
+{n:'石玉',g:'男',s:'shijing',src:'《小雅·鹤鸣》',q:'他山之石，可以攻玉',m:'借外力提升自己'},
+{n:'羽飞',g:'男',s:'shijing',src:'《邶风·燕燕》',q:'燕燕于飞，差池其羽',m:'自由飞翔'},
+{n:'言信',g:'男',s:'shijing',src:'《周颂·有客》',q:'有客宿宿，有客信信',m:'言而有信、重承诺'},
+{n:'永誉',g:'男',s:'shijing',src:'《周颂·振鹭》',q:'庶几夙夜，以永终誉',m:'勤勉、声誉远播'},
+{n:'柏舟',g:'男',s:'shijing',src:'《邶风·柏舟》',q:'泛彼柏舟，亦泛其流',m:'乘风破浪、意志坚定'},
+{n:'子东',g:'男',s:'shijing',src:'《豳风·东山》',q:'我来自东，零雨其濛',m:'如朝阳有活力'},
+{n:'檀伐',g:'男',s:'shijing',src:'《魏风·伐檀》',q:'坎坎伐檀兮，置之河之干兮',m:'有本领、有所长'},
+{n:'硕衣',g:'男',s:'shijing',src:'《卫风·硕人》',q:'硕人其颀，衣锦褧衣',m:'外貌出众、形象好'},
+{n:'维怀',g:'男',s:'shijing',src:'《周南·卷耳》',q:'我姑酌彼金罍，维以不永怀',m:'心胸宽广'},
+{n:'宁之',g:'男',s:'shijing',src:'《周颂·载芟》',q:'有椒其馨，胡考之宁',m:'安宁幸福、心态平和'},
+{n:'嘉维',g:'男',s:'shijing',src:'《小雅·楚茨》',q:'其告维何，笾豆静嘉',m:'优秀、有热爱的事物'},
+{n:'常棣',g:'男',s:'shijing',src:'《小雅·常棣》',q:'常棣之华，鄂不韡韡',m:'兄弟和睦、健康富足'},
+{n:'文稷',g:'男',s:'shijing',src:'《周颂·思文》',q:'思文后稷，克配彼天',m:'聪明仁德、才华功德'},
+{n:'中乾',g:'男',s:'shijing',src:'《王风·中谷有蓷》',q:'中谷有蓷，暵其乾矣',m:'中庸之道、淡然处世'},
+{n:'居之',g:'男',s:'shijing',src:'《召南·鹊巢》',q:'维鹊有巢，维鸠居之',m:'有安身立命之所、有归宿'},
+{n:'念先',g:'男',s:'shijing',src:'《小雅·小弁》',q:'我心忧伤，念昔先人',m:'见贤思齐'},
+{n:'有闻',g:'男',s:'shijing',src:'《王风·葛藟》',q:'谓他人昆，亦莫我闻',m:'谦虚上进、精益求精'},
+{n:'乐归',g:'男',s:'shijing',src:'《鲁颂·有駜》',q:'鼓咽咽，醉言归。于胥乐兮',m:'思家念家、懂感恩、孝顺'},
+{n:'涧南',g:'男',s:'shijing',src:'《召南·采蘋》',q:'于以采蘋？南涧之滨',m:'不畏艰险、勇敢进取'},
+{n:'西雨',g:'男',s:'shijing',src:'《鄘风·蝃蝀》',q:'朝隮于西，崇朝其雨',m:'清晨的雨、清新自然'},
+// ── 诗经 · 男孩（补 4）──
+{n:'骏德',g:'男',s:'shijing',src:'《小雅·雨无正》',q:'浩浩昊天，不骏其德',m:'美善之德'},
+{n:'翰飞',g:'男',s:'shijing',src:'《小雅·小宛》',q:'宛彼鸣鸠，翰飞戾天',m:'高飞、志向远大'},
+{n:'懿德',g:'男',s:'shijing',src:'《大雅·烝民》',q:'民之秉彝，好是懿德',m:'美德'},
+{n:'阿琢',g:'男',s:'shijing',src:'《卫风·淇奥》',q:'如切如磋，如琢如磨',m:'严于律己、有才华'},
+// ── 楚辞 · 男孩 19 ──
+{n:'正则',g:'男',s:'chuci',src:'《离骚》',q:'名余曰正则兮，字余曰灵均',m:'公正而有法则'},
+{n:'灵均',g:'男',s:'chuci',src:'《离骚》',q:'字余曰灵均',m:'灵善而均调、钟灵毓秀'},
+{n:'修能',g:'男',s:'chuci',src:'《离骚》',q:'又重之以修能',m:'才干与美好仪形'},
+{n:'秉德',g:'男',s:'chuci',src:'《九章·橘颂》',q:'秉德无私，参天地兮',m:'秉持道德、无私高尚'},
+{n:'诚勇',g:'男',s:'chuci',src:'《九歌·国殇》',q:'诚既勇兮又以武，终刚强兮不可凌',m:'真诚勇敢、刚强不屈'},
+{n:'承宇',g:'男',s:'chuci',src:'《九章·涉江》',q:'云霏霏而承宇',m:'气宇轩昂'},
+{n:'齐光',g:'男',s:'chuci',src:'《九歌·云中君》',q:'与日月兮齐光',m:'与日月同辉'},
+{n:'辰良',g:'男',s:'chuci',src:'《九歌·东皇太一》',q:'吉日兮辰良',m:'良辰吉日'},
+{n:'望舒',g:'男',s:'chuci',src:'《离骚》',q:'前望舒使先驱兮',m:'为月神驾车、意境美'},
+{n:'扬灵',g:'男',s:'chuci',src:'《九歌·湘君》',q:'横大江兮扬灵',m:'钟灵毓秀、神采飞扬'},
+{n:'峻茂',g:'男',s:'chuci',src:'《离骚》',q:'冀枝叶之峻茂兮',m:'高大茂盛'},
+{n:'高翔',g:'男',s:'chuci',src:'《九辩》',q:'将去君而高翔',m:'志向高远、展翅高飞'},
+{n:'广志',g:'男',s:'chuci',src:'《九章·怀沙》',q:'定心广志，余何畏惧兮',m:'志向宽广、无所畏惧'},
+{n:'怀德',g:'男',s:'chuci',src:'《九辩》',q:'鸟兽犹知怀德兮',m:'心怀仁德'},
+{n:'云宇',g:'男',s:'chuci',src:'《九章·涉江》',q:'云霏霏而承宇',m:'大气内敛'},
+{n:'云旗',g:'男',s:'chuci',src:'《离骚》',q:'驾八龙之婉婉兮，载云旗之委蛇',m:'气势磅礴、志向高远'},
+{n:'玉锵',g:'男',s:'chuci',src:'《九歌·东皇太一》',q:'抚长剑兮玉珥，璆锵鸣兮琳琅',m:'佩玉锵锵、音节响亮'},
+{n:'既明',g:'男',s:'chuci',src:'《九歌·东君》',q:'夜皎皎兮既明',m:'天色明亮、前途光明'},
+{n:'飞扬',g:'男',s:'chuci',src:'《九歌·河伯》',q:'心飞扬兮浩荡',m:'心情舒展、神采飞扬'},
+// ── 诗经 · 女孩 5 ──
+{n:'静姝',g:'女',s:'shijing',src:'《邶风·静女》',q:'静女其姝，俟我于城隅',m:'安静美好、贤淑端庄'},
+{n:'清扬',g:'女',s:'shijing',src:'《郑风·野有蔓草》',q:'有美一人，清扬婉兮',m:'眉目清秀、气质脱俗'},
+{n:'采薇',g:'女',s:'shijing',src:'《小雅·采薇》',q:'采薇采薇，薇亦作止',m:'古典坚韧、象征生命力'},
+{n:'舒窈',g:'女',s:'shijing',src:'《陈风·月出》',q:'月出皎兮，佼人僚兮。舒窈纠兮',m:'舒缓而柔美'},
+{n:'攸宁',g:'女',s:'shijing',src:'《小雅·斯干》',q:'君子攸宁',m:'安宁、岁月静好'},
+// ── 唐诗 · 女孩 2 ──
+{n:'锦瑟',g:'女',s:'tangshi',src:'李商隐《锦瑟》',q:'锦瑟无端五十弦',m:'华美、充满艺术气息'},
+{n:'清安',g:'女',s:'tangshi',src:'李白《古朗月行》',q:'羿昔落九乌，天人清且安',m:'品德高洁、平安吉祥'},
+// ── 宋词 · 女孩 3 ──
+{n:'溪月',g:'女',s:'songci',src:'《南浦·旅怀》',q:'好在半胧溪月',m:'清新优雅、温柔似水'},
+{n:'海棠',g:'女',s:'songci',src:'李清照《如梦令》',q:'试问卷帘人，却道海棠依旧',m:'娴静美好'},
+{n:'云锦',g:'女',s:'songci',src:'李清照《一剪梅》',q:'云中谁寄锦书来',m:'华美、情意绵长'},
+// ── 宋诗 · 女孩 2 ──
+{n:'晴方',g:'女',s:'songshi',src:'苏轼《饮湖上初晴后雨》',q:'水光潋滟晴方好',m:'明朗开阔'},
+{n:'清源',g:'女',s:'songshi',src:'朱熹《观书有感》',q:'问渠那得清如许？为有源头活水来',m:'清澈有源、思想常新'},
+// ── 诸子典籍 · 女孩 2 ──
+{n:'扶摇',g:'女',s:'other',src:'庄子《逍遥游》',q:'抟扶摇而上者九万里',m:'大气有力、鹏程万里'},
+{n:'含章',g:'女',s:'other',src:'《易经·坤卦》',q:'含章可贞',m:'内涵、含蓄之美'},
+// ── 楚辞 · 女孩 3 ──
+{n:'芳华',g:'女',s:'chuci',src:'《九章·思美人》',q:'羌芳华自中出',m:'美好年华'},
+{n:'琬琰',g:'女',s:'chuci',src:'《远游》',q:'怀琬琰之华英',m:'如美玉般美好'},
+{n:'幼清',g:'女',s:'chuci',src:'《招魂》',q:'朕幼清以耿介兮',m:'清白耿介'}
+];
+
+const SRC_NAME = {shijing:'诗经', chuci:'楚辞', tangshi:'唐诗', songci:'宋词', songshi:'宋诗', other:'诸子典籍'};
+const grid = document.getElementById('grid');
+const empty = document.getElementById('empty');
+const dlg = document.getElementById('dlg');
+const dlgBody = document.getElementById('dlgBody');
+let gFilter = '全部', sFilter = '全部', sortBy = 'default';
+
+function render() {
+  const q = document.getElementById('searchIn').value.trim();
+  let list = NAMES.filter(n =>
+    (gFilter === '全部' || n.g === gFilter) &&
+    (sFilter === '全部' || n.s === sFilter) &&
+    (!q || n.n.includes(q) || n.m.includes(q) || n.src.includes(q))
+  );
+  if (sortBy === 'name') list = [...list].sort((a, b) => a.n.localeCompare(b.n, 'zh-Hans-CN'));
+  empty.hidden = list.length > 0;
+  grid.innerHTML = list.map(n => `
+    <div class="card s-${n.s}" tabindex="0" role="button" aria-label="${n.n}" data-name="${n.n}">
+      <div class="accent"></div>
+      <div class="card-top"><span class="name">${n.n}</span></div>
+      <div class="chips">
+        <span class="chip src">${SRC_NAME[n.s]}</span>
+        <span class="chip ${n.g === '女' ? 'girl' : 'boy'}">${n.g === '女' ? '女孩名' : '男孩名'}</span>
+      </div>
+      <div class="line">${n.src}</div>
+      <div class="quote">「${n.q}」</div>
+      <div class="meaning">${n.m}</div>
+    </div>`).join('');
+}
+
+function openModal(n) {
+  dlgBody.innerHTML = `
+    <div class="dlg-top"><span class="name">${n.n}</span></div>
+    <div class="dlg-meta">
+      <span class="chip src">${SRC_NAME[n.s]}</span>
+      <span class="chip ${n.g === '女' ? 'girl' : 'boy'}">${n.g === '女' ? '女孩名' : '男孩名'}</span>
+    </div>
+    <div class="dlg-line">出处：${n.src}</div>
+    <div class="dlg-quote">「${n.q}」</div>
+    <h3>寓意</h3>
+    <p class="meaning">${n.m}</p>
+    <button class="dlg-close" id="dlgClose">关闭</button>`;
+  dlg.showModal();
+}
+
+grid.addEventListener('click', e => {
+  const card = e.target.closest('.card');
+  if (card) { const n = NAMES.find(x => x.n === card.dataset.name); if (n) openModal(n); }
+});
+grid.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    const card = e.target.closest('.card');
+    if (card) { e.preventDefault(); const n = NAMES.find(x => x.n === card.dataset.name); if (n) openModal(n); }
+  }
+});
+dlg.addEventListener('click', e => {
+  if (e.target === dlg || e.target.id === 'dlgClose') dlg.close();
+});
+dlg.addEventListener('close', () => { dlgBody.innerHTML = ''; });
+
+document.getElementById('filters').addEventListener('click', e => {
+  const b = e.target.closest('.fbtn');
+  if (!b) return;
+  if (b.dataset.g !== undefined) {
+    document.querySelectorAll('.fbtn[data-g]').forEach(x => x.classList.remove('on'));
+    b.classList.add('on'); gFilter = b.dataset.g;
+  } else if (b.dataset.s !== undefined) {
+    document.querySelectorAll('.fbtn[data-s]').forEach(x => x.classList.remove('on'));
+    b.classList.add('on'); sFilter = b.dataset.s;
+  }
+  render();
+});
+document.getElementById('searchIn').addEventListener('input', render);
+document.getElementById('sortSel').addEventListener('change', e => { sortBy = e.target.value; render(); });
+
+render();
+</script>
+</body>
+</html>

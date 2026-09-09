@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中邮资管固收部 · 山东省投资分布</title>
+<script src="https://unpkg.com/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  }
+  .chart-box {
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px 24px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .chart-title {
+    color: #1e293b;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+  .chart-subtitle {
+    color: #94a3b8;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #64748b;
+    font-size: 12px;
+  }
+  .legend-dot {
+    width: 9px; height: 9px;
+    border-radius: 2px;
+  }
+  .footnote {
+    color: #94a3b8;
+    font-size: 11px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  #sunburst {
+    width: 680px;
+    height: 620px;
+    margin: 0 auto;
+  }
+  @media (max-width: 720px) {
+    #sunburst { width: 95vw; height: 95vw; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chart-box">
+  <div class="chart-title">中邮资管固收部 · 山东省投资分布</div>
+  <div class="chart-subtitle">总规模超 700 亿元</div>
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:#E8A317"></span>标债</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#D4A017"></span>地方政府债</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#F0C75E"></span>其他标债</span>
+    <span class="legend-item"><span class="legend-dot" style="background:#C48804"></span>非标</span>
+  </div>
+  <div id="sunburst"></div>
+  <div class="footnote">非标主要投向：山东高速 · 山东黄金 · 山东能源 等省级核心企业</div>
+</div>
+
+<script>
+const sunburst = echarts.init(document.getElementById('sunburst'));
+
+// 中邮品牌黄色系: 标债用金色调, 非标用橙金色调
+sunburst.setOption({
+  tooltip: {
+    trigger: 'item',
+    backgroundColor: 'rgba(255,255,255,0.96)',
+    borderColor: '#e2e8f0',
+    textStyle: { color: '#334155', fontSize: 13 },
+    formatter: (p) => {
+      if (p.data.name === '总规模\n＞700亿') return '<b>总规模</b><br/>＞700亿';
+      if (p.data.name === '标债') return '<b>标债</b><br/>622亿';
+      if (p.data.name === '非标') return '<b>非标</b><br/>80亿';
+      if (p.data.name === '地方政府债') return '<b>地方政府债</b><br/>90%';
+      if (p.data.name === '其他标债') return '<b>其他标债</b><br/>10%';
+      if (p.data.name === '山东高速\n山东黄金\n山东能源等') return '<b>山东高速·山东黄金<br/>山东能源等</b><br/>80亿';
+      return `<b>${p.name}</b>`;
+    },
+  },
+  series: [
+    {
+      type: 'sunburst',
+      data: [
+        {
+          name: '总规模\n＞700亿',
+          itemStyle: { color: '#D4A017' },
+          children: [
+            {
+              name: '标债',
+              value: 622,
+              itemStyle: { color: '#E8A317' },
+              children: [
+                { name: '地方政府债', value: 559.8, itemStyle: { color: '#F0C75E' } },
+                { name: '其他标债',   value: 62.2,  itemStyle: { color: '#F7DC6F' } },
+              ],
+            },
+            {
+              name: '非标',
+              value: 80,
+              itemStyle: { color: '#C48804' },
+              children: [
+                { name: '山东高速\n山东黄金\n山东能源等', value: 80, itemStyle: { color: '#DAa520' } },
+              ],
+            },
+          ],
+        },
+      ],
+      radius: ['18%', '85%'],
+      center: ['50%', '52%'],
+      emphasis: {
+        focus: 'ancestor',
+        label: { fontSize: 15, fontWeight: 'bold' },
+      },
+      label: {
+        show: true,
+        rotate: 0,
+        color: '#fff',
+        fontWeight: 'bold',
+        formatter: (p) => {
+          if (p.data.name === '总规模\n＞700亿') return `${p.name}`;
+          if (p.data.name === '标债') return `${p.name}\n622亿`;
+          if (p.data.name === '非标') return `${p.name}\n80亿`;
+          if (p.data.name === '地方政府债') return `${p.name}\n90%`;
+          if (p.data.name === '其他标债') return `${p.name}\n10%`;
+          if (p.data.name === '山东高速\n山东黄金\n山东能源等') return `${p.name}\n80亿`;
+          return p.name;
+        },
+      },
+      itemStyle: {
+        borderColor: '#fff',
+        borderWidth: 2,
+        borderRadius: 5,
+      },
+      levels: [
+        {},
+        {
+          r0: '18%', r: '32%',
+          label: { fontSize: 15, fontWeight: 'bold', color: '#fff' },
+          itemStyle: { borderWidth: 3 },
+        },
+        {
+          r0: '32%', r: '58%',
+          label: { fontSize: 13, color: '#fff', textShadowColor: 'rgba(0,0,0,0.3)', textShadowBlur: 2 },
+        },
+        {
+          r0: '58%', r: '85%',
+          label: { fontSize: 11, color: '#fff' },
+        },
+      ],
+    },
+  ],
+});
+
+window.addEventListener('resize', () => sunburst.resize());
+</script>
+
+</body>
+</html>

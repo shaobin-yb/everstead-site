@@ -21,6 +21,7 @@
 依赖: py -V:Astral/CPython3.12.14 (含 pywinauto + requests)
       同花顺 iFinD 客户端须在运行且已登录
 """
+import ctypes
 import json
 import sys
 import time
@@ -29,6 +30,23 @@ from datetime import datetime
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+# 空闲检测: 老板 N 分钟没碰键鼠才允许 UI 抓取(不抢鼠标的自动化之星方案)
+IDLE_MIN_SECONDS = 10 * 60
+IDLE_MIN_SECONDS = int(Path(__file__).parent.joinpath("idle_seconds.txt").read_text().strip()) \
+    if Path(__file__).parent.joinpath("idle_seconds.txt").exists() else IDLE_MIN_SECONDS
+
+
+class _LASTINPUTINFO(ctypes.Structure):
+    _fields_ = [("cbSize", ctypes.c_uint), ("dwTime", ctypes.c_uint)]
+
+
+def system_idle_seconds() -> float:
+    lii = _LASTINPUTINFO()
+    lii.cbSize = ctypes.sizeof(_LASTINPUTINFO)
+    if ctypes.windll.user32.GetLastInputInfo(ctypes.byref(lii)):
+        return max(0, (ctypes.windll.kernel32.GetTickCount() - lii.dwTime) / 1000.0)
+    return 0.0
 
 BASE = Path(__file__).parent
 HISTORY = BASE / "nav-history.json"
@@ -257,29 +275,38 @@ def main():
     print("=" * 56)
     print("[1/3] 产品净值 (%s)" % datetime.now().strftime("%H:%M"))
     hist = load_history()
+
+    # 基准(沪深300)永远可以更新: fuyao API, 不碰 UI
+    print("[2/3] fuyao 拉沪深300")
+    bench = fetch_hs300(datetime.now().strftime("%Y-%m-%d"))
+
+    xls_ok = all((excel_dir / ("业绩表现(%s).xls" % c)).exists() for c in PRODUCTS)
+    got_fresh = False
     if ui_mode:
+        print("[ui] 显式 --ui 模式, 抓取会占用界面约30秒")
         fresh = read_ifind_tables()
-        print("[2/3] fuyao 拉沪深300")
-        latest_date = max(r["date"] for rows in fresh.values() for r in rows)
-        bench = fetch_hs300(latest_date)
-        if bench:
-            print("  沪深300 %d 行, 最新 %s 收盘 %s" % (
-                len(bench), bench[-1]["date"], bench[-1]["close"]))
-        else:
-            print("  ⚠️ 沪深300 无数据,继续(仅产品)")
         hist = merge(hist, fresh, bench)
-    else:
+        got_fresh = True
+    elif xls_ok:
         print("[excel] 从 %s 导入 iFinD 业绩表现导出件" % excel_dir)
         hist = import_excel(excel_dir, hist)
-        latest_date = max(r["date"] for rows in hist.values() if rows
-                          for r in rows if r["date"].startswith("20"))
-        print("[2/3] fuyao 拉沪深300")
-        bench = fetch_hs300(latest_date)
-        if bench:
-            print("  沪深300 %d 行, 最新 %s 收盘 %s" % (
-                len(bench), bench[-1]["date"], bench[-1]["close"]))
+    else:
+        idle = system_idle_seconds()
+        print("[idle] 当前空闲 %.0f 秒 (阈值 %d 秒)" % (idle, IDLE_MIN_SECONDS))
+        if idle >= IDLE_MIN_SECONDS:
+            print("[ui-auto] 老板已离开, 自动无感抓取(约30秒, 抓完还原前台窗口)")
+            fg = ctypes.windll.user32.GetForegroundWindow()
+            try:
+                fresh = read_ifind_tables()
+                hist = merge(hist, fresh, bench)
+                got_fresh = True
+            finally:
+                ctypes.windll.user32.SetForegroundWindow(fg)
         else:
-            print("  ⚠️ 沪深300 无数据,继续(仅产品)")
+            print("[skip] 老板在用电脑, 不抓 UI。产品净值保留旧值, 基准照常更新")
+
+    if not got_fresh:
+        # 无新产品数据时也把基准合并进去
         by_date = {r["date"]: r for r in hist["benchmark"]}
         for r in bench:
             by_date[r["date"]] = r

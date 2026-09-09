@@ -247,28 +247,43 @@ def calc_metrics(hist):
 def main():
     dry = "--dry-run" in sys.argv
     push = "--no-push" not in sys.argv
-    excel_dir = None
+    # Excel 导入模式(2026-09-09 起默认): 不碰 UI 不抢鼠标, 读固定导出目录
+    EXPORT_DIR = BASE / "ifind_exports"
+    excel_dir = EXPORT_DIR
     if "--import" in sys.argv:
-        excel_dir = sys.argv[sys.argv.index("--import") + 1]
+        excel_dir = Path(sys.argv[sys.argv.index("--import") + 1])
+    ui_mode = "--ui" in sys.argv  # 显式要求才走 UI 抓取(会抢鼠标,慎用)
 
     print("=" * 56)
-    print("[1/3] iFinD 客户端抓产品净值 (%s)" % datetime.now().strftime("%H:%M"))
-    fresh = read_ifind_tables()
-
-    print("[2/3] fuyao 拉沪深300")
-    latest_date = max(r["date"] for rows in fresh.values() for r in rows)
-    bench = fetch_hs300(latest_date)
-    if bench:
-        print("  沪深300 %d 行, 最新 %s 收盘 %s" % (
-            len(bench), bench[-1]["date"], bench[-1]["close"]))
-    else:
-        print("  ⚠️ 沪深300 无数据,继续(仅产品)")
-
+    print("[1/3] 产品净值 (%s)" % datetime.now().strftime("%H:%M"))
     hist = load_history()
-    if excel_dir:
-        print("[import] 导入 iFinD 业绩表现 xls 历史")
+    if ui_mode:
+        fresh = read_ifind_tables()
+        print("[2/3] fuyao 拉沪深300")
+        latest_date = max(r["date"] for rows in fresh.values() for r in rows)
+        bench = fetch_hs300(latest_date)
+        if bench:
+            print("  沪深300 %d 行, 最新 %s 收盘 %s" % (
+                len(bench), bench[-1]["date"], bench[-1]["close"]))
+        else:
+            print("  ⚠️ 沪深300 无数据,继续(仅产品)")
+        hist = merge(hist, fresh, bench)
+    else:
+        print("[excel] 从 %s 导入 iFinD 业绩表现导出件" % excel_dir)
         hist = import_excel(excel_dir, hist)
-    hist = merge(hist, fresh, bench)
+        latest_date = max(r["date"] for rows in hist.values() if rows
+                          for r in rows if r["date"].startswith("20"))
+        print("[2/3] fuyao 拉沪深300")
+        bench = fetch_hs300(latest_date)
+        if bench:
+            print("  沪深300 %d 行, 最新 %s 收盘 %s" % (
+                len(bench), bench[-1]["date"], bench[-1]["close"]))
+        else:
+            print("  ⚠️ 沪深300 无数据,继续(仅产品)")
+        by_date = {r["date"]: r for r in hist["benchmark"]}
+        for r in bench:
+            by_date[r["date"]] = r
+        hist["benchmark"] = sorted(by_date.values(), key=lambda x: x["date"])
 
     for k in ("ZY0049", "ZY0053"):
         hist[k] = hist[k][-400:]

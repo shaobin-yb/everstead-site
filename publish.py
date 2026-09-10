@@ -20,6 +20,8 @@ sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 SITE = Path(__file__).parent
 REPORTS = SITE / "reports"
+BRIEFINGS = SITE / "market-briefings"
+BRIEFING_ARCHIVE = BRIEFINGS / "archive"
 
 # 站点根目录固定展品（不经过 md 转换，直接列出卡片）
 # 每项: (名称, 路径, 日期, 图标, 类型, 描述)
@@ -48,6 +50,9 @@ ROOT_ARTIFACTS = [
      "关注池 86 只 · 股息率TTM/动量/波动率/成交额 五因子本地计算"),
     ("资产负债管理办法概念梳理", "保险公司资产负债管理办法-概念梳理.html", "2026-09-09", "📖", "report",
      "新规学习页 · 12张概念卡 + 人身险4项/财险3项监管指标扫盲 + IFRS9/17 + 产品化映射"),
+    # 收盘点评卡片日期动态取 latest.md 的日期(见 load_briefing_info)
+    ("每日收盘点评", "market-briefings/index.html", "", "📰", "briefing",
+     "每个交易日收盘后更新 · 历史逐日归档"),
 ]
 
 PAGE_CSS = """
@@ -183,6 +188,80 @@ def load_kb_stats() -> tuple[int, str]:
         return 0, ""
 
 
+BRIEF_DATE_RE = re.compile(r"(\d{4}-\d{2}-\d{2})")
+
+
+def briefing_date(text: str, fallback_mtime: datetime | None = None) -> str:
+    """从点评首行标题提取日期; 提取失败用文件 mtime 兜底。"""
+    first = text.strip().splitlines()[0] if text.strip() else ""
+    m = BRIEF_DATE_RE.search(first)
+    if m:
+        return m.group(1)
+    if fallback_mtime:
+        return fallback_mtime.strftime("%Y-%m-%d")
+    return ""
+
+
+def load_briefing_info() -> tuple[str, str]:
+    """读 latest.md: 返回(正文, 日期); 不存在返回 ("", "")。"""
+    latest = BRIEFINGS / "latest.md"
+    if not latest.exists():
+        return "", ""
+    try:
+        text = latest.read_text(encoding="utf-8")
+        return text, briefing_date(text, datetime.fromtimestamp(latest.stat().st_mtime))
+    except Exception:
+        return "", ""
+
+
+def render_briefing() -> str:
+    """latest.md → 首页点评栏目 HTML; 无点评时返回空串。"""
+    text, date = load_briefing_info()
+    if not text.strip():
+        return ""
+    body = md_to_html(text)
+    return (f'<section class="section">'
+            f'<div class="section-head"><div class="bar"></div>'
+            f'<div><h2>每日收盘点评</h2><div class="en">DAILY MARKET BRIEF</div></div>'
+            f'<a class="briefing-more" href="market-briefings/index.html">查看历史 →</a>'
+            f'</div>'
+            f'<div class="briefing-body">{body}</div>'
+            f'</section>')
+
+
+def build_briefing_archive() -> None:
+    """渲染 archive/*.md → html, 并生成归档列表页(倒序)。"""
+    if not BRIEFING_ARCHIVE.exists():
+        return
+    entries = []
+    for md in sorted(BRIEFING_ARCHIVE.glob("*.md"), reverse=True):
+        text = md.read_text(encoding="utf-8", errors="replace")
+        date = briefing_date(text, datetime.fromtimestamp(md.stat().st_mtime))
+        title = text.strip().splitlines()[0].strip(" *") if text.strip() else date
+        body = md_to_html(text)
+        html = (f'<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">'
+                f'<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+                f'<title>{date} 收盘点评 · everstead</title><style>{PAGE_CSS}</style></head><body>'
+                f'<a class="back" href="../index.html">← everstead 成果站</a>'
+                f'<h1>{date} A股收评</h1>{body}</body></html>')
+        (md.with_suffix(".html")).write_text(html, encoding="utf-8")
+        entries.append((date, md.name, title))
+        print(f"[build] 简报 {md.name} → html")
+    items = "".join(
+        f'<li><a href="archive/{name}"><span class="d">{date}</span>{title}</a></li>'
+        for date, name, title in entries
+    )
+    page = (f'<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">'
+            f'<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+            f'<title>每日收盘点评 · 历史归档 · everstead</title><style>{PAGE_CSS}</style></head><body>'
+            f'<a class="back" href="../index.html">← everstead 成果站</a>'
+            f'<h1>每日收盘点评 · 历史归档</h1>'
+            f'<p>共 {len(entries)} 篇，点击查看任意一天。</p>'
+            f'<ul>{"".join(items) or "<li>暂无归档</li>"}</ul></body></html>')
+    (BRIEFINGS / "index.html").write_text(page, encoding="utf-8")
+    print(f"[build] market-briefings/index.html ({len(entries)} 篇归档)")
+
+
 def build_index(reports: list) -> None:
     """从 index-template.html 科技感模板渲染首页(注入卡片 + 统计)。"""
     tpl = SITE / "index-template.html"
@@ -192,6 +271,8 @@ def build_index(reports: list) -> None:
         return
     html = tpl.read_text(encoding="utf-8")
     kb_count, kb_date = load_kb_stats()
+    latest_briefing_text, _ = load_briefing_info()
+    briefing_html = render_briefing()
 
     def card(name, href, date, icon, kind, desc, delay, external=False):
         ext = ' target="_blank" rel="noopener"' if external else ''
@@ -215,6 +296,9 @@ def build_index(reports: list) -> None:
         if exists(path):
             if kind == "knowledge" and kb_date:
                 date = kb_date  # 知识库卡片日期取最新条目日期
+            if kind == "briefing":
+                date = briefing_date(latest_briefing_text) or datetime.fromtimestamp(
+                    (SITE / path).stat().st_mtime).strftime("%Y-%m-%d")
             cards.append(card(name, path, date, icon, kind, desc, delay,
                               external=path.startswith(("http://", "https://"))))
             delay += 0.06
@@ -241,6 +325,7 @@ def build_index(reports: list) -> None:
 
     html = (html.replace("<!--CARDS-->", "\n".join(cards))
                 .replace("<!--PRODUCTS-->", products_html)
+                .replace("<!--BRIEFING-->", briefing_html)
                 .replace("{{TOTAL}}", str(total))
                 .replace("{{RADAR_COUNT}}", str(radar_n))
                 .replace("{{REPORT_COUNT}}", str(report_n))
@@ -267,6 +352,7 @@ def main():
         sys.exit(1)
     for f in reports:
         build_report(f)
+    build_briefing_archive()
     build_index(reports)
     if push:
         subprocess.run(["git", "-C", str(SITE), "add", "-A"], check=True)

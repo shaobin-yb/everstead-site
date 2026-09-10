@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
 """
-产品净值 SDK 取数管道（iFinDPy 直连版）— 就绪待命
-【状态: 待 SuperCommand 注册账号】(2026-09-09)
+产品净值 SDK 取数管道（iFinDPy 直连版）— 【状态: 实测冻结, 净值不在 SDK 数据白名单】(2026-09-09)
 
-说明: iFinD 官方 Python SDK (iFinDPy) 已安装(3.12.14 环境), 全部取数函数可用,
-     唯一缺的是账号密码。老板提供密码后, 把密码写入:
-         C:/Users/13167/.claude/settings.local.json → env.THS_PASSWORD
-     (或环境变量 THS_PASSWORD), 本脚本即可全自动拉净值, 彻底不碰客户端 UI。
+实测结论 (SuperCommand 已登录 + THS_PASSWORD 已配置):
+  ✅ THS_iFinDLogin('zyzcgs125', pw) → 0 登录成功
+  ✅ THS_BasicData('ZY0049.BZJ', 'ths_stock_short_name_stock') → "中邮资管价值策略1号"
+  ⚠️  父会话判定指标 ths_name_fund: err=0 但值空字符串(SuperCommand 注册前后症状无变化)
+      → 按父会话判定标准: 保险资管产品不在 SDK 数据域, SDK 路线正式关闭
+  ❌ 净值指标族 (ths_unit_nav_fund / ths_acc_nav_fund / ths_nav_adj_fund / ths_daily_return_fund
+     等 20+) 全部 -209 参数无效; ths_close_price_stock 指标存在但值全 None; THS_HD 空 DataFrame;
+     iwencai/THS_DR/ReportQuery 均不认 .BZJ 品类
+  ⚠️  结论: 保险资管净值只在客户端 F9 深度资料页(客户端内部独立数据通道), SDK/quantapi 服务器
+      无此数据。这不是账号权限问题, 是数据开放范围问题。
+  下一步(若要复活): 找 iFinD 客户经理确认保险资管净值是否向 quantapi/SDK 开放及指标代码。
+
+主管道仍为 update_nav.py 三级决策 (Excel 导入 > 空闲无感抓取 > 跳过)。
+密码从 C:/Users/13167/.claude/settings.local.json → env.THS_PASSWORD 读取 (已配置)。
 
 用法:
   py -V:Astral/CPython3.12.14 nav_sdk.py [--probe]

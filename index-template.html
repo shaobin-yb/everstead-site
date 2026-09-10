@@ -260,6 +260,35 @@ a{text-decoration:none;color:inherit}
 .card[data-type="knowledge"] .card-tag{color:#fbbf24}
 .card[data-type="external"] .card-ico{background:linear-gradient(160deg, rgba(96,165,250,.2), rgba(34,211,238,.12))}
 .card[data-type="external"] .card-tag{color:#93c5fd}
+.card[data-type="briefing"] .card-ico{background:linear-gradient(160deg, rgba(251,191,36,.2), rgba(34,211,238,.12))}
+.card[data-type="briefing"] .card-tag{color:#fcd34d}
+
+/* ---- 每日收盘点评 ---- */
+.briefing-body{
+  border:1px solid var(--line);border-radius:14px;
+  background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:24px 26px 20px;
+  max-height:560px;overflow:auto;
+  line-height:1.8;font-size:14px;color:var(--text);
+  animation:fadeUp .7s .36s ease-out both;
+}
+.briefing-body h1{font-size:1.25em;line-height:1.5;margin:0 0 14px;color:#22d3ee;border-bottom:1px solid var(--line);padding-bottom:10px}
+.briefing-body h2{font-size:1.05em;color:#7dd3fc;margin:18px 0 8px}
+.briefing-body h3{font-size:1em;color:#a5b4fc;margin:14px 0 6px}
+.briefing-body p{margin:8px 0}
+.briefing-body ul,.briefing-body ol{margin:8px 0 8px 22px}
+.briefing-body li{margin:4px 0}
+.briefing-body strong{color:#e8f6ff}
+.briefing-body table{border-collapse:collapse;width:100%;margin:10px 0}
+.briefing-body th,.briefing-body td{border:1px solid rgba(56,189,248,.16);padding:5px 9px;font-size:13px;text-align:left}
+.briefing-body th{background:rgba(34,211,238,.1)}
+.briefing-body code{background:rgba(13,26,48,.9);padding:1px 5px;border-radius:3px;font-size:13px;color:#7dd3fc}
+.briefing-body blockquote{border-left:3px solid #22d3ee;margin:10px 0;padding:4px 14px;color:#a9bed6;background:rgba(34,211,238,.06)}
+.briefing-body a{color:#67e8f9}
+.briefing-body hr{border:none;border-top:1px solid var(--line);margin:14px 0}
+.briefing-more{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--cyan);
+  border:1px solid var(--line);padding:4px 12px;border-radius:999px;transition:border-color .2s,color .2s}
+.briefing-more:hover{border-color:var(--cyan);color:#a5f3fc}
 
 /* ---- 页脚 ---- */
 .footer{
@@ -326,6 +355,9 @@ a{text-decoration:none;color:inherit}
 
   <!-- 重点产品绩效面板(由 update_nav.py 驱动) -->
   <!--PRODUCTS-->
+
+  <!-- 每日收盘点评(由 publish.py 注入) -->
+  <!--BRIEFING-->
 
   <!-- 成果卡片 -->
   <section class="section">

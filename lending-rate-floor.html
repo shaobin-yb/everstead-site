@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 年贷款利率自律底线 · 查询工具</title>
+<style>
+/* ============================================================
+   2026 年贷款利率自律底线 · 查询工具
+   数据源: 2026年贷款利率自律底线.xlsx (51 档, 6个月-50年)
+   功能: 曲线图 + 标准期限速查 + 非标期限向上靠档计算器
+   零外部依赖, 深空科技风与成果站一致
+   ============================================================ */
+:root{
+  --bg:#03060c;
+  --panel:rgba(10,20,38,.55);
+  --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --violet:#8b5cf6;
+  --green:#34d399;
+  --amber:#fbbf24;
+  --text:#e2ecf7;
+  --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
+    var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+}
+.wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 56px}
+
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0}
+.topbar .logo{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:19px;color:#03101f;box-shadow:var(--glow);font-family:var(--mono);
+}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.28em;font-size:15px}
+.topbar .brand em{font-style:normal;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .back{
+  margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:rgba(10,20,38,.4);
+  transition:border-color .25s,color .25s;
+}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+
+/* 头部 KPI 条 */
+.kpis{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:14px;margin-top:32px;
+}
+.kpi{
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);
+  backdrop-filter:blur(10px);padding:16px 18px;
+}
+.kpi .k{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--muted);margin-bottom:8px}
+.kpi .v{font-family:var(--mono);font-size:24px;font-weight:800;color:var(--cyan);line-height:1.2}
+.kpi .v small{font-size:13px;font-weight:400;color:var(--muted)}
+.kpi.o .v{color:var(--amber)}
+
+/* 板块 */
+.section{margin-top:40px}
+.section-head{
+  display:flex;align-items:baseline;gap:12px;padding-bottom:12px;margin-bottom:18px;
+  border-bottom:1px solid var(--line);flex-wrap:wrap;
+}
+.section-head .no{
+  font-family:var(--mono);font-weight:800;font-size:13px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.section-head h2{font-size:19px;font-weight:700;letter-spacing:.06em}
+.section-head .cnt{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em}
+
+/* 曲线图 */
+.chart-card{
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);
+  backdrop-filter:blur(10px);padding:20px 16px 10px;position:relative;
+}
+#curve{width:100%;height:auto;display:block}
+.chart-hint{
+  position:absolute;pointer-events:none;display:none;z-index:5;
+  background:rgba(3,6,12,.95);border:1px solid var(--line-strong);border-radius:8px;
+  padding:8px 12px;font-family:var(--mono);font-size:12px;color:var(--text);
+  box-shadow:var(--glow);white-space:nowrap;
+}
+.chart-hint b{color:var(--cyan)}
+
+/* 计算器 */
+.calc{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch;
+}
+@media (max-width:720px){.calc{grid-template-columns:1fr}}
+.calc-card{
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);
+  backdrop-filter:blur(10px);padding:20px;
+}
+.calc-card h3{font-size:15px;font-weight:600;margin-bottom:14px;letter-spacing:.04em}
+.calc-card label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}
+.calc-row{display:flex;gap:10px}
+.calc-row input{
+  flex:1;min-width:0;padding:12px 14px;font-family:var(--mono);font-size:16px;
+  color:var(--text);background:rgba(3,6,12,.6);border:1px solid var(--line);
+  border-radius:10px;outline:none;transition:border-color .25s,box-shadow .25s;
+}
+.calc-row input:focus{border-color:var(--line-strong);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+.calc-row select{
+  padding:12px 10px;font-size:13px;color:var(--text);background:rgba(3,6,12,.6);
+  border:1px solid var(--line);border-radius:10px;outline:none;
+}
+.btn{
+  margin-top:14px;width:100%;padding:12px;font-size:14px;font-weight:600;letter-spacing:.16em;
+  color:#03101f;cursor:pointer;border:none;border-radius:10px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  transition:transform .2s,box-shadow .2s;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.result{
+  margin-top:16px;border:1px dashed var(--line);border-radius:10px;
+  padding:16px;min-height:96px;background:rgba(3,6,12,.35);
+}
+.result .big{font-family:var(--mono);font-size:30px;font-weight:800;color:var(--green)}
+.result .big small{font-size:14px;color:var(--muted);font-weight:400}
+.result .note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.8}
+.result .note b{color:var(--cyan)}
+.result.err .big{color:#f87171}
+
+/* 速查表 */
+.table-tools{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.table-tools input{
+  flex:1;min-width:180px;padding:11px 14px;font-size:14px;color:var(--text);
+  background:rgba(3,6,12,.6);border:1px solid var(--line);border-radius:10px;outline:none;
+}
+.table-tools input:focus{border-color:var(--line-strong)}
+.tabs{display:flex;gap:8px}
+.tab{
+  font-family:var(--mono);font-size:12px;letter-spacing:.1em;padding:9px 16px;cursor:pointer;
+  color:var(--muted);background:rgba(10,20,38,.5);border:1px solid var(--line);border-radius:8px;
+  transition:all .2s;
+}
+.tab.on{color:#03101f;background:linear-gradient(90deg,var(--cyan),var(--blue));border-color:transparent;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left}
+th{background:rgba(34,211,238,.1);font-weight:600;font-size:12px;letter-spacing:.08em;color:#a5e8f5}
+td.r{font-family:var(--mono);font-weight:700;color:var(--cyan)}
+td.term{font-family:var(--mono)}
+tr:hover td{background:rgba(56,189,248,.06)}
+.table-card{border:1px solid var(--line);border-radius:14px;background:var(--panel);backdrop-filter:blur(10px);padding:20px}
+.table-scroll{max-height:520px;overflow-y:auto;border-radius:8px}
+.table-scroll::-webkit-scrollbar{width:8px}
+.table-scroll::-webkit-scrollbar-thumb{background:rgba(56,189,248,.3);border-radius:4px}
+
+/* 注释 */
+.notes{margin-top:20px;display:grid;gap:12px}
+.note-card{
+  border:1px solid var(--line);border-left:3px solid var(--amber);
+  border-radius:10px;background:var(--panel);padding:14px 18px;
+  font-size:13px;line-height:1.9;color:#c3d4e8;
+}
+.note-card b{color:var(--amber)}
+.note-card .src{font-family:var(--mono);font-size:11px;color:var(--muted);display:block;margin-top:8px}
+
+.foot{
+  margin-top:56px;padding-top:16px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-align:center;
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">%</div>
+    <div class="brand">LEND<em>ING</em> FLOOR</div>
+    <a class="back" href="./">← 返回首页</a>
+  </div>
+
+  <!-- KPI 条 -->
+  <div class="kpis">
+    <div class="kpi">
+      <div class="k">最短档 · 6 个月</div>
+      <div class="v" id="kpiMin">2.08<small>%</small></div>
+    </div>
+    <div class="kpi">
+      <div class="k">最长档 · 50 年</div>
+      <div class="v" id="kpiMax">3.03<small>%</small></div>
+    </div>
+    <div class="kpi">
+      <div class="k">常用 · 5 年</div>
+      <div class="v" id="kpi5y">2.41<small>%</small></div>
+    </div>
+    <div class="kpi o">
+      <div class="k">期限档位</div>
+      <div class="v">51<small> 档</small></div>
+    </div>
+  </div>
+
+  <!-- 曲线图 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="no">CURVE</span>
+      <h2>📈 自律底线利率曲线</h2>
+      <span class="cnt">6个月 → 50年 · 鼠标悬停看档位</span>
+    </div>
+    <div class="chart-card">
+      <svg id="curve" viewBox="0 0 1000 340" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="chart-hint" id="hint"></div>
+    </div>
+  </div>
+
+  <!-- 计算器 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="no">CALC</span>
+      <h2>🧮 非标期限向上靠档计算器</h2>
+      <span class="cnt">按注1规则自动匹配</span>
+    </div>
+    <div class="calc">
+      <div class="calc-card">
+        <h3>输入期限</h3>
+        <label>期限长度（支持小数，如 4.5）</label>
+        <div class="calc-row">
+          <input type="number" id="termInput" step="0.1" min="0.5" placeholder="例如 4.5" value="4.5">
+          <select id="unitSel">
+            <option value="y">年</option>
+            <option value="m">月</option>
+          </select>
+        </div>
+        <button class="btn" id="calcBtn" type="button">计 算 底 线</button>
+      </div>
+      <div class="calc-card">
+        <h3>查询结果</h3>
+        <div class="result" id="calcResult">
+          <div class="note">输入期限后点「计算底线」，系统按<b>向上靠档</b>规则匹配对应标准档位。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 速查表 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="no">TABLE</span>
+      <h2>📋 全档位速查表</h2>
+      <span class="cnt">共 51 档 · 可搜索</span>
+    </div>
+    <div class="table-card">
+      <div class="table-tools">
+        <input type="text" id="searchBox" placeholder="搜索期限，如 5年 / 10年 / 50年">
+        <div class="tabs">
+          <button class="tab on" data-mode="all" type="button">全部</button>
+          <button class="tab" data-mode="key" type="button">常用档</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th style="width:40%">期限</th><th>自律底线（年化）</th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 注释 -->
+  <div class="section">
+    <div class="section-head">
+      <span class="no">NOTES</span>
+      <h2>📌 规则说明</h2>
+    </div>
+    <div class="notes">
+      <div class="note-card">
+        <b>1. 非标准期限向上靠档</b><br>
+        对非标准期限应采用向上靠档，如：对非标准期限 4.5 年应不低于标准期限 5 年所对应的底线 <b>2.41%</b>。
+      </div>
+      <div class="note-card">
+        <b>2. 定价依据</b><br>
+        根据"不发放税后利率低于同期限国债收益率的贷款"的政策导向，统筹考虑反内卷要求和促进社会综合融资成本低位运行政策导向，基于无风险收益率曲线，考虑风险成本、资本成本等因素，确定 2026 年对公贷款利率自律底线。
+      </div>
+      <div class="note-card">
+        <span class="src">数据源：2026年贷款利率自律底线.xlsx · 原表 51 档标准期限（6个月 - 50年）</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">EVERSTEAD · 2026 贷款利率自律底线查询工具</div>
+</div>
+
+<script>
+/* ================= 数据（从 xlsx 逐字提取，51 档） ================= */
+var DATA = [
+  {term:'6个月',rate:2.08},{term:'1年',rate:2.11},{term:'2年',rate:2.19},
+  {term:'3年',rate:2.29},{term:'4年',rate:2.33},{term:'5年',rate:2.41},
+  {term:'6年',rate:2.50},{term:'7年',rate:2.57},{term:'8年',rate:2.61},
+  {term:'9年',rate:2.63},{term:'10年',rate:2.65},{term:'11年',rate:2.77},
+  {term:'12年',rate:2.79},{term:'13年',rate:2.81},{term:'14年',rate:2.83},
+  {term:'15年',rate:2.85},{term:'16年',rate:2.87},{term:'17年',rate:2.88},
+  {term:'18年',rate:2.89},{term:'19年',rate:2.91},{term:'20年',rate:2.92},
+  {term:'21年',rate:2.92},{term:'22年',rate:2.93},{term:'23年',rate:2.93},
+  {term:'24年',rate:2.93},{term:'25年',rate:2.94},{term:'26年',rate:2.94},
+  {term:'27年',rate:2.94},{term:'28年',rate:2.95},{term:'29年',rate:2.95},
+  {term:'30年',rate:2.95},{term:'31年',rate:2.96},{term:'32年',rate:2.97},
+  {term:'33年',rate:2.97},{term:'34年',rate:2.98},{term:'35年',rate:2.98},
+  {term:'36年',rate:2.99},{term:'37年',rate:3.00},{term:'38年',rate:3.00},
+  {term:'39年',rate:3.01},{term:'40年',rate:3.02},{term:'41年',rate:3.02},
+  {term:'42年',rate:3.02},{term:'43年',rate:3.02},{term:'44年',rate:3.02},
+  {term:'45年',rate:3.02},{term:'46年',rate:3.02},{term:'47年',rate:3.02},
+  {term:'48年',rate:3.02},{term:'49年',rate:3.02},{term:'50年',rate:3.03}
+];
+
+/* 期限转年数（月 -> 年） */
+function termToYears(t) {
+  if (t === '6个月') return 0.5;
+  return parseInt(t.replace('年', ''), 10);
+}
+
+/* ================= 曲线图（SVG 手绘） ================= */
+(function drawCurve() {
+  var svg = document.getElementById('curve');
+  var W = 1000, H = 340;
+  var padL = 64, padR = 26, padT = 24, padB = 46;
+  var plotW = W - padL - padR, plotH = H - padT - padB;
+
+  var xs = DATA.map(function(d) { return termToYears(d.term); });
+  var ys = DATA.map(function(d) { return d.rate; });
+  var xMin = xs[0], xMax = xs[xs.length - 1];
+  var yMin = Math.floor(Math.min.apply(null, ys) * 100) / 100 - 0.08;
+  var yMax = Math.ceil(Math.max.apply(null, ys) * 100) / 100 + 0.08;
+
+  function px(x) { return padL + (x - xMin) / (xMax - xMin) * plotW; }
+  function py(y) { return padT + (1 - (y - yMin) / (yMax - yMin)) * plotH; }
+
+  var parts = [];
+  // 横向网格 + y 轴刻度
+  var yTicks = 6;
+  for (var i = 0; i <= yTicks; i++) {
+    var yv = yMin + (yMax - yMin) * i / yTicks;
+    var yy = py(yv);
+    parts.push('<line x1="' + padL + '" y1="' + yy.toFixed(1) + '" x2="' + (W - padR) +
+               '" y2="' + yy.toFixed(1) + '" stroke="rgba(56,189,248,.12)" stroke-width="1"/>');
+    parts.push('<text x="' + (padL - 10) + '" y="' + (yy + 4).toFixed(1) +
+               '" fill="#7d92ad" font-size="12" font-family="Consolas,monospace" text-anchor="end">' +
+               yv.toFixed(2) + '%</text>');
+  }
+  // x 轴刻度（挑几个关键档）
+  var xTicks = [0.5, 1, 3, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+  xTicks.forEach(function(xv) {
+    var xx = px(xv);
+    parts.push('<line x1="' + xx.toFixed(1) + '" y1="' + padT + '" x2="' + xx.toFixed(1) +
+               '" y2="' + (H - padB) + '" stroke="rgba(56,189,248,.06)" stroke-width="1"/>');
+    var label = xv === 0.5 ? '6月' : xv + '年';
+    parts.push('<text x="' + xx.toFixed(1) + '" y="' + (H - padB + 22) +
+               '" fill="#7d92ad" font-size="12" font-family="Consolas,monospace" text-anchor="middle">' +
+               label + '</text>');
+  });
+
+  // 曲线路径
+  var dPath = xs.map(function(x, idx) {
+    return (idx === 0 ? 'M' : 'L') + px(x).toFixed(1) + ' ' + py(ys[idx]).toFixed(1);
+  }).join(' ');
+  // 面积渐变
+  var areaPath = dPath + ' L' + px(xMax).toFixed(1) + ' ' + (H - padB) +
+                 ' L' + px(xMin).toFixed(1) + ' ' + (H - padB) + ' Z';
+  parts.push('<defs><linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">' +
+             '<stop offset="0%" stop-color="#22d3ee" stop-opacity=".28"/>' +
+             '<stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/></linearGradient>' +
+             '<linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">' +
+             '<stop offset="0%" stop-color="#22d3ee"/><stop offset="100%" stop-color="#8b5cf6"/>' +
+             '</linearGradient></defs>');
+  parts.push('<path d="' + areaPath + '" fill="url(#areaGrad)"/>');
+  parts.push('<path d="' + dPath + '" fill="none" stroke="url(#lineGrad)" stroke-width="2.6" ' +
+             'stroke-linejoin="round" stroke-linecap="round"/>');
+
+  // 数据点 + hover 热区
+  DATA.forEach(function(dp, idx) {
+    var cx = px(xs[idx]), cy = py(ys[idx]);
+    parts.push('<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) +
+               '" r="3" fill="#03060c" stroke="#22d3ee" stroke-width="1.6"/>');
+    parts.push('<circle class="hot" data-i="' + idx + '" cx="' + cx.toFixed(1) +
+               '" cy="' + cy.toFixed(1) + '" r="12" fill="transparent" style="cursor:pointer"/>');
+  });
+
+  svg.innerHTML = parts.join('');
+
+  // hover 提示
+  var hint = document.getElementById('hint');
+  var card = svg.parentNode;
+  svg.addEventListener('mousemove', function(e) {
+    var t = e.target;
+    if (t.classList && t.classList.contains('hot')) {
+      var dp = DATA[+t.dataset.i];
+      hint.innerHTML = dp.term + ' · <b>' + dp.rate.toFixed(2) + '%</b>';
+      hint.style.display = 'block';
+      var rect = card.getBoundingClientRect();
+      var hx = e.clientX - rect.left + 14;
+      var hy = e.clientY - rect.top - 40;
+      if (hx + 150 > rect.width) hx = hx - 170;
+      hint.style.left = hx + 'px';
+      hint.style.top = Math.max(0, hy) + 'px';
+    } else {
+      hint.style.display = 'none';
+    }
+  });
+  svg.addEventListener('mouseleave', function() { hint.style.display = 'none'; });
+})();
+
+/* ================= 计算器 ================= */
+function findFloor(termYears) {
+  /* 向上靠档: 找第一个 >= 输入期限的标准档 */
+  for (var i = 0; i < DATA.length; i++) {
+    if (termToYears(DATA[i].term) >= termYears) return DATA[i];
+  }
+  return DATA[DATA.length - 1];  /* 超 50 年取最高档 */
+}
+
+document.getElementById('calcBtn').addEventListener('click', function() {
+  var raw = parseFloat(document.getElementById('termInput').value);
+  var unit = document.getElementById('unitSel').value;
+  var box = document.getElementById('calcResult');
+  if (isNaN(raw) || raw <= 0) {
+    box.className = 'result err';
+    box.innerHTML = '<div class="big">输入无效</div><div class="note">请输入大于 0 的期限。</div>';
+    return;
+  }
+  var years = unit === 'm' ? raw / 12 : raw;
+  var hit = findFloor(years);
+  var exact = DATA.some(function(d) { return Math.abs(termToYears(d.term) - years) < 1e-9; });
+  var note = exact
+    ? '标准期限，直接对应 <b>' + hit.term + "</b> 档。"
+    : '非标准期限 <b>' + (unit === 'm' ? raw + ' 个月' : raw + ' 年') + '</b> → 按向上靠档规则，' +
+      '应不低于 <b>' + hit.term + '</b> 档底线。';
+  box.className = 'result';
+  box.innerHTML =
+    '<div class="big">' + hit.rate.toFixed(2) + '<small>%</small></div>' +
+    '<div class="note">' + note + '</div>';
+});
+
+/* 回车也能算 */
+document.getElementById('termInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('calcBtn').click();
+});
+
+/* ================= 速查表 ================= */
+var KEY_TERMS = ['6个月', '1年', '2年', '3年', '5年', '7年', '10年', '15年', '20年', '30年', '50年'];
+var tableMode = 'all';
+var searchText = '';
+
+function renderTable() {
+  var body = document.getElementById('tableBody');
+  var rows = DATA.filter(function(d) {
+    if (tableMode === 'key' && KEY_TERMS.indexOf(d.term) === -1) return false;
+    if (searchText && d.term.indexOf(searchText) === -1) return false;
+    return true;
+  });
+  if (!rows.length) {
+    body.innerHTML = '<tr><td colspan="2" style="text-align:center;color:#7d92ad;padding:24px">没有匹配的档位</td></tr>';
+    return;
+  }
+  body.innerHTML = rows.map(function(d) {
+    return '<tr><td class="term">' + d.term + '</td><td class="r">' + d.rate.toFixed(2) + '%</td></tr>';
+  }).join('');
+}
+
+document.getElementById('searchBox').addEventListener('input', function(e) {
+  searchText = e.target.value.trim();
+  renderTable();
+});
+
+Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(tab) {
+  tab.addEventListener('click', function() {
+    Array.prototype.forEach.call(document.querySelectorAll('.tab'), function(t) {
+      t.classList.remove('on');
+    });
+    tab.classList.add('on');
+    tableMode = tab.dataset.mode;
+    renderTable();
+  });
+});
+
+renderTable();
+</script>
+</body>
+</html>

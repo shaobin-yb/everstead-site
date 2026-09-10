@@ -231,10 +231,9 @@ def render_briefing() -> str:
 
 def build_briefing_archive() -> None:
     """渲染 archive/*.md → html, 并生成归档列表页(倒序)。"""
-    if not BRIEFING_ARCHIVE.exists():
-        return
     entries = []
-    for md in sorted(BRIEFING_ARCHIVE.glob("*.md"), reverse=True):
+    mds = sorted(BRIEFING_ARCHIVE.glob("*.md"), reverse=True) if BRIEFING_ARCHIVE.exists() else []
+    for md in mds:
         text = md.read_text(encoding="utf-8", errors="replace")
         date = briefing_date(text, datetime.fromtimestamp(md.stat().st_mtime))
         title = text.strip().splitlines()[0].strip(" *") if text.strip() else date
@@ -258,6 +257,7 @@ def build_briefing_archive() -> None:
             f'<h1>每日收盘点评 · 历史归档</h1>'
             f'<p>共 {len(entries)} 篇，点击查看任意一天。</p>'
             f'<ul>{"".join(items) or "<li>暂无归档</li>"}</ul></body></html>')
+    BRIEFINGS.mkdir(exist_ok=True)
     (BRIEFINGS / "index.html").write_text(page, encoding="utf-8")
     print(f"[build] market-briefings/index.html ({len(entries)} 篇归档)")
 

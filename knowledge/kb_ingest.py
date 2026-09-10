@@ -476,6 +476,8 @@ q.addEventListener('input', function(){
       return !c.classList.contains('hide');
     });
     t.classList.toggle('hide', !any);
+    // 搜索命中时自动展开该主题, 否则卡片藏折叠里看不见
+    if (s && any) t.classList.remove('closed');
   });
   n.textContent = vis;
 });

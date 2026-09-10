@@ -49,6 +49,20 @@ section.prov{margin-bottom:26px;scroll-margin-top:130px}
 .city{font-size:.72rem;color:var(--sub)}
 .empty{display:none;text-align:center;color:var(--sub);padding:60px 0;font-size:1rem}
 footer{color:var(--sub);font-size:.8rem;text-align:center;padding:0 20px 40px}
+/* ---- 密码门 ---- */
+.gate{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;background:var(--bg);text-align:center}
+.gate-panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:38px 44px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.gate .lock{font-size:44px;margin-bottom:12px}
+.gate h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.gate p{font-size:13px;color:var(--sub);margin-bottom:22px;line-height:1.8}
+.gate input{width:220px;padding:11px 14px;border:1.5px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);font-size:1rem;text-align:center;letter-spacing:.3em;outline:none}
+.gate input:focus{border-color:var(--accent)}
+.gate button{display:block;width:220px;margin:14px auto 0;padding:11px;border:none;border-radius:9px;background:var(--accent);color:#fff;font-size:.95rem;font-weight:600;cursor:pointer}
+.gate button:hover{opacity:.88}
+.gate .err-msg{display:none;color:#f87171;font-size:.8rem;margin-top:12px}
+.gate.err .err-msg{display:block}
+.gate.err{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 @media (max-width:760px){
   .layout{flex-direction:column}
   nav.side{position:static;width:100%;max-height:200px;display:flex;flex-wrap:wrap;gap:4px;padding:8px}
@@ -59,6 +73,17 @@ footer{color:var(--sub);font-size:.8rem;text-align:center;padding:0 20px 40px}
 </style>
 </head>
 <body>
+<div class="gate" id="gate">
+  <div class="gate-panel">
+    <div class="lock">🔐</div>
+    <h2>金融客户全量名单</h2>
+    <p>内部资料 · 与内网 CRM 同级管理<br>输入密码后解锁</p>
+    <input type="password" id="pw" placeholder="••••" maxlength="16"
+           autocomplete="off">
+    <button id="btn" type="button">解 锁</button>
+    <div class="err-msg" id="err">密码不对, 再试一次</div>
+  </div>
+</div>
 <header>
   <div class="wrap">
     <h1>🏦 金融客户全量名单 · 按省分布</h1>
@@ -195,6 +220,91 @@ nav.addEventListener('click', e => {
   a.classList.add('active');
 });
 renderAll();
+
+/* ---- 密码门: 纯 JS SHA-256(紧凑实现) 只存哈希不存明文; sessionStorage 记住本会话 ---- */
+var PASSWORD_HASH = "62030069b40c02d1dd642d438194850f14d9e79a25abd1e53c02f7391f8242c8";
+var GATE_KEY = 'client_list_ok';
+function sha256(ascii) {
+  function rightRotate(value, amount) { return (value>>>amount) | (value<<(32-amount)); }
+  var mathPow = Math.pow;
+  var maxWord = mathPow(2, 32);
+  var result = '';
+  var words = [];
+  var asciiBitLength = ascii.length*8;
+  var hash = sha256.h = sha256.h || [];
+  var k = sha256.k = sha256.k || [];
+  var primeCounter = k.length;
+  var isComposite = {};
+  for (var candidate = 2; primeCounter < 64; candidate++) {
+    if (!isComposite[candidate]) {
+      for (var i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+      hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+      k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
+    }
+  }
+  ascii += '\x80';
+  while (ascii.length%64 - 56) ascii += '\x00';
+  for (var i = 0; i < ascii.length; i++) {
+    var j = ascii.charCodeAt(i);
+    if (j>>8) return '';
+    words[i>>2] |= j << ((3 - i)%4)*8;
+  }
+  words[words.length] = ((asciiBitLength/maxWord)|0);
+  words[words.length] = (asciiBitLength);
+  for (var j = 0; j < words.length;) {
+    var w = words.slice(j, j += 16);
+    var oldHash = hash;
+    hash = hash.slice(0, 8);
+    for (var i = 0; i < 64; i++) {
+      var w15 = w[i - 15], w2 = w[i - 2];
+      var a = hash[0], e = hash[4];
+      var temp1 = hash[7]
+        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+        + ((e&hash[5])^((~e)&hash[6]))
+        + k[i]
+        + (w[i] = (i < 16) ? w[i] : (
+            w[i - 16]
+            + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3))
+            + w[i - 7]
+            + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10))
+          )|0
+        );
+      var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+        + ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+      hash = [(temp1 + temp2)|0].concat(hash);
+      hash[4] = (hash[4] + temp1)|0;
+    }
+    for (var i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i])|0;
+  }
+  for (var i = 0; i < 8; i++) {
+    for (var j = 3; j + 1; j--) {
+      var b = (hash[i]>>(j*8))&255;
+      result += ((b < 16) ? 0 : '') + b.toString(16);
+    }
+  }
+  return result;
+}
+function unlock() {
+  var gate = document.getElementById('gate');
+  var input = document.getElementById('pw');
+  if (sha256(input.value) === PASSWORD_HASH) {
+    sessionStorage.setItem(GATE_KEY, '1');
+    gate.style.display = 'none';
+  } else {
+    gate.classList.remove('err');
+    void gate.offsetWidth;
+    gate.classList.add('err');
+    input.value = '';
+    input.focus();
+  }
+}
+document.getElementById('pw').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') unlock();
+});
+document.getElementById('btn').addEventListener('click', unlock);
+if (sessionStorage.getItem(GATE_KEY) === '1') {
+  document.getElementById('gate').style.display = 'none';
+}
 </script>
 </body>
 </html>

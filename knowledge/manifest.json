@@ -285,7 +285,8 @@
       "file": "2026年联合年卡使用手册.pdf",
       "size": 7872989,
       "pages": 2,
-      "url": null
+      "url": null,
+      "private": true
     },
     {
       "slug": "science-golden-age",
@@ -337,7 +338,8 @@
       "file": "祖国100岁.jpg",
       "size": 329169,
       "pages": 1,
-      "url": null
+      "url": null,
+      "private": true
     },
     {
       "slug": "waic-2026-speeches",

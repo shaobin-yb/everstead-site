@@ -522,7 +522,8 @@ def item_card(it: dict, tname: str) -> str:
 
 def build_index(m: dict) -> None:
     topics = sorted(m.get("topics", []), key=lambda t: (t.get("order", 0), t["name"]))
-    items = m.get("items", [])
+    # 私密条目(private=true)不进公开列表页, 只出现在密码门后的私人专区(2026-09-10 老板要求)
+    items = [it for it in m.get("items", []) if not it.get("private")]
     sections = []
     for t in topics:
         its = sorted((it for it in items if it["topic"] == t["slug"]),

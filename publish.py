@@ -175,13 +175,14 @@ def build_report(md_file: Path) -> None:
 
 
 def load_kb_stats() -> tuple[int, str]:
-    """读知识库 manifest: 返回(条目数, 最新日期); 不存在返回 (0, "")。"""
+    """读知识库 manifest: 返回(公开条目数, 最新日期); 不存在返回 (0, "")。
+    private 条目不计数(只出现在密码门后的私人专区, 2026-09-10)。"""
     kb_manifest = SITE / "knowledge" / "manifest.json"
     if not kb_manifest.exists():
         return 0, ""
     try:
         m = json.loads(kb_manifest.read_text(encoding="utf-8"))
-        items = m.get("items", [])
+        items = [it for it in m.get("items", []) if not it.get("private")]
         latest = max((it.get("date", "") for it in items), default="")
         return len(items), latest
     except Exception:

@@ -102,12 +102,17 @@ a{text-decoration:none;color:inherit}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 
 /* ---- 顶栏导航 ---- */
-.topnav{margin-left:26px;display:flex;gap:18px}
+.topnav{margin-left:26px;display:flex;gap:22px}
 .topnav a{
-  font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--muted);
-  padding:6px 2px;border-bottom:1px solid transparent;transition:color .2s,border-color .2s;
+  font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-weight:700;
+  font-size:15.5px;letter-spacing:.08em;color:#a8d8f0;
+  padding:7px 10px;border-radius:8px;border-bottom:none;
+  transition:color .2s,background .2s,box-shadow .2s,transform .2s;
 }
-.topnav a:hover{color:var(--cyan);border-color:var(--cyan)}
+.topnav a:hover{
+  color:#e8f6ff;background:rgba(34,211,238,.12);
+  box-shadow:0 0 14px rgba(34,211,238,.25);transform:translateY(-1px);
+}
 
 /* ---- Hero ---- */
 .hero{position:relative;padding:72px 0 56px}
@@ -177,6 +182,8 @@ a{text-decoration:none;color:inherit}
   content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
   background:linear-gradient(var(--cyan),transparent);
 }
+.stat{display:flex;align-items:flex-start}
+.stat .stat-ico{font-size:15px;opacity:.85;margin:2px 6px 0 0;flex-shrink:0}
 .stat .v{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--cyan);
   font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(34,211,238,.4)}
 .stat .k{margin-top:4px;font-size:12px;color:var(--muted);letter-spacing:.08em}
@@ -292,29 +299,22 @@ a{text-decoration:none;color:inherit}
 .card[data-type="briefing"] .card-tag{color:#fcd34d}
 
 /* ---- 每日收盘点评 ---- */
-.briefing-wrap{position:relative;animation:fadeUp .7s .36s ease-out both}
+.briefing-toggle{
+  margin-left:16px;padding:6px 16px;
+  font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-weight:600;
+  font-size:13px;letter-spacing:.06em;color:var(--cyan);
+  background:transparent;border:1px solid var(--line);border-radius:999px;cursor:pointer;
+  transition:border-color .2s,background .2s,color .2s;
+}
+.briefing-toggle:hover{border-color:var(--cyan);background:rgba(34,211,238,.1);color:#a5f3fc}
+.briefing-wrap{animation:fadeUp .5s .3s ease-out both}
 .briefing-body{
   border:1px solid var(--line);border-radius:14px;
   background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   padding:24px 26px 20px;
-  max-height:250px;overflow:hidden;   /* 默认收起, 展开后放开限高 */
+  max-height:640px;overflow-y:auto;   /* 展开后全文滚动 */
   line-height:1.8;font-size:14px;color:var(--text);
-  transition:max-height .45s ease;
 }
-.briefing-body.open{max-height:640px;overflow-y:auto}
-.briefing-fade{
-  position:absolute;left:0;right:0;bottom:0;height:120px;pointer-events:none;
-  background:linear-gradient(180deg,transparent,var(--panel) 88%);
-  transition:opacity .35s;
-}
-.briefing-more-btn{
-  display:block;margin:14px auto 0;padding:8px 26px;
-  font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--cyan);
-  background:transparent;border:1px solid var(--line);border-radius:999px;cursor:pointer;
-  transition:border-color .2s,color .2s,background .2s;
-}
-.briefing-more-btn:hover{border-color:var(--cyan);background:rgba(34,211,238,.08)}
-.briefing-more-btn.on{color:var(--muted)}
 
 .briefing-body h1{font-size:1.25em;line-height:1.5;margin:0 0 14px;color:#22d3ee;border-bottom:1px solid var(--line);padding-bottom:10px}
 .briefing-body h2{font-size:1.05em;color:#7dd3fc;margin:18px 0 8px}
@@ -333,6 +333,19 @@ a{text-decoration:none;color:inherit}
 .briefing-more{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--cyan);
   border:1px solid var(--line);padding:4px 12px;border-radius:999px;transition:border-color .2s,color .2s}
 .briefing-more:hover{border-color:var(--cyan);color:#a5f3fc}
+
+/* ---- 页脚 ---- */
+.footer{
+  margin-top:84px;padding-top:26px;border-top:1px solid var(--line);
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);
+}
+.footer .dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);
+  box-shadow:0 0 6px var(--cyan);animation:blink 2.2s ease-in-out infinite}
+.footer .sep{opacity:.4}
+.footer a{color:var(--cyan);border-bottom:1px solid transparent;transition:border-color .2s}
+.footer a:hover{border-color:var(--cyan)}
+.footer .foot-meta{margin-left:auto;font-size:10px;letter-spacing:.08em;opacity:.7}
 
 /* ---- 页脚 ---- */
 .footer{
@@ -390,11 +403,11 @@ a{text-decoration:none;color:inherit}
 
   <!-- 数据条 -->
   <section class="stats">
-    <div class="stat"><div class="v">{{TOTAL}}</div><div class="k">归档成果</div></div>
-    <div class="stat"><div class="v">{{RADAR_COUNT}}</div><div class="k">雷达 / 站点</div></div>
-    <div class="stat"><div class="v">{{REPORT_COUNT}}</div><div class="k">专题报告</div></div>
-    <div class="stat"><div class="v">{{KB_COUNT}}</div><div class="k">知识库条目</div></div>
-    <div class="stat"><div class="v">{{LAST_DATE}}</div><div class="k">最近更新</div></div>
+    <div class="stat"><div class="stat-ico">🗂️</div><div class="v" data-count="{{TOTAL}}">0</div><div class="k">归档成果</div></div>
+    <div class="stat"><div class="stat-ico">📡</div><div class="v" data-count="{{RADAR_COUNT}}">0</div><div class="k">雷达 / 站点</div></div>
+    <div class="stat"><div class="stat-ico">📄</div><div class="v" data-count="{{REPORT_COUNT}}">0</div><div class="k">专题报告</div></div>
+    <div class="stat"><div class="stat-ico">📚</div><div class="v" data-count="{{KB_COUNT}}">0</div><div class="k">知识库条目</div></div>
+    <div class="stat"><div class="stat-ico">🕒</div><div class="v" data-text="{{LAST_DATE}}">{{LAST_DATE}}</div><div class="k">最近更新</div></div>
   </section>
 
   <!-- 重点产品绩效面板(由 update_nav.py 驱动) -->
@@ -426,7 +439,12 @@ a{text-decoration:none;color:inherit}
     <span class="sep">|</span>
     <span>日常成果归档 · 持续更新</span>
     <span class="sep">|</span>
-    <span>everstead.cn</span>
+    <span>数据驱动 · 中国邮政系资管投研</span>
+    <span class="sep">|</span>
+    <a href="https://www.everstead.cn/">everstead.cn</a>
+    <span class="sep">|</span>
+    <a href="mailto:wangshaobin@chinapostamc.com">联系我们</a>
+    <span class="foot-meta">powered by GitHub Pages</span>
   </footer>
 </div>
 
@@ -507,6 +525,29 @@ a{text-decoration:none;color:inherit}
   }
   mk('全部').classList.add('active');
   names.forEach(function(n){mk(n)});
+})();
+
+/* ---- 数据条数字滚动动画(纯数字才有动画; 日期直接显示) ---- */
+(function(){
+  var vs=document.querySelectorAll('.stat .v[data-count]');
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  vs.forEach(function(el){
+    var target=parseInt(el.getAttribute('data-count'),10);
+    if(isNaN(target))return;
+    el.textContent=target;   /* 兜底默认值: rAF 不跑(极端环境)也显示正确数字 */
+    if(reduced)return;
+    var t0=null,DUR=900,done=false;
+    function step(ts){
+      if(!t0)t0=ts;
+      var p=Math.min((ts-t0)/DUR,1);
+      var ease=1-Math.pow(1-p,3);   /* easeOutCubic */
+      el.textContent=Math.round(target*ease);
+      if(p<1){requestAnimationFrame(step);}else{done=true;}
+    }
+    requestAnimationFrame(step);
+    /* 保险丝: rAF 不触发时确保终值正确(900ms+缓冲后重设) */
+    setTimeout(function(){if(!done)el.textContent=target;},1200);
+  });
 })();
 </script>
 </body>

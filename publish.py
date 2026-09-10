@@ -215,7 +215,7 @@ def load_briefing_info() -> tuple[str, str]:
 
 
 def render_briefing() -> str:
-    """latest.md → 首页点评栏目 HTML; 无点评时返回空串。"""
+    """latest.md → 首页点评栏目 HTML(默认整块收起 accordion); 无点评时返回空串。"""
     text, date = load_briefing_info()
     if not text.strip():
         return ""
@@ -223,14 +223,22 @@ def render_briefing() -> str:
     return (f'<section class="section">'
             f'<div class="section-head"><div class="bar"></div>'
             f'<div><h2>每日收盘点评</h2><div class="en">DAILY MARKET BRIEF</div></div>'
+            f'<button class="briefing-toggle" id="briefing-toggle" type="button">'
+            f'<span id="briefing-toggle-label">展开今日点评 ▾</span></button>'
             f'<a class="briefing-more" href="market-briefings/index.html">查看历史 →</a>'
             f'</div>'
-            f'<div class="briefing-wrap">'
-            f'<div class="briefing-body" id="briefing-body">{body}</div>'
-            f'<div class="briefing-fade" id="briefing-fade"></div>'
+            f'<div class="briefing-wrap" id="briefing-wrap" style="display:none">'
+            f'<div class="briefing-body">{body}</div>'
             f'</div>'
-            f'<button class="briefing-more-btn" id="briefing-btn" type="button">展开全文 ▾</button>'
-            f'<script>(function(){{var b=document.getElementById("briefing-body"),f=document.getElementById("briefing-fade"),t=document.getElementById("briefing-btn");if(!b||!t)return;function on(){{var open=b.classList.toggle("open");t.textContent=open?"收起全文 ▴":"展开全文 ▾";t.classList.toggle("on",open);if(f)f.style.opacity=open?"0":"1";}}t.addEventListener("click",on);}})();</script>'
+            f'<script>(function(){{var w=document.getElementById("briefing-wrap"),'
+            f'b=document.getElementById("briefing-toggle"),'
+            f'l=document.getElementById("briefing-toggle-label");'
+            f'if(!w||!b)return;'
+            f'b.addEventListener("click",function(){{'
+            f'var open=w.style.display!=="none";'
+            f'w.style.display=open?"none":"";'
+            f'l.textContent=open?"展开今日点评 ▾":"收起点评 ▴";'
+            f'}});}})();</script>'
             f'</section>')
 
 

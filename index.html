@@ -4,25 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EVERSTEAD · 成果展示平台</title>
+<meta name="description" content="中国邮政系资管投研数字化成果库 — 客户情报雷达、每日收盘点评、产品净值追踪、行业调研与数据工具，真实数据驱动，每日更新。">
+<meta name="keywords" content="保险资管,中邮资管,投研成果,客户情报雷达,A股收评,产品净值,资管研究">
+<meta name="author" content="everstead">
+<link rel="canonical" href="https://www.everstead.cn/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EVERSTEAD 成果展示平台">
+<meta property="og:title" content="EVERSTEAD · 成果展示平台">
+<meta property="og:description" content="中国邮政系资管投研数字化成果库 — 客户情报雷达、每日收盘点评、产品净值追踪、行业调研与数据工具。">
+<meta property="og:url" content="https://www.everstead.cn/">
+<meta name="twitter:card" content="summary">
 <style>
 /* ============================================================
    EVERSTEAD 科技感展示平台 · v1.0
    深空底 + 粒子星座 + 雷达扫描 + 玻璃拟态卡片
    零外部依赖(无 CDN)，GitHub Pages 国内直连友好
-   卡片区由 publish.py 注入 <a class="card" data-type="kb" style="animation-delay:0.35s" href="kb.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🛡️</div><div class="card-tag">KB</div></div><div class="t">保险资管风险责任人知识库</div><div class="m">5 大投资管理能力 · 40+ 机构风险责任人档案 · 搜索/折叠/从业经历</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="tool" style="animation-delay:0.41s" href="yield-calc.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🧮</div><div class="card-tag">TOOL</div></div><div class="t">税后收益率计算表</div><div class="m">资管产品税后收益率一键计算</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="radar" style="animation-delay:0.47s" href="radar.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📡</div><div class="card-tag">RADAR</div></div><div class="t">客户情报雷达</div><div class="m">巨潮每日公告抓取 + 受托方解析 + iFind 打分 · 页内直达 433 家公司分级站点</div><div class="d">2026-09-10</div><span class="arrow">→</span></a>
-<a class="card" data-type="tool" style="animation-delay:0.53s" href="product-onepagers/红利质量_产品一页通.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📈</div><div class="card-tag">TOOL</div></div><div class="t">产品一页通</div><div class="m">红利质量/价值1号(净值每日更新) + 国新红利价值/深度价值(要素型) 四张一页通</div><div class="d">2026-09-08</div><span class="arrow">→</span></a>
-<a class="card" data-type="report" style="animation-delay:0.59s" href="上市公司购买理财产品情况.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📊</div><div class="card-tag">REPORT</div></div><div class="t">上市公司购买理财产品情况</div><div class="m">上市公司闲置资金理财公告全景统计</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="knowledge" style="animation-delay:0.65s" href="knowledge/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📚</div><div class="card-tag">KNOWLEDGE</div></div><div class="t">知识库</div><div class="m">PPT/PDF 翻页预览 + 原文件下载，按主题归档</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="external" style="animation-delay:0.71s" href="http://192.168.100.148:3000" target="_blank" rel="noopener"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">👥</div><div class="card-tag">EXTERNAL</div></div><div class="t">CRM 客户关系管理系统</div><div class="m">公司局域网 · 账号 wangshaobin · 客户/商机/拜访纪要</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="tool" style="animation-delay:0.77s" href="tools.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🧰</div><div class="card-tag">TOOL</div></div><div class="t">工具箱</div><div class="m">网页工具(山东投资3件套) + 本地工具(8个 launch:// 一键唤起) + 私人专区(密码锁)</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="cockpit" style="animation-delay:0.83s" href="cockpit.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🖥️</div><div class="card-tag">COCKPIT</div></div><div class="t">资管投研驾驶舱</div><div class="m">每日盘后自动更新 · 市场总览/温度/产品净值/红利·深度价值关注池异动/龙虎榜/同业新发</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="cockpit" style="animation-delay:0.89s" href="factors.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">⚗️</div><div class="card-tag">COCKPIT</div></div><div class="t">因子工厂快照</div><div class="m">关注池 86 只 · 股息率TTM/动量/波动率/成交额 五因子本地计算</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="report" style="animation-delay:0.95s" href="保险公司资产负债管理办法-概念梳理.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📖</div><div class="card-tag">REPORT</div></div><div class="t">资产负债管理办法概念梳理</div><div class="m">新规学习页 · 12张概念卡 + 人身险4项/财险3项监管指标扫盲 + IFRS9/17 + 产品化映射</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="briefing" style="animation-delay:1.01s" href="market-briefings/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📰</div><div class="card-tag">BRIEFING</div></div><div class="t">每日收盘点评</div><div class="m">每个交易日收盘后更新 · 历史逐日归档</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="report" style="animation-delay:1.07s" href="reports/铁蛋近期工作总结.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">REPORT</div></div><div class="t">铁蛋近期工作总结</div><div class="m">专题调研 · 工作汇报</div><div class="d">2026-09-08</div><span class="arrow">→</span></a>
-<a class="card" data-type="report" style="animation-delay:1.13s" href="reports/光大理财-客户拜访调研-五看六定.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">REPORT</div></div><div class="t">光大理财-客户拜访调研-五看六定</div><div class="m">专题调研 · 工作汇报</div><div class="d">2026-08-24</div><span class="arrow">→</span></a>
+   卡片区由 publish.py 注入 <a class="card" data-type="kb" style="animation-delay:0.35s" href="kb.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🛡️</div><div class="card-tag">LAN · 内网</div></div><div class="t">保险资管风险责任人知识库</div><div class="m">5 大投资管理能力 · 40+ 机构风险责任人档案 · 搜索/折叠/从业经历</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="tool" style="animation-delay:0.41s" href="yield-calc.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🧮</div><div class="card-tag">LAN · 内网</div></div><div class="t">税后收益率计算表</div><div class="m">资管产品税后收益率一键计算</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="radar" style="animation-delay:0.47s" href="radar.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📡</div><div class="card-tag">LAN · 内网</div></div><div class="t">客户情报雷达</div><div class="m">巨潮每日公告抓取 + 受托方解析 + iFind 打分 · 页内直达 433 家公司分级站点</div><div class="d">2026-09-10</div><span class="arrow">→</span></a>
+<a class="card" data-type="tool" style="animation-delay:0.53s" href="product-onepagers/红利质量_产品一页通.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📈</div><div class="card-tag">LAN · 内网</div></div><div class="t">产品一页通</div><div class="m">红利质量/价值1号(净值每日更新) + 国新红利价值/深度价值(要素型) 四张一页通</div><div class="d">2026-09-08</div><span class="arrow">→</span></a>
+<a class="card" data-type="report" style="animation-delay:0.59s" href="上市公司购买理财产品情况.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📊</div><div class="card-tag">LAN · 内网</div></div><div class="t">上市公司购买理财产品情况</div><div class="m">上市公司闲置资金理财公告全景统计</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="knowledge" style="animation-delay:0.65s" href="knowledge/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📚</div><div class="card-tag">LAN · 内网</div></div><div class="t">知识库</div><div class="m">PPT/PDF 翻页预览 + 原文件下载，按主题归档</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="lan" style="animation-delay:0.71s" href="#"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">👥</div><div class="card-tag">LAN · 内网</div></div><div class="t">CRM 客户关系管理系统</div><div class="m">客户/商机/拜访纪要 · 账号 wangshaobin · 🔒 仅公司内网可访问</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="tool" style="animation-delay:0.77s" href="tools.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🧰</div><div class="card-tag">LAN · 内网</div></div><div class="t">工具箱</div><div class="m">网页工具(山东投资3件套) + 本地工具(8个 launch:// 一键唤起) + 私人专区(密码锁)</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="cockpit" style="animation-delay:0.83s" href="cockpit.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🖥️</div><div class="card-tag">LAN · 内网</div></div><div class="t">资管投研驾驶舱</div><div class="m">每日盘后自动更新 · 市场总览/温度/产品净值/红利·深度价值关注池异动/龙虎榜/同业新发</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="cockpit" style="animation-delay:0.89s" href="factors.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">⚗️</div><div class="card-tag">LAN · 内网</div></div><div class="t">因子工厂快照</div><div class="m">关注池 86 只 · 股息率TTM/动量/波动率/成交额 五因子本地计算</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="report" style="animation-delay:0.95s" href="保险公司资产负债管理办法-概念梳理.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📖</div><div class="card-tag">LAN · 内网</div></div><div class="t">资产负债管理办法概念梳理</div><div class="m">新规学习页 · 12张概念卡 + 人身险4项/财险3项监管指标扫盲 + IFRS9/17 + 产品化映射</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="briefing" style="animation-delay:1.01s" href="market-briefings/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📰</div><div class="card-tag">LAN · 内网</div></div><div class="t">每日收盘点评</div><div class="m">每个交易日收盘后更新 · 历史逐日归档</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="report" style="animation-delay:1.07s" href="reports/铁蛋近期工作总结.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">LAN · 内网</div></div><div class="t">铁蛋近期工作总结</div><div class="m">专题调研 · 工作汇报</div><div class="d">2026-09-08</div><span class="arrow">→</span></a>
+<a class="card" data-type="report" style="animation-delay:1.13s" href="reports/光大理财-客户拜访调研-五看六定.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">LAN · 内网</div></div><div class="t">光大理财-客户拜访调研-五看六定</div><div class="m">专题调研 · 工作汇报</div><div class="d">2026-08-24</div><span class="arrow">→</span></a>
    ============================================================ */
 :root{
   --bg:#03060c;
@@ -197,9 +207,25 @@ a{text-decoration:none;color:inherit}
 .section-head .count{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted);
   border:1px solid var(--line);padding:4px 12px;border-radius:999px}
 
+/* 成果展厅类型筛选 */
+.filter-bar{
+  display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;
+  animation:fadeUp .6s .32s ease-out both;
+}
+.filter-bar button{
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);
+  background:transparent;border:1px solid var(--line);border-radius:999px;
+  padding:5px 14px;cursor:pointer;transition:all .18s;
+}
+.filter-bar button:hover{color:var(--cyan);border-color:var(--line-strong)}
+.filter-bar button.active{
+  color:#03101f;background:linear-gradient(90deg,var(--cyan),var(--violet));
+  border-color:transparent;font-weight:600;
+}
 .grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;
 }
+.grid .card.hidden{display:none}
 .card{
   position:relative;display:block;
   border:1px solid var(--line);border-radius:14px;
@@ -273,18 +299,36 @@ a{text-decoration:none;color:inherit}
 .card[data-type="knowledge"] .card-tag{color:#fbbf24}
 .card[data-type="external"] .card-ico{background:linear-gradient(160deg, rgba(96,165,250,.2), rgba(34,211,238,.12))}
 .card[data-type="external"] .card-tag{color:#93c5fd}
+.card[data-type="lan"] .card-ico{background:linear-gradient(160deg, rgba(96,165,250,.2), rgba(139,92,246,.12))}
+.card[data-type="lan"] .card-tag{color:#93c5fd}
 .card[data-type="briefing"] .card-ico{background:linear-gradient(160deg, rgba(251,191,36,.2), rgba(34,211,238,.12))}
 .card[data-type="briefing"] .card-tag{color:#fcd34d}
 
 /* ---- 每日收盘点评 ---- */
+.briefing-wrap{position:relative;animation:fadeUp .7s .36s ease-out both}
 .briefing-body{
   border:1px solid var(--line);border-radius:14px;
   background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   padding:24px 26px 20px;
-  max-height:560px;overflow:auto;
+  max-height:250px;overflow:hidden;   /* 默认收起, 展开后放开限高 */
   line-height:1.8;font-size:14px;color:var(--text);
-  animation:fadeUp .7s .36s ease-out both;
+  transition:max-height .45s ease;
 }
+.briefing-body.open{max-height:640px;overflow-y:auto}
+.briefing-fade{
+  position:absolute;left:0;right:0;bottom:0;height:120px;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--panel) 88%);
+  transition:opacity .35s;
+}
+.briefing-more-btn{
+  display:block;margin:14px auto 0;padding:8px 26px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--cyan);
+  background:transparent;border:1px solid var(--line);border-radius:999px;cursor:pointer;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.briefing-more-btn:hover{border-color:var(--cyan);background:rgba(34,211,238,.08)}
+.briefing-more-btn.on{color:var(--muted)}
+
 .briefing-body h1{font-size:1.25em;line-height:1.5;margin:0 0 14px;color:#22d3ee;border-bottom:1px solid var(--line);padding-bottom:10px}
 .briefing-body h2{font-size:1.05em;color:#7dd3fc;margin:18px 0 8px}
 .briefing-body h3{font-size:1em;color:#a5b4fc;margin:14px 0 6px}
@@ -367,7 +411,9 @@ a{text-decoration:none;color:inherit}
   </section>
 
   <!-- 重点产品绩效面板(由 update_nav.py 驱动) -->
-  <!-- 重点产品绩效面板 · 由 update_nav.py 更新 nav-data.json 驱动 -->
+  <!-- 重点产品绩效面板 · 由 update_nav.py 更新 nav-data.json 驱动
+     默认值(占位符)由 publish.py 从 nav-data.json 实时注入, JS 仅在拿到新数据时覆盖。
+     好处: 无 JS / fetch 失败也不显示 '—', 静态首屏即真实数据。 -->
 <section class="section" id="products">
   <div class="section-head">
     <div class="bar"></div>
@@ -375,7 +421,7 @@ a{text-decoration:none;color:inherit}
       <h2>重点产品 · 每日净值</h2>
       <div class="en">KEY PRODUCTS · DAILY NAV</div>
     </div>
-    <div class="count" id="nav-updated">—</div>
+    <div class="count" id="nav-updated">2026-09-09 15:21</div>
   </div>
 
   <div class="pp-grid">
@@ -385,13 +431,13 @@ a{text-decoration:none;color:inherit}
         <span class="pp-name">中邮资管价值策略1号</span>
       </div>
       <div class="pp-nav-row">
-        <span class="pp-nav" id="pp-nav-ZY0049">—</span>
-        <span class="pp-pct" id="pp-pct-ZY0049">—</span>
+        <span class="pp-nav" id="pp-nav-ZY0049">1.0455</span>
+        <span class="pp-pct" id="pp-pct-ZY0049" class="pp-pct">-0.35%</span>
       </div>
       <div class="pp-kpis" id="pp-kpis-ZY0049">
-        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">—</div></div>
-        <div class="pp-kpi"><div class="k">年化</div><div class="v">—</div></div>
-        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">—</div></div>
+        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">+4.65%</div></div>
+        <div class="pp-kpi"><div class="k">年化</div><div class="v">+20.53%</div></div>
+        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">-8.71%</div></div>
       </div>
     </div>
     <div class="pp-card" id="pp-ZY0053">
@@ -400,13 +446,13 @@ a{text-decoration:none;color:inherit}
         <span class="pp-name">中邮资管红利质量量化选股策略</span>
       </div>
       <div class="pp-nav-row">
-        <span class="pp-nav" id="pp-nav-ZY0053">—</span>
-        <span class="pp-pct" id="pp-pct-ZY0053">—</span>
+        <span class="pp-nav" id="pp-nav-ZY0053">1.0464</span>
+        <span class="pp-pct" id="pp-pct-ZY0053" class="pp-pct">-0.97%</span>
       </div>
       <div class="pp-kpis" id="pp-kpis-ZY0053">
-        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">—</div></div>
-        <div class="pp-kpi"><div class="k">年化</div><div class="v">—</div></div>
-        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">—</div></div>
+        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">+4.42%</div></div>
+        <div class="pp-kpi"><div class="k">年化</div><div class="v">+33.28%</div></div>
+        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">-4.25%</div></div>
       </div>
     </div>
   </div>
@@ -422,7 +468,7 @@ a{text-decoration:none;color:inherit}
 
   <div class="pp-note">
     数据来源：同花顺 iFinD（产品净值） · 扶摇 API（沪深300基准） · 每日 10:00 自动更新 ·
-    历史自 <span id="pp-since">—</span> 起逐日积累
+    历史自 <span id="pp-since">2026-06-10</span> 起逐日积累
   </div>
 </section>
 
@@ -599,7 +645,7 @@ a{text-decoration:none;color:inherit}
 
 
   <!-- 每日收盘点评(由 publish.py 注入) -->
-  <section class="section"><div class="section-head"><div class="bar"></div><div><h2>每日收盘点评</h2><div class="en">DAILY MARKET BRIEF</div></div><a class="briefing-more" href="market-briefings/index.html">查看历史 →</a></div><div class="briefing-body"><p><strong>2026-09-09 A股收评：指数微涨、个股普跌，煤炭航运撑起沪指，超3600股下跌</strong></p>
+  <section class="section"><div class="section-head"><div class="bar"></div><div><h2>每日收盘点评</h2><div class="en">DAILY MARKET BRIEF</div></div><a class="briefing-more" href="market-briefings/index.html">查看历史 →</a></div><div class="briefing-wrap"><div class="briefing-body" id="briefing-body"><p><strong>2026-09-09 A股收评：指数微涨、个股普跌，煤炭航运撑起沪指，超3600股下跌</strong></p>
 <p><strong>1. 大盘指数</strong> 今日三大指数高开后探底回升，走势明显分化：权重周期股撑住沪指，双创指数走弱。全市场呈典型"指数微涨、个股普跌"的结构性行情。沪深两市成交额约1.86万亿元（沪市8737.35亿+深市9818.72亿），沪深京三市约1.87万亿，较上日缩量约1052亿元。沪深两市上涨1762家、下跌3396家，全市场超3600只个股下跌；涨停49家、跌停7家。 <strong>截止收盘，沪指涨0.28%，深成指涨0.15%，创业板指跌0.14%，科创50跌0.69%。</strong></p>
 <p><strong>2. 核心主线 / 热门板块</strong></p>
 <ul>
@@ -651,10 +697,10 @@ a{text-decoration:none;color:inherit}
 <li>地缘风险：霍尔木兹海峡通行受阻，油价与航运波动可能放大</li>
 <li>北证50跌0.41%报1081.81点，小盘风格继续偏弱</li>
 </ul>
-<p>⚠️ 风险提示：内容仅供参考，不构成投资建议</p></div></section>
+<p>⚠️ 风险提示：内容仅供参考，不构成投资建议</p></div><div class="briefing-fade" id="briefing-fade"></div></div><button class="briefing-more-btn" id="briefing-btn" type="button">展开全文 ▾</button><script>(function(){var b=document.getElementById("briefing-body"),f=document.getElementById("briefing-fade"),t=document.getElementById("briefing-btn");if(!b||!t)return;function on(){var open=b.classList.toggle("open");t.textContent=open?"收起全文 ▴":"展开全文 ▾";t.classList.toggle("on",open);if(f)f.style.opacity=open?"0":"1";}t.addEventListener("click",on);})();</script></section>
 
   <!-- 成果卡片 -->
-  <section class="section">
+  <section class="section" id="gallery">
     <div class="section-head">
       <div class="bar"></div>
       <div>
@@ -663,21 +709,22 @@ a{text-decoration:none;color:inherit}
       </div>
       <div class="count">14 ITEMS</div>
     </div>
-    <div class="grid">
-      <a class="card" data-type="kb" style="animation-delay:0.35s" href="kb.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🛡️</div><div class="card-tag">KB</div></div><div class="t">保险资管风险责任人知识库</div><div class="m">5 大投资管理能力 · 40+ 机构风险责任人档案 · 搜索/折叠/从业经历</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="tool" style="animation-delay:0.41s" href="yield-calc.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🧮</div><div class="card-tag">TOOL</div></div><div class="t">税后收益率计算表</div><div class="m">资管产品税后收益率一键计算</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="radar" style="animation-delay:0.47s" href="radar.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📡</div><div class="card-tag">RADAR</div></div><div class="t">客户情报雷达</div><div class="m">巨潮每日公告抓取 + 受托方解析 + iFind 打分 · 页内直达 433 家公司分级站点</div><div class="d">2026-09-10</div><span class="arrow">→</span></a>
-<a class="card" data-type="tool" style="animation-delay:0.53s" href="product-onepagers/红利质量_产品一页通.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📈</div><div class="card-tag">TOOL</div></div><div class="t">产品一页通</div><div class="m">红利质量/价值1号(净值每日更新) + 国新红利价值/深度价值(要素型) 四张一页通</div><div class="d">2026-09-08</div><span class="arrow">→</span></a>
-<a class="card" data-type="report" style="animation-delay:0.59s" href="上市公司购买理财产品情况.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📊</div><div class="card-tag">REPORT</div></div><div class="t">上市公司购买理财产品情况</div><div class="m">上市公司闲置资金理财公告全景统计</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="knowledge" style="animation-delay:0.65s" href="knowledge/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📚</div><div class="card-tag">KNOWLEDGE</div></div><div class="t">知识库</div><div class="m">PPT/PDF 翻页预览 + 原文件下载，按主题归档</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="external" style="animation-delay:0.71s" href="http://192.168.100.148:3000" target="_blank" rel="noopener"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">👥</div><div class="card-tag">EXTERNAL</div></div><div class="t">CRM 客户关系管理系统</div><div class="m">公司局域网 · 账号 wangshaobin · 客户/商机/拜访纪要</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
-<a class="card" data-type="tool" style="animation-delay:0.77s" href="tools.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🧰</div><div class="card-tag">TOOL</div></div><div class="t">工具箱</div><div class="m">网页工具(山东投资3件套) + 本地工具(8个 launch:// 一键唤起) + 私人专区(密码锁)</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="cockpit" style="animation-delay:0.83s" href="cockpit.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🖥️</div><div class="card-tag">COCKPIT</div></div><div class="t">资管投研驾驶舱</div><div class="m">每日盘后自动更新 · 市场总览/温度/产品净值/红利·深度价值关注池异动/龙虎榜/同业新发</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="cockpit" style="animation-delay:0.89s" href="factors.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">⚗️</div><div class="card-tag">COCKPIT</div></div><div class="t">因子工厂快照</div><div class="m">关注池 86 只 · 股息率TTM/动量/波动率/成交额 五因子本地计算</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="report" style="animation-delay:0.95s" href="保险公司资产负债管理办法-概念梳理.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📖</div><div class="card-tag">REPORT</div></div><div class="t">资产负债管理办法概念梳理</div><div class="m">新规学习页 · 12张概念卡 + 人身险4项/财险3项监管指标扫盲 + IFRS9/17 + 产品化映射</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="briefing" style="animation-delay:1.01s" href="market-briefings/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📰</div><div class="card-tag">BRIEFING</div></div><div class="t">每日收盘点评</div><div class="m">每个交易日收盘后更新 · 历史逐日归档</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
-<a class="card" data-type="report" style="animation-delay:1.07s" href="reports/铁蛋近期工作总结.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">REPORT</div></div><div class="t">铁蛋近期工作总结</div><div class="m">专题调研 · 工作汇报</div><div class="d">2026-09-08</div><span class="arrow">→</span></a>
-<a class="card" data-type="report" style="animation-delay:1.13s" href="reports/光大理财-客户拜访调研-五看六定.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">REPORT</div></div><div class="t">光大理财-客户拜访调研-五看六定</div><div class="m">专题调研 · 工作汇报</div><div class="d">2026-08-24</div><span class="arrow">→</span></a>
+    <div class="filter-bar" id="filter-bar" role="tablist" aria-label="成果筛选"></div>
+    <div class="grid" id="gallery-grid">
+      <a class="card" data-type="kb" style="animation-delay:0.35s" href="kb.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🛡️</div><div class="card-tag">LAN · 内网</div></div><div class="t">保险资管风险责任人知识库</div><div class="m">5 大投资管理能力 · 40+ 机构风险责任人档案 · 搜索/折叠/从业经历</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="tool" style="animation-delay:0.41s" href="yield-calc.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🧮</div><div class="card-tag">LAN · 内网</div></div><div class="t">税后收益率计算表</div><div class="m">资管产品税后收益率一键计算</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="radar" style="animation-delay:0.47s" href="radar.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📡</div><div class="card-tag">LAN · 内网</div></div><div class="t">客户情报雷达</div><div class="m">巨潮每日公告抓取 + 受托方解析 + iFind 打分 · 页内直达 433 家公司分级站点</div><div class="d">2026-09-10</div><span class="arrow">→</span></a>
+<a class="card" data-type="tool" style="animation-delay:0.53s" href="product-onepagers/红利质量_产品一页通.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📈</div><div class="card-tag">LAN · 内网</div></div><div class="t">产品一页通</div><div class="m">红利质量/价值1号(净值每日更新) + 国新红利价值/深度价值(要素型) 四张一页通</div><div class="d">2026-09-08</div><span class="arrow">→</span></a>
+<a class="card" data-type="report" style="animation-delay:0.59s" href="上市公司购买理财产品情况.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📊</div><div class="card-tag">LAN · 内网</div></div><div class="t">上市公司购买理财产品情况</div><div class="m">上市公司闲置资金理财公告全景统计</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="knowledge" style="animation-delay:0.65s" href="knowledge/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📚</div><div class="card-tag">LAN · 内网</div></div><div class="t">知识库</div><div class="m">PPT/PDF 翻页预览 + 原文件下载，按主题归档</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="lan" style="animation-delay:0.71s" href="#"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">👥</div><div class="card-tag">LAN · 内网</div></div><div class="t">CRM 客户关系管理系统</div><div class="m">客户/商机/拜访纪要 · 账号 wangshaobin · 🔒 仅公司内网可访问</div><div class="d">2026-09-07</div><span class="arrow">→</span></a>
+<a class="card" data-type="tool" style="animation-delay:0.77s" href="tools.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🧰</div><div class="card-tag">LAN · 内网</div></div><div class="t">工具箱</div><div class="m">网页工具(山东投资3件套) + 本地工具(8个 launch:// 一键唤起) + 私人专区(密码锁)</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="cockpit" style="animation-delay:0.83s" href="cockpit.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🖥️</div><div class="card-tag">LAN · 内网</div></div><div class="t">资管投研驾驶舱</div><div class="m">每日盘后自动更新 · 市场总览/温度/产品净值/红利·深度价值关注池异动/龙虎榜/同业新发</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="cockpit" style="animation-delay:0.89s" href="factors.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">⚗️</div><div class="card-tag">LAN · 内网</div></div><div class="t">因子工厂快照</div><div class="m">关注池 86 只 · 股息率TTM/动量/波动率/成交额 五因子本地计算</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="report" style="animation-delay:0.95s" href="保险公司资产负债管理办法-概念梳理.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📖</div><div class="card-tag">LAN · 内网</div></div><div class="t">资产负债管理办法概念梳理</div><div class="m">新规学习页 · 12张概念卡 + 人身险4项/财险3项监管指标扫盲 + IFRS9/17 + 产品化映射</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="briefing" style="animation-delay:1.01s" href="market-briefings/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📰</div><div class="card-tag">LAN · 内网</div></div><div class="t">每日收盘点评</div><div class="m">每个交易日收盘后更新 · 历史逐日归档</div><div class="d">2026-09-09</div><span class="arrow">→</span></a>
+<a class="card" data-type="report" style="animation-delay:1.07s" href="reports/铁蛋近期工作总结.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">LAN · 内网</div></div><div class="t">铁蛋近期工作总结</div><div class="m">专题调研 · 工作汇报</div><div class="d">2026-09-08</div><span class="arrow">→</span></a>
+<a class="card" data-type="report" style="animation-delay:1.13s" href="reports/光大理财-客户拜访调研-五看六定.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">LAN · 内网</div></div><div class="t">光大理财-客户拜访调研-五看六定</div><div class="m">专题调研 · 工作汇报</div><div class="d">2026-08-24</div><span class="arrow">→</span></a>
     </div>
   </section>
 
@@ -733,6 +780,42 @@ a{text-decoration:none;color:inherit}
   resize();addEventListener('resize',resize);
   addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
   tick();
+})();
+
+/* ---- 成果展厅类型筛选(按 显示名 分组, 同语义类型合并: kb/knowledge→知识库) ---- */
+(function(){
+  var TYPE_NAMES={radar:'雷达',report:'报告',tool:'工具',cockpit:'驾驶舱',kb:'知识库',
+    knowledge:'知识库',briefing:'点评',lan:'内网',external:'外链'};
+  var bar=document.getElementById('filter-bar'),grid=document.getElementById('gallery-grid');
+  if(!bar||!grid)return;
+  var cards=grid.querySelectorAll('.card');
+  if(!cards.length)return;
+  // 收集 (实际类型 → 显示名) 有序去重映射; 同语义类型(kb/knowledge)合并成同一显示名
+  var nameByType={},names=[];
+  cards.forEach(function(c){
+    var t=c.getAttribute('data-type');
+    if(!t||nameByType[t])return;
+    var n=TYPE_NAMES[t]||t.toUpperCase();
+    nameByType[t]=n;
+    if(names.indexOf(n)<0)names.push(n);
+  });
+  var btns=[];
+  function mk(label){
+    var b=document.createElement('button');
+    b.type='button';b.textContent=label;
+    b.addEventListener('click',function(){
+      btns.forEach(function(x){x.classList.toggle('active',x===b)});
+      var cur=(label==='全部')?'':label; // 空=全部
+      cards.forEach(function(c){
+        var t=c.getAttribute('data-type');
+        var show=!cur||(nameByType[t]||t.toUpperCase())===cur;
+        c.classList.toggle('hidden',!show);
+      });
+    });
+    bar.appendChild(b);btns.push(b);return b;
+  }
+  mk('全部').classList.add('active');
+  names.forEach(function(n){mk(n)});
 })();
 </script>
 </body>

@@ -40,8 +40,8 @@ ROOT_ARTIFACTS = [
      "上市公司闲置资金理财公告全景统计"),
     ("知识库", "knowledge/index.html", "2026-09-07", "📚", "knowledge",
      "PPT/PDF 翻页预览 + 原文件下载，按主题归档"),
-    ("CRM 客户关系管理系统", "http://192.168.100.148:3000", "2026-09-07", "👥", "external",
-     "公司局域网 · 账号 wangshaobin · 客户/商机/拜访纪要"),
+    ("CRM 客户关系管理系统", "#lan-crm", "2026-09-07", "👥", "lan",
+     "客户/商机/拜访纪要 · 账号 wangshaobin · 🔒 仅公司内网可访问"),
     ("工具箱", "tools.html", "2026-09-09", "🧰", "tool",
      "网页工具(山东投资3件套) + 本地工具(8个 launch:// 一键唤起) + 私人专区(密码锁)"),
     ("资管投研驾驶舱", "cockpit.html", "2026-09-09", "🖥️", "cockpit",
@@ -225,7 +225,12 @@ def render_briefing() -> str:
             f'<div><h2>每日收盘点评</h2><div class="en">DAILY MARKET BRIEF</div></div>'
             f'<a class="briefing-more" href="market-briefings/index.html">查看历史 →</a>'
             f'</div>'
-            f'<div class="briefing-body">{body}</div>'
+            f'<div class="briefing-wrap">'
+            f'<div class="briefing-body" id="briefing-body">{body}</div>'
+            f'<div class="briefing-fade" id="briefing-fade"></div>'
+            f'</div>'
+            f'<button class="briefing-more-btn" id="briefing-btn" type="button">展开全文 ▾</button>'
+            f'<script>(function(){{var b=document.getElementById("briefing-body"),f=document.getElementById("briefing-fade"),t=document.getElementById("briefing-btn");if(!b||!t)return;function on(){{var open=b.classList.toggle("open");t.textContent=open?"收起全文 ▴":"展开全文 ▾";t.classList.toggle("on",open);if(f)f.style.opacity=open?"0":"1";}}t.addEventListener("click",on);}})();</script>'
             f'</section>')
 
 
@@ -262,6 +267,36 @@ def build_briefing_archive() -> None:
     print(f"[build] market-briefings/index.html ({len(entries)} 篇归档)")
 
 
+def fill_nav_tokens(panel: str) -> str:
+    """nav-panel.html 里的 __NAV_*__ token → nav-data.json 实时值(构建期注入)。
+    无数据/文件缺失 → 替换为 '—'(JS 拿到数据会再覆盖)。
+    2026-09-10: 静态首屏即真实数据, fetch 失败/无 JS 也不见空白。"""
+    try:
+        nav = json.loads((SITE / "product-panel" / "nav-data.json").read_text(encoding="utf-8"))
+    except Exception:
+        nav = {}
+    data = nav.get("products", {})
+    prods = list(data.keys())
+    tokens = {"__NAV_UPDATED__": nav.get("updated", "")}
+    if prods:
+        p = data[prods[0]]
+        tokens["__NAV_SINCE__"] = p.get("since", "")
+    for code, p in data.items():
+        tok = code  # token 用完整产品代码, 与模板占位符 __NAV_ZY0049__ 等对应
+        def f(x):
+            return "" if x is None else ("%+.2f%%" % x if isinstance(x, (int, float)) else str(x))
+        tokens[f"__NAV_{tok}__"] = ("%.4f" % p["nav"]) if isinstance(p.get("nav"), (int, float)) else "—"
+        tokens[f"__PCT_{tok}__"] = f(p.get("daily_pct"))
+        tokens[f"__CUM_{tok}__"] = f(p.get("cum_return"))
+        tokens[f"__ANN_{tok}__"] = f(p.get("annualized"))
+        tokens[f"__DD_{tok}__"] = f(p.get("max_drawdown"))
+    for k, v in tokens.items():
+        if not v:
+            v = "—"
+        panel = panel.replace(k, v)
+    return panel
+
+
 def build_index(reports: list) -> None:
     """从 index-template.html 科技感模板渲染首页(注入卡片 + 统计)。"""
     tpl = SITE / "index-template.html"
@@ -276,12 +311,15 @@ def build_index(reports: list) -> None:
 
     def card(name, href, date, icon, kind, desc, delay, external=False):
         ext = ' target="_blank" rel="noopener"' if external else ''
+        # lan(仅内网)卡片不携带可点击地址, href=# 不跳转, 顶部标签 LAN
+        if kind == "lan":
+            href = "#"
         return (f'<a class="card" data-type="{kind}" style="animation-delay:{delay:.2f}s" '
                 f'href="{href}"{ext}>'
                 f'<span class="corner c1"></span><span class="corner c2"></span>'
                 f'<span class="corner c3"></span><span class="corner c4"></span>'
                 f'<div class="card-top"><div class="card-ico">{icon}</div>'
-                f'<div class="card-tag">{kind.upper()}</div></div>'
+                f'<div class="card-tag">LAN · 内网</div></div>'
                 f'<div class="t">{name}</div>'
                 f'<div class="m">{desc}</div>'
                 f'<div class="d">{date}</div>'
@@ -293,7 +331,8 @@ def build_index(reports: list) -> None:
 
     cards, delay = [], 0.35
     for name, path, date, icon, kind, desc in ROOT_ARTIFACTS:
-        if exists(path):
+        # lan 卡片(仅内网)恒展示
+        if kind == "lan" or exists(path):
             if kind == "knowledge" and kb_date:
                 date = kb_date  # 知识库卡片日期取最新条目日期
             if kind == "briefing":
@@ -313,7 +352,7 @@ def build_index(reports: list) -> None:
     report_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "report" and exists(a[1])) + len(reports)
     tool_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "tool" and exists(a[1]))
     last_date = max(
-        [a[2] for a in ROOT_ARTIFACTS if exists(a[1])]
+        [a[2] for a in ROOT_ARTIFACTS if a[4] != "lan" and exists(a[1])]
         + [datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d") for f in reports]
     )
 
@@ -321,7 +360,7 @@ def build_index(reports: list) -> None:
     products_html = ""
     panel = SITE / "product-panel" / "nav-panel.html"
     if panel.exists():
-        products_html = panel.read_text(encoding="utf-8")
+        products_html = fill_nav_tokens(panel.read_text(encoding="utf-8"))
 
     html = (html.replace("<!--CARDS-->", "\n".join(cards))
                 .replace("<!--PRODUCTS-->", products_html)

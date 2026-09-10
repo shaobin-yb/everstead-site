@@ -128,9 +128,9 @@ def read_ifind_tables():
                     if row[0].startswith("20") and row[1]:
                         try:
                             rows.append({
-                                "date": row[0],
-                                "nav": float(row[1]),
-                                "pct": float(row[4].rstrip("%")),
+                                "date": norm_num(row[0]),
+                                "nav": float(norm_num(row[1])),
+                                "pct": float(norm_num(row[4]).rstrip("%")),
                             })
                         except ValueError:
                             continue
@@ -174,6 +174,15 @@ def load_history():
     return {"ZY0049": [], "ZY0053": [], "benchmark": []}
 
 
+def norm_num(x: str | float | int | None) -> str:
+    """数值字符串规整: 全角负号/百分号/空格 → 半角, 便于 float() 解析。
+    2026-09-10: iFinD Excel 偶发全角 '−'/'％' 混入, 解析前统一清洗(双保险)。"""
+    if x is None:
+        return ""
+    s = str(x)
+    return s.replace("−", "-").replace("％", "%").replace("　", " ").strip()
+
+
 def import_excel(excel_dir, hist):
     """--import <目录> : 从 iFinD「业绩表现」导出的 xls 导入历史净值。
     文件名格式: 业绩表现(ZY0049).xls / 业绩表现(ZY0053).xls (实为 xlsx)
@@ -193,8 +202,9 @@ def import_excel(excel_dir, hist):
             pct = sh.cell_value(r, 4)
             if not d.startswith("20") or not isinstance(nav, float):
                 continue
+            pct_s = norm_num(pct)
             rows.append({"date": d[:10], "nav": round(float(nav), 4),
-                         "pct": None if pct == "" else round(float(pct), 4)})
+                         "pct": None if pct_s == "" else round(float(norm_num(pct_s).rstrip("%")), 4)})
         by_date = {x["date"]: x for x in hist[code]}
         for x in rows:
             by_date[x["date"]] = x

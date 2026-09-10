@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EVERSTEAD · 成果展示平台</title>
+<meta name="description" content="中国邮政系资管投研数字化成果库 — 客户情报雷达、每日收盘点评、产品净值追踪、行业调研与数据工具，真实数据驱动，每日更新。">
+<meta name="keywords" content="保险资管,中邮资管,投研成果,客户情报雷达,A股收评,产品净值,资管研究">
+<meta name="author" content="everstead">
+<link rel="canonical" href="https://www.everstead.cn/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EVERSTEAD 成果展示平台">
+<meta property="og:title" content="EVERSTEAD · 成果展示平台">
+<meta property="og:description" content="中国邮政系资管投研数字化成果库 — 客户情报雷达、每日收盘点评、产品净值追踪、行业调研与数据工具。">
+<meta property="og:url" content="https://www.everstead.cn/">
+<meta name="twitter:card" content="summary">
 <style>
 /* ============================================================
    EVERSTEAD 科技感展示平台 · v1.0
@@ -184,9 +194,25 @@ a{text-decoration:none;color:inherit}
 .section-head .count{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted);
   border:1px solid var(--line);padding:4px 12px;border-radius:999px}
 
+/* 成果展厅类型筛选 */
+.filter-bar{
+  display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;
+  animation:fadeUp .6s .32s ease-out both;
+}
+.filter-bar button{
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);
+  background:transparent;border:1px solid var(--line);border-radius:999px;
+  padding:5px 14px;cursor:pointer;transition:all .18s;
+}
+.filter-bar button:hover{color:var(--cyan);border-color:var(--line-strong)}
+.filter-bar button.active{
+  color:#03101f;background:linear-gradient(90deg,var(--cyan),var(--violet));
+  border-color:transparent;font-weight:600;
+}
 .grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;
 }
+.grid .card.hidden{display:none}
 .card{
   position:relative;display:block;
   border:1px solid var(--line);border-radius:14px;
@@ -260,18 +286,36 @@ a{text-decoration:none;color:inherit}
 .card[data-type="knowledge"] .card-tag{color:#fbbf24}
 .card[data-type="external"] .card-ico{background:linear-gradient(160deg, rgba(96,165,250,.2), rgba(34,211,238,.12))}
 .card[data-type="external"] .card-tag{color:#93c5fd}
+.card[data-type="lan"] .card-ico{background:linear-gradient(160deg, rgba(96,165,250,.2), rgba(139,92,246,.12))}
+.card[data-type="lan"] .card-tag{color:#93c5fd}
 .card[data-type="briefing"] .card-ico{background:linear-gradient(160deg, rgba(251,191,36,.2), rgba(34,211,238,.12))}
 .card[data-type="briefing"] .card-tag{color:#fcd34d}
 
 /* ---- 每日收盘点评 ---- */
+.briefing-wrap{position:relative;animation:fadeUp .7s .36s ease-out both}
 .briefing-body{
   border:1px solid var(--line);border-radius:14px;
   background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   padding:24px 26px 20px;
-  max-height:560px;overflow:auto;
+  max-height:250px;overflow:hidden;   /* 默认收起, 展开后放开限高 */
   line-height:1.8;font-size:14px;color:var(--text);
-  animation:fadeUp .7s .36s ease-out both;
+  transition:max-height .45s ease;
 }
+.briefing-body.open{max-height:640px;overflow-y:auto}
+.briefing-fade{
+  position:absolute;left:0;right:0;bottom:0;height:120px;pointer-events:none;
+  background:linear-gradient(180deg,transparent,var(--panel) 88%);
+  transition:opacity .35s;
+}
+.briefing-more-btn{
+  display:block;margin:14px auto 0;padding:8px 26px;
+  font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--cyan);
+  background:transparent;border:1px solid var(--line);border-radius:999px;cursor:pointer;
+  transition:border-color .2s,color .2s,background .2s;
+}
+.briefing-more-btn:hover{border-color:var(--cyan);background:rgba(34,211,238,.08)}
+.briefing-more-btn.on{color:var(--muted)}
+
 .briefing-body h1{font-size:1.25em;line-height:1.5;margin:0 0 14px;color:#22d3ee;border-bottom:1px solid var(--line);padding-bottom:10px}
 .briefing-body h2{font-size:1.05em;color:#7dd3fc;margin:18px 0 8px}
 .briefing-body h3{font-size:1em;color:#a5b4fc;margin:14px 0 6px}
@@ -360,7 +404,7 @@ a{text-decoration:none;color:inherit}
   <!--BRIEFING-->
 
   <!-- 成果卡片 -->
-  <section class="section">
+  <section class="section" id="gallery">
     <div class="section-head">
       <div class="bar"></div>
       <div>
@@ -369,7 +413,8 @@ a{text-decoration:none;color:inherit}
       </div>
       <div class="count">{{TOTAL}} ITEMS</div>
     </div>
-    <div class="grid">
+    <div class="filter-bar" id="filter-bar" role="tablist" aria-label="成果筛选"></div>
+    <div class="grid" id="gallery-grid">
       <!--CARDS-->
     </div>
   </section>
@@ -426,6 +471,42 @@ a{text-decoration:none;color:inherit}
   resize();addEventListener('resize',resize);
   addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
   tick();
+})();
+
+/* ---- 成果展厅类型筛选(按 显示名 分组, 同语义类型合并: kb/knowledge→知识库) ---- */
+(function(){
+  var TYPE_NAMES={radar:'雷达',report:'报告',tool:'工具',cockpit:'驾驶舱',kb:'知识库',
+    knowledge:'知识库',briefing:'点评',lan:'内网',external:'外链'};
+  var bar=document.getElementById('filter-bar'),grid=document.getElementById('gallery-grid');
+  if(!bar||!grid)return;
+  var cards=grid.querySelectorAll('.card');
+  if(!cards.length)return;
+  // 收集 (实际类型 → 显示名) 有序去重映射; 同语义类型(kb/knowledge)合并成同一显示名
+  var nameByType={},names=[];
+  cards.forEach(function(c){
+    var t=c.getAttribute('data-type');
+    if(!t||nameByType[t])return;
+    var n=TYPE_NAMES[t]||t.toUpperCase();
+    nameByType[t]=n;
+    if(names.indexOf(n)<0)names.push(n);
+  });
+  var btns=[];
+  function mk(label){
+    var b=document.createElement('button');
+    b.type='button';b.textContent=label;
+    b.addEventListener('click',function(){
+      btns.forEach(function(x){x.classList.toggle('active',x===b)});
+      var cur=(label==='全部')?'':label; // 空=全部
+      cards.forEach(function(c){
+        var t=c.getAttribute('data-type');
+        var show=!cur||(nameByType[t]||t.toUpperCase())===cur;
+        c.classList.toggle('hidden',!show);
+      });
+    });
+    bar.appendChild(b);btns.push(b);return b;
+  }
+  mk('全部').classList.add('active');
+  names.forEach(function(n){mk(n)});
 })();
 </script>
 </body>

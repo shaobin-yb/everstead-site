@@ -1,4 +1,6 @@
-<!-- 重点产品绩效面板 · 由 update_nav.py 更新 nav-data.json 驱动 -->
+<!-- 重点产品绩效面板 · 由 update_nav.py 更新 nav-data.json 驱动
+     默认值(占位符)由 publish.py 从 nav-data.json 实时注入, JS 仅在拿到新数据时覆盖。
+     好处: 无 JS / fetch 失败也不显示 '—', 静态首屏即真实数据。 -->
 <section class="section" id="products">
   <div class="section-head">
     <div class="bar"></div>
@@ -6,7 +8,7 @@
       <h2>重点产品 · 每日净值</h2>
       <div class="en">KEY PRODUCTS · DAILY NAV</div>
     </div>
-    <div class="count" id="nav-updated">—</div>
+    <div class="count" id="nav-updated">__NAV_UPDATED__</div>
   </div>
 
   <div class="pp-grid">
@@ -16,13 +18,13 @@
         <span class="pp-name">中邮资管价值策略1号</span>
       </div>
       <div class="pp-nav-row">
-        <span class="pp-nav" id="pp-nav-ZY0049">—</span>
-        <span class="pp-pct" id="pp-pct-ZY0049">—</span>
+        <span class="pp-nav" id="pp-nav-ZY0049">__NAV_ZY0049__</span>
+        <span class="pp-pct" id="pp-pct-ZY0049" class="pp-pct">__PCT_ZY0049__</span>
       </div>
       <div class="pp-kpis" id="pp-kpis-ZY0049">
-        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">—</div></div>
-        <div class="pp-kpi"><div class="k">年化</div><div class="v">—</div></div>
-        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">—</div></div>
+        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">__CUM_ZY0049__</div></div>
+        <div class="pp-kpi"><div class="k">年化</div><div class="v">__ANN_ZY0049__</div></div>
+        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">__DD_ZY0049__</div></div>
       </div>
     </div>
     <div class="pp-card" id="pp-ZY0053">
@@ -31,13 +33,13 @@
         <span class="pp-name">中邮资管红利质量量化选股策略</span>
       </div>
       <div class="pp-nav-row">
-        <span class="pp-nav" id="pp-nav-ZY0053">—</span>
-        <span class="pp-pct" id="pp-pct-ZY0053">—</span>
+        <span class="pp-nav" id="pp-nav-ZY0053">__NAV_ZY0053__</span>
+        <span class="pp-pct" id="pp-pct-ZY0053" class="pp-pct">__PCT_ZY0053__</span>
       </div>
       <div class="pp-kpis" id="pp-kpis-ZY0053">
-        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">—</div></div>
-        <div class="pp-kpi"><div class="k">年化</div><div class="v">—</div></div>
-        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">—</div></div>
+        <div class="pp-kpi"><div class="k">累计收益</div><div class="v">__CUM_ZY0053__</div></div>
+        <div class="pp-kpi"><div class="k">年化</div><div class="v">__ANN_ZY0053__</div></div>
+        <div class="pp-kpi"><div class="k">最大回撤</div><div class="v">__DD_ZY0053__</div></div>
       </div>
     </div>
   </div>
@@ -53,7 +55,7 @@
 
   <div class="pp-note">
     数据来源：同花顺 iFinD（产品净值） · 扶摇 API（沪深300基准） · 每日 10:00 自动更新 ·
-    历史自 <span id="pp-since">—</span> 起逐日积累
+    历史自 <span id="pp-since">__NAV_SINCE__</span> 起逐日积累
   </div>
 </section>
 

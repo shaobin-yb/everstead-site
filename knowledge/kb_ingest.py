@@ -483,6 +483,135 @@ q.addEventListener('input', function(){
 });
 </script>"""
 
+# 私密条目详情页的密码门(与 private.html 同锁: 同 hash + 同 sessionStorage key)
+# 2026-09-10 老板拍板: 个人资料彻底进私密, 知道 URL 也要锁
+PRIVATE_GATE_HTML = """<style>
+.pvgate{
+  max-width:420px;margin:30px auto 0;padding:32px 28px;text-align:center;
+  border:1px solid rgba(56,189,248,.16);border-radius:14px;
+  background:rgba(10,20,38,.55);backdrop-filter:blur(10px);
+}
+.pvgate .lock{font-size:34px;margin-bottom:10px}
+.pvgate p{font-size:12px;color:#7d92ad;margin-bottom:18px;line-height:1.8}
+.pvgate input{
+  width:100%;padding:11px 14px;font-family:'JetBrains Mono',Consolas,monospace;
+  font-size:16px;letter-spacing:.35em;text-align:center;color:#e2ecf7;
+  background:rgba(3,6,12,.6);border:1px solid rgba(56,189,248,.16);
+  border-radius:10px;outline:none;
+}
+.pvgate input:focus{border-color:rgba(56,189,248,.45);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+.pvgate button{
+  margin-top:14px;width:100%;padding:11px;font-size:14px;font-weight:600;letter-spacing:.2em;
+  color:#03101f;cursor:pointer;background:linear-gradient(90deg,#22d3ee,#8b5cf6);
+  border:none;border-radius:10px;
+}
+.pvgate .err-msg{display:none;margin-top:10px;font-size:12px;color:#f43f5e}
+.pvgate.err .err-msg{display:block}
+</style>
+<div class="pvgate" id="pvgate">
+  <div class="lock">🔐</div>
+  <p>这是私人资料<br>输入密码后解锁查看</p>
+  <input type="password" id="pw" placeholder="••••••" maxlength="16" autocomplete="off" inputmode="numeric">
+  <button id="btn" type="button">解 锁</button>
+  <div class="err-msg" id="err">密码不对, 再试一次</div>
+</div>
+<script>
+/* 与 private.html 同一把锁: 同 hash + 同 sessionStorage key('private_ok') */
+var PASSWORD_HASH = "a68afcaa33dc88de7217371b041b422543aa16e2958365dde8112487475e37cd";
+function sha256(ascii) {
+  function rightRotate(value, amount) { return (value>>>amount) | (value<<(32-amount)); }
+  var mathPow = Math.pow;
+  var maxWord = mathPow(2, 32);
+  var result = '';
+  var words = [];
+  var asciiBitLength = ascii.length*8;
+  var hash = sha256.h = sha256.h || [];
+  var k = sha256.k = sha256.k || [];
+  var primeCounter = k.length;
+  var isComposite = {};
+  for (var candidate = 2; primeCounter < 64; candidate++) {
+    if (!isComposite[candidate]) {
+      for (var i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+      hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+      k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
+    }
+  }
+  ascii += '\x80';
+  while (ascii.length%64 - 56) ascii += '\x00';
+  for (var i = 0; i < ascii.length; i++) {
+    var j = ascii.charCodeAt(i);
+    if (j>>8) return '';
+    words[i>>2] |= j << ((3 - i)%4)*8;
+  }
+  words[words.length] = ((asciiBitLength/maxWord)|0);
+  words[words.length] = (asciiBitLength);
+  for (var j = 0; j < words.length;) {
+    var w = words.slice(j, j += 16);
+    var oldHash = hash;
+    hash = hash.slice(0, 8);
+    for (var i = 0; i < 64; i++) {
+      var w15 = w[i - 15], w2 = w[i - 2];
+      var a = hash[0], e = hash[4];
+      var temp1 = hash[7]
+        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+        + ((e&hash[5])^((~e)&hash[6]))
+        + k[i]
+        + (w[i] = (i < 16) ? w[i] : (
+            w[i - 16]
+            + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3))
+            + w[i - 7]
+            + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10))
+          )|0
+        );
+      var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+        + ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+      hash = [(temp1 + temp2)|0].concat(hash);
+      hash[4] = (hash[4] + temp1)|0;
+    }
+    for (var i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i])|0;
+  }
+  for (var i = 0; i < 8; i++) {
+    for (var j = 3; j + 1; j--) {
+      var b = (hash[i]>>(j*8))&255;
+      result += ((b < 16) ? 0 : '') + b.toString(16);
+    }
+  }
+  return result;
+}
+(function(){
+  var gate = document.getElementById('pvgate');
+  if (!gate) return;
+  /* 本会话已解锁(在私人专区输过密码) → 直接放行 */
+  if (sessionStorage.getItem('private_ok') === '1') { gate.style.display = 'none'; return; }
+  /* 未解锁: 隐藏正文, 只留密码门 */
+  var all = document.body.children;
+  for (var i = 0; i < all.length; i++) {
+    if (all[i] !== gate && all[i].tagName !== 'SCRIPT' && all[i].tagName !== 'STYLE') {
+      all[i].style.display = 'none';
+    }
+  }
+  function unlock() {
+    var input = document.getElementById('pw');
+    if (sha256(input.value) === PASSWORD_HASH) {
+      sessionStorage.setItem('private_ok', '1');
+      for (var i = 0; i < all.length; i++) {
+        if (all[i].tagName !== 'SCRIPT' && all[i].tagName !== 'STYLE') all[i].style.display = '';
+      }
+      gate.style.display = 'none';
+    } else {
+      gate.classList.remove('err');
+      void gate.offsetWidth;
+      gate.classList.add('err');
+      input.value = '';
+      input.focus();
+    }
+  }
+  document.getElementById('pw').addEventListener('keydown', function(e) { if (e.key === 'Enter') unlock(); });
+  document.getElementById('btn').addEventListener('click', unlock);
+})();
+</script>
+"""
+
 
 def _chips(tags: list[str]) -> str:
     return "".join(f'<span class="kb-chip">{esc(t)}</span>' for t in tags)
@@ -641,6 +770,11 @@ def build_item_page(it: dict, m: dict) -> None:
                 if fname else
                 '<div class="kb-note">无在线预览</div>')
 
+    # 私密条目: 详情页自带密码门(与私人专区同锁同 hash, 2026-09-10 老板拍板)
+    private_gate = ""
+    if it.get("private"):
+        private_gate = PRIVATE_GATE_HTML
+
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -655,6 +789,7 @@ def build_item_page(it: dict, m: dict) -> None:
 <div class="kb-infoline">{"".join(meta_parts)}</div>
 {fileline}
 {dl}
+{private_gate}
 {body}
 </body>
 </html>"""

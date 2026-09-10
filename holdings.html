@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品持仓池 · 中邮价值1号 / 红利质量</title>
+<style>
+:root{
+  --bg:#03060c;--panel:rgba(10,20,38,.55);--line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);--cyan:#22d3ee;--blue:#3b82f6;
+  --violet:#8b5cf6;--green:#34d399;--amber:#fbbf24;--text:#e2ecf7;--muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Microsoft YaHei','PingFang SC',sans-serif;background:var(--bg);
+  color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(1100px 600px at 75% -10%,rgba(59,130,246,.16),transparent 60%),
+  radial-gradient(900px 500px at -10% 110%,rgba(139,92,246,.12),transparent 60%),
+  linear-gradient(rgba(56,189,248,.045) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(56,189,248,.045) 1px,transparent 1px),var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 55%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 55%,transparent 100%)}
+.wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 56px}
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0}
+.topbar .logo{width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;
+  justify-content:center;font-weight:800;font-size:17px;color:#03101f;box-shadow:var(--glow);font-family:var(--mono)}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.28em;font-size:15px}
+.topbar .brand em{font-style:normal;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .back{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:rgba(10,20,38,.4);transition:all .25s}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:32px}
+.kpi{border:1px solid var(--line);border-radius:14px;background:var(--panel);backdrop-filter:blur(10px);padding:18px 20px}
+.kpi .k{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--muted);margin-bottom:8px}
+.kpi .v{font-family:var(--mono);font-size:30px;font-weight:800;line-height:1.2}
+.kpi .s{font-size:12px;color:var(--muted);margin-top:8px}
+.section{margin-top:40px}
+.section-head{display:flex;align-items:baseline;gap:12px;padding-bottom:12px;margin-bottom:18px;
+  border-bottom:1px solid var(--line);flex-wrap:wrap}
+.section-head .no{font-family:var(--mono);font-weight:800;font-size:13px}
+.section-head h2{font-size:19px;font-weight:700;letter-spacing:.06em}
+.section-head .cnt{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.1em}
+.table-card{border:1px solid var(--line);border-radius:14px;background:var(--panel);backdrop-filter:blur(10px);padding:20px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:middle}
+th{background:rgba(34,211,238,.1);font-weight:600;font-size:12px;letter-spacing:.08em;color:#a5e8f5}
+tr:hover td{background:rgba(56,189,248,.06)}
+td.rank{font-family:var(--mono);color:var(--muted);text-align:center}
+td.num{font-family:var(--mono);font-weight:700;color:var(--cyan)}
+.code{font-family:var(--mono);color:#7dd3fc;font-size:13px}
+.bar-cell{padding:0 12px!important}
+.bar{display:block;height:10px;border-radius:5px;min-width:4px;opacity:.85}
+.badge{display:inline-block;font-size:10px;font-family:var(--mono);padding:2px 7px;border-radius:4px;
+  margin-left:6px;letter-spacing:.06em;vertical-align:middle}
+.b-div{color:#fbbf24;border:1px solid rgba(251,191,36,.4)}
+.b-deep{color:#a78bfa;border:1px solid rgba(167,139,250,.4)}
+.legend{margin-top:16px;font-size:12px;color:var(--muted);line-height:2}
+.legend .badge{margin-left:0;margin-right:6px}
+.foot{margin-top:56px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);
+  font-size:11px;letter-spacing:.12em;color:var(--muted);text-align:center}
+.overlap-tip{margin-top:14px;padding:12px 16px;border:1px dashed var(--line);border-radius:10px;
+  font-size:12px;color:var(--muted);line-height:1.9}
+.overlap-tip b{color:var(--cyan)}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">📦</div>
+    <div class="brand">HOLD<em>INGS</em> · 产品持仓池</div>
+    <a class="back" href="./">← 返回首页</a>
+  </div>
+
+  <div class="kpis">
+
+        <div class="kpi">
+          <div class="k">TOP10 合计权重 · 中邮价值1号</div>
+          <div class="v" style="background:linear-gradient(90deg,#22d3ee,#3b82f6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">50.57%</div>
+          <div class="s">持股市值合计 5,428.0 万 · 快照 2026-09-07</div>
+        </div>
+        <div class="kpi">
+          <div class="k">TOP10 合计权重 · 中邮红利质量</div>
+          <div class="v" style="background:linear-gradient(90deg,#34d399,#22d3ee);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">27.17%</div>
+          <div class="s">持股市值合计 3,190.8 万 · 快照 2026-09-07</div>
+        </div>
+  </div>
+
+
+  <div class="section" id="sec-holding_value1">
+    <div class="section-head">
+      <span class="no" style="background:linear-gradient(90deg,#22d3ee,#8b5cf6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">TOP 10</span>
+      <h2>📕 中邮价值1号 — 重仓股</h2>
+      <span class="cnt">截至 2026-09-07 · 权重合计 50.57%</span>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr>
+          <th style="width:56px">排名</th><th>成分股</th>
+          <th style="width:90px">权重</th><th style="width:140px">权重分布</th>
+          <th style="width:110px">市值</th>
+        </tr></thead>
+        <tbody>
+<tr><td class="rank">1</td><td><span class="code">601900</span> 南方传媒 </td><td class="num">5.37%</td><td class="bar-cell"><span class="bar" style="width:100%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">576.6万</td></tr>
+<tr><td class="rank">2</td><td><span class="code">601083</span> 锦江航运 </td><td class="num">5.35%</td><td class="bar-cell"><span class="bar" style="width:100%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">574.1万</td></tr>
+<tr><td class="rank">3</td><td><span class="code">002697</span> 红旗连锁 </td><td class="num">5.11%</td><td class="bar-cell"><span class="bar" style="width:95%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">548.3万</td></tr>
+<tr><td class="rank">4</td><td><span class="code">002532</span> 天山铝业 </td><td class="num">5.07%</td><td class="bar-cell"><span class="bar" style="width:94%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">543.9万</td></tr>
+<tr><td class="rank">5</td><td><span class="code">000411</span> 英特集团 </td><td class="num">5.03%</td><td class="bar-cell"><span class="bar" style="width:94%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">540.1万</td></tr>
+<tr><td class="rank">6</td><td><span class="code">000651</span> 格力电器 <span class="badge b-div">红利池</span></td><td class="num">4.97%</td><td class="bar-cell"><span class="bar" style="width:93%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">533.7万</td></tr>
+<tr><td class="rank">7</td><td><span class="code">600874</span> 创业环保 </td><td class="num">4.95%</td><td class="bar-cell"><span class="bar" style="width:92%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">531.4万</td></tr>
+<tr><td class="rank">8</td><td><span class="code">600528</span> 中铁工业 </td><td class="num">4.92%</td><td class="bar-cell"><span class="bar" style="width:92%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">528.4万</td></tr>
+<tr><td class="rank">9</td><td><span class="code">600033</span> 福建高速 </td><td class="num">4.92%</td><td class="bar-cell"><span class="bar" style="width:92%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">528.1万</td></tr>
+<tr><td class="rank">10</td><td><span class="code">002061</span> 浙江交科 </td><td class="num">4.88%</td><td class="bar-cell"><span class="bar" style="width:91%;background:linear-gradient(90deg,#22d3ee,#3b82f6)"></span></td><td class="num">523.4万</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="section" id="sec-holding_dividend">
+    <div class="section-head">
+      <span class="no" style="background:linear-gradient(90deg,#34d399,#8b5cf6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">TOP 10</span>
+      <h2>📗 中邮红利质量 — 重仓股</h2>
+      <span class="cnt">截至 2026-09-07 · 权重合计 27.17%</span>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr>
+          <th style="width:56px">排名</th><th>成分股</th>
+          <th style="width:90px">权重</th><th style="width:140px">权重分布</th>
+          <th style="width:110px">市值</th>
+        </tr></thead>
+        <tbody>
+<tr><td class="rank">1</td><td><span class="code">002867</span> 周大生 </td><td class="num">3.42%</td><td class="bar-cell"><span class="bar" style="width:100%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">401.9万</td></tr>
+<tr><td class="rank">2</td><td><span class="code">601098</span> 中南传媒 </td><td class="num">3.23%</td><td class="bar-cell"><span class="bar" style="width:94%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">379.6万</td></tr>
+<tr><td class="rank">3</td><td><span class="code">300770</span> 新媒股份 </td><td class="num">2.86%</td><td class="bar-cell"><span class="bar" style="width:84%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">335.9万</td></tr>
+<tr><td class="rank">4</td><td><span class="code">301109</span> 军信股份 </td><td class="num">2.84%</td><td class="bar-cell"><span class="bar" style="width:83%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">333.2万</td></tr>
+<tr><td class="rank">5</td><td><span class="code">603558</span> 健盛集团 </td><td class="num">2.80%</td><td class="bar-cell"><span class="bar" style="width:82%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">328.9万</td></tr>
+<tr><td class="rank">6</td><td><span class="code">600282</span> 南钢股份 <span class="badge b-div">红利池</span></td><td class="num">2.71%</td><td class="bar-cell"><span class="bar" style="width:79%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">318.2万</td></tr>
+<tr><td class="rank">7</td><td><span class="code">603508</span> 思维列控 </td><td class="num">2.56%</td><td class="bar-cell"><span class="bar" style="width:75%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">300.7万</td></tr>
+<tr><td class="rank">8</td><td><span class="code">600027</span> 华电国际 </td><td class="num">2.28%</td><td class="bar-cell"><span class="bar" style="width:67%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">267.8万</td></tr>
+<tr><td class="rank">9</td><td><span class="code">601598</span> 中国外运 </td><td class="num">2.25%</td><td class="bar-cell"><span class="bar" style="width:66%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">264.5万</td></tr>
+<tr><td class="rank">10</td><td><span class="code">600741</span> 华域汽车 <span class="badge b-deep">深度池</span></td><td class="num">2.22%</td><td class="bar-cell"><span class="bar" style="width:65%;background:linear-gradient(90deg,#34d399,#22d3ee)"></span></td><td class="num">260.1万</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="badge b-div">红利池</span> 该股同时在公司红利价值池（44 只观察名单）中
+    &nbsp;&nbsp;<span class="badge b-deep">深度池</span> 该股同时在公司深度价值池（45 只观察名单）中
+    <div class="overlap-tip">
+      <b>说明</b> · 本页数据为两只产品<b>定期披露的 Top10 重仓股快照</b>（截至 2026-09-07），
+      非实时持仓。每日驾驶舱任务可对持仓池逐只扫描行情与异动（watchlists.json: holding_value1 / holding_dividend）。
+    </div>
+  </div>
+
+  <div class="foot">EVERSTEAD · 中邮价值1号 / 中邮红利质量 持仓池</div>
+</div>
+</body>
+</html>

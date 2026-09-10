@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>因子 IC 回测 · everstead</title>
+<style>
+body{font-family:'Microsoft YaHei',sans-serif;max-width:1100px;margin:0 auto;padding:24px 20px 60px;color:#e2ecf7;background:#03060c;
+background-image:radial-gradient(1100px 600px at 75% -10%,rgba(59,130,246,.14),transparent 60%),
+radial-gradient(900px 500px at -10% 110%,rgba(139,92,246,.10),transparent 60%);
+background-attachment:fixed;line-height:1.7}
+h1{font-size:1.6em;border-bottom:2px solid rgba(34,211,238,.5);padding-bottom:8px;color:#22d3ee}
+h2{font-size:1.2em;margin-top:1.8em;color:#7dd3fc}
+.back{display:inline-block;margin-bottom:16px;color:#7d92ad;font-size:13px;text-decoration:none}
+.back:hover{color:#22d3ee}
+.note{font-size:12px;color:#7d92ad}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid rgba(56,189,248,.16);padding:7px 10px;text-align:center}
+th{background:rgba(34,211,238,.1);color:#7dd3fc;font-size:12.5px}
+td.fname{text-align:left;font-weight:600;color:#e8f6ff}
+td.unit{color:#7d92ad;font-size:12px}
+.chart-box{border:1px solid rgba(56,189,248,.16);border-radius:12px;background:rgba(10,20,38,.55);
+padding:16px 18px 8px;margin:14px 0}
+.chart-title{font-size:12.5px;color:#7dd3fc;margin-bottom:8px}
+.caveat{border-left:3px solid #f59e0b;background:rgba(245,158,11,.07);padding:10px 16px;margin-top:24px;
+font-size:12.5px;color:#a9bed6;line-height:1.9}
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← everstead 成果站</a>
+<h1>因子 IC 回测 · 关注池 5 因子</h1>
+<p class="note">更新 2026-09-10T13:14 · 样本 86 只 · 2025-12-03 ~ 2026-09-08 · 5交易日调仓</p>
+
+<h2>Rank IC 汇总(周频)</h2>
+<p class="note">Spearman 秩相关: 因子值与前向收益的截面排名相关。IC&gt;0 = 因子选股方向有效。</p>
+<table>
+<thead>
+<tr><th rowspan="2">因子</th><th rowspan="2">单位</th><th colspan="4">fwd 5 交易日</th><th colspan="4">fwd 20 交易日</th></tr>
+<tr><th>均值IC</th><th>ICIR</th><th>t值</th><th>IC&gt;0占比</th><th>均值IC</th><th>ICIR</th><th>t值</th><th>IC&gt;0占比</th></tr>
+</thead>
+<tbody>
+<tr><td class='fname'>股息率TTM</td><td class='unit'>%</td><td style="color:#34d399">+0.1304</td><td>+0.679</td><td>+3.18</td><td>68%</td><td style="color:#34d399">+0.2089</td><td>+1.225</td><td>+5.74</td><td>86%</td></tr>
+<tr><td class='fname'>动量1月</td><td class='unit'>%</td><td style="color:#34d399">+0.0011</td><td>+0.004</td><td>+0.02</td><td>41%</td><td style="color:#34d399">+0.0069</td><td>+0.034</td><td>+0.16</td><td>59%</td></tr>
+<tr><td class='fname'>动量3月</td><td class='unit'>%</td><td style="color:#34d399">+0.0148</td><td>+0.055</td><td>+0.26</td><td>55%</td><td style="color:#34d399">+0.0335</td><td>+0.114</td><td>+0.53</td><td>50%</td></tr>
+<tr><td class='fname'>波动率60d</td><td class='unit'>%</td><td style="color:#f43f5e">-0.1253</td><td>-0.675</td><td>-3.17</td><td>27%</td><td style="color:#f43f5e">-0.1949</td><td>-0.825</td><td>-3.87</td><td>27%</td></tr>
+<tr><td class='fname'>日均成交额20d</td><td class='unit'>亿</td><td style="color:#34d399">+0.0180</td><td>+0.092</td><td>+0.43</td><td>55%</td><td style="color:#34d399">+0.0632</td><td>+0.468</td><td>+2.20</td><td>68%</td></tr>
+
+</tbody>
+</table>
+
+<h2>IC 时序(fwd 20d)</h2>
+<div class="chart-box"><div class="chart-title">股息率TTM · fwd 20d Rank IC</div><p class='note'>时序不足 2 期, 跳过画图</p></div><div class="chart-box"><div class="chart-title">动量1月 · fwd 20d Rank IC</div><p class='note'>时序不足 2 期, 跳过画图</p></div><div class="chart-box"><div class="chart-title">动量3月 · fwd 20d Rank IC</div><p class='note'>时序不足 2 期, 跳过画图</p></div><div class="chart-box"><div class="chart-title">波动率60d · fwd 20d Rank IC</div><p class='note'>时序不足 2 期, 跳过画图</p></div><div class="chart-box"><div class="chart-title">日均成交额20d · fwd 20d Rank IC</div><p class='note'>时序不足 2 期, 跳过画图</p></div>
+
+<div class="caveat">
+⚠️ <b>口径与局限</b>: ①样本期仅 2025-12-03 ~ 2026-09-08(约 9 个月), 统计功效有限; ②池内 86 只全部来自红利/深度价值关注池, 风格集中, IC 反映的是池内相对排序而非全市场; ③dy_ttm 用除息事件近似 TTM 派息, 含税口径; ④ICIR 为单期口径(未年化)。|t|&gt;2 才算显著, 请勿过度解读。
+</div>
+</body>
+</html>

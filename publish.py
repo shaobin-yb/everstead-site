@@ -56,8 +56,6 @@ ROOT_ARTIFACTS = [
      "51档标准期限(6个月-50年)全档位速查 + 利率曲线 + 非标期限向上靠档计算器"),
     ("产品持仓池", "holdings.html", "2026-09-10", "📦", "tool",
      "中邮价值1号(TOP10权重50.57%) + 红利质量(27.17%) 重仓股快照 · 与红利/深度观察池重叠标记"),
-    ("金融客户全量名单", "client-list.html", "2026-09-10", "🗺️", "tool",
-     "2394 家持牌金融机构按省分布 · 银行/保险/财险/财务/信托/金租/保险资管 8类Tab · 🔒 密码访问(与CRM同级)"),
     ("金融客户名单·精选版", "client-list-lite.html", "2026-09-10", "🏛️", "tool",
      "980 家市级及以上机构 · 8类Tab一眼抓重点 · 剔除联合社/信用社/县级农商行 · 🔒 密码访问(与CRM同级)"),
     # 收盘点评卡片日期动态取 latest.md 的日期(见 load_briefing_info)
@@ -366,7 +364,11 @@ def build_index(reports: list) -> None:
             cards.append(card(name, path, date, icon, kind, desc, delay, len(cards) + 1,
                               external=path.startswith(("http://", "https://"))))
             delay += 0.06
+    # 2026-09-11: 老板点名下线的报告(源文件保留, 首页不再出卡)
+    EXCLUDED_REPORTS = {"光大理财-客户拜访调研-五看六定"}
     for f in reports:
+        if f.stem in EXCLUDED_REPORTS:
+            continue
         rdate = datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d")
         cards.append(card(f.stem, f"reports/{f.stem}.html", rdate,
                           "📄", "report", "专题调研 · 工作汇报", delay, len(cards) + 1))

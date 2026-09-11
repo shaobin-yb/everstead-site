@@ -167,6 +167,32 @@ a{text-decoration:none;color:inherit}
 @keyframes blip{0%,100%{opacity:.15}45%,55%{opacity:1}}
 @media (max-width:900px){.radar{display:none}}
 
+/* ---- 全局搜索 ---- */
+.search-wrap{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;
+  animation:fadeUp .7s .26s ease-out both;
+}
+.search-box{
+  flex:1;min-width:260px;display:flex;align-items:center;gap:10px;
+  border:1px solid var(--line-strong);border-radius:12px;
+  background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:11px 16px;transition:border-color .2s, box-shadow .2s;
+}
+.search-box:focus-within{border-color:var(--cyan);box-shadow:var(--glow)}
+.search-box .search-ico{font-size:16px;opacity:.85}
+.search-box input{
+  flex:1;background:transparent;border:none;outline:none;color:var(--text);
+  font-size:14.5px;letter-spacing:.03em;
+}
+.search-box input::placeholder{color:var(--muted)}
+.search-box button{
+  background:transparent;border:1px solid var(--line);border-radius:8px;
+  color:var(--muted);font-size:12px;padding:4px 12px;cursor:pointer;
+  display:none;transition:color .18s, border-color .18s;
+}
+.search-box button:hover{color:var(--cyan);border-color:var(--line-strong)}
+.search-hint{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.05em}
+
 /* ---- 数据条 ---- */
 .stats{
   display:flex;gap:14px;flex-wrap:wrap;
@@ -231,6 +257,24 @@ a{text-decoration:none;color:inherit}
   display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;
 }
 .grid .card.hidden{display:none}
+/* ---- 分类分组 + 折叠 ---- */
+.cat-group{margin-bottom:26px}
+.cat-head{
+  display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;
+  padding:10px 14px;border:1px solid var(--line);border-radius:12px;
+  background:var(--panel);transition:border-color .18s, background .18s;
+}
+.cat-head:hover{border-color:var(--line-strong);background:var(--panel-hover)}
+.cat-head .cat-ico{font-size:16px}
+.cat-head .cat-name{font-size:14.5px;font-weight:700;letter-spacing:.06em}
+.cat-head .cat-cnt{font-family:var(--mono);font-size:12px;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.cat-head .cat-arrow{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);
+  transition:transform .22s}
+.cat-group.collapsed .cat-arrow{transform:rotate(-90deg)}
+.cat-group.collapsed .grid{display:none}
+.cat-group.filtered-out{display:none}
+.cat-group.search-empty{display:none}
 .card{
   position:relative;display:block;
   border:1px solid var(--line);border-radius:14px;
@@ -418,13 +462,26 @@ a{text-decoration:none;color:inherit}
     </div>
   </section>
 
+  <!-- 全局搜索 -->
+  <div class="wrap">
+    <div class="search-wrap">
+      <div class="search-box">
+        <span class="search-ico">🔍</span>
+        <input id="globalSearch" type="text" placeholder="搜索成果(名称/描述/编号, 如: 雷达 / 利率 / 03)"
+               autocomplete="off">
+        <button id="searchClear" type="button">✕ 清除</button>
+      </div>
+      <span class="search-hint">Ctrl+K 聚焦搜索</span>
+    </div>
+  </div>
+
   <!-- 数据条 -->
   <section class="stats">
-    <div class="stat" data-jump="全部" title="点击查看全部成果"><div class="stat-ico">🗂️</div><div class="v" data-count="19">0</div><div class="k">归档成果</div></div>
+    <div class="stat" data-jump="全部" title="点击查看全部成果"><div class="stat-ico">🗂️</div><div class="v" data-count="17">0</div><div class="k">归档成果</div></div>
     <div class="stat" data-jump="雷达" title="点击只看雷达"><div class="stat-ico">📡</div><div class="v" data-count="1">0</div><div class="k">雷达 / 站点</div></div>
     <div class="stat" data-jump="报告" title="点击只看专题报告"><div class="stat-ico">📄</div><div class="v" data-count="4">0</div><div class="k">专题报告</div></div>
     <div class="stat" data-jump="知识库" title="点击只看知识库"><div class="stat-ico">📚</div><div class="v" data-count="31">0</div><div class="k">知识库条目</div></div>
-    <div class="stat" data-jump="工具" title="点击只看数据工具"><div class="stat-ico">🧰</div><div class="v" data-count="10">0</div><div class="k">数据工具</div></div>
+    <div class="stat" data-jump="工具" title="点击只看数据工具"><div class="stat-ico">🧰</div><div class="v" data-count="9">0</div><div class="k">数据工具</div></div>
     <div class="stat" id="stat-update" title="点击触发每日更新(雷达/净值/首页)"><div class="stat-ico">🕒</div><div class="v" data-text="2026-09-11">2026-09-11</div><div class="k">最近更新 · 点击更新</div></div>
   </section>
 
@@ -723,11 +780,12 @@ a{text-decoration:none;color:inherit}
         <h2>成果展厅</h2>
         <div class="en">ARTIFACT GALLERY</div>
       </div>
-      <div class="count">19 ITEMS</div>
+      <div class="count">17 ITEMS</div>
     </div>
     <div class="filter-bar" id="filter-bar" role="tablist" aria-label="成果筛选"></div>
-    <div class="grid" id="gallery-grid">
-      <a class="card" data-type="kb" data-no="1" style="animation-delay:0.35s" href="kb.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🛡️</div><div class="card-tag">知识库</div></div><div class="t">保险资管风险责任人知识库</div><div class="m">5 大投资管理能力 · 40+ 机构风险责任人档案 · 搜索/折叠/从业经历</div><div class="d"><span class="card-no">01</span><span>2026-09-07</span></div><span class="arrow">→</span></a>
+    <div id="gallery-wrap">
+      <div class="grid" id="gallery-grid">
+        <a class="card" data-type="kb" data-no="1" style="animation-delay:0.35s" href="kb.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🛡️</div><div class="card-tag">知识库</div></div><div class="t">保险资管风险责任人知识库</div><div class="m">5 大投资管理能力 · 40+ 机构风险责任人档案 · 搜索/折叠/从业经历</div><div class="d"><span class="card-no">01</span><span>2026-09-07</span></div><span class="arrow">→</span></a>
 <a class="card" data-type="tool" data-no="2" style="animation-delay:0.41s" href="yield-calc.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🧮</div><div class="card-tag">工具</div></div><div class="t">税后收益率计算表</div><div class="m">资管产品税后收益率一键计算</div><div class="d"><span class="card-no">02</span><span>2026-09-07</span></div><span class="arrow">→</span></a>
 <a class="card" data-type="radar" data-no="3" style="animation-delay:0.47s" href="radar.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📡</div><div class="card-tag">雷达</div></div><div class="t">客户情报雷达</div><div class="m">巨潮每日公告抓取 + 受托方解析 + iFind 打分 · 页内直达 433 家公司分级站点</div><div class="d"><span class="card-no">03</span><span>2026-09-11</span></div><span class="arrow">→</span></a>
 <a class="card" data-type="tool" data-no="4" style="animation-delay:0.53s" href="product-onepagers/红利质量_产品一页通.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📈</div><div class="card-tag">工具</div></div><div class="t">产品一页通</div><div class="m">红利质量/价值1号(净值每日更新) + 国新红利价值/深度价值(要素型) 四张一页通</div><div class="d"><span class="card-no">04</span><span>2026-09-08</span></div><span class="arrow">→</span></a>
@@ -741,11 +799,10 @@ a{text-decoration:none;color:inherit}
 <a class="card" data-type="report" data-no="12" style="animation-delay:1.01s" href="保险公司资产负债管理办法-概念梳理.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📖</div><div class="card-tag">报告</div></div><div class="t">资产负债管理办法概念梳理</div><div class="m">新规学习页 · 12张概念卡 + 人身险4项/财险3项监管指标扫盲 + IFRS9/17 + 产品化映射</div><div class="d"><span class="card-no">12</span><span>2026-09-09</span></div><span class="arrow">→</span></a>
 <a class="card" data-type="tool" data-no="13" style="animation-delay:1.07s" href="lending-rate-floor.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">💹</div><div class="card-tag">工具</div></div><div class="t">2026年贷款利率自律底线</div><div class="m">51档标准期限(6个月-50年)全档位速查 + 利率曲线 + 非标期限向上靠档计算器</div><div class="d"><span class="card-no">13</span><span>2026-09-10</span></div><span class="arrow">→</span></a>
 <a class="card" data-type="tool" data-no="14" style="animation-delay:1.13s" href="holdings.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📦</div><div class="card-tag">工具</div></div><div class="t">产品持仓池</div><div class="m">中邮价值1号(TOP10权重50.57%) + 红利质量(27.17%) 重仓股快照 · 与红利/深度观察池重叠标记</div><div class="d"><span class="card-no">14</span><span>2026-09-10</span></div><span class="arrow">→</span></a>
-<a class="card" data-type="tool" data-no="15" style="animation-delay:1.19s" href="client-list.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🗺️</div><div class="card-tag">工具</div></div><div class="t">金融客户全量名单</div><div class="m">2394 家持牌金融机构按省分布 · 银行/保险/财险/财务/信托/金租/保险资管 8类Tab · 🔒 密码访问(与CRM同级)</div><div class="d"><span class="card-no">15</span><span>2026-09-10</span></div><span class="arrow">→</span></a>
-<a class="card" data-type="tool" data-no="16" style="animation-delay:1.25s" href="client-list-lite.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🏛️</div><div class="card-tag">工具</div></div><div class="t">金融客户名单·精选版</div><div class="m">980 家市级及以上机构 · 8类Tab一眼抓重点 · 剔除联合社/信用社/县级农商行 · 🔒 密码访问(与CRM同级)</div><div class="d"><span class="card-no">16</span><span>2026-09-10</span></div><span class="arrow">→</span></a>
-<a class="card" data-type="briefing" data-no="17" style="animation-delay:1.31s" href="market-briefings/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📰</div><div class="card-tag">点评</div></div><div class="t">每日收盘点评</div><div class="m">每个交易日收盘后更新 · 历史逐日归档</div><div class="d"><span class="card-no">17</span><span>2026-09-11</span></div><span class="arrow">→</span></a>
-<a class="card" data-type="report" data-no="18" style="animation-delay:1.37s" href="reports/铁蛋近期工作总结.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">报告</div></div><div class="t">铁蛋近期工作总结</div><div class="m">专题调研 · 工作汇报</div><div class="d"><span class="card-no">18</span><span>2026-09-08</span></div><span class="arrow">→</span></a>
-<a class="card" data-type="report" data-no="19" style="animation-delay:1.43s" href="reports/光大理财-客户拜访调研-五看六定.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">报告</div></div><div class="t">光大理财-客户拜访调研-五看六定</div><div class="m">专题调研 · 工作汇报</div><div class="d"><span class="card-no">19</span><span>2026-08-24</span></div><span class="arrow">→</span></a>
+<a class="card" data-type="tool" data-no="15" style="animation-delay:1.19s" href="client-list-lite.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🏛️</div><div class="card-tag">工具</div></div><div class="t">金融客户名单·精选版</div><div class="m">980 家市级及以上机构 · 8类Tab一眼抓重点 · 剔除联合社/信用社/县级农商行 · 🔒 密码访问(与CRM同级)</div><div class="d"><span class="card-no">15</span><span>2026-09-10</span></div><span class="arrow">→</span></a>
+<a class="card" data-type="briefing" data-no="16" style="animation-delay:1.25s" href="market-briefings/index.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📰</div><div class="card-tag">点评</div></div><div class="t">每日收盘点评</div><div class="m">每个交易日收盘后更新 · 历史逐日归档</div><div class="d"><span class="card-no">16</span><span>2026-09-11</span></div><span class="arrow">→</span></a>
+<a class="card" data-type="report" data-no="17" style="animation-delay:1.31s" href="reports/铁蛋近期工作总结.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">报告</div></div><div class="t">铁蛋近期工作总结</div><div class="m">专题调研 · 工作汇报</div><div class="d"><span class="card-no">17</span><span>2026-09-08</span></div><span class="arrow">→</span></a>
+      </div>
     </div>
   </section>
 
@@ -808,31 +865,80 @@ a{text-decoration:none;color:inherit}
   tick();
 })();
 
-/* ---- 成果展厅类型筛选(按 显示名 分组, 同语义类型合并: kb/knowledge→知识库, cockpit→工具) ---- */
+/* ---- 成果展厅: 分类分组 + 折叠 + 筛选 + 全局搜索联动 ---- */
 (function(){
   var TYPE_NAMES={radar:'雷达',report:'报告',tool:'工具',cockpit:'工具',kb:'知识库',
     knowledge:'知识库',briefing:'点评',lan:'内网',external:'外链'};
-  var bar=document.getElementById('filter-bar'),grid=document.getElementById('gallery-grid');
-  if(!bar||!grid)return;
-  var cards=grid.querySelectorAll('.card');
+  var CAT_META={  /* 分组显示顺序 + 图标 */
+    '知识库':{ico:'📚',open:true},
+    '雷达':{ico:'📡',open:true},
+    '报告':{ico:'📄',open:true},
+    '工具':{ico:'🧰',open:true},
+    '驾驶舱':{ico:'🖥️',open:false},
+    '点评':{ico:'📰',open:false},
+    '内网':{ico:'🔒',open:false}
+  };
+  var bar=document.getElementById('filter-bar');
+  var grid=document.getElementById('gallery-grid');
+  var wrap=document.getElementById('gallery-wrap');
+  if(!bar||!grid||!wrap)return;
+  var cards=[].slice.call(grid.querySelectorAll('.card'));
   if(!cards.length)return;
-  // 收集 (实际类型 → 显示名) 有序去重映射; 同语义类型合并成同一显示名
-  var nameByType={},names=[];
+
+  /* 实际类型 → 显示名 */
+  var nameByType={};
   cards.forEach(function(c){
     var t=c.getAttribute('data-type');
     if(!t||nameByType[t])return;
-    var n=TYPE_NAMES[t]||t.toUpperCase();
-    nameByType[t]=n;
-    if(names.indexOf(n)<0)names.push(n);
+    nameByType[t]=TYPE_NAMES[t]||t.toUpperCase();
   });
+
+  /* 1. 按显示名分组(顺序按 CAT_META), 每组一个 .cat-group */
+  var groups={};
+  var order=[];
+  cards.forEach(function(c){
+    var n=nameByType[c.getAttribute('data-type')];
+    if(!groups[n]){
+      groups[n]=[];
+      order.push(n);
+    }
+    groups[n].push(c);
+  });
+  order.sort(function(a,b){
+    var ia=Object.keys(CAT_META).indexOf(a), ib=Object.keys(CAT_META).indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib);
+  });
+  var groupEls={};
+  order.forEach(function(n){
+    var meta=CAT_META[n]||{ico:'🗂️',open:true};
+    var g=document.createElement('div');
+    g.className='cat-group'+(meta.open?'':' collapsed');
+    var head=document.createElement('div');
+    head.className='cat-head';
+    head.innerHTML='<span class="cat-ico">'+meta.ico+'</span>'+
+      '<span class="cat-name">'+n+'</span>'+
+      '<span class="cat-cnt">'+groups[n].length+'</span>'+
+      '<span class="cat-arrow">▼</span>';
+    head.addEventListener('click',function(){
+      g.classList.toggle('collapsed');
+    });
+    var sub=document.createElement('div');
+    sub.className='grid';
+    groups[n].forEach(function(c){sub.appendChild(c)});
+    g.appendChild(head);g.appendChild(sub);
+    wrap.appendChild(g);
+    groupEls[n]=g;
+  });
+  grid.remove();  /* 原平面 grid 拆完即弃 */
+
+  /* 2. 筛选行: 点按钮 = 只显示该组(隐藏其他组), "全部"显示所有 */
   var btns=[];
+  var curFilter='';
   function applyFilter(label){
+    curFilter=(label==='全部')?'':label;
     btns.forEach(function(x){x.classList.toggle('active',x.textContent===label)});
-    var cur=(label==='全部')?'':label;
-    cards.forEach(function(c){
-      var t=c.getAttribute('data-type');
-      var show=!cur||(nameByType[t]||t.toUpperCase())===cur;
-      c.classList.toggle('hidden',!show);
+    Object.keys(groupEls).forEach(function(n){
+      groupEls[n].classList.toggle('filtered-out', !!curFilter && n!==curFilter);
     });
   }
   function mk(label){
@@ -842,10 +948,66 @@ a{text-decoration:none;color:inherit}
     bar.appendChild(b);btns.push(b);return b;
   }
   mk('全部');
-  names.forEach(function(n){mk(n)});
+  order.forEach(function(n){mk(n)});
   applyFilter('全部');
 
-  /* 统计卡点击: 有独立页面的直接跳转, 其余切筛选并滚到展厅 */
+  /* 3. 全局搜索: 名称/描述/编号 匹配, 命中的组自动展开, 无命中组隐藏 */
+  var searchInput=document.getElementById('globalSearch');
+  var searchClear=document.getElementById('searchClear');
+  var kw='';
+  function applySearch(){
+    kw=searchInput.value.trim().toLowerCase();
+    searchClear.style.display=kw?'':'none';
+    var anyHit=false;
+    Object.keys(groupEls).forEach(function(n){
+      var hits=groups[n].filter(function(c){
+        if(!kw)return true;
+        var hay=(c.querySelector('.t').textContent+' '+
+                 c.querySelector('.m').textContent+' '+
+                 (c.getAttribute('data-no')||'')).toLowerCase();
+        return hay.indexOf(kw)>=0;
+      });
+      var g=groupEls[n];
+      var visible=hits.length>0;
+      g.classList.toggle('search-empty', !visible);
+      if(kw && visible){
+        g.classList.remove('collapsed');
+        groups[n].forEach(function(c){
+          c.classList.toggle('hidden', hits.indexOf(c)<0);
+        });
+        g.querySelector('.cat-cnt').textContent=hits.length;
+        anyHit=true;
+      }else{
+        groups[n].forEach(function(c){c.classList.remove('hidden')});
+        var total=groups[n].length;
+        g.querySelector('.cat-cnt').textContent=total;
+      }
+    });
+    /* 搜索无任何命中时的提示 */
+    var emptyTip=document.getElementById('searchEmptyTip');
+    if(kw && !anyHit && !emptyTip){
+      emptyTip=document.createElement('div');
+      emptyTip.id='searchEmptyTip';
+      emptyTip.style.cssText='text-align:center;color:var(--muted);padding:50px 0;font-size:14px;';
+      emptyTip.textContent='没有匹配的成果, 换个关键词试试';
+      wrap.appendChild(emptyTip);
+    }else if(emptyTip){
+      if(!kw||anyHit)emptyTip.remove();
+    }
+  }
+  searchInput.addEventListener('input',applySearch);
+  searchClear.addEventListener('click',function(){
+    searchInput.value='';applySearch();
+  });
+
+  /* Ctrl+K 聚焦搜索 */
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){
+      e.preventDefault();searchInput.focus();searchInput.select();
+    }
+  });
+
+  /* 4. 统计卡点击: 有独立页面的跳转, 其余切筛选并滚到展厅 */
   var statTargets={
     '全部': function(){applyFilter('全部')},
     '雷达': function(){location.href='radar.html'},

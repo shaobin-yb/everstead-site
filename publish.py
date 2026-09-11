@@ -328,20 +328,26 @@ def build_index(reports: list) -> None:
     latest_briefing_text, _ = load_briefing_info()
     briefing_html = render_briefing()
 
-    def card(name, href, date, icon, kind, desc, delay, external=False):
+    # 卡片右上角标签: 按类型显示(与筛选行显示名一致)
+    TYPE_TAG = {'radar': '雷达', 'tool': '工具', 'report': '报告', 'kb': '知识库',
+                'knowledge': '知识库', 'briefing': '点评', 'cockpit': '驾驶舱',
+                'lan': '内网', 'external': '外链'}
+
+    def card(name, href, date, icon, kind, desc, delay, no, external=False):
         ext = ' target="_blank" rel="noopener"' if external else ''
-        # lan(仅内网)卡片不携带可点击地址, href=# 不跳转, 顶部标签 LAN
+        # lan(仅内网)卡片不携带可点击地址, href=# 不跳转
         if kind == "lan":
             href = "#"
-        return (f'<a class="card" data-type="{kind}" style="animation-delay:{delay:.2f}s" '
+        tag = TYPE_TAG.get(kind, kind.upper())
+        return (f'<a class="card" data-type="{kind}" data-no="{no}" style="animation-delay:{delay:.2f}s" '
                 f'href="{href}"{ext}>'
                 f'<span class="corner c1"></span><span class="corner c2"></span>'
                 f'<span class="corner c3"></span><span class="corner c4"></span>'
                 f'<div class="card-top"><div class="card-ico">{icon}</div>'
-                f'<div class="card-tag">LAN · 内网</div></div>'
+                f'<div class="card-tag">{tag}</div></div>'
                 f'<div class="t">{name}</div>'
                 f'<div class="m">{desc}</div>'
-                f'<div class="d">{date}</div>'
+                f'<div class="d"><span class="card-no">{no:02d}</span><span>{date}</span></div>'
                 f'<span class="arrow">→</span></a>')
 
     def exists(path: str) -> bool:
@@ -357,13 +363,13 @@ def build_index(reports: list) -> None:
             if kind == "briefing":
                 date = briefing_date(latest_briefing_text) or datetime.fromtimestamp(
                     (SITE / path).stat().st_mtime).strftime("%Y-%m-%d")
-            cards.append(card(name, path, date, icon, kind, desc, delay,
+            cards.append(card(name, path, date, icon, kind, desc, delay, len(cards) + 1,
                               external=path.startswith(("http://", "https://"))))
             delay += 0.06
     for f in reports:
         rdate = datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d")
         cards.append(card(f.stem, f"reports/{f.stem}.html", rdate,
-                          "📄", "report", "专题调研 · 工作汇报", delay))
+                          "📄", "report", "专题调研 · 工作汇报", delay, len(cards) + 1))
         delay += 0.06
 
     total = len(cards)

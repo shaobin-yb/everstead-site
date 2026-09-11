@@ -19,7 +19,7 @@
    EVERSTEAD 科技感展示平台 · v1.0
    深空底 + 粒子星座 + 雷达扫描 + 玻璃拟态卡片
    零外部依赖(无 CDN)，GitHub Pages 国内直连友好
-   卡片区由 publish.py 注入 <!--CARDS-->
+   卡片区由 publish.py 注入(占位符见 body 内 [CARDS] 标记)
    ============================================================ */
 :root{
   --bg:#03060c;
@@ -284,6 +284,12 @@ a{text-decoration:none;color:inherit}
 .card .m{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:7px}
 .card .d{font-family:var(--mono);font-size:12px;color:var(--cyan);margin-top:13px;
   display:flex;align-items:center;gap:8px;opacity:.85}
+/* 卡片编号: 老板按编号给指令(如"改3号卡") */
+.card .card-no{
+  font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan);
+  border:1px solid var(--line-strong);border-radius:6px;padding:1px 7px;
+  background:rgba(34,211,238,.08);letter-spacing:.06em;
+}
 .card .d::before{content:'';width:14px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
 .card .arrow{
   position:absolute;right:20px;bottom:16px;color:var(--cyan);font-size:15px;

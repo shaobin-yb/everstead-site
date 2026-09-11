@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>讯飞本文件 · 私人专区</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="../../zy-tech.css">
+<style>
+.pvgate{
+  max-width:420px;margin:30px auto 0;padding:32px 28px;text-align:center;
+  border:1px solid rgba(56,189,248,.16);border-radius:14px;
+  background:rgba(10,20,38,.55);backdrop-filter:blur(10px);
+}
+.pvgate .lock{font-size:34px;margin-bottom:10px}
+.pvgate p{font-size:12px;color:#7d92ad;margin-bottom:18px;line-height:1.8}
+.pvgate input{
+  width:100%;padding:11px 14px;font-family:'JetBrains Mono',Consolas,monospace;
+  font-size:16px;letter-spacing:.35em;text-align:center;color:#e2ecf7;
+  background:rgba(3,6,12,.6);border:1px solid rgba(56,189,248,.16);
+  border-radius:10px;outline:none;
+}
+.pvgate input:focus{border-color:rgba(56,189,248,.45);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+.pvgate button{
+  margin-top:14px;width:100%;padding:11px;font-size:14px;font-weight:600;letter-spacing:.2em;
+  color:#03101f;cursor:pointer;background:linear-gradient(90deg,#22d3ee,#8b5cf6);
+  border:none;border-radius:10px;
+}
+.pvgate .err-msg{display:none;margin-top:10px;font-size:12px;color:#f43f5e}
+.pvgate.err .err-msg{display:block}
+</style>
+</head>
+<body>
+<div class="kb-bread"><a href="../../index.html">成果站</a> / <a href="../../private.html">私人专区</a> / 讯飞本文件</div>
+<div class="pvgate" id="pvgate">
+  <div class="lock">🔐</div>
+  <p>这是私人资料<br>输入密码后解锁查看</p>
+  <input type="password" id="pw" placeholder="••••••" maxlength="16" autocomplete="off" inputmode="numeric">
+  <button id="btn" type="button">解 锁</button>
+  <div class="err-msg" id="err">密码不对, 再试一次</div>
+</div>
+<div id="main" style="display:none;max-width:960px;margin:0 auto;padding:0 20px 60px">
+<div style="margin:20px 0;padding:14px 18px;border:1px solid rgba(56,189,248,.16);border-radius:12px;background:rgba(10,20,38,.45)">
+<span style="color:#7d92ad;font-size:12px">板块导航：</span>
+<a href="2024.html" style="color:#22d3ee;margin:0 8px">2024 年明细</a>·
+<a href="2025.html" style="color:#22d3ee;margin:0 8px">2025 年明细</a>·
+<a href="2026.html" style="color:#22d3ee;margin:0 8px">2026 年明细</a>·
+<a href="themes-1.html" style="color:#a5b4fc;margin:0 8px">主题线 2024-2025H1</a>·
+<a href="themes-2.html" style="color:#a5b4fc;margin:0 8px">主题线 2025H2-2026</a>
+</div><h1>讯飞办公本笔记总纪要（2024-10 ~ 2026-09）</h1>
+<blockquote>整理时间：2026-09-11 · 由铁蛋（Claude）通过 doxent skill 拉取讯飞办公本全部笔记并归纳</blockquote>
+<blockquote>范围：297 篇笔记（2024-10-26 至 2026-09-11），其中 67 篇为空内容（手写/图片笔记，文字不可提取）</blockquote>
+<blockquote>数据链路：办公本云端 → doxent API（本地 46588 端口）→ 逐篇正文拉取 → 19 组分批归纳 → 主题线挖掘 → 本纪要</blockquote>
+<blockquote>⚠️ 标记：录音转写存疑的数字/名称，仅作参考</blockquote>
+<hr>
+<h2>一、全景总览</h2>
+<table><thead><tr><th>项目</th><th>数据</th></tr></thead><tbody>
+<tr><td>笔记总数</td><td>297 篇</td></tr>
+<tr><td>时间跨度</td><td>2024-10-26 ~ 2026-09-11（约 23 个月）</td></tr>
+<tr><td>按年分布</td><td>2024 年 64 篇 / 2025 年 148 篇 / 2026 年 85 篇</td></tr>
+<tr><td>有效内容</td><td>230 篇（含录音转写、会议整理、碎片备忘）</td></tr>
+<tr><td>空内容</td><td>67 篇（手写或图片笔记，接口仅返回标题/占位符）</td></tr>
+<tr><td>笔记性质</td><td>中邮保险资管业务人员工作记录：会议录音为主（周例会/立项会/客户拜访/尽调/投资人交流/培训/路演）</td></tr>
+</tbody></table>
+<p><strong>背景</strong>：中邮保险资产管理有限公司（2023 年底成立，第 34 家保险资管，受托管理中邮人寿保险资金约 6000~7000 亿；2024-12-05 获批保债资质）。</p>
+<hr>
+<h2>二、业务主线演进（四阶段）</h2>
+<h3>阶段一：2024Q4 — 保债资质冲刺 + 年底放款高峰</h3>
+<ul>
+<li><strong>资质主线</strong>：筹备自 2020-11，2024-11-25 上报能力材料，12-05 正式取得保债发行资质。创新投资部从年初 3 人扩到 16 人，建"1+5+N"制度体系。</li>
+<li><strong>首单冲刺（未果）</strong>：山东出版"万悦文化广场"保债（枣庄，4 亿，总成本约 4%），公司开绿色通道冲刺年底放款，卡在担保决议/招标流程/政府回购合规口径，年底未落地。</li>
+<li><strong>存量基本盘（信托）</strong>：全年债权类投放 69.24 亿、三方募资 48.13 亿、财顾收入 2200 万。核心：山东高速 60 亿并表信托、山东黄金 10 亿（12 月放款 11 亿多）、福州城投渤海项目 7.69 亿、宜宾科教一期二期约 26 亿。</li>
+<li><strong>新牌照</strong>：首单保单贷款 ABS 立项（1.5 亿、收益率约 2.6%）；监管委托研究"债性资金做资本金"创新课题。</li>
+<li><strong>年会定调（2025-01-24）</strong>：受托资产 5600 亿、"七个坚持七个突破"、三方业务定位第二增长曲线；"首单保债未落地"列为年度不足。</li>
+</ul>
+<h3>阶段二：2025H1 — 首单二次冲刺 + 基本盘扩张</h3>
+<ul>
+<li><strong>首单换押</strong>：2025-05 改押宜宾凯翼汽车产业园三期（8-15 亿），"拿到牌照至今没干过，尽快落一个领导好交代"，至 6 月末仍在尽调。</li>
+<li><strong>投放加码</strong>：一季度开门红 60 亿目标；上半年累计投放约 100 亿（山高"撑起半边天"）；与超 100 家金融机构建联系，资金方画像全覆盖（平安寿险 1500 亿盘口、国寿体系、泰康等）。</li>
+<li><strong>策略转向（2025-02-10 齐总）</strong>："往上开发"——放弃小客户和区级平台、没有明确认购方的项目直接放弃、不盲目信用下沉。</li>
+<li><strong>监管收紧</strong>：3 月"存量债权投资计划风险排查"专项通报；4 月新领导定 30 亿非标目标、优先央企（中铁、中石油）；内部价格纪律 3.5。</li>
+</ul>
+<h3>阶段三：2025H2 — 保债置换大年 + 并表信托叫停</h3>
+<ul>
+<li><strong>置换主线</strong>：利率大降后老保债成本倒挂，客户集中要求"更便宜更长久的资金提前置换"。主要盘子：武汉城建 100 多亿（泰康 49.9 亿已还 19.4 亿、生命 18.4 亿）、山高四川 29 亿、湖北交投旗下 22 亿（4.73%→3.1-3.3%）、宜宾 12 亿续期（友邦续投，12 月签补充协议）。</li>
+<li><strong>并表信托全国叫停（11 月底-12 月）</strong>：中信信托约 900 多亿被检查触发；山高集团 100 多亿额度冻结；中邮 60 亿额度已放 40 多亿、剩 21 亿——第一大创新业务线中断，转向永续/类 REITs 替代。</li>
+<li><strong>年底冲关</strong>：宜宾年底 5 亿信托（中华联合 3 亿+鸿康 4 亿拼盘、成本 4.52%）完成当年投资任务；宜宾科教 5 亿保债年底放款（A 类 4.5）。</li>
+<li><strong>三方业务起步</strong>：12 月首支三方产品（中短债定位，23 亿）；首单 ABS 上评审会。</li>
+</ul>
+<h3>阶段四：2026 — 产品化转型 + 新赛道落地</h3>
+<ul>
+<li><strong>三方组合类爆发</strong>：2026-05 总规模 211 亿、增速 163.75%（逆市增长，全市场组合类产品规模反而下降）；浦发"普泰一号"10 亿、宁波银行"开渔专户"20 亿追加；姚总（银行资管背景）3 月入职主抓产品线。</li>
+<li><strong>新赛道逐个落地</strong>：</li>
+<li>京沪高铁股票质押 5 亿（2026-06 放款，公司资本市场业务破局，质押率 30%→20% 以内，收益 3.25-3.32）</li>
+<li>比亚迪永续债首期 50 亿（广发资金 40 亿，2026-07 推进）</li>
+<li>陕交控资本金过桥产品（5+N）设计；宜宾科教 CMBS（公办高校教育类首例，预计 9 月发行）</li>
+<li>券商投顾输出（"价值一号"策略：回测年化 20%、最大回撤 29%）+ 京东代销（8-9 月签约落地）</li>
+<li><strong>资产负债新规（公司未来三年主线）</strong>：2027-01-01 起三年过渡期、2029 年前达标；应对=产品化改造（近 2000 亿交易盘打包成产品、分红确认收益）；三方外包机会（目标客户=没有资管公司的中小险企）。</li>
+<li><strong>非标整体收缩</strong>：固收受托 6190 亿中非标仅约 228 亿；2026 年以存量续期和高质量创新业务为主；行业出现"丧失债权投资计划能力"的监管咨询案例。</li>
+</ul>
+<hr>
+<h2>三、核心客户关系图谱</h2>
+<h3>城投/国企平台（融资客户）</h3>
+<table><thead><tr><th>客户</th><th>接触频次</th><th>合作内容与进展</th></tr></thead><tbody>
+<tr><td>宜宾体系（发展/三江/科教）</td><td>最高频</td><td>存量 30 多亿+31 亿：三江 7 亿信托、科教一二期约 26 亿+5 亿保债、12 亿续期。担保额度紧张（约 80 亿）是反复议题；2026 获"续期优先中邮做"承诺</td></tr>
+<tr><td>山东高速集团</td><td>核心大客户</td><td>并表信托 50-60 亿（2024-2025 分批滚动）、山高四川 29 亿置换、山高湖北 22 亿（3+N 约 2.8）；并表类 REITs 创新构想</td></tr>
+<tr><td>山东黄金</td><td>约 10 次</td><td>10 亿放款；国资委降负债需求→找权益/永续产品</td></tr>
+<tr><td>陕投集团/金泰恒业</td><td>约 18 次</td><td>保债+地产项目约 20 亿组合；担保 5 个会流程慢；金泰党委会已过</td></tr>
+<tr><td>陕西交控</td><td>约 9 次</td><td>价格极低（2.6-2.8）；资本金过桥产品（5+N）设计；30 年期债试发 5 亿（2.76%）</td></tr>
+<tr><td>武汉地铁</td><td>约 8 次</td><td>30 亿规模 6 家意向；2026-08 放款；中邮 7 年前投过（2.69-2.7）</td></tr>
+<tr><td>武汉城建</td><td>约 4 次</td><td>100 多亿保债置换盘（2026-2027 到期）；明股实债方案</td></tr>
+<tr><td>湖北交投</td><td>约 7 次</td><td>60 亿并表信托立项；旗下 22 亿置换洽谈</td></tr>
+<tr><td>河南投资集团</td><td>约 6 次</td><td>管理资产超 4 万亿；2026-01 定 50 亿五年期普通信托</td></tr>
+<tr><td>宁波系（北仑/鄞州/前湾）</td><td>约 25 次</td><td>北仑 30 亿三年期信托、鄞州 22 亿 PPN 置换、前湾 15 亿</td></tr>
+<tr><td>福州城投/左海</td><td>约 18 次</td><td>渤海项目 7.69 亿放款；左海财务顾问两个信托计划</td></tr>
+<tr><td>中能建</td><td>约 10 次</td><td>20 亿 5+5 并表信托；雄安项目跟进</td></tr>
+<tr><td>成都产投/石化基地</td><td>约 8 次</td><td>存量到期置换；石化基地 10 亿保债立项</td></tr>
+<tr><td>天津铁投/轨道租赁</td><td>约 3 次</td><td>京沪高铁质押 5 亿（2026-06 落地）</td></tr>
+<tr><td>其他</td><td>—</td><td>山东出版（首单保债主体，未落地）、电投融合、财信金控、渝富、无锡、合肥建投、青岛地铁、嘉兴、广开控、惠州交投、石家庄交投/国投、鲁信、四川高速、湖北科投、余杭、嘉兴城投等</td></tr>
+</tbody></table>
+<h3>银行渠道</h3>
+<ul>
+<li><strong>邮储银行</strong>（兄弟单位，约 16 次）：武汉/郑州/宁波/河北分行联动；河北首单（石家庄交投 20 亿）打造集团协同范本</li>
+<li><strong>招商银行</strong>（约 9 次）：北分/深分/西安分行；资管团队 3800 亿规模、保债市占率约 15%</li>
+<li><strong>华夏银行</strong>（约 6 次）："保险复苏计划"撮合（600 亿→150 亿低谷→恢复）</li>
+<li>其他：工行、北京银行、渤海银行杭州、中行宜宾、浦发、广发深圳（比亚迪 40 亿）、兴业、宁波银行等</li>
+</ul>
+<h3>保险同业（资金方）</h3>
+<ul>
+<li><strong>国寿体系</strong>（约 18 次）：最大外部拼盘方；在豫投资超 1400 亿；2026 一方资金被平安超越</li>
+<li><strong>泰康</strong>（约 16 次）：保债登记 +45%；非标收缩 70-80% 后 2025 一季度加大配置；武汉城建 49.9 亿存量对手方</li>
+<li><strong>平安系</strong>（约 23 次）：寿险 1500 亿盘口；余杭 9.5 亿拼盘牵头；三江保债报 3.99 恶性竞价负面案例</li>
+<li>其他活跃：友邦（宜宾续投核心）、中华联合（拼盘伙伴）、人保系（宜宾连环卡阻）、中汇人寿、幸福人寿、永安财险、中银三星、中英人寿、弘康、国民养老等</li>
+</ul>
+<h3>券商/信托/基金</h3>
+<ul>
+<li>华能信托（京沪高铁通道）、中信信托（并表信托 900 多亿被查）、华商基金（2026-06 策略会）、申万宏源（投顾备案路径）、国信证券（投顾准入）、京东财富（代销签约）</li>
+</ul>
+<hr>
+<h2>四、重要里程碑时间线（精选 30 条）</h2>
+<table><thead><tr><th>时间</th><th>事件</th></tr></thead><tbody>
+<tr><td>2024-10-26</td><td>讯飞办公本开始使用（本批笔记起点）</td></tr>
+<tr><td>2024-11-01</td><td>向协会汇报保债资格筹备（储备项目 600 亿）；监管委托研究"债性资金做资本金"课题</td></tr>
+<tr><td>2024-11-13</td><td>陕投保债立项会（公司第一个保债立项）</td></tr>
+<tr><td>2024-12-05</td><td><strong>正式取得保债发行资质</strong>（公司牌照里程碑）</td></tr>
+<tr><td>2024-12-09</td><td>保单贷款 ABS 立项（1.5 亿，收益率约 2.6%）</td></tr>
+<tr><td>2024-12-16</td><td>山东出版保债评审会；山东黄金放款 11 亿多；渤海项目放款 7.69 亿</td></tr>
+<tr><td>2024 年末</td><td>全年投放 69.24 亿、三方募资 48.13 亿、财顾收入 2200 万</td></tr>
+<tr><td>2025-01-24</td><td>公司年会：受托 5600 亿；"七个坚持七个突破"；首单保债未落地列为不足</td></tr>
+<tr><td>2025-02-10</td><td>齐总定调"往上开发"策略转向</td></tr>
+<tr><td>2025-03-17</td><td>监管"存量债权投资计划风险排查"专项通报</td></tr>
+<tr><td>2025-05-15</td><td>换凯翼三期做保债首单（二次冲刺）</td></tr>
+<tr><td>2025-06-27</td><td>国寿投同业交流：上半年累计投放约 100 亿</td></tr>
+<tr><td>2025-08-29</td><td>宜宾发展 12 亿保债续期确定（友邦续投，12 月签补充协议）</td></tr>
+<tr><td>2025-09-11/12</td><td>宜宾"三件套"集中尽调（三江/发展/科教），宜宾成第二主战场</td></tr>
+<tr><td>2025-10-28</td><td>武汉城建 100 多亿保债置换深谈</td></tr>
+<tr><td>2025-11-20</td><td>宜宾年底 5 亿信托放款方案（完成当年投资任务关键一单）</td></tr>
+<tr><td>2025-11-26</td><td>河南投资集团首次对接（2026 年 50 亿信托铺路）</td></tr>
+<tr><td><strong>2025-11 底</strong></td><td><strong>并表信托全国叫停</strong>（中信信托 900 多亿被查触发）</td></tr>
+<tr><td>2025-12-03</td><td>宜宾科教 5 亿保债年底放款</td></tr>
+<tr><td>2025-12</td><td>首支三方产品发行（23 亿）；首单 ABS 上评审会</td></tr>
+<tr><td>2026-02</td><td>年度定调：产品线发力、非标定位转变；姚总入职</td></tr>
+<tr><td>2026-03-16</td><td>京沪高铁股票质押 5 亿三方沟通成型</td></tr>
+<tr><td>2026-05-13</td><td>中坚培训：受托 6979 亿、三方组合类 211 亿（+163.75%）</td></tr>
+<tr><td>2026-06-09</td><td>宜宾科教融资沟通会：31 亿存续获"续期优先"承诺；CMBS 上报</td></tr>
+<tr><td>2026-07-15</td><td>比亚迪永续债首期 50 亿推进（广发 40 亿）</td></tr>
+<tr><td>2026-08-31~09-11</td><td>投顾+代销新模式落地：京东签约、国信准入、申万"固收加"</td></tr>
+<tr><td>2026-09-07</td><td>资产负债新规培训：2027 起三年过渡、产品化改造成为公司未来三年主线</td></tr>
+</tbody></table>
+<hr>
+<h2>五、反复出现的议题（浓缩版）</h2>
+<ol>
+<li><strong>资金用途合规与穿透</strong>（最高频）：补流比例 40%→30%、置换用途层层穿透、监管账户、"说明函只是辅助手段"</li>
+<li><strong>隐债与平台名单</strong>：35 号文 3899 名单、150 号文退平台、审计署检查（余杭事件）后全行业收紧</li>
+<li><strong>价格纪律与恶性竞争</strong>：利率从 4% 一路压到 2.4-2.6；平安 3.99 恶性竞价、大家 2.55 离谱低价案例；内部纪律 2.6 以下没意义</li>
+<li><strong>担保资源稀缺</strong>：母公司担保额度排满（宜发展、陕投 5 个会）、反担保以股权质押为主</li>
+<li><strong>并表信托叫停与替代</strong>：永续条款改造、类 REITs、公募 REITs、持有型不动产 ABS</li>
+<li><strong>资产荒与利率拐点</strong>：2025 险资配到 2.49-2.5%；2026 初利率反弹（30 年国债 +51bp）后存量低价单倒挂</li>
+<li><strong>提款乱象</strong>：行业提款率仅 20%（陕交控登记 200 亿只提 20 亿）</li>
+<li><strong>行业生态恶化</strong>：非标压降共识、险企"丧失保债能力"案例、大资管不买非标</li>
+<li><strong>中邮系协同</strong>：邮储分行牵线（河北首单）、银行+保险+券商三牌照协同、兄弟单位拼盘</li>
+<li><strong>内部管理与合规</strong>：巡视期要求、考核改革、AI 使用推广（用量垫底被批评）</li>
+</ol>
+<hr>
+<h2>六、空内容笔记说明</h2>
+<p>67 篇笔记（约 23%）的接口返回为空或仅标题——这些是<strong>手写笔记、拍照笔记或图片笔记</strong>，文字内容不在云端转写数据里，本纪要无法覆盖。如需要，可在办公本上查看原文或手动导出图片后另行处理。</p>
+<hr>
+<h2>附：明细页</h2>
+<ul>
+<li>2024 年明细（64 篇）：见网站板块 2024 页 / 本目录 doxent_summaries g00-g03</li>
+<li>2025 年明细（148 篇）：见网站板块 2025 页 / g04-g13</li>
+<li>2026 年明细（85 篇）：见网站板块 2026 页 / g14-g18</li>
+</ul>
+</div>
+<script>
+/* 与 private.html 同一把锁: 同 hash + 同 sessionStorage key('private_ok') */
+var PASSWORD_HASH = "a68afcaa33dc88de7217371b041b422543aa16e2958365dde8112487475e37cd";
+function sha256(ascii) {
+  function rightRotate(value, amount) { return (value>>>amount) | (value<<(32-amount)); }
+  var mathPow = Math.pow;
+  var maxWord = mathPow(2, 32);
+  var result = '';
+  var words = [];
+  var asciiBitLength = ascii.length*8;
+  var hash = sha256.h = sha256.h || [];
+  var k = sha256.k = sha256.k || [];
+  var primeCounter = k.length;
+  var isComposite = {};
+  for (var candidate = 2; primeCounter < 64; candidate++) {
+    if (!isComposite[candidate]) {
+      for (var i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+      hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+      k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
+    }
+  }
+  ascii += '\x80';
+  while (ascii.length%64 - 56) ascii += '\x00';
+  for (var i = 0; i < ascii.length; i++) {
+    var j = ascii.charCodeAt(i);
+    if (j>>8) return '';
+    words[i>>2] |= j << ((3 - i)%4)*8;
+  }
+  words[words.length] = ((asciiBitLength/maxWord)|0);
+  words[words.length] = (asciiBitLength);
+  for (var j = 0; j < words.length;) {
+    var w = words.slice(j, j += 16);
+    var oldHash = hash;
+    hash = hash.slice(0, 8);
+    for (var i = 0; i < 64; i++) {
+      var w15 = w[i - 15], w2 = w[i - 2];
+      var a = hash[0], e = hash[4];
+      var temp1 = hash[7]
+        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+        + ((e&hash[5])^((~e)&hash[6]))
+        + k[i]
+        + (w[i] = (i < 16) ? w[i] : (
+            w[i - 16]
+            + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3))
+            + w[i - 7]
+            + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10))
+          )|0
+        );
+      var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+        + ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+      hash = [(temp1 + temp2)|0].concat(hash);
+      hash[4] = (hash[4] + temp1)|0;
+    }
+    for (var i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i])|0;
+  }
+  for (var i = 0; i < 8; i++) {
+    for (var j = 3; j + 1; j--) {
+      var b = (hash[i]>>(j*8))&255;
+      result += ((b < 16) ? 0 : '') + b.toString(16);
+    }
+  }
+  return result;
+}
+function unlock() {
+  var gate = document.getElementById('pvgate');
+  var input = document.getElementById('pw');
+  if (sha256(input.value) === PASSWORD_HASH) {
+    sessionStorage.setItem('private_ok', '1');
+    gate.style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+  } else {
+    gate.classList.remove('err');
+    void gate.offsetWidth;
+    gate.classList.add('err');
+    input.value = '';
+    input.focus();
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  if (sessionStorage.getItem('private_ok') === '1') {
+    document.getElementById('pvgate').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+  }
+  document.getElementById('pw').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') unlock();
+  });
+  document.getElementById('btn').addEventListener('click', unlock);
+});
+</script>
+</body>
+</html>

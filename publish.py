@@ -370,8 +370,12 @@ def build_index(reports: list) -> None:
     radar_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "radar" and exists(a[1]))
     report_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "report" and exists(a[1])) + len(reports)
     tool_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "tool" and exists(a[1]))
+    # 2026-09-11: 统计卡片口径:
+    #   tool_n = 数据工具卡片数(tool + cockpit 合并, 与筛选行"工具"一致)
+    #   kb_count = 知识库条目数(manifest 公开条目, 点卡片跳 knowledge/ 能对上)
+    tool_n = sum(1 for a in ROOT_ARTIFACTS if a[4] in ("tool", "cockpit") and exists(a[1]))
     last_date = max(
-        [a[2] for a in ROOT_ARTIFACTS if a[4] != "lan" and exists(a[1])]
+        [a[2] for a in ROOT_ARTIFACTS if a[4] != "lan" and a[2] and exists(a[1])]
         + [datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d") for f in reports]
     )
 
@@ -388,6 +392,7 @@ def build_index(reports: list) -> None:
                 .replace("{{RADAR_COUNT}}", str(radar_n))
                 .replace("{{REPORT_COUNT}}", str(report_n))
                 .replace("{{KB_COUNT}}", str(kb_count))
+                .replace("{{TOOL_COUNT}}", str(tool_n))
                 .replace("{{LAST_DATE}}", last_date))
     (SITE / "index.html").write_text(html, encoding="utf-8")
     print(f"[build] index.html ({total} 个成果卡片, 最近更新 {last_date})")

@@ -187,6 +187,17 @@ a{text-decoration:none;color:inherit}
 .stat .v{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--cyan);
   font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(34,211,238,.4)}
 .stat .k{margin-top:4px;font-size:12px;color:var(--muted);letter-spacing:.08em}
+/* 可点击统计卡: 点击=切筛选; 日期卡点击=触发更新 */
+.stat[data-jump]{cursor:pointer;transition:border-color .18s, transform .18s}
+.stat[data-jump]:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+#stat-update{cursor:pointer;transition:border-color .18s}
+#stat-update:hover{border-color:var(--line-strong)}
+#stat-update.updating .k{color:var(--cyan)}
+#stat-update.updating::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:var(--cyan);animation:blink 1s infinite;
+}
+@keyframes blink{50%{opacity:.2}}
 
 /* ---- 成果卡片区 ---- */
 .section{margin-top:64px}
@@ -403,11 +414,12 @@ a{text-decoration:none;color:inherit}
 
   <!-- 数据条 -->
   <section class="stats">
-    <div class="stat"><div class="stat-ico">🗂️</div><div class="v" data-count="{{TOTAL}}">0</div><div class="k">归档成果</div></div>
-    <div class="stat"><div class="stat-ico">📡</div><div class="v" data-count="{{RADAR_COUNT}}">0</div><div class="k">雷达 / 站点</div></div>
-    <div class="stat"><div class="stat-ico">📄</div><div class="v" data-count="{{REPORT_COUNT}}">0</div><div class="k">专题报告</div></div>
-    <div class="stat"><div class="stat-ico">📚</div><div class="v" data-count="{{KB_COUNT}}">0</div><div class="k">知识库条目</div></div>
-    <div class="stat"><div class="stat-ico">🕒</div><div class="v" data-text="{{LAST_DATE}}">{{LAST_DATE}}</div><div class="k">最近更新</div></div>
+    <div class="stat" data-jump="全部" title="点击查看全部成果"><div class="stat-ico">🗂️</div><div class="v" data-count="{{TOTAL}}">0</div><div class="k">归档成果</div></div>
+    <div class="stat" data-jump="雷达" title="点击只看雷达"><div class="stat-ico">📡</div><div class="v" data-count="{{RADAR_COUNT}}">0</div><div class="k">雷达 / 站点</div></div>
+    <div class="stat" data-jump="报告" title="点击只看专题报告"><div class="stat-ico">📄</div><div class="v" data-count="{{REPORT_COUNT}}">0</div><div class="k">专题报告</div></div>
+    <div class="stat" data-jump="知识库" title="点击只看知识库"><div class="stat-ico">📚</div><div class="v" data-count="{{KB_COUNT}}">0</div><div class="k">知识库条目</div></div>
+    <div class="stat" data-jump="工具" title="点击只看数据工具"><div class="stat-ico">🧰</div><div class="v" data-count="{{TOOL_COUNT}}">0</div><div class="k">数据工具</div></div>
+    <div class="stat" id="stat-update" title="点击触发每日更新(雷达/净值/首页)"><div class="stat-ico">🕒</div><div class="v" data-text="{{LAST_DATE}}">{{LAST_DATE}}</div><div class="k">最近更新 · 点击更新</div></div>
   </section>
 
   <!-- 重点产品绩效面板(由 update_nav.py 驱动) -->
@@ -491,15 +503,15 @@ a{text-decoration:none;color:inherit}
   tick();
 })();
 
-/* ---- 成果展厅类型筛选(按 显示名 分组, 同语义类型合并: kb/knowledge→知识库) ---- */
+/* ---- 成果展厅类型筛选(按 显示名 分组, 同语义类型合并: kb/knowledge→知识库, cockpit→工具) ---- */
 (function(){
-  var TYPE_NAMES={radar:'雷达',report:'报告',tool:'工具',cockpit:'驾驶舱',kb:'知识库',
+  var TYPE_NAMES={radar:'雷达',report:'报告',tool:'工具',cockpit:'工具',kb:'知识库',
     knowledge:'知识库',briefing:'点评',lan:'内网',external:'外链'};
   var bar=document.getElementById('filter-bar'),grid=document.getElementById('gallery-grid');
   if(!bar||!grid)return;
   var cards=grid.querySelectorAll('.card');
   if(!cards.length)return;
-  // 收集 (实际类型 → 显示名) 有序去重映射; 同语义类型(kb/knowledge)合并成同一显示名
+  // 收集 (实际类型 → 显示名) 有序去重映射; 同语义类型合并成同一显示名
   var nameByType={},names=[];
   cards.forEach(function(c){
     var t=c.getAttribute('data-type');
@@ -509,22 +521,44 @@ a{text-decoration:none;color:inherit}
     if(names.indexOf(n)<0)names.push(n);
   });
   var btns=[];
+  function applyFilter(label){
+    btns.forEach(function(x){x.classList.toggle('active',x.textContent===label)});
+    var cur=(label==='全部')?'':label;
+    cards.forEach(function(c){
+      var t=c.getAttribute('data-type');
+      var show=!cur||(nameByType[t]||t.toUpperCase())===cur;
+      c.classList.toggle('hidden',!show);
+    });
+  }
   function mk(label){
     var b=document.createElement('button');
     b.type='button';b.textContent=label;
-    b.addEventListener('click',function(){
-      btns.forEach(function(x){x.classList.toggle('active',x===b)});
-      var cur=(label==='全部')?'':label; // 空=全部
-      cards.forEach(function(c){
-        var t=c.getAttribute('data-type');
-        var show=!cur||(nameByType[t]||t.toUpperCase())===cur;
-        c.classList.toggle('hidden',!show);
-      });
-    });
+    b.addEventListener('click',function(){applyFilter(label)});
     bar.appendChild(b);btns.push(b);return b;
   }
-  mk('全部').classList.add('active');
+  mk('全部');
   names.forEach(function(n){mk(n)});
+  applyFilter('全部');
+
+  /* 统计卡点击: 有独立页面的直接跳转, 其余切筛选并滚到展厅 */
+  var statTargets={
+    '全部': function(){applyFilter('全部')},
+    '雷达': function(){location.href='radar.html'},
+    '报告': function(){applyFilter('报告')},
+    '知识库': function(){location.href='knowledge/index.html'},
+    '工具': function(){applyFilter('工具')}
+  };
+  document.querySelectorAll('.stat[data-jump]').forEach(function(st){
+    st.addEventListener('click',function(){
+      var fn=statTargets[st.getAttribute('data-jump')];
+      if(!fn)return;
+      var isJump=st.getAttribute('data-jump')==='雷达'||st.getAttribute('data-jump')==='知识库';
+      fn();
+      if(!isJump){
+        document.getElementById('gallery').scrollIntoView({behavior:'smooth'});
+      }
+    });
+  });
 })();
 
 /* ---- 数据条数字滚动动画(纯数字才有动画; 日期直接显示) ---- */
@@ -547,6 +581,53 @@ a{text-decoration:none;color:inherit}
     requestAnimationFrame(step);
     /* 保险丝: rAF 不触发时确保终值正确(900ms+缓冲后重设) */
     setTimeout(function(){if(!done)el.textContent=target;},1200);
+  });
+})();
+
+/* ---- 最近更新卡: 点击触发每日更新(经本机调度服务 18999, 老板电脑专用) ---- */
+(function(){
+  var UPDATE_SVC = "http://127.0.0.1:18999";
+  var card = document.getElementById('stat-update');
+  var k = card ? card.querySelector('.k') : null;
+  if (!card) return;
+  var busy = false, timer = null;
+
+  function setBusy(on, text){
+    busy = on;
+    card.classList.toggle('updating', on);
+    if (text !== undefined) k.textContent = text;
+  }
+  function done(text){
+    setBusy(false, text);
+    clearInterval(timer);
+    timer = null;
+    /* 更新完成后刷新页面拿新数据 */
+    setTimeout(function(){ location.reload(); }, 1200);
+  }
+  card.addEventListener('click', function(){
+    if (busy) return;
+    fetch(UPDATE_SVC + "/update", {cache: 'no-store'})
+      .then(function(r){
+        if (!r.ok) throw new Error('svc ' + r.status);
+        return r.text();
+      })
+      .then(function(t){
+        setBusy(true, t === 'busy' ? '更新进行中(他人已触发)' : '更新中…');
+        /* 轮询状态 */
+        timer = setInterval(function(){
+          fetch(UPDATE_SVC + "/update/status", {cache: 'no-store'})
+            .then(function(r){ return r.json(); })
+            .then(function(s){
+              if (!s.running) {
+                done(s.ok ? '最近更新 · 已刷新' : '更新失败, 点此重试');
+              }
+            })
+            .catch(function(){ /* 状态查询失败继续轮询 */ });
+        }, 2500);
+      })
+      .catch(function(){
+        setBusy(false, '仅本机可触发更新');
+      });
   });
 })();
 </script>

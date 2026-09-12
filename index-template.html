@@ -101,6 +101,51 @@ a{text-decoration:none;color:inherit}
 }
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 
+/* ---- 吐槽与功能需求: 顶栏按钮 + 弹窗 ---- */
+.feedback-btn{
+  display:flex;align-items:center;gap:6px;cursor:pointer;
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;
+  background:rgba(10,20,38,.4);
+  transition:border-color .25s,color .25s;
+}
+.feedback-btn:hover{border-color:var(--line-strong);color:var(--cyan)}
+.fb-overlay{
+  position:fixed;inset:0;z-index:2000;background:rgba(3,6,12,.7);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+.fb-overlay.show{display:flex}
+.fb-panel{
+  width:min(460px,94vw);background:var(--panel);border:1px solid var(--line-strong);
+  border-radius:16px;padding:26px 28px;box-shadow:0 16px 60px rgba(0,0,0,.55);
+}
+.fb-panel h3{font-size:16px;letter-spacing:.1em;margin-bottom:4px}
+.fb-panel .fb-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.7}
+.fb-kinds{display:flex;gap:10px;margin-bottom:14px}
+.fb-kind{
+  flex:1;text-align:center;padding:9px 0;border-radius:10px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(7,16,33,.6);color:var(--muted);
+  font-size:13px;transition:all .18s;
+}
+.fb-kind.on{color:var(--cyan);border-color:var(--line-strong);background:rgba(34,211,238,.1)}
+.fb-panel textarea{
+  width:100%;height:130px;resize:vertical;background:rgba(7,16,33,.95);
+  border:1px solid var(--line);border-radius:10px;color:var(--text);
+  font-size:14px;padding:12px;outline:none;font-family:inherit;line-height:1.7;
+}
+.fb-panel textarea:focus{border-color:var(--cyan)}
+.fb-actions{display:flex;gap:10px;margin-top:14px;align-items:center}
+.fb-actions .fb-btn{
+  padding:9px 22px;border:none;border-radius:9px;cursor:pointer;
+  font-size:13.5px;font-weight:700;letter-spacing:.12em;transition:filter .18s;
+}
+.fb-actions .fb-submit{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#03101f}
+.fb-actions .fb-cancel{background:rgba(7,16,33,.8);color:var(--muted);border:1px solid var(--line)}
+.fb-actions .fb-btn:hover{filter:brightness(1.2)}
+.fb-status{font-size:12px;color:var(--muted)}
+.fb-status.ok{color:var(--green)}
+
 /* ---- 顶栏导航 ---- */
 .topnav{margin-left:26px;display:flex;gap:22px}
 .topnav a{
@@ -167,7 +212,7 @@ a{text-decoration:none;color:inherit}
 @keyframes blip{0%,100%{opacity:.15}45%,55%{opacity:1}}
 @media (max-width:900px){.radar{display:none}}
 
-/* ---- 全局搜索 ---- */
+/* ---- 全局搜索: 输入框 + 搜索按钮, 点按钮/回车直达结果 ---- */
 .search-wrap{
   display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:18px;
   animation:fadeUp .7s .26s ease-out both;
@@ -176,7 +221,7 @@ a{text-decoration:none;color:inherit}
   flex:1;min-width:260px;display:flex;align-items:center;gap:10px;
   border:1px solid var(--line-strong);border-radius:12px;
   background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  padding:11px 16px;transition:border-color .2s, box-shadow .2s;
+  padding:6px 6px 6px 16px;transition:border-color .2s, box-shadow .2s;
 }
 .search-box:focus-within{border-color:var(--cyan);box-shadow:var(--glow)}
 .search-box .search-ico{font-size:16px;opacity:.85}
@@ -186,12 +231,13 @@ a{text-decoration:none;color:inherit}
 }
 .search-box input::placeholder{color:var(--muted)}
 .search-box button{
-  background:transparent;border:1px solid var(--line);border-radius:8px;
-  color:var(--muted);font-size:12px;padding:4px 12px;cursor:pointer;
-  display:none;transition:color .18s, border-color .18s;
+  flex-shrink:0;border:none;border-radius:8px;cursor:pointer;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  color:#03101f;font-size:13.5px;font-weight:700;letter-spacing:.12em;
+  padding:9px 20px;transition:filter .18s, transform .18s;
 }
-.search-box button:hover{color:var(--cyan);border-color:var(--line-strong)}
-.search-hint{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.05em}
+.search-box button:hover{filter:brightness(1.2)}
+.search-box button:active{transform:scale(.97)}
 
 /* ---- 数据条 ---- */
 .stats{
@@ -440,8 +486,28 @@ a{text-decoration:none;color:inherit}
     <div class="logo">E</div>
     <div class="brand"><em>EVERSTEAD</em></div>
     <nav class="topnav"><a href="index.html">首页</a><a href="cockpit.html">驾驶舱</a><a href="factors.html">因子</a><a href="knowledge/index.html">知识库</a></nav>
+    <button class="feedback-btn" id="feedbackBtn" type="button" title="记录使用体验与功能需求">💬 吐槽与功能需求</button>
     <div class="status"><span class="dot"></span>SYSTEM ONLINE</div>
   </header>
+
+  <!-- 吐槽与功能需求弹窗 -->
+  <div class="fb-overlay" id="fbOverlay">
+    <div class="fb-panel">
+      <h3>💬 吐槽与功能需求</h3>
+      <div class="fb-sub">使用中遇到的不爽、想要的新功能, 都写在这里。<br>提交后铁蛋会定期查看, 和老板商量后再决定要不要更新。</div>
+      <div class="fb-kinds" id="fbKinds">
+        <div class="fb-kind on" data-kind="feature">💡 功能需求</div>
+        <div class="fb-kind" data-kind="bug">🐞 吐槽不爽</div>
+        <div class="fb-kind" data-kind="other">💬 其他想法</div>
+      </div>
+      <textarea id="fbText" placeholder="说点什么吧, 比如: 希望雷达页能按城市筛选…" maxlength="5000"></textarea>
+      <div class="fb-actions">
+        <button class="fb-btn fb-submit" id="fbSubmit" type="button">提 交</button>
+        <button class="fb-btn fb-cancel" id="fbCancel" type="button">取消</button>
+        <span class="fb-status" id="fbStatus"></span>
+      </div>
+    </div>
+  </div>
 
   <!-- Hero -->
   <section class="hero">
@@ -467,11 +533,10 @@ a{text-decoration:none;color:inherit}
     <div class="search-wrap">
       <div class="search-box">
         <span class="search-ico">🔍</span>
-        <input id="globalSearch" type="text" placeholder="搜索成果(名称/描述/编号, 如: 雷达 / 利率 / 03)"
+        <input id="globalSearch" type="text" placeholder="搜索成果, 如: 雷达 / 利率 / 03"
                autocomplete="off">
-        <button id="searchClear" type="button">✕ 清除</button>
+        <button id="searchGo" type="button">搜 索</button>
       </div>
-      <span class="search-hint">Ctrl+K 聚焦搜索</span>
     </div>
   </div>
 
@@ -654,13 +719,12 @@ a{text-decoration:none;color:inherit}
   order.forEach(function(n){mk(n)});
   applyFilter('全部');
 
-  /* 3. 全局搜索: 名称/描述/编号 匹配, 命中的组自动展开, 无命中组隐藏 */
+  /* 3. 全局搜索: 输入框+按钮, 点按钮/回车 → 执行匹配并滚动直达结果区 */
   var searchInput=document.getElementById('globalSearch');
-  var searchClear=document.getElementById('searchClear');
+  var searchGo=document.getElementById('searchGo');
   var kw='';
   function applySearch(){
     kw=searchInput.value.trim().toLowerCase();
-    searchClear.style.display=kw?'':'none';
     var anyHit=false;
     Object.keys(groupEls).forEach(function(n){
       var hits=groups[n].filter(function(c){
@@ -697,17 +761,15 @@ a{text-decoration:none;color:inherit}
     }else if(emptyTip){
       if(!kw||anyHit)emptyTip.remove();
     }
+    /* 有关键词才滚动到展厅结果区 */
+    if(kw) wrap.scrollIntoView({behavior:'smooth',block:'start'});
   }
-  searchInput.addEventListener('input',applySearch);
-  searchClear.addEventListener('click',function(){
-    searchInput.value='';applySearch();
-  });
-
-  /* Ctrl+K 聚焦搜索 */
-  document.addEventListener('keydown',function(e){
-    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){
-      e.preventDefault();searchInput.focus();searchInput.select();
-    }
+  function runSearch(){
+    applySearch();  /* 空输入也执行: 恢复全部组 + 清除无命中提示 */
+  }
+  searchGo.addEventListener('click',runSearch);
+  searchInput.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){e.preventDefault();runSearch();}
   });
 
   /* 4. 统计卡点击: 有独立页面的跳转, 其余切筛选并滚到展厅 */
@@ -799,6 +861,60 @@ a{text-decoration:none;color:inherit}
         setBusy(false, '仅本机可触发更新');
       });
   });
+})();
+
+/* ---- 吐槽与功能需求: 弹窗 + 提交到本机 18999 /feedback ---- */
+(function(){
+  var LAUNCH = 'http://127.0.0.1:18999';
+  var overlay = document.getElementById('fbOverlay');
+  var kind = 'feature';
+
+  document.getElementById('feedbackBtn').addEventListener('click', function(){
+    overlay.classList.add('show');
+    document.getElementById('fbText').focus();
+  });
+  document.getElementById('fbCancel').addEventListener('click', function(){
+    overlay.classList.remove('show');
+    setStatus('');
+  });
+  overlay.addEventListener('click', function(e){
+    if(e.target === overlay) overlay.classList.remove('show');
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && overlay.classList.contains('show')){
+      overlay.classList.remove('show');
+    }
+  });
+  var kinds = document.querySelectorAll('.fb-kind');
+  for (var i = 0; i < kinds.length; i++) {
+    kinds[i].addEventListener('click', function(){
+      kinds.forEach(function(k){ k.classList.remove('on'); });
+      this.classList.add('on');
+      kind = this.getAttribute('data-kind');
+    });
+  }
+  function setStatus(msg, ok){
+    var el = document.getElementById('fbStatus');
+    el.textContent = msg;
+    el.className = 'fb-status' + (ok ? ' ok' : '');
+  }
+  function sendFeedback(){
+    var text = document.getElementById('fbText').value.trim();
+    if (!text) { setStatus('先写点什么再提交'); return; }
+    var btn = document.getElementById('fbSubmit');
+    btn.disabled = true;
+    setStatus('提交中…');
+    fetch(LAUNCH + '/feedback', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({kind: kind, text: text, page: location.pathname})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(){ setStatus('✅ 已收到, 谢谢!', true); })
+    .catch(function(){ setStatus('本机服务未开, 请直接微信告诉老板', false); })
+    .finally(function(){ btn.disabled = false; });
+  }
+  document.getElementById('fbSubmit').addEventListener('click', sendFeedback);
 })();
 </script>
 </body>

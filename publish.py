@@ -408,6 +408,11 @@ def build_index(reports: list) -> None:
     print(f"[build] index.html ({total} 个成果卡片, 最近更新 {last_date})")
 
 
+def inject_nav() -> None:
+    """全站悬浮导航注入(2026-09-12): 调用 inject_nav.py, 增量幂等。"""
+    subprocess.run([sys.executable, str(SITE / "inject_nav.py")], check=True)
+
+
 def main():
     args = [a for a in sys.argv[1:] if a != "--no-push"]
     push = "--no-push" not in sys.argv[1:]
@@ -427,6 +432,7 @@ def main():
         build_report(f)
     build_briefing_archive()
     build_index(reports)
+    inject_nav()  # 全站悬浮导航(返回上一步+返回首页), 增量幂等
     if push:
         subprocess.run(["git", "-C", str(SITE), "add", "-A"], check=True)
         subprocess.run(["git", "-C", str(SITE), "commit", "-m", "发布: 成果站更新"], check=True)

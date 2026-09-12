@@ -187,24 +187,35 @@ def import_excel(excel_dir, hist):
     """--import <目录> : 从 iFinD「业绩表现」导出的 xls 导入历史净值。
     文件名格式: 业绩表现(ZY0049).xls / 业绩表现(ZY0053).xls (实为 xlsx)
     数据源标注"同花顺iFinD", 字段: 时间|单位净值|复权|累计|增长率(%)"""
-    import xlrd
     for code in PRODUCTS:
         f = Path(excel_dir) / ("业绩表现(%s).xls" % code)
         if not f.exists():
             print("  [skip] 找不到 %s" % f.name)
             continue
-        wb = xlrd.open_workbook(str(f))
-        sh = wb.sheet_by_name("净值走势")
+        # iFinD 导出的 .xls 实为 xlsx (2026-09-08 踩坑: xlrd 不支持 xlsx)
+        # openpyxl 按扩展名判断格式, .xls 扩展名直接拒绝 → 临时复制为 .xlsx 再读
+        import openpyxl, shutil, tempfile, os
+        tmp_x = os.path.join(tempfile.gettempdir(), "ifind_nav_%s.xlsx" % code)
+        shutil.copy(str(f), tmp_x)
         rows = []
-        for r in range(1, sh.nrows):
-            d = str(sh.cell_value(r, 0)).strip()
-            nav = sh.cell_value(r, 1)
-            pct = sh.cell_value(r, 4)
-            if not d.startswith("20") or not isinstance(nav, float):
-                continue
-            pct_s = norm_num(pct)
-            rows.append({"date": d[:10], "nav": round(float(nav), 4),
-                         "pct": None if pct_s == "" else round(float(norm_num(pct_s).rstrip("%")), 4)})
+        try:
+            wb = openpyxl.load_workbook(tmp_x, read_only=True, data_only=True)
+            sh = wb["净值走势"]
+            for row in sh.iter_rows(min_row=2, values_only=True):
+                d = str(row[0] or "").strip()
+                nav = row[1]
+                pct = row[4]
+                if not d.startswith("20") or not isinstance(nav, (int, float)):
+                    continue
+                pct_s = norm_num(pct)
+                rows.append({"date": d[:10], "nav": round(float(nav), 4),
+                             "pct": None if pct_s == "" else round(float(norm_num(pct_s).rstrip("%")), 4)})
+        finally:
+            try:
+                wb.close()
+            except NameError:
+                pass
+            os.remove(tmp_x)
         by_date = {x["date"]: x for x in hist[code]}
         for x in rows:
             by_date[x["date"]] = x

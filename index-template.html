@@ -671,7 +671,7 @@ a{text-decoration:none;color:inherit}
 /* ---- 成果展厅: 分类分组 + 折叠 + 筛选 + 全局搜索联动 ---- */
 (function(){
   var TYPE_NAMES={radar:'雷达',report:'报告',tool:'工具',cockpit:'工具',kb:'知识库',
-    knowledge:'知识库',briefing:'点评',lan:'内网',external:'外链'};
+    knowledge:'知识库',briefing:'点评',lan:'密码区',external:'外链'};
   var CAT_META={  /* 分组显示顺序 + 图标 */
     '知识库':{ico:'📚',open:true},
     '雷达':{ico:'📡',open:true},
@@ -679,7 +679,7 @@ a{text-decoration:none;color:inherit}
     '工具':{ico:'🧰',open:true},
     '驾驶舱':{ico:'🖥️',open:false},
     '点评':{ico:'📰',open:false},
-    '内网':{ico:'🔒',open:false}
+    '密码区':{ico:'🔒',open:false}
   };
   var bar=document.getElementById('filter-bar');
   var grid=document.getElementById('gallery-grid');
@@ -837,7 +837,7 @@ a{text-decoration:none;color:inherit}
   if(!input||!panel)return;
 
   var TYPE_LABEL={radar:'雷达',report:'报告',tool:'工具',cockpit:'驾驶舱',
-    knowledge:'知识库',briefing:'点评',lan:'内网',kb:'知识库'};
+    knowledge:'知识库',briefing:'点评',lan:'密码区',kb:'知识库'};
 
   /* ---- 归一化: 全角→半角、年期→年、小写、空白折叠(与 build_search_index.py 同规则) ---- */
   var FULLWIDTH_PUNCT={'（':'(','）':')','，':',','。':'.','％':'%'};

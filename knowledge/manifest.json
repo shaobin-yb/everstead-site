@@ -325,23 +325,6 @@
       "url": null
     },
     {
-      "slug": "motherland-100",
-      "topic": "stay-hungry",
-      "title": "祖国 100 岁",
-      "type": "image",
-      "date": "2026-09-07",
-      "desc": "图片（内容未查看，按文件名登记）",
-      "tags": [
-        "图片"
-      ],
-      "original": "祖国100岁.jpg",
-      "file": "祖国100岁.jpg",
-      "size": 329169,
-      "pages": 1,
-      "url": null,
-      "private": true
-    },
-    {
       "slug": "waic-2026-speeches",
       "topic": "ai",
       "title": "2026 世界人工智能大会演讲全录",

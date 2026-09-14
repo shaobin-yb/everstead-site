@@ -33,15 +33,15 @@ BRIEFING_KEEP = 60       # 归档点评最多收录篇数
 
 # 绝对禁止索引(密码门/私人专区/自引用)。相对 SITE, 正斜杠, 小写
 # knowledge/iflyink-notes/ 是私人专区(不在 manifest, 有密码门);
-# union-card-handbook-2026 / motherland-100 是 manifest private 条目
+# union-card-handbook-2026 是 manifest private 条目
 PRIVATE_PREFIXES = (
     "private.html", "client-list.html", "client-list-lite.html",
     "tools/counterparty/", "tools/meal/", "tools/nursery/",
     "tools/nursery-parents/", "tools/family-links/",
     "tools/baby-name-board/", "tools/naming/",
+    "tools/scattered-private/",
     "knowledge/iflyink-notes/",
     "knowledge/union-card-handbook-2026/",
-    "knowledge/motherland-100/",
     "radar-site/",
 )
 SKIP_FILES = {"index.html", "index-template.html", "kb.html", "search.json"}

@@ -6,6 +6,7 @@
 - 首页 index.html 跳过(已在首页, FAB 自身也有保护)
 - 带密码门的私有页跳过(自动加导航会绕过密码门, 变成"未解锁先露底"):
     client-list.html / client-list-lite.html / private.html / tools/counterparty/counterparty.html
+    tools/scattered-private/index.html(私人专区内容页, 本身已有返回链接)
 - radar-site/ 的站点页有站内返回导航, 同样跳过(只给顶层 radar.html 注入)
 - index-template.html 是模板源(注入后 publish.py 渲染会自动带进首页→被首页保护跳过, 注入与否无害, 跳过保持模板干净)
 
@@ -29,6 +30,7 @@ SKIP = {
     "private.html",
     "tools/counterparty/counterparty.html",
     "tools/unassigned/unassigned.html",
+    "tools/scattered-private/index.html",
 }
 
 

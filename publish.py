@@ -433,6 +433,10 @@ def main():
         build_report(f)
     build_briefing_archive()
     build_index(reports)
+    # 全站搜索索引(2026-09-14)。函数级导入: build_search_index 反向 import publish
+    # 复用常量, 模块级互引会循环导入。
+    import build_search_index
+    build_search_index.main()
     inject_nav()  # 全站悬浮导航(返回上一步+返回首页), 增量幂等
     if push:
         subprocess.run(["git", "-C", str(SITE), "add", "-A"], check=True)

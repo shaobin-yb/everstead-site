@@ -89,6 +89,24 @@ def esc(s) -> str:
             .replace('"', "&quot;"))
 
 
+def norm_py(s: str) -> str:
+    """搜索数据侧归一化(2026-09-14): 全角→半角、年期→年、小写、空白折叠。
+    与页面 FILTER_JS 里的 norm()、build_search_index.py 的 norm_py 同规则,
+    保证 data-search 与查询侧同构。"""
+    out = []
+    for ch in str(s):
+        code = ord(ch)
+        if 0xFF10 <= code <= 0xFF19:      # 全角数字
+            out.append(chr(code - 0xFEE0))
+        elif 0xFF21 <= code <= 0xFF3A:    # 全角大写
+            out.append(chr(code - 0xFEE0))
+        elif 0xFF41 <= code <= 0xFF5A:    # 全角小写
+            out.append(chr(code - 0xFEE0))
+        else:
+            out.append({"（": "(", "）": ")", "，": ",", "。": ".", "％": "%"}.get(ch, ch))
+    return re.sub(r"\s+", " ", "".join(out).replace("年期", "年")).lower().strip()
+
+
 def human_size(n: int) -> str:
     if n >= 1024 * 1024:
         return f"{n / 1024 / 1024:.1f} MB"
@@ -460,11 +478,21 @@ document.addEventListener('touchend', function(e){
 </script>"""
 
 FILTER_JS = """<script>
+/* 查询归一化(2026-09-14): 全角→半角、年期→年, 与首页全站搜索/构建脚本同规则 */
+function norm(s){
+  return String(s||'')
+    .replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0)})
+    .replace(/[Ａ-Ｚ]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0)})
+    .replace(/[ａ-ｚ]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0)})
+    .replace(/[（），。％]/g,function(c){return {'（':'(','）':')','，':',','。':'.','％':'%'}[c]})
+    .replace(/年期/g,'年')
+    .toLowerCase().replace(/\\s+/g,' ').trim();
+}
 const q = document.getElementById('q');
 const cards = Array.from(document.querySelectorAll('.kb-card'));
 const n = document.getElementById('kb-count-n');
 q.addEventListener('input', function(){
-  const s = q.value.trim().toLowerCase();
+  const s = norm(q.value);
   let vis = 0;
   cards.forEach(function(c){
     const hit = !s || c.dataset.search.includes(s);
@@ -634,8 +662,8 @@ def item_card(it: dict, tname: str) -> str:
         durl = f"files/{slug}/{urllib.parse.quote(fname)}"
         dl = (f'<a class="kb-dl" href="{durl}" download '
               f'onclick="event.stopPropagation()">⬇ 下载</a>')
-    search = " ".join([it.get("title", ""), it.get("desc", ""),
-                       " ".join(it.get("tags", [])), tname]).lower()
+    search = norm_py(" ".join([it.get("title", ""), it.get("desc", ""),
+                               " ".join(it.get("tags", [])), tname]))
     fname_html = f'<div class="kb-fname">{esc(it.get("original") or "")}</div>' if fname else ""
     return (f'<div class="kb-card" onclick="location.href=\'{slug}/index.html\'" '
             f'data-search="{esc(search)}">'
@@ -869,6 +897,11 @@ def cmd_ls() -> None:
 def cmd_build() -> None:
     m = load_manifest()
     build_all(m)
+    # 重建覆盖页面会丢失 nav-fab, 重扫注入(2026-09-14: --all 因当日标记会跳过增量;
+    # 已有 nav 的页面按 tag 幂等跳过, 全站扫描开销可忽略)
+    r = subprocess.run([sys.executable, str(KB.parent / "inject_nav.py"), "--all"],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    print(f"[nav] {r.stdout.strip()}" if r.returncode == 0 else f"[nav] {r.stderr[-200:]}")
     print("[ok] 全量重建完成(未重渲图片)")
 
 

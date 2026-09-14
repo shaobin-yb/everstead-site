@@ -239,6 +239,40 @@ a{text-decoration:none;color:inherit}
 .search-box button:hover{filter:brightness(1.2)}
 .search-box button:active{transform:scale(.97)}
 
+/* ---- 全站搜索下拉结果面板(2026-09-14: 索引 search.json, 即时命中) ---- */
+.search-wrap{position:relative}
+.search-panel{
+  position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:1200;
+  max-height:min(60vh,520px);overflow-y:auto;
+  background:rgba(5,12,25,.96);border:1px solid var(--line-strong);
+  border-radius:14px;box-shadow:0 18px 60px rgba(0,0,0,.6), var(--glow);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  padding:8px;display:none;
+}
+.search-panel.show{display:block}
+.search-item{display:flex;gap:12px;padding:10px 12px;border-radius:10px;
+  cursor:pointer;border-bottom:1px solid var(--line)}
+.search-item:last-child{border-bottom:none}
+.search-item:hover,.search-item.active{background:rgba(34,211,238,.08)}
+.search-item .s-ico{font-size:18px;flex-shrink:0;margin-top:2px}
+.search-item .s-main{min-width:0;flex:1}
+.search-item .s-t{font-size:14px;font-weight:700;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-item .s-t mark{background:rgba(34,211,238,.25);color:#a5f3fc;
+  border-radius:3px;padding:0 2px}
+.search-item .s-snip{font-size:12px;color:var(--muted);line-height:1.6;
+  margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden}
+.search-item .s-snip mark{background:rgba(34,211,238,.25);color:#a5f3fc}
+.search-item .s-meta{display:flex;align-items:center;gap:8px;margin-top:5px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.06em}
+.search-item .s-tag{color:var(--cyan);border:1px solid var(--line-strong);
+  border-radius:999px;padding:1px 8px;flex-shrink:0}
+.search-item .s-date{color:var(--muted);flex-shrink:0}
+.search-foot{padding:8px 12px 4px;font-size:11px;color:var(--muted);
+  font-family:var(--mono);letter-spacing:.08em;border-top:1px solid var(--line)}
+.search-panel .search-empty{padding:26px 12px;text-align:center;color:var(--muted);font-size:13px}
+
 /* ---- 数据条 ---- */
 .stats{
   display:flex;gap:14px;flex-wrap:wrap;
@@ -533,10 +567,11 @@ a{text-decoration:none;color:inherit}
     <div class="search-wrap">
       <div class="search-box">
         <span class="search-ico">🔍</span>
-        <input id="globalSearch" type="text" placeholder="搜索成果, 如: 雷达 / 利率 / 03"
-               autocomplete="off">
+        <input id="globalSearch" type="text" placeholder="全站搜索: 利率 / 10年期 / 客户 / 合规 / 收盘点评"
+               autocomplete="off" role="combobox" aria-expanded="false" aria-controls="searchPanel">
         <button id="searchGo" type="button">搜 索</button>
       </div>
+      <div class="search-panel" id="searchPanel" role="listbox"></div>
     </div>
   </div>
 
@@ -1065,10 +1100,8 @@ a{text-decoration:none;color:inherit}
   function runSearch(){
     applySearch();  /* 空输入也执行: 恢复全部组 + 清除无命中提示 */
   }
-  searchGo.addEventListener('click',runSearch);
-  searchInput.addEventListener('keydown',function(e){
-    if(e.key==='Enter'){e.preventDefault();runSearch();}
-  });
+  /* 2026-09-14: 事件交由全站搜索引擎接管; 本函数保留为 file:// 降级路径 */
+  window.__legacySearch = runSearch;
 
   /* 4. 统计卡点击: 有独立页面的跳转, 其余切筛选并滚到展厅 */
   var statTargets={
@@ -1088,6 +1121,273 @@ a{text-decoration:none;color:inherit}
         document.getElementById('gallery').scrollIntoView({behavior:'smooth'});
       }
     });
+  });
+})();
+
+/* ---- 全站搜索(2026-09-14): fetch search.json → bigram 打分 → 下拉面板 ----
+   查询与索引同归一化(全角→半角、年期→年、小写);
+   中文无分词器, 用字符 bigram 重叠打分, 完整子串命中大幅加权;
+   file:// 下 fetch 失败 → 降级旧卡片过滤(window.__legacySearch)。 */
+(function(){
+  var input=document.getElementById('globalSearch');
+  var goBtn=document.getElementById('searchGo');
+  var panel=document.getElementById('searchPanel');
+  if(!input||!panel)return;
+
+  var TYPE_LABEL={radar:'雷达',report:'报告',tool:'工具',cockpit:'驾驶舱',
+    knowledge:'知识库',briefing:'点评',lan:'内网',kb:'知识库'};
+
+  /* ---- 归一化: 全角→半角、年期→年、小写、空白折叠(与 build_search_index.py 同规则) ---- */
+  var FULLWIDTH_PUNCT={'（':'(','）':')','，':',','。':'.','％':'%'};
+  function norm(s){
+    return String(s||'')
+      .replace(/[０-９]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0)})
+      .replace(/[Ａ-Ｚ]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0)})
+      .replace(/[ａ-ｚ]/g,function(c){return String.fromCharCode(c.charCodeAt(0)-0xFEE0)})
+      .replace(/[（），。％]/g,function(c){return FULLWIDTH_PUNCT[c]})
+      .replace(/年期/g,'年')
+      .toLowerCase().replace(/\s+/g,' ').trim();
+  }
+
+  /* ---- bigram: 相邻字符对(跳过空白与标点), 去重 ---- */
+  function bigrams(s){
+    var set={}, prev=null, i, ch;
+    for(i=0;i<s.length;i++){
+      ch=s[i];
+      if(/[\s\p{P}\p{S}]/u.test(ch)){prev=null;continue}
+      if(prev!==null)set[prev+ch]=true;
+      prev=ch;
+    }
+    return set;
+  }
+
+  /* ---- 索引加载: 惰性单例; 每条目预建标题/正文 bigram 集合 ---- */
+  var idxPromise=null, idxData=null, idxFailed=false;
+  function loadIndex(){
+    if(idxData)return Promise.resolve(idxData);
+    if(idxFailed)return Promise.reject(idxFailed);
+    if(!idxPromise){
+      idxPromise=fetch('search.json').then(function(r){
+        if(!r.ok)throw new Error('HTTP '+r.status);
+        return r.json();
+      }).then(function(d){
+        idxData={items:d.items.map(function(it){
+          var t=norm(it.t), text=norm(it.text);
+          return {t:it.t,u:it.u,d:it.d,type:it.type,icon:it.icon,
+            tn:t,text:text,bigT:bigrams(t),bigText:bigrams(text.slice(0,64000))};
+        })};
+        return idxData;
+      }).catch(function(e){idxFailed=e;throw e});
+    }
+    return idxPromise;
+  }
+
+  /* ---- 打分: bigram 覆盖率加权 + 完整子串命中大幅加分 ----
+     title 权重 12 > tags 6 > text 3; 子串命中 ×8(标题 ×12), 2 字查询 ×2。 */
+  function score(it,qn,qBig){
+    var short=qn.length<2;
+    var hit,cover=0,sub=false,base;
+    if(short){  /* 单字查询: 只跑子串匹配, 防噪声轰炸 */
+      if(it.tn.indexOf(qn)>=0){sub=true;base=12}
+      else if(it.text.indexOf(qn)>=0){sub=true;base=4}
+      else return -Infinity;
+    }else{
+      for(hit in qBig){
+        if(it.bigT[hit])cover+=12;
+        else if(it.bigText[hit])cover+=3;
+      }
+      if(!cover)return -Infinity;
+      base=cover;
+      if(it.tn.indexOf(qn)>=0)sub=true;
+      else if(it.text.indexOf(qn)>=0)sub=true;
+    }
+    var boost=sub?8:0;
+    if(qn.length===2)boost*=2;
+    if(it.type==='tool'||it.type==='knowledge')boost+=0.5;
+    return base+boost;
+  }
+
+  /* ---- 片段: 取首个命中位置前后各 ~45 字符; 无位置则开头截取 ---- */
+  function snippet(it,qn){
+    var pos=it.text.indexOf(qn);
+    if(pos<0)pos=0;
+    var start=Math.max(0,pos-45);
+    var s=it.text.slice(start,start+90);
+    return (start>0?'…':'')+s+(start+90<it.text.length?'…':'');
+  }
+
+  /* ---- 命中高亮: 按查询原始 token 切分(大小写不敏感), textContent 逐段拼接(禁 innerHTML) ---- */
+  function markText(el,text,tokens){
+    var parts=[text];
+    tokens.forEach(function(tk){
+      if(!tk)return;
+      var next=[];
+      parts.forEach(function(p){
+        var idx=p.toLowerCase().indexOf(tk), rest=p;
+        while(idx>=0){
+          next.push(rest.slice(0,idx));
+          next.push({m:rest.slice(idx,idx+tk.length)});
+          rest=rest.slice(idx+tk.length);
+          idx=rest.toLowerCase().indexOf(tk);
+        }
+        next.push(rest);
+      });
+      parts=next;
+    });
+    parts.forEach(function(p){
+      if(typeof p==='string'){el.appendChild(document.createTextNode(p))}
+      else{var mk=document.createElement('mark');mk.textContent=p.m;el.appendChild(mk)}
+    });
+  }
+
+  /* ---- 渲染: 按类型分组, top 20 ---- */
+  var activeIdx=-1;
+  var renderQueue=0;
+  function render(hits,qn,tokens){
+    var q=renderQueue;
+    panel.innerHTML='';
+    if(!hits.length){
+      var em=document.createElement('div');
+      em.className='search-empty';
+      em.textContent='没有匹配的成果, 换个关键词试试';
+      panel.appendChild(em);
+    }
+    var groups=[], byType={};
+    hits.forEach(function(h){
+      var lab=TYPE_LABEL[h.type]||'页面';
+      if(!byType[lab]){byType[lab]=[];groups.push(lab)}
+      byType[lab].push(h);
+    });
+    groups.forEach(function(g){
+      var hd=document.createElement('div');
+      hd.className='search-foot';
+      hd.style.cssText='border-top:none;padding:8px 12px 4px';
+      hd.textContent=g+' · '+byType[g].length+' 条';
+      panel.appendChild(hd);
+      byType[g].forEach(function(it){
+        var row=document.createElement('div');
+        row.className='search-item';
+        row.setAttribute('role','option');
+        var ico=document.createElement('div');ico.className='s-ico';ico.textContent=it.icon||'📄';
+        var main=document.createElement('div');main.className='s-main';
+        var t=document.createElement('div');t.className='s-t';markText(t,it.t,tokens);
+        var sn=document.createElement('div');sn.className='s-snip';markText(sn,snippet(it,qn),tokens);
+        var meta=document.createElement('div');meta.className='s-meta';
+        var tag=document.createElement('span');tag.className='s-tag';tag.textContent=TYPE_LABEL[it.type]||'页面';
+        meta.appendChild(tag);
+        if(it.d){
+          var dt=document.createElement('span');dt.className='s-date';dt.textContent=it.d;
+          meta.appendChild(dt);
+        }
+        main.appendChild(t);main.appendChild(sn);main.appendChild(meta);
+        row.appendChild(ico);row.appendChild(main);
+        row.addEventListener('click',function(){openItem(it)});
+        panel.appendChild(row);
+      });
+    });
+    var foot=document.createElement('div');
+    foot.className='search-foot';
+    foot.textContent=hits.length+' 条结果 · ↑↓ 选择 · Enter 打开 · Esc 关闭';
+    panel.appendChild(foot);
+    setActive(q===renderQueue?0:-1);
+  }
+
+  function setActive(i){
+    var rows=panel.querySelectorAll('.search-item');
+    if(activeIdx>=0&&rows[activeIdx])rows[activeIdx].classList.remove('active');
+    activeIdx=i;
+    if(activeIdx>=0&&rows[activeIdx])rows[activeIdx].classList.add('active');
+  }
+  function openItem(it){
+    if(!it)return;
+    if(it.u&&it.u[0]!=='#'){
+      location.href=it.u;
+    }else{
+      closePanel();
+      alert('🔒 仅公司内网可访问');
+    }
+  }
+
+  var hits=[];
+  var timer=null;
+  function closePanel(){
+    panel.classList.remove('show');
+    panel.innerHTML='';
+    activeIdx=-1;
+    input.setAttribute('aria-expanded','false');
+  }
+  function runSearch(){
+    var q=input.value;
+    var qn=norm(q);
+    if(!qn){closePanel();return}
+    if(window.__legacySearch&&idxFailed){
+      /* fetch 失败(file:// 等)降级: 面板提示 + 旧卡片过滤 */
+      panel.innerHTML='';
+      var tip=document.createElement('div');
+      tip.className='search-empty';
+      tip.textContent='⚠️ 搜索索引加载失败(本地文件模式), 已切换为卡片过滤搜索';
+      panel.appendChild(tip);
+      panel.classList.add('show');
+      input.setAttribute('aria-expanded','true');
+      window.__legacySearch();
+      return;
+    }
+    loadIndex().then(function(){
+      var tokens=qn.split(/\s+/).map(function(tk){return tk.toLowerCase()});
+      var qBig=bigrams(qn);
+      var scored=[];
+      idxData.items.forEach(function(it){
+        var s=score(it,qn,qBig);
+        if(s>-Infinity)scored.push({it:it,s:s});
+      });
+      scored.sort(function(a,b){return b.s-a.s});
+      hits=scored.slice(0,20).map(function(x){return x.it});
+      renderQueue++;
+      render(hits,qn,tokens);
+      panel.classList.add('show');
+      input.setAttribute('aria-expanded','true');
+    }).catch(function(){
+      if(window.__legacySearch){
+        panel.innerHTML='';
+        var tip=document.createElement('div');
+        tip.className='search-empty';
+        tip.textContent='⚠️ 搜索索引加载失败(本地文件模式), 已切换为卡片过滤搜索';
+        panel.appendChild(tip);
+        panel.classList.add('show');
+        input.setAttribute('aria-expanded','true');
+        window.__legacySearch();
+      }
+    });
+  }
+
+  var debounce=null;
+  input.addEventListener('input',function(){
+    clearTimeout(debounce);
+    debounce=setTimeout(runSearch,150);
+  });
+  if(goBtn){
+    goBtn.addEventListener('click',function(){
+      clearTimeout(debounce);
+      runSearch();
+    });
+  }
+  input.addEventListener('keydown',function(e){
+    if(!panel.classList.contains('show'))return;
+    if(e.key==='ArrowDown'){e.preventDefault();setActive((activeIdx+1)%Math.max(1,panel.querySelectorAll('.search-item').length))}
+    else if(e.key==='ArrowUp'){e.preventDefault();var n=panel.querySelectorAll('.search-item').length;setActive((activeIdx-1+n)%Math.max(1,n))}
+    else if(e.key==='Enter'){
+      e.preventDefault();
+      var rows=panel.querySelectorAll('.search-item');
+      var it=hits[activeIdx>=0?activeIdx:0];
+      openItem(it);
+    }
+    else if(e.key==='Escape'){closePanel();input.blur()}
+  });
+  document.addEventListener('click',function(e){
+    if(!panel.classList.contains('show'))return;
+    var wrap=document.querySelector('.search-wrap');
+    if(wrap&&wrap.contains(e.target))return;
+    closePanel();
   });
 })();
 

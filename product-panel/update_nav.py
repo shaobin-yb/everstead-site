@@ -362,6 +362,37 @@ def main():
             by_date[r["date"]] = r
         hist["benchmark"] = sorted(by_date.values(), key=lambda x: x["date"])
 
+    # 新鲜度校验(2026-09-14 踩坑): 导出件旧于客户端披露, 管道照跑但产品净值
+    # 静默停在旧值, 首页数字一直不涨。基准(沪深300)永远最新 → 用基准序列
+    # 数产品落后几个交易日; ≥2 时: 老板离开(空闲达标)自动 UIA 补抓, 否则只告警。
+    def bench_ahead(code):
+        import bisect
+        bdates = [x["date"] for x in hist["benchmark"]]
+        latest = hist[code][-1]["date"]
+        if latest >= bdates[-1]:
+            return 0
+        return len(bdates) - bisect.bisect_right(bdates, latest)
+
+    if not ui_mode and not got_fresh:
+        stale = [c for c in PRODUCTS if bench_ahead(c) >= 2]
+        if stale:
+            for c in stale:
+                print("[stale] %s 净值最新 %s, 基准已到 %s (落后 %d 个交易日) — 导出件可能旧了"
+                      % (PRODUCTS[c]["name"], hist[c][-1]["date"],
+                         hist["benchmark"][-1]["date"], bench_ahead(c)))
+            idle = system_idle_seconds()
+            if idle >= IDLE_MIN_SECONDS:
+                print("[stale-ui] 老板已离开(空闲 %.0f 秒), 自动 UIA 补抓" % idle)
+                fg = ctypes.windll.user32.GetForegroundWindow()
+                try:
+                    fresh = read_ifind_tables()
+                    hist = merge(hist, fresh, bench)
+                    got_fresh = True
+                finally:
+                    ctypes.windll.user32.SetForegroundWindow(fg)
+            else:
+                print("[stale-skip] 老板在用电脑, 不抢 UI。稍后请 py update_nav.py --ui 手动补抓")
+
     for k in ("ZY0049", "ZY0053"):
         hist[k] = hist[k][-400:]
     hist["benchmark"] = hist["benchmark"][-250:]

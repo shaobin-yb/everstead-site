@@ -41,6 +41,7 @@ PRIVATE_PREFIXES = (
     "tools/baby-name-board/", "tools/naming/",
     "tools/scattered-private/",
     "tools/yuebing-travels/",
+    "tools/token-usage/",  # Token 用量展板(密码门, 2026-09-14)
     "knowledge/iflyink-notes/",
     "knowledge/union-card-handbook-2026/",
     "radar-site/",

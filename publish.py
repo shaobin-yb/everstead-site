@@ -40,7 +40,7 @@ ROOT_ARTIFACTS = [
      "上市公司闲置资金理财公告全景统计"),
     ("知识库", "knowledge/index.html", "2026-09-07", "📚", "knowledge",
      "PPT/PDF 翻页预览 + 原文件下载，按主题归档"),
-    ("CRM 客户关系管理系统", "#lan-crm", "2026-09-07", "👥", "lan",
+    ("CRM 客户关系管理系统", "http://192.168.100.148:3000", "2026-09-07", "👥", "lan",
      "客户/商机/拜访纪要 · 账号 wangshaobin · 🔒 仅公司内网可访问"),
     ("工具箱", "tools.html", "2026-09-09", "🧰", "tool",
      "网页工具(山东投资3件套+直接交易对手库) + 本地工具(8个 launch:// 一键唤起) + 私人专区(密码锁)"),
@@ -335,9 +335,10 @@ def build_index(reports: list) -> None:
 
     def card(name, href, date, icon, kind, desc, delay, no, external=False):
         ext = ' target="_blank" rel="noopener"' if external else ''
-        # lan(仅内网)卡片不携带可点击地址, href=# 不跳转
+        # lan(仅内网)卡片保留真实内网地址, 点击新标签页打开
+        # (2026-09-14 修复: 此前 href 强制置 # 导致 CRM 卡片点击无跳转)
         if kind == "lan":
-            href = "#"
+            ext = ' target="_blank" rel="noopener"'
         tag = TYPE_TAG.get(kind, kind.upper())
         return (f'<a class="card" data-type="{kind}" data-no="{no}" style="animation-delay:{delay:.2f}s" '
                 f'href="{href}"{ext}>'

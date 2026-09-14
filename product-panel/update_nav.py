@@ -216,6 +216,35 @@ def import_excel(excel_dir, hist):
             except NameError:
                 pass
             os.remove(tmp_x)
+        if not rows:
+            # 2026-09-14 踩坑: 同花顺导出的 xlsx 用 inline 字符串(t="inlineStr"),
+            # sharedStrings 为空, openpyxl 读这些单元格返回 None → 上面 0 行。
+            # 回退: 直接解包 sheet1.xml 按列解析 (A=日期, B=单位净值, E=增长率)。
+            import zipfile
+            import xml.etree.ElementTree as ET
+            NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
+            with zipfile.ZipFile(f) as z:  # 读原文件(此时 tmp_x 已被 finally 清理)
+                root = ET.fromstring(z.read("xl/worksheets/sheet1.xml"))
+            for row in root.findall(".//m:row", NS):
+                cells = {}
+                for c in row.findall("m:c", NS):
+                    col = "".join(ch for ch in c.get("r", "") if ch.isalpha())
+                    if c.get("t") == "inlineStr":
+                        is_el = c.find("m:is", NS)
+                        cells[col] = "".join(t.text or "" for t in is_el.iter()) if is_el is not None else ""
+                    else:
+                        v = c.find("m:v", NS)
+                        cells[col] = v.text if v is not None else ""
+                d = cells.get("A", "").strip()
+                try:
+                    nav = float(cells.get("B", ""))
+                    pct_s = norm_num(cells.get("E", ""))
+                    pct = None if pct_s == "" else round(float(norm_num(pct_s).rstrip("%")), 4)
+                except (TypeError, ValueError):
+                    continue
+                if d.startswith("20"):
+                    rows.append({"date": d[:10], "nav": round(nav, 4), "pct": pct})
+
         by_date = {x["date"]: x for x in hist[code]}
         for x in rows:
             by_date[x["date"]] = x

@@ -96,14 +96,19 @@ def main():
         for m, v in (s0.get("models") or {}).items():
             s["models"][m] = list(v)
     days = defaultdict(lambda: {"total": 0, "input": 0, "output": 0, "cache_read": 0,
-                                "by_model": defaultdict(int), "sessions": set()})
+                                "cache_creation": 0, "by_model": defaultdict(int),
+                                "model_detail": defaultdict(lambda: [0, 0, 0, 0]),
+                                "sessions": set()})
     # 每日聚合: 状态存日级累计, 新行往上叠加(不重放历史)
     for day, d0 in state.get("days", {}).items():
         dd = days[day]
         dd.update({"total": d0.get("total", 0), "input": d0.get("input", 0),
-                   "output": d0.get("output", 0), "cache_read": d0.get("cache_read", 0)})
+                   "output": d0.get("output", 0), "cache_read": d0.get("cache_read", 0),
+                   "cache_creation": d0.get("cache_creation", 0)})
         for m, v in (d0.get("by_model") or {}).items():
             dd["by_model"][m] = v
+        for m, v in (d0.get("model_detail") or {}).items():
+            dd["model_detail"][m] = list(v)
         dd["sessions"] = set(d0.get("sessions", []))
     new_lines = 0
     files = sorted(PROJECTS_DIR.glob("*/*.jsonl"))
@@ -163,7 +168,10 @@ def main():
                     dd["input"] += i
                     dd["output"] += o
                     dd["cache_read"] += cr
+                    dd["cache_creation"] += cc
                     dd["by_model"][m.get("model") or "unknown"] += tok
+                    md = dd["model_detail"][m.get("model") or "unknown"]
+                    md[0] += i; md[1] += o; md[2] += cr; md[3] += cc
                     dd["sessions"].add(d.get("sessionId") or f.stem)
                 s["cwd"] = s["cwd"] or d.get("cwd") or ""
             fstate[key] = {"offset": fh.tell(), "title": s["title"]}
@@ -174,7 +182,9 @@ def main():
                 "models": {m: list(v) for m, v in s["models"].items()}}
     def day_dump(d):
         return {"total": d["total"], "input": d["input"], "output": d["output"],
-                "cache_read": d["cache_read"], "by_model": dict(d["by_model"]),
+                "cache_read": d["cache_read"], "cache_creation": d["cache_creation"],
+                "by_model": dict(d["by_model"]),
+                "model_detail": {m: list(v) for m, v in d["model_detail"].items()},
                 "sessions": sorted(d["sessions"])}
     state["sessions"] = {sid: sess_dump(s) for sid, s in sessions.items() if s["total"] > 0}
     state["days"] = {day: day_dump(d) for day, d in days.items()}
@@ -183,7 +193,8 @@ def main():
 
     # ---- 模型 / 项目 聚合 ----
     models = defaultdict(lambda: [0, 0, 0, 0])
-    projects = defaultdict(lambda: {"total": 0, "sessions": set()})
+    projects = defaultdict(lambda: {"total": 0, "sessions": set(),
+                                    "model_detail": defaultdict(lambda: [0, 0, 0, 0])})
     for sid, s in sessions.items():
         if s["total"] <= 0:
             continue
@@ -193,6 +204,7 @@ def main():
         for m, v in s["models"].items():
             for k in range(4):
                 models[m][k] += v[k]
+                projects[pl]["model_detail"][m][k] += v[k]
 
     # ---- 组装输出 ----
     total_tok = sum(v[0] + v[1] + v[2] + v[3] for v in models.values())
@@ -201,16 +213,21 @@ def main():
     total_cr = sum(v[2] for v in models.values())
     sess_list = [{"id": sid, "t": s["title"] or "(无标题)", "p": project_label(s["cwd"]),
                   "d": s["first"], "d2": s["last"], "tok": s["total"],
-                  "models": sorted(s["models"].keys())}
+                  "models": {m: {"i": v[0], "o": v[1], "cr": v[2], "cc": v[3]}
+                             for m, v in s["models"].items()}}
                  for sid, s in sessions.items() if s["total"] > 0]
     sess_list.sort(key=lambda x: -x["tok"])
-    day_list = [{"d": k, **{kk: vv for kk, vv in v.items() if kk != "by_model" and kk != "sessions"},
-                 "by_model": dict(v["by_model"]), "sessions": len(v["sessions"])}
+    day_list = [{"d": k, **{kk: vv for kk, vv in v.items()
+                            if kk not in ("by_model", "sessions", "model_detail")},
+                 "by_model": dict(v["by_model"]),
+                 "model_detail": {m: list(mv) for m, mv in v["model_detail"].items()},
+                 "sessions": len(v["sessions"])}
                 for k, v in sorted(days.items())]
     model_list = [{"m": k, "i": v[0], "o": v[1], "cr": v[2], "cc": v[3],
                    "tok": v[0] + v[1] + v[2] + v[3]} for k, v in models.items()]
     model_list.sort(key=lambda x: -x["tok"])
-    proj_list = [{"p": k, "tok": v["total"], "sessions": len(v["sessions"])}
+    proj_list = [{"p": k, "tok": v["total"], "sessions": len(v["sessions"]),
+                  "model_detail": {m: list(mv) for m, mv in v["model_detail"].items()}}
                  for k, v in projects.items()]
     proj_list.sort(key=lambda x: -x["tok"])
 
@@ -288,11 +305,40 @@ a{text-decoration:none;color:inherit}
 .gate.err .gate-panel{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
-.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;backdrop-filter:blur(6px)}
 .stat .k{font-size:11px;color:var(--muted);letter-spacing:.12em;font-family:var(--mono)}
 .stat .v{font-size:21px;font-weight:700;margin-top:5px;font-family:var(--mono);color:var(--cyan)}
 .stat .v small{font-size:11px;font-weight:400;color:var(--muted);margin-left:2px}
+.chart-wrap{position:relative}
+.tooltip{position:fixed;z-index:9999;pointer-events:none;background:rgba(5,12,25,.97);
+  border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px;
+  font-family:var(--mono);font-size:11px;line-height:1.75;box-shadow:var(--glow);
+  min-width:200px;display:none}
+.tooltip .tt-h{color:var(--cyan);font-weight:700;font-size:12px;margin-bottom:4px}
+.tooltip .tt-r{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.tooltip .tt-r .dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.tooltip .tt-r b{margin-left:auto;color:var(--text);font-weight:600}
+.tooltip .tt-t{border-top:1px solid var(--line);margin-top:6px;padding-top:6px;color:var(--text)}
+.pr-dialog{position:fixed;inset:0;z-index:9998;background:rgba(3,6,12,.8);
+  display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.pr-dialog.show{display:flex}
+.pr-panel{background:var(--panel);border:1px solid var(--line-strong);border-radius:16px;
+  padding:22px 26px;box-shadow:var(--glow);width:min(560px,92vw);max-height:86vh;overflow-y:auto}
+.pr-panel h3{font-size:15px;margin-bottom:4px}
+.pr-sub{font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:14px;line-height:1.7}
+.pr-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr 1fr;gap:8px 10px;
+  align-items:center;margin-bottom:16px;font-size:12px}
+.pr-grid .ph{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em}
+.pr-grid .pm{font-family:var(--mono);color:var(--text);font-size:11.5px;white-space:nowrap}
+.pr-grid input{background:rgba(5,12,25,.9);border:1px solid var(--line);border-radius:6px;
+  padding:6px 8px;color:var(--text);font-family:var(--mono);font-size:12px;width:100%;outline:none}
+.pr-grid input:focus{border-color:var(--cyan)}
+.pr-btns{display:flex;gap:10px;justify-content:flex-end}
+.pr-btns button{border-radius:8px;padding:8px 18px;font-size:13px;cursor:pointer;font-weight:700}
+.pr-save{background:linear-gradient(135deg,var(--cyan),var(--blue));border:none;color:#03101f}
+.pr-reset{background:transparent;border:1px solid var(--line-strong);color:var(--muted)}
+.pr-cancel{background:transparent;border:1px solid var(--line);color:var(--muted)}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;backdrop-filter:blur(6px)}
 .card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .card-head h2{font-size:14px;letter-spacing:.1em}
@@ -356,7 +402,7 @@ tr:hover td{background:rgba(34,211,238,.04)}
         <button class="tog" id="tog90" type="button">近 90 天</button>
       </div>
     </div>
-    <div id="chart"></div>
+    <div class="chart-wrap"><div id="chart"></div></div>
     <div class="legend" id="chartLegend"></div>
   </div>
 
@@ -409,6 +455,37 @@ document.getElementById('btn').addEventListener('click',unlock);
 document.getElementById('pw').addEventListener('keydown',function(e){if(e.key==='Enter')unlock()});
 if(sessionStorage.getItem(GATE_KEY)==='1'){document.getElementById('gate').style.display='none'}
 
+/* ================= 成本模型(2026-09-14, 页内可调, 存 localStorage) =================
+   单价: 元/百万 tokens。默认取 DeepSeek V4 峰谷定价闲时档(第三方报道口径);
+   老板有真实账单时点「⚙ 价格校准」改数字, 全页立即重算。 */
+var DEFAULT_PRICES = {
+  'deepseek-v4-pro':   {h: 0.15, m: 4.5,  o: 13.5, w: 1.5},
+  'deepseek-v4-flash': {h: 0.05, m: 1.5,  o: 4.5,  w: 1.5},
+  'deepseek-flash':    {h: 0.05, m: 1.5,  o: 4.5,  w: 1.5},
+  'unknown':           {h: 0.05, m: 1.5,  o: 4.5,  w: 1.5}
+};  /* h=缓存命中 m=缓存未命中 o=输出 w=缓存写(按未命中计, 无独立官价) */
+function getPrices(){
+  try{return JSON.parse(localStorage.getItem('tok_prices')||'null')||DEFAULT_PRICES}
+  catch(e){return DEFAULT_PRICES}
+}
+function costOfModel(m, i, o, cr, cc){
+  var p=getPrices()[m]||DEFAULT_PRICES['unknown'];
+  /* 缓存读按命中价; 缓存写并入输入未命中价(DeepSeek 无独立 cache write 定价) */
+  return (cr/1e6*p.h + (i+cc)/1e6*p.m + o/1e6*p.o);
+}
+function modelTotals(it){  /* it = {models:{m:{i,o,cr,cc}}} → {cost, costPerModel:{m:¥}} */
+  var cost=0, per={};
+  Object.keys(it.models||{}).forEach(function(m){
+    var v=it.models[m]; var c=costOfModel(m,v.i,v.o,v.cr,v.cc);
+    cost+=c; per[m]=c;
+  });
+  return {cost:cost, per:per};
+}
+function cnY(v){
+  if(v>=1e4)return (v/1e4).toFixed(2)+' 万';
+  return v>=100?Math.round(v)+' 元':(v>=1? v.toFixed(1)+' 元': v.toFixed(2)+' 元');
+}
+
 /* ================= 数据渲染 ================= */
 var U = /*__USAGE_DATA__*/;
 var PAL = ['#22d3ee','#8b5cf6','#34d399','#fb923c','#f43f5e','#3b82f6'];
@@ -420,31 +497,77 @@ function hm(n){
 }
 function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
 
-/* KPI */
+/* KPI(成本按当前价格模型实时计算) */
 (function(){
   var T=U.totals;
-  var today=U.days.length?U.days[U.days.length-1].total:0;
+  var today=U.days.length?U.days[U.days.length-1]:null;
   var avg=U.days.length?Math.round(T.tok/U.days.length):0;
   var cacheRate=T.cr/(T.cr+T.in)*100;
+  var totCost=U.models.reduce(function(a,m){return a+costOfModel(m.m,m.i,m.o,m.cr,m.cc)},0);
+  /* 今日成本: 用今日逐模型明细精确计算(数据侧已给 i/o/cr/cc) */
+  var todayCost=0;
+  if(today){
+    Object.keys(today.model_detail||{}).forEach(function(m){
+      var v=today.model_detail[m];
+      todayCost+=costOfModel(m,v[0],v[1],v[2],v[3]);
+    });
+  }
+  var avgCost=U.days.length?totCost/U.days.length:0;
   var cards=[
     ['累计 TOKEN', hm(T.tok)],
-    ['今日 TOKEN', hm(today)],
+    ['累计成本', '¥ '+cnY(totCost)],
+    ['今日 TOKEN', hm(today?today.total:0)],
+    ['今日成本', '¥ '+cnY(todayCost)],
     ['会话数', T.sessions+' 次'],
-    ['活跃天数', T.days+' 天'],
     ['缓存命中率', cacheRate.toFixed(1)+'%'],
-    ['日均 TOKEN', hm(avg)]
+    ['日均 TOKEN', hm(avg)],
+    ['日均成本', '¥ '+cnY(avgCost)]
   ];
   var box=document.getElementById('stats');
+  box.innerHTML='';
   cards.forEach(function(c){
     var s=el('div','stat');
     s.appendChild(el('div','k',c[0]));
     s.appendChild(el('div','v',c[1]));
     box.appendChild(s);
   });
+  var pr=el('button','tog');
+  pr.style.cssText='margin-top:10px;font-size:11px';
+  pr.textContent='⚙ 价格校准';
+  pr.addEventListener('click',showPriceDialog);
+  box.parentElement.insertBefore(pr, box.nextSibling);
 })();
 
-/* 每日趋势 SVG 面积图 */
+/* 每日趋势: 面积图 + 自绘即时 tooltip(mousemove 驱动, 无 SVG title 延迟) */
 var CHART_N=30;
+var TT=null;  /* tooltip 单例 */
+function tipEl(){
+  if(TT)return TT;
+  TT=document.createElement('div');TT.className='tooltip';
+  document.body.appendChild(TT);
+  return TT;
+}
+function showTip(ev,day,models){
+  var t=tipEl();
+  var rows='';
+  models.forEach(function(m,i){
+    rows+='<div class="tt-r"><span class="dot" style="background:'+PAL[i%PAL.length]+'"></span>'
+      +m.name+'<b>'+hm(m.val)+'</b></div>';
+  });
+  var cost=0;
+  var md=day.model_detail||{};
+  Object.keys(md).forEach(function(m){var v=md[m];cost+=costOfModel(m,v[0],v[1],v[2],v[3])});
+  t.innerHTML='<div class="tt-h">'+day.d+'</div>'+rows
+    +'<div class="tt-t">'+hm(day.total)+' token · <span style="color:#fbbf24">¥ '+cnY(cost)+'</span>'
+    +(day.sessions?' · '+day.sessions+' 会话':'')+'</div>';
+  t.style.display='block';
+  var W=window.innerWidth, mw=t.offsetWidth, mh=t.offsetHeight;
+  var px=ev.clientX+14, py=ev.clientY-10;
+  if(px+mw>W-8)px=ev.clientX-mw-14;
+  if(py+mh>window.innerHeight-8)py=window.innerHeight-mh-8;
+  t.style.left=px+'px';t.style.top=py+'px';
+}
+function hideTip(){if(TT)TT.style.display='none'}
 function drawChart(){
   var box=document.getElementById('chart');
   box.innerHTML='';
@@ -477,13 +600,31 @@ function drawChart(){
     }
   });
   svg+='<path d="'+area+'" fill="url(#g)"/>'
-    +'<path d="'+path+'" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linejoin="round"/>';
+    +'<path d="'+path+'" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linejoin="round"/>'
+    +'<rect class="hover-zone" x="0" y="0" width="'+W+'" height="'+H+'" fill="transparent"/>';
   days.forEach(function(d,i){
-    svg+='<circle cx="'+x(i).toFixed(1)+'" cy="'+y(d.total).toFixed(1)+'" r="2.6" fill="#22d3ee">'
-      +'<title>'+d.d+' · '+hm(d.total)+' token</title></circle>';
+    svg+='<circle class="pt" data-i="'+i+'" cx="'+x(i).toFixed(1)+'" cy="'+y(d.total).toFixed(1)+'" r="3.4" fill="#22d3ee" opacity="0"/>';
   });
   svg+='</svg>';
   box.innerHTML=svg;
+  /* mousemove: 按 SVG 坐标系换算最近数据点 → 高亮 + 即时 tooltip */
+  var svgEl=box.querySelector('svg');
+  var pts=box.querySelectorAll('.pt');
+  svgEl.addEventListener('mousemove',function(ev){
+    var r=svgEl.getBoundingClientRect();
+    var sx=(ev.clientX-r.left)/r.width*W;
+    var i=Math.max(0,Math.min(days.length-1,Math.round((sx-padL)/step)));
+    pts.forEach(function(p){p.setAttribute('opacity',p.getAttribute('data-i')==i?'1':'0')});
+    var byModel=days[i].by_model||{};
+    var ms=Object.keys(byModel).map(function(m){
+      return {name:m.replace(/^deepseek-/,'DS '),val:byModel[m]};
+    }).sort(function(a,b){return b.val-a.val});
+    showTip(ev,days[i],ms);
+  });
+  svgEl.addEventListener('mouseleave',function(){
+    hideTip();
+    pts.forEach(function(p){p.setAttribute('opacity','0')});
+  });
   var lg=document.getElementById('chartLegend');
   lg.innerHTML='<div class="lg"><span class="dot" style="background:#22d3ee"></span><b>'+hm(v.reduce(function(a,b){return a+b},0))+'</b> 近 '+CHART_N+' 天合计</div>'
     +'<div class="lg"><span class="dot" style="background:rgba(34,211,238,.35)"></span>峰值 '+hm(mx/1.1)+' / 天</div>'
@@ -492,10 +633,11 @@ function drawChart(){
 document.getElementById('tog30').addEventListener('click',function(){CHART_N=30;this.classList.add('on');document.getElementById('tog90').classList.remove('on');drawChart()});
 document.getElementById('tog90').addEventListener('click',function(){CHART_N=90;this.classList.add('on');document.getElementById('tog30').classList.remove('on');drawChart()});
 
-/* 模型分拆 */
-(function(){
+/* 模型分拆(成本随价格实时计算) */
+function renderModels(){
   var ms=U.models, tot=U.totals.tok;
   var bar=document.getElementById('mbar'), rows=document.getElementById('mrows');
+  bar.innerHTML='';rows.innerHTML='';
   ms.forEach(function(m,i){
     var seg=el('div');seg.style.width=(m.tok/tot*100).toFixed(2)+'%';
     seg.style.background=PAL[i%PAL.length];
@@ -508,47 +650,158 @@ document.getElementById('tog90').addEventListener('click',function(){CHART_N=90;
     var track=el('div','mtrack');
     track.appendChild((function(){var f=el('div','mfill');f.style.width=(m.tok/tot*100).toFixed(1)+'%';f.style.background=PAL[i%PAL.length];return f})());
     r.appendChild(track);
-    r.appendChild(el('div','mval',hm(m.tok)+' · '+(m.tok/tot*100).toFixed(1)+'%'));
+    var cost=costOfModel(m.m,m.i,m.o,m.cr,m.cc);
+    r.appendChild(el('div','mval',hm(m.tok)+' · ¥ '+cnY(cost)+' · '+(m.tok/tot*100).toFixed(1)+'%'));
     rows.appendChild(r);
   });
-})();
+}
+renderModels();
 
-/* 项目分拆 */
-(function(){
+/* 项目分拆(成本随价格实时计算) */
+function renderProjects(){
   var ps=U.projects, mx=Math.max.apply(null,ps.map(function(p){return p.tok}));
   var rows=document.getElementById('prows');
+  rows.innerHTML='';
   ps.forEach(function(p){
+    var cost=0;
+    Object.keys(p.model_detail||{}).forEach(function(m){
+      var v=p.model_detail[m];cost+=costOfModel(m,v[0],v[1],v[2],v[3]);
+    });
     var r=el('div','mrow');
     r.appendChild(el('div','mlab',p.p));
     var track=el('div','mtrack');
     track.appendChild((function(){var f=el('div','mfill');f.style.width=(p.tok/mx*100).toFixed(1)+'%';return f})());
     r.appendChild(track);
-    r.appendChild(el('div','mval',hm(p.tok)+' · '+p.sessions+' 次会话'));
+    r.appendChild(el('div','mval',hm(p.tok)+' · ¥ '+cnY(cost)+' · '+p.sessions+' 次会话'));
     rows.appendChild(r);
   });
-})();
+}
+renderProjects();
 
-/* 会话明细 */
-(function(){
+/* 会话明细(成本随价格实时计算) */
+function renderSessions(){
   var tb=document.getElementById('sessBody');
+  tb.innerHTML='';
   U.sessions.forEach(function(s,i){
+    var cost=0;
+    Object.keys(s.models||{}).forEach(function(m){
+      var v=s.models[m];cost+=costOfModel(m,v.i,v.o,v.cr,v.cc);
+    });
     var tr=el('tr');
     tr.appendChild(el('td','dim','#'+(i+1)));
     tr.appendChild(el('td',null,s.t));
     tr.appendChild(el('td','dim',s.d+(s.d2&&s.d2!==s.d?' ~ '+s.d2.slice(5):'')));
     tr.appendChild(el('td',null,s.p));
     var mc=el('td');
-    (s.models||[]).forEach(function(m){mc.appendChild(el('span','mtag',m.replace(/^deepseek-/,'DS ')))});
+    Object.keys(s.models||{}).forEach(function(m){mc.appendChild(el('span','mtag',m.replace(/^deepseek-/,'DS ')))});
     tr.appendChild(mc);
-    tr.appendChild(el('td','mono',hm(s.tok)));
+    tr.appendChild(el('td','mono',hm(s.tok)+' <span style="color:#fbbf24;font-size:11px">¥ '+cnY(cost)+'</span>'));
     tb.appendChild(tr);
   });
-})();
+}
+renderSessions();
 
 document.getElementById('foot').innerHTML =
   '构建时间 '+U.built+' · 统计口径: 主会话 assistant 消息 usage 求和(输入/输出/缓存读写全计入) · 子代理(sidechain)不计 · 令牌数源自会话转录逐字累加<br>'
-  +'数据每日 18:07 自动刷新 · 🔒 本页与 CRM 同级密码门 · 不进入公开搜索索引';
+  +'数据每日 18:07 自动刷新 · 🔒 本页与 CRM 同级密码门 · 不进入公开搜索索引 · '
+  +'成本单价为 DeepSeek V4 峰谷闲时档(第三方报道口径, 点击「⚙ 价格校准」可改)';
 drawChart();
+
+/* ================= 价格校准弹窗 ================= */
+function showPriceDialog(){
+  var prices=getPrices();
+  var dlg=document.getElementById('prDialog');
+  if(!dlg){
+    dlg=el('div','pr-dialog');dlg.id='prDialog';
+    var panel=el('div','pr-panel');
+    panel.appendChild(el('h3',null,'⚙ 价格校准'));
+    panel.appendChild(el('div','pr-sub',
+      '单价: 元 / 百万 tokens。默认 DeepSeek V4 峰谷闲时档(第三方报道口径);<br>'
+      +'h=缓存命中 m=缓存未命中 o=输出 w=缓存写(无独立官价, 默认按未命中计)。<br>'
+      +'改完保存立即全页重算, 存在浏览器本地。'));
+    var grid=el('div','pr-grid');
+    ['模型','h','m','o','w'].forEach(function(h){
+      grid.appendChild(el('div','ph',h));
+    });
+    var inputs={};
+    Object.keys(DEFAULT_PRICES).forEach(function(m){
+      grid.appendChild(el('div','pm',m.replace(/^deepseek-/,'DS ')));
+      ['h','m','o','w'].forEach(function(f){
+        var inp=document.createElement('input');inp.type='number';inp.step='0.01';inp.min='0';
+        inp.value=prices[m]?prices[m][f]:DEFAULT_PRICES[m][f];
+        grid.appendChild(inp);
+        inputs[m+'|'+f]=inp;
+      });
+    });
+    panel.appendChild(grid);
+    var btns=el('div','pr-btns');
+    var bSave=el('button','pr-save','保存');var bReset=el('button','pr-reset','恢复默认');var bCancel=el('button','pr-cancel','取消');
+    bSave.addEventListener('click',function(){
+      var p={};
+      Object.keys(DEFAULT_PRICES).forEach(function(m){
+        p[m]={};
+        ['h','m','o','w'].forEach(function(f){
+          var v=parseFloat(inputs[m+'|'+f].value);
+          p[m][f]=isFinite(v)?v:DEFAULT_PRICES[m][f];
+        });
+      });
+      localStorage.setItem('tok_prices',JSON.stringify(p));
+      dlg.classList.remove('show');
+      rerenderAll();
+    });
+    bReset.addEventListener('click',function(){
+      localStorage.removeItem('tok_prices');
+      dlg.classList.remove('show');
+      rerenderAll();
+    });
+    bCancel.addEventListener('click',function(){dlg.classList.remove('show')});
+    btns.appendChild(bSave);btns.appendChild(bReset);btns.appendChild(bCancel);
+    panel.appendChild(btns);
+    dlg.appendChild(panel);
+    dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.classList.remove('show')});
+    document.body.appendChild(dlg);
+  }else{
+    /* 刷新输入框为当前价格 */
+    var prices2=getPrices();
+    var inputs2=dlg.querySelectorAll('.pr-grid input');
+    var mi=0,fj=0;
+    Object.keys(DEFAULT_PRICES).forEach(function(m){
+      ['h','m','o','w'].forEach(function(f){
+        inputs2[mi*4+fj].value=prices2[m][f];fj++;
+      });
+      fj=0;mi++;
+    });
+  }
+  dlg.classList.add('show');
+}
+function rerenderAll(){
+  /* KPI/模型/项目/会话全部重渲染(图表 token 不受价格影响, 只需重算成本提示) */
+  var T=U.totals;
+  var totCost=U.models.reduce(function(a,m){return a+costOfModel(m.m,m.i,m.o,m.cr,m.cc)},0);
+  var today=U.days.length?U.days[U.days.length-1]:null;
+  var todayCost=0;
+  if(today){
+    Object.keys(today.model_detail||{}).forEach(function(m){
+      var v=today.model_detail[m];todayCost+=costOfModel(m,v[0],v[1],v[2],v[3]);
+    });
+  }
+  var avgCost=U.days.length?totCost/U.days.length:0;
+  var box=document.getElementById('stats');
+  box.innerHTML='';
+  var cards=[
+    ['累计 TOKEN', hm(T.tok)],['累计成本', '¥ '+cnY(totCost)],
+    ['今日 TOKEN', hm(today?today.total:0)],['今日成本', '¥ '+cnY(todayCost)],
+    ['会话数', T.sessions+' 次'],['缓存命中率', (T.cr/(T.cr+T.in)*100).toFixed(1)+'%'],
+    ['日均 TOKEN', hm(Math.round(T.tok/U.days.length))],['日均成本', '¥ '+cnY(avgCost)]
+  ];
+  cards.forEach(function(c){
+    var s=el('div','stat');
+    s.appendChild(el('div','k',c[0]));
+    s.appendChild(el('div','v',c[1]));
+    box.appendChild(s);
+  });
+  renderModels();renderProjects();renderSessions();drawChart();
+}
 </script>
 </body>
 </html>

@@ -49,11 +49,40 @@ a{text-decoration:none;color:inherit}
 .gate.err .gate-panel{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
-.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;backdrop-filter:blur(6px)}
 .stat .k{font-size:11px;color:var(--muted);letter-spacing:.12em;font-family:var(--mono)}
 .stat .v{font-size:21px;font-weight:700;margin-top:5px;font-family:var(--mono);color:var(--cyan)}
 .stat .v small{font-size:11px;font-weight:400;color:var(--muted);margin-left:2px}
+.chart-wrap{position:relative}
+.tooltip{position:fixed;z-index:9999;pointer-events:none;background:rgba(5,12,25,.97);
+  border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px;
+  font-family:var(--mono);font-size:11px;line-height:1.75;box-shadow:var(--glow);
+  min-width:200px;display:none}
+.tooltip .tt-h{color:var(--cyan);font-weight:700;font-size:12px;margin-bottom:4px}
+.tooltip .tt-r{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.tooltip .tt-r .dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.tooltip .tt-r b{margin-left:auto;color:var(--text);font-weight:600}
+.tooltip .tt-t{border-top:1px solid var(--line);margin-top:6px;padding-top:6px;color:var(--text)}
+.pr-dialog{position:fixed;inset:0;z-index:9998;background:rgba(3,6,12,.8);
+  display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.pr-dialog.show{display:flex}
+.pr-panel{background:var(--panel);border:1px solid var(--line-strong);border-radius:16px;
+  padding:22px 26px;box-shadow:var(--glow);width:min(560px,92vw);max-height:86vh;overflow-y:auto}
+.pr-panel h3{font-size:15px;margin-bottom:4px}
+.pr-sub{font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:14px;line-height:1.7}
+.pr-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr 1fr;gap:8px 10px;
+  align-items:center;margin-bottom:16px;font-size:12px}
+.pr-grid .ph{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em}
+.pr-grid .pm{font-family:var(--mono);color:var(--text);font-size:11.5px;white-space:nowrap}
+.pr-grid input{background:rgba(5,12,25,.9);border:1px solid var(--line);border-radius:6px;
+  padding:6px 8px;color:var(--text);font-family:var(--mono);font-size:12px;width:100%;outline:none}
+.pr-grid input:focus{border-color:var(--cyan)}
+.pr-btns{display:flex;gap:10px;justify-content:flex-end}
+.pr-btns button{border-radius:8px;padding:8px 18px;font-size:13px;cursor:pointer;font-weight:700}
+.pr-save{background:linear-gradient(135deg,var(--cyan),var(--blue));border:none;color:#03101f}
+.pr-reset{background:transparent;border:1px solid var(--line-strong);color:var(--muted)}
+.pr-cancel{background:transparent;border:1px solid var(--line);color:var(--muted)}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;backdrop-filter:blur(6px)}
 .card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .card-head h2{font-size:14px;letter-spacing:.1em}
@@ -117,7 +146,7 @@ tr:hover td{background:rgba(34,211,238,.04)}
         <button class="tog" id="tog90" type="button">近 90 天</button>
       </div>
     </div>
-    <div id="chart"></div>
+    <div class="chart-wrap"><div id="chart"></div></div>
     <div class="legend" id="chartLegend"></div>
   </div>
 
@@ -170,8 +199,39 @@ document.getElementById('btn').addEventListener('click',unlock);
 document.getElementById('pw').addEventListener('keydown',function(e){if(e.key==='Enter')unlock()});
 if(sessionStorage.getItem(GATE_KEY)==='1'){document.getElementById('gate').style.display='none'}
 
+/* ================= 成本模型(2026-09-14, 页内可调, 存 localStorage) =================
+   单价: 元/百万 tokens。默认取 DeepSeek V4 峰谷定价闲时档(第三方报道口径);
+   老板有真实账单时点「⚙ 价格校准」改数字, 全页立即重算。 */
+var DEFAULT_PRICES = {
+  'deepseek-v4-pro':   {h: 0.15, m: 4.5,  o: 13.5, w: 1.5},
+  'deepseek-v4-flash': {h: 0.05, m: 1.5,  o: 4.5,  w: 1.5},
+  'deepseek-flash':    {h: 0.05, m: 1.5,  o: 4.5,  w: 1.5},
+  'unknown':           {h: 0.05, m: 1.5,  o: 4.5,  w: 1.5}
+};  /* h=缓存命中 m=缓存未命中 o=输出 w=缓存写(按未命中计, 无独立官价) */
+function getPrices(){
+  try{return JSON.parse(localStorage.getItem('tok_prices')||'null')||DEFAULT_PRICES}
+  catch(e){return DEFAULT_PRICES}
+}
+function costOfModel(m, i, o, cr, cc){
+  var p=getPrices()[m]||DEFAULT_PRICES['unknown'];
+  /* 缓存读按命中价; 缓存写并入输入未命中价(DeepSeek 无独立 cache write 定价) */
+  return (cr/1e6*p.h + (i+cc)/1e6*p.m + o/1e6*p.o);
+}
+function modelTotals(it){  /* it = {models:{m:{i,o,cr,cc}}} → {cost, costPerModel:{m:¥}} */
+  var cost=0, per={};
+  Object.keys(it.models||{}).forEach(function(m){
+    var v=it.models[m]; var c=costOfModel(m,v.i,v.o,v.cr,v.cc);
+    cost+=c; per[m]=c;
+  });
+  return {cost:cost, per:per};
+}
+function cnY(v){
+  if(v>=1e4)return (v/1e4).toFixed(2)+' 万';
+  return v>=100?Math.round(v)+' 元':(v>=1? v.toFixed(1)+' 元': v.toFixed(2)+' 元');
+}
+
 /* ================= 数据渲染 ================= */
-var U = {"built": "2026-09-14 17:13", "totals": {"tok": 3553188242, "in": 104104777, "out": 16288969, "cr": 3432794496, "sessions": 57, "days": 24}, "days": [{"d": "2026-07-22", "total": 25471619, "input": 413587, "output": 149616, "cache_read": 24908416, "by_model": {"deepseek-v4-pro": 25471619}, "sessions": 2}, {"d": "2026-07-23", "total": 67088811, "input": 2406326, "output": 366453, "cache_read": 64316032, "by_model": {"deepseek-v4-pro": 67088811}, "sessions": 5}, {"d": "2026-07-30", "total": 93807409, "input": 2642088, "output": 574985, "cache_read": 90590336, "by_model": {"deepseek-v4-pro": 93807409}, "sessions": 5}, {"d": "2026-07-31", "total": 18990967, "input": 1541642, "output": 27629, "cache_read": 17421696, "by_model": {"deepseek-v4-pro": 18990967}, "sessions": 2}, {"d": "2026-08-02", "total": 83543745, "input": 2119077, "output": 222748, "cache_read": 81201920, "by_model": {"deepseek-v4-pro": 54112524, "deepseek-v4-flash": 29431221}, "sessions": 3}, {"d": "2026-08-03", "total": 48501459, "input": 2444237, "output": 227078, "cache_read": 45830144, "by_model": {"deepseek-v4-flash": 46846541, "deepseek-v4-pro": 1654918}, "sessions": 3}, {"d": "2026-08-04", "total": 90683887, "input": 3732465, "output": 529790, "cache_read": 86421632, "by_model": {"deepseek-v4-flash": 17758679, "deepseek-v4-pro": 72925208}, "sessions": 6}, {"d": "2026-08-07", "total": 17249824, "input": 1332881, "output": 150287, "cache_read": 15766656, "by_model": {"deepseek-v4-pro": 17249824}, "sessions": 3}, {"d": "2026-08-17", "total": 117488220, "input": 3329531, "output": 1302497, "cache_read": 112856192, "by_model": {"deepseek-v4-pro": 117488220}, "sessions": 3}, {"d": "2026-08-21", "total": 3669617, "input": 124218, "output": 56119, "cache_read": 3489280, "by_model": {"deepseek-v4-pro": 3669617}, "sessions": 1}, {"d": "2026-08-24", "total": 254700550, "input": 3863050, "output": 1709052, "cache_read": 249128448, "by_model": {"deepseek-v4-pro": 254700550}, "sessions": 5}, {"d": "2026-08-25", "total": 77265345, "input": 3484052, "output": 277933, "cache_read": 73503360, "by_model": {"deepseek-v4-pro": 77265345}, "sessions": 7}, {"d": "2026-08-27", "total": 17512776, "input": 664300, "output": 137564, "cache_read": 16710912, "by_model": {"deepseek-v4-pro": 17512776}, "sessions": 2}, {"d": "2026-08-30", "total": 35517202, "input": 2025347, "output": 297231, "cache_read": 33194624, "by_model": {"deepseek-v4-pro": 35517202}, "sessions": 4}, {"d": "2026-08-31", "total": 230083738, "input": 6859313, "output": 757097, "cache_read": 222467328, "by_model": {"deepseek-v4-pro": 230083738}, "sessions": 4}, {"d": "2026-09-02", "total": 4339902, "input": 266003, "output": 32043, "cache_read": 4041856, "by_model": {"deepseek-v4-pro": 4339902}, "sessions": 1}, {"d": "2026-09-03", "total": 63413614, "input": 4607311, "output": 213023, "cache_read": 58593280, "by_model": {"deepseek-v4-pro": 63413614}, "sessions": 2}, {"d": "2026-09-07", "total": 540119857, "input": 11549407, "output": 2026322, "cache_read": 526544128, "by_model": {"deepseek-v4-pro": 540119857}, "sessions": 7}, {"d": "2026-09-08", "total": 186325258, "input": 5005619, "output": 817367, "cache_read": 180502272, "by_model": {"deepseek-v4-pro": 186325258}, "sessions": 6}, {"d": "2026-09-09", "total": 424187303, "input": 8434280, "output": 1822399, "cache_read": 413930624, "by_model": {"deepseek-v4-pro": 424187303}, "sessions": 7}, {"d": "2026-09-10", "total": 340216302, "input": 13745312, "output": 999502, "cache_read": 325471488, "by_model": {"deepseek-v4-pro": 235638966, "deepseek-v4-flash": 47941267, "deepseek-flash": 56636069}, "sessions": 4}, {"d": "2026-09-11", "total": 328140987, "input": 5905802, "output": 1267505, "cache_read": 320967680, "by_model": {"deepseek-v4-pro": 328140987}, "sessions": 4}, {"d": "2026-09-12", "total": 89705245, "input": 2006787, "output": 172186, "cache_read": 87526272, "by_model": {"deepseek-v4-pro": 89705245}, "sessions": 2}, {"d": "2026-09-14", "total": 395164605, "input": 15602142, "output": 2152543, "cache_read": 377409920, "by_model": {"deepseek-v4-pro": 395164605}, "sessions": 7}], "models": [{"m": "deepseek-v4-pro", "i": 95873334, "o": 15526347, "cr": 3243174784, "cc": 0, "tok": 3354574465}, {"m": "deepseek-v4-flash", "i": 5489668, "o": 581608, "cr": 135906432, "cc": 0, "tok": 141977708}, {"m": "deepseek-flash", "i": 2741775, "o": 181014, "cr": 53713280, "cc": 0, "tok": 56636069}], "projects": [{"p": "主工作区", "tok": 3359634293, "sessions": 54}, {"p": "主工作区子项目", "tok": 193503307, "sessions": 2}, {"p": "其他", "tok": 50642, "sessions": 1}], "sessions": [{"id": "c42f6ce9-7646-46d0-b101-1b4fda6d2eed", "t": "https://mp.weixin.qq.com/s/mtd2opsACcZHFEC", "p": "主工作区", "d": "2026-09-09", "d2": "2026-09-11", "tok": 373440696, "models": ["deepseek-v4-flash", "deepseek-v4-pro"]}, {"id": "e856ac84-e382-4cb7-802b-3351f0110012", "t": "我们将于北京时间2026年9月10日12:00起，调整flash系列定价：空闲时段输", "p": "主工作区", "d": "2026-09-09", "d2": "2026-09-10", "tok": 258154093, "models": ["deepseek-v4-pro"]}, {"id": "b12cc5b1-b779-4976-9bc0-54e0e4c72dcf", "t": "https://lw-wo.github.io/china-announcement", "p": "主工作区", "d": "2026-08-24", "d2": "2026-08-31", "tok": 224259927, "models": ["deepseek-v4-pro"]}, {"id": "f5ea3615-569b-4214-9f44-aab3521e99d3", "t": "咱们搞一些基础的信息记忆吧，我是一个1993年2月28日生的陕西人，在北京工作，媳妇", "p": "主工作区", "d": "2026-07-23", "d2": "2026-09-14", "tok": 217647404, "models": ["deepseek-v4-pro"]}, {"id": "90c0614b-571f-4e2f-b41d-a2a242c3cab4", "t": "铁蛋，帮我装个小米的多模态，我试着玩一玩", "p": "主工作区", "d": "2026-09-08", "d2": "2026-09-10", "tok": 207020628, "models": ["deepseek-flash", "deepseek-v4-flash", "deepseek-v4-pro"]}, {"id": "44acef1d-ce98-49ee-8ac4-de4f8cf61434", "t": "王元一这个名字的五行分布", "p": "主工作区", "d": "2026-08-17", "d2": "2026-08-25", "tok": 174902216, "models": ["deepseek-v4-pro"]}, {"id": "47bd4c9e-2f3c-4c6c-abd7-ea0e281eada9", "t": "启动补做 2026-09-07 漏执行的三项定时任务(按 task-check-ca", "p": "主工作区子项目", "d": "2026-09-07", "d2": "2026-09-07", "tok": 173065306, "models": ["deepseek-v4-pro"]}, {"id": "40add077-54c2-4a3f-801f-3b87752b2ac7", "t": "铁蛋，桌面上那个codex和harness的快捷方式，你给咱搞得美观一些", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-07", "tok": 171705543, "models": ["deepseek-v4-pro"]}, {"id": "193fa316-cd6c-4a4a-afde-7d76b028f216", "t": "铁蛋，我媳妇10月13预产期，帮我做一周的每日餐食推荐", "p": "主工作区", "d": "2026-07-30", "d2": "2026-08-03", "tok": 146195746, "models": ["deepseek-v4-flash", "deepseek-v4-pro"]}, {"id": "3b1ab1de-826d-41be-8cec-43696847d21c", "t": "@\"C:\\Users\\13167\\Desktop\\客户数据_全量名单_2026-08", "p": "主工作区", "d": "2026-09-10", "d2": "2026-09-11", "tok": 140720054, "models": ["deepseek-v4-pro"]}, {"id": "52e2642f-f742-4ba7-8756-e9a3ecbe1c2f", "t": "【通知】部门知识库 RAG 服务上线，欢迎大家的 Agent 接入。 部门文档知识库", "p": "主工作区", "d": "2026-08-30", "d2": "2026-09-03", "tok": 102580411, "models": ["deepseek-v4-pro"]}, {"id": "083dc09f-8b7d-494b-91bd-77b41b8e3f09", "t": "http://www.everstead.cn/ 铁蛋，这个网站以后就是咱俩工作结果", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-07", "tok": 100464247, "models": ["deepseek-v4-pro"]}, {"id": "ea5344d7-80c5-40f6-9430-c6e194a7a501", "t": "铁蛋，这两只产品是我们很重要的产品，ZY0049 ZY0053 查一下这两只产品的走", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-08", "tok": 98943708, "models": ["deepseek-v4-pro"]}, {"id": "a4a6e957-b3ca-450f-8cbf-a5b27f37e3bc", "t": "@\"D:\\工作文件\\初期项目\\方案等文件\\直接交易对手库汇总表20241223-更新", "p": "主工作区", "d": "2026-09-11", "d2": "2026-09-12", "tok": 94761827, "models": ["deepseek-v4-pro"]}, {"id": "9cedfb37-0edb-4b8d-b43b-f63273d997b2", "t": "@\"C:\\Users\\13167\\Desktop\\中邮合作产品红利&深度价值产品要素", "p": "主工作区", "d": "2026-09-14", "d2": "2026-09-14", "tok": 92862419, "models": ["deepseek-v4-pro"]}, {"id": "dc1f7419-35b0-4da2-9b1e-9ced5c0d37d7", "t": "铁蛋，看看有哪些待执行未执行任务", "p": "主工作区", "d": "2026-08-24", "d2": "2026-08-24", "tok": 75125252, "models": ["deepseek-v4-pro"]}, {"id": "fde62ce9-44a5-4f2e-8de7-848b1e378628", "t": "铁蛋，咱们的网站搜索功能，不好用，我搜索10年期自律利率，弹不出来东西，你想想有啥好", "p": "主工作区", "d": "2026-09-14", "d2": "2026-09-14", "tok": 71811467, "models": ["deepseek-v4-pro"]}, {"id": "f954e9af-40c2-4780-a442-14f636c5b5b0", "t": "铁蛋，打开下我买的那个ever 的那个网站", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-08", "tok": 68349387, "models": ["deepseek-v4-pro"]}, {"id": "a89c0526-3594-47da-b40c-ab5c5ba7f9cb", "t": "请安装讯飞办公本技能，并打开登录页面 下载地址：https://download.i", "p": "主工作区", "d": "2026-09-11", "d2": "2026-09-12", "tok": 67065344, "models": ["deepseek-v4-pro"]}, {"id": "f7ada88f-bcd0-422b-b746-7eb0391835f2", "t": "在这个看板 把用量信息放上去", "p": "主工作区", "d": "2026-07-22", "d2": "2026-07-23", "tok": 64289933, "models": ["deepseek-v4-pro"]}, {"id": "42c7fabe-3c70-4b73-bd10-79a735c095c1", "t": "给我布置一个obsidian 创建桌面快捷方式 然后", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-07", "tok": 58485195, "models": ["deepseek-v4-pro"]}, {"id": "e32c8c87-2dae-4636-ab7e-a7b15c80d130", "t": "铁蛋，今天做的客户拜访台账，咱们上github看看有没有类似的方案", "p": "主工作区", "d": "2026-08-24", "d2": "2026-08-24", "tok": 56413116, "models": ["deepseek-v4-pro"]}, {"id": "1cb46c7b-17dd-40a0-83bf-6dd96275f30f", "t": "来个每周孕期提醒", "p": "主工作区", "d": "2026-08-17", "d2": "2026-08-17", "tok": 49626957, "models": ["deepseek-v4-pro"]}, {"id": "02464e39-3c14-4e74-a63b-1f6c59ecaf8e", "t": "铁蛋，网站里面我的个人私密文件放哪里了", "p": "主工作区", "d": "2026-09-14", "d2": "2026-09-14", "tok": 47314968, "models": ["deepseek-v4-pro"]}, {"id": "acf317eb-77f2-4ecf-b01e-c608f4dd69f1", "t": "铁蛋，让你写一遍三字经会不会特别费token", "p": "主工作区", "d": "2026-08-17", "d2": "2026-08-25", "tok": 40100910, "models": ["deepseek-v4-pro"]}, {"id": "a42a2403-daf0-4c99-98ef-6f8b3a47172f", "t": "D:\\cloude code 这个里面文件比较乱， 咱们按照项目逻辑还有L1-L5的", "p": "主工作区", "d": "2026-08-03", "d2": "2026-08-03", "tok": 36525685, "models": ["deepseek-v4-flash"]}, {"id": "5e2ff85d-cd11-417b-8e73-f462f7780a19", "t": "\"C:\\Users\\13167\\Desktop\\中邮合作产品红利&深度价值产品要素表", "p": "主工作区", "d": "2026-09-08", "d2": "2026-09-08", "tok": 34033632, "models": ["deepseek-v4-pro"]}, {"id": "2c39ccd8-fddc-4260-9302-57858b3158b1", "t": "给我把未来一周的孕期餐食推荐 按照每天的格式发一下", "p": "主工作区", "d": "2026-08-04", "d2": "2026-08-04", "tok": 32108629, "models": ["deepseek-v4-flash", "deepseek-v4-pro"]}, {"id": "5c4b1759-7262-40b7-98d9-660a53ed22ad", "t": "http://192.168.100.148:3000/customers 铁蛋，这", "p": "主工作区", "d": "2026-09-14", "d2": "2026-09-14", "tok": 31745323, "models": ["deepseek-v4-pro"]}, {"id": "7a18f672-1c42-4f35-9216-9693c6988de8", "t": "@\"C:\\Users\\13167\\Desktop\\20260724_143258.m", "p": "主工作区", "d": "2026-08-21", "d2": "2026-08-24", "tok": 24114250, "models": ["deepseek-v4-pro"]}]};
+var U = {"built": "2026-09-14 17:32", "totals": {"tok": 3613039109, "in": 104214175, "out": 16395878, "cr": 3492429056, "sessions": 57, "days": 24}, "days": [{"d": "2026-07-22", "total": 25471619, "input": 413587, "output": 149616, "cache_read": 24908416, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 25471619}, "model_detail": {}, "sessions": 2}, {"d": "2026-07-23", "total": 67088811, "input": 2406326, "output": 366453, "cache_read": 64316032, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 67088811}, "model_detail": {}, "sessions": 5}, {"d": "2026-07-30", "total": 93807409, "input": 2642088, "output": 574985, "cache_read": 90590336, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 93807409}, "model_detail": {}, "sessions": 5}, {"d": "2026-07-31", "total": 18990967, "input": 1541642, "output": 27629, "cache_read": 17421696, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 18990967}, "model_detail": {}, "sessions": 2}, {"d": "2026-08-02", "total": 83543745, "input": 2119077, "output": 222748, "cache_read": 81201920, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 54112524, "deepseek-v4-flash": 29431221}, "model_detail": {}, "sessions": 3}, {"d": "2026-08-03", "total": 48501459, "input": 2444237, "output": 227078, "cache_read": 45830144, "cache_creation": 0, "by_model": {"deepseek-v4-flash": 46846541, "deepseek-v4-pro": 1654918}, "model_detail": {}, "sessions": 3}, {"d": "2026-08-04", "total": 90683887, "input": 3732465, "output": 529790, "cache_read": 86421632, "cache_creation": 0, "by_model": {"deepseek-v4-flash": 17758679, "deepseek-v4-pro": 72925208}, "model_detail": {}, "sessions": 6}, {"d": "2026-08-07", "total": 17249824, "input": 1332881, "output": 150287, "cache_read": 15766656, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 17249824}, "model_detail": {}, "sessions": 3}, {"d": "2026-08-17", "total": 117488220, "input": 3329531, "output": 1302497, "cache_read": 112856192, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 117488220}, "model_detail": {}, "sessions": 3}, {"d": "2026-08-21", "total": 3669617, "input": 124218, "output": 56119, "cache_read": 3489280, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 3669617}, "model_detail": {}, "sessions": 1}, {"d": "2026-08-24", "total": 254700550, "input": 3863050, "output": 1709052, "cache_read": 249128448, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 254700550}, "model_detail": {}, "sessions": 5}, {"d": "2026-08-25", "total": 77265345, "input": 3484052, "output": 277933, "cache_read": 73503360, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 77265345}, "model_detail": {}, "sessions": 7}, {"d": "2026-08-27", "total": 17512776, "input": 664300, "output": 137564, "cache_read": 16710912, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 17512776}, "model_detail": {}, "sessions": 2}, {"d": "2026-08-30", "total": 35517202, "input": 2025347, "output": 297231, "cache_read": 33194624, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 35517202}, "model_detail": {}, "sessions": 4}, {"d": "2026-08-31", "total": 230083738, "input": 6859313, "output": 757097, "cache_read": 222467328, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 230083738}, "model_detail": {}, "sessions": 4}, {"d": "2026-09-02", "total": 4339902, "input": 266003, "output": 32043, "cache_read": 4041856, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 4339902}, "model_detail": {}, "sessions": 1}, {"d": "2026-09-03", "total": 63413614, "input": 4607311, "output": 213023, "cache_read": 58593280, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 63413614}, "model_detail": {}, "sessions": 2}, {"d": "2026-09-07", "total": 540119857, "input": 11549407, "output": 2026322, "cache_read": 526544128, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 540119857}, "model_detail": {}, "sessions": 7}, {"d": "2026-09-08", "total": 186325258, "input": 5005619, "output": 817367, "cache_read": 180502272, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 186325258}, "model_detail": {}, "sessions": 6}, {"d": "2026-09-09", "total": 424187303, "input": 8434280, "output": 1822399, "cache_read": 413930624, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 424187303}, "model_detail": {}, "sessions": 7}, {"d": "2026-09-10", "total": 340216302, "input": 13745312, "output": 999502, "cache_read": 325471488, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 235638966, "deepseek-v4-flash": 47941267, "deepseek-flash": 56636069}, "model_detail": {}, "sessions": 4}, {"d": "2026-09-11", "total": 328140987, "input": 5905802, "output": 1267505, "cache_read": 320967680, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 328140987}, "model_detail": {}, "sessions": 4}, {"d": "2026-09-12", "total": 89705245, "input": 2006787, "output": 172186, "cache_read": 87526272, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 89705245}, "model_detail": {}, "sessions": 2}, {"d": "2026-09-14", "total": 455015472, "input": 15711540, "output": 2259452, "cache_read": 437044480, "cache_creation": 0, "by_model": {"deepseek-v4-pro": 455015472}, "model_detail": {"deepseek-v4-pro": [109398, 106909, 59634560, 0]}, "sessions": 7}], "models": [{"m": "deepseek-v4-pro", "i": 95982732, "o": 15633256, "cr": 3302809344, "cc": 0, "tok": 3414425332}, {"m": "deepseek-v4-flash", "i": 5489668, "o": 581608, "cr": 135906432, "cc": 0, "tok": 141977708}, {"m": "deepseek-flash", "i": 2741775, "o": 181014, "cr": 53713280, "cc": 0, "tok": 56636069}], "projects": [{"p": "主工作区", "tok": 3419485160, "sessions": 54, "model_detail": {"deepseek-v4-pro": [92275400, 14769167, 3113826816, 0], "deepseek-v4-flash": [5489668, 581608, 135906432, 0], "deepseek-flash": [2741775, 181014, 53713280, 0]}}, {"p": "主工作区子项目", "tok": 193503307, "sessions": 2, "model_detail": {"deepseek-v4-pro": [3658544, 862235, 188982528, 0]}}, {"p": "其他", "tok": 50642, "sessions": 1, "model_detail": {"deepseek-v4-pro": [48788, 1854, 0, 0]}}], "sessions": [{"id": "c42f6ce9-7646-46d0-b101-1b4fda6d2eed", "t": "https://mp.weixin.qq.com/s/mtd2opsACcZHFEC", "p": "主工作区", "d": "2026-09-09", "d2": "2026-09-11", "tok": 373440696, "models": {"deepseek-v4-pro": {"i": 8056015, "o": 795318, "cr": 317176192, "cc": 0}, "deepseek-v4-flash": {"i": 1097138, "o": 94721, "cr": 46221312, "cc": 0}}}, {"id": "e856ac84-e382-4cb7-802b-3351f0110012", "t": "我们将于北京时间2026年9月10日12:00起，调整flash系列定价：空闲时段输", "p": "主工作区", "d": "2026-09-09", "d2": "2026-09-10", "tok": 258154093, "models": {"deepseek-v4-pro": {"i": 4243436, "o": 691329, "cr": 253219328, "cc": 0}}}, {"id": "f5ea3615-569b-4214-9f44-aab3521e99d3", "t": "咱们搞一些基础的信息记忆吧，我是一个1993年2月28日生的陕西人，在北京工作，媳妇", "p": "主工作区", "d": "2026-07-23", "d2": "2026-09-14", "tok": 252881255, "models": {"deepseek-v4-pro": {"i": 8593183, "o": 535624, "cr": 243752448, "cc": 0}}}, {"id": "b12cc5b1-b779-4976-9bc0-54e0e4c72dcf", "t": "https://lw-wo.github.io/china-announcement", "p": "主工作区", "d": "2026-08-24", "d2": "2026-08-31", "tok": 224259927, "models": {"deepseek-v4-pro": {"i": 5947024, "o": 659655, "cr": 217653248, "cc": 0}}}, {"id": "90c0614b-571f-4e2f-b41d-a2a242c3cab4", "t": "铁蛋，帮我装个小米的多模态，我试着玩一玩", "p": "主工作区", "d": "2026-09-08", "d2": "2026-09-10", "tok": 207020628, "models": {"deepseek-v4-pro": {"i": 4505562, "o": 598389, "cr": 144752512, "cc": 0}, "deepseek-v4-flash": {"i": 527178, "o": 918, "cr": 0, "cc": 0}, "deepseek-flash": {"i": 2741775, "o": 181014, "cr": 53713280, "cc": 0}}}, {"id": "44acef1d-ce98-49ee-8ac4-de4f8cf61434", "t": "王元一这个名字的五行分布", "p": "主工作区", "d": "2026-08-17", "d2": "2026-08-25", "tok": 174902216, "models": {"deepseek-v4-pro": {"i": 4410872, "o": 1265360, "cr": 169225984, "cc": 0}}}, {"id": "47bd4c9e-2f3c-4c6c-abd7-ea0e281eada9", "t": "启动补做 2026-09-07 漏执行的三项定时任务(按 task-check-ca", "p": "主工作区子项目", "d": "2026-09-07", "d2": "2026-09-07", "tok": 173065306, "models": {"deepseek-v4-pro": {"i": 2694230, "o": 643844, "cr": 169727232, "cc": 0}}}, {"id": "40add077-54c2-4a3f-801f-3b87752b2ac7", "t": "铁蛋，桌面上那个codex和harness的快捷方式，你给咱搞得美观一些", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-07", "tok": 171705543, "models": {"deepseek-v4-pro": {"i": 3169266, "o": 540245, "cr": 167996032, "cc": 0}}}, {"id": "193fa316-cd6c-4a4a-afde-7d76b028f216", "t": "铁蛋，我媳妇10月13预产期，帮我做一周的每日餐食推荐", "p": "主工作区", "d": "2026-07-30", "d2": "2026-08-03", "tok": 146195746, "models": {"deepseek-v4-pro": {"i": 2108095, "o": 411606, "cr": 103923968, "cc": 0}, "deepseek-v4-flash": {"i": 1868535, "o": 124694, "cr": 37758848, "cc": 0}}}, {"id": "3b1ab1de-826d-41be-8cec-43696847d21c", "t": "@\"C:\\Users\\13167\\Desktop\\客户数据_全量名单_2026-08", "p": "主工作区", "d": "2026-09-10", "d2": "2026-09-11", "tok": 140720054, "models": {"deepseek-v4-pro": {"i": 3195068, "o": 587514, "cr": 136937472, "cc": 0}}}, {"id": "52e2642f-f742-4ba7-8756-e9a3ecbe1c2f", "t": "【通知】部门知识库 RAG 服务上线，欢迎大家的 Agent 接入。 部门文档知识库", "p": "主工作区", "d": "2026-08-30", "d2": "2026-09-03", "tok": 102580411, "models": {"deepseek-v4-pro": {"i": 6666665, "o": 528914, "cr": 95384832, "cc": 0}}}, {"id": "083dc09f-8b7d-494b-91bd-77b41b8e3f09", "t": "http://www.everstead.cn/ 铁蛋，这个网站以后就是咱俩工作结果", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-07", "tok": 100464247, "models": {"deepseek-v4-pro": {"i": 2485101, "o": 345866, "cr": 97633280, "cc": 0}}}, {"id": "ea5344d7-80c5-40f6-9430-c6e194a7a501", "t": "铁蛋，这两只产品是我们很重要的产品，ZY0049 ZY0053 查一下这两只产品的走", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-08", "tok": 98943708, "models": {"deepseek-v4-pro": {"i": 1757060, "o": 413784, "cr": 96772864, "cc": 0}}}, {"id": "fde62ce9-44a5-4f2e-8de7-848b1e378628", "t": "铁蛋，咱们的网站搜索功能，不好用，我搜索10年期自律利率，弹不出来东西，你想想有啥好", "p": "主工作区", "d": "2026-09-14", "d2": "2026-09-14", "tok": 96428483, "models": {"deepseek-v4-pro": {"i": 3136076, "o": 436471, "cr": 92855936, "cc": 0}}}, {"id": "a4a6e957-b3ca-450f-8cbf-a5b27f37e3bc", "t": "@\"D:\\工作文件\\初期项目\\方案等文件\\直接交易对手库汇总表20241223-更新", "p": "主工作区", "d": "2026-09-11", "d2": "2026-09-12", "tok": 94761827, "models": {"deepseek-v4-pro": {"i": 2022600, "o": 389915, "cr": 92349312, "cc": 0}}}, {"id": "9cedfb37-0edb-4b8d-b43b-f63273d997b2", "t": "@\"C:\\Users\\13167\\Desktop\\中邮合作产品红利&深度价值产品要素", "p": "主工作区", "d": "2026-09-14", "d2": "2026-09-14", "tok": 92862419, "models": {"deepseek-v4-pro": {"i": 4197319, "o": 490892, "cr": 88174208, "cc": 0}}}, {"id": "dc1f7419-35b0-4da2-9b1e-9ced5c0d37d7", "t": "铁蛋，看看有哪些待执行未执行任务", "p": "主工作区", "d": "2026-08-24", "d2": "2026-08-24", "tok": 75125252, "models": {"deepseek-v4-pro": {"i": 634865, "o": 512531, "cr": 73977856, "cc": 0}}}, {"id": "f954e9af-40c2-4780-a442-14f636c5b5b0", "t": "铁蛋，打开下我买的那个ever 的那个网站", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-08", "tok": 68349387, "models": {"deepseek-v4-pro": {"i": 3444821, "o": 247542, "cr": 64657024, "cc": 0}}}, {"id": "a89c0526-3594-47da-b40c-ab5c5ba7f9cb", "t": "请安装讯飞办公本技能，并打开登录页面 下载地址：https://download.i", "p": "主工作区", "d": "2026-09-11", "d2": "2026-09-12", "tok": 67065344, "models": {"deepseek-v4-pro": {"i": 1806053, "o": 459931, "cr": 64799360, "cc": 0}}}, {"id": "f7ada88f-bcd0-422b-b746-7eb0391835f2", "t": "在这个看板 把用量信息放上去", "p": "主工作区", "d": "2026-07-22", "d2": "2026-07-23", "tok": 64289933, "models": {"deepseek-v4-pro": {"i": 891422, "o": 333039, "cr": 63065472, "cc": 0}}}, {"id": "42c7fabe-3c70-4b73-bd10-79a735c095c1", "t": "给我布置一个obsidian 创建桌面快捷方式 然后", "p": "主工作区", "d": "2026-09-07", "d2": "2026-09-07", "tok": 58485195, "models": {"deepseek-v4-pro": {"i": 1051723, "o": 281728, "cr": 57151744, "cc": 0}}}, {"id": "e32c8c87-2dae-4636-ab7e-a7b15c80d130", "t": "铁蛋，今天做的客户拜访台账，咱们上github看看有没有类似的方案", "p": "主工作区", "d": "2026-08-24", "d2": "2026-08-24", "tok": 56413116, "models": {"deepseek-v4-pro": {"i": 1260561, "o": 369707, "cr": 54782848, "cc": 0}}}, {"id": "1cb46c7b-17dd-40a0-83bf-6dd96275f30f", "t": "来个每周孕期提醒", "p": "主工作区", "d": "2026-08-17", "d2": "2026-08-17", "tok": 49626957, "models": {"deepseek-v4-pro": {"i": 1060503, "o": 383414, "cr": 48183040, "cc": 0}}}, {"id": "02464e39-3c14-4e74-a63b-1f6c59ecaf8e", "t": "铁蛋，网站里面我的个人私密文件放哪里了", "p": "主工作区", "d": "2026-09-14", "d2": "2026-09-14", "tok": 47314968, "models": {"deepseek-v4-pro": {"i": 1206534, "o": 263314, "cr": 45845120, "cc": 0}}}, {"id": "acf317eb-77f2-4ecf-b01e-c608f4dd69f1", "t": "铁蛋，让你写一遍三字经会不会特别费token", "p": "主工作区", "d": "2026-08-17", "d2": "2026-08-25", "tok": 40100910, "models": {"deepseek-v4-pro": {"i": 1478562, "o": 226700, "cr": 38395648, "cc": 0}}}, {"id": "a42a2403-daf0-4c99-98ef-6f8b3a47172f", "t": "D:\\cloude code 这个里面文件比较乱， 咱们按照项目逻辑还有L1-L5的", "p": "主工作区", "d": "2026-08-03", "d2": "2026-08-03", "tok": 36525685, "models": {"deepseek-v4-flash": {"i": 1294017, "o": 210868, "cr": 35020800, "cc": 0}}}, {"id": "5e2ff85d-cd11-417b-8e73-f462f7780a19", "t": "\"C:\\Users\\13167\\Desktop\\中邮合作产品红利&深度价值产品要素表", "p": "主工作区", "d": "2026-09-08", "d2": "2026-09-08", "tok": 34033632, "models": {"deepseek-v4-pro": {"i": 638502, "o": 183994, "cr": 33211136, "cc": 0}}}, {"id": "2c39ccd8-fddc-4260-9302-57858b3158b1", "t": "给我把未来一周的孕期餐食推荐 按照每天的格式发一下", "p": "主工作区", "d": "2026-08-04", "d2": "2026-08-04", "tok": 32108629, "models": {"deepseek-v4-flash": {"i": 702800, "o": 150407, "cr": 16905472, "cc": 0}, "deepseek-v4-pro": {"i": 1071490, "o": 59004, "cr": 13219456, "cc": 0}}}, {"id": "5c4b1759-7262-40b7-98d9-660a53ed22ad", "t": "http://192.168.100.148:3000/customers 铁蛋，这", "p": "主工作区", "d": "2026-09-14", "d2": "2026-09-14", "tok": 31745323, "models": {"deepseek-v4-pro": {"i": 631915, "o": 129600, "cr": 30983808, "cc": 0}}}, {"id": "7a18f672-1c42-4f35-9216-9693c6988de8", "t": "@\"C:\\Users\\13167\\Desktop\\20260724_143258.m", "p": "主工作区", "d": "2026-08-21", "d2": "2026-08-24", "tok": 24114250, "models": {"deepseek-v4-pro": {"i": 359007, "o": 288107, "cr": 23467136, "cc": 0}}}]};
 var PAL = ['#22d3ee','#8b5cf6','#34d399','#fb923c','#f43f5e','#3b82f6'];
 function hm(n){
   if(n>=1e8)return (n/1e8).toFixed(2)+' 亿';
@@ -181,31 +241,77 @@ function hm(n){
 }
 function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
 
-/* KPI */
+/* KPI(成本按当前价格模型实时计算) */
 (function(){
   var T=U.totals;
-  var today=U.days.length?U.days[U.days.length-1].total:0;
+  var today=U.days.length?U.days[U.days.length-1]:null;
   var avg=U.days.length?Math.round(T.tok/U.days.length):0;
   var cacheRate=T.cr/(T.cr+T.in)*100;
+  var totCost=U.models.reduce(function(a,m){return a+costOfModel(m.m,m.i,m.o,m.cr,m.cc)},0);
+  /* 今日成本: 用今日逐模型明细精确计算(数据侧已给 i/o/cr/cc) */
+  var todayCost=0;
+  if(today){
+    Object.keys(today.model_detail||{}).forEach(function(m){
+      var v=today.model_detail[m];
+      todayCost+=costOfModel(m,v[0],v[1],v[2],v[3]);
+    });
+  }
+  var avgCost=U.days.length?totCost/U.days.length:0;
   var cards=[
     ['累计 TOKEN', hm(T.tok)],
-    ['今日 TOKEN', hm(today)],
+    ['累计成本', '¥ '+cnY(totCost)],
+    ['今日 TOKEN', hm(today?today.total:0)],
+    ['今日成本', '¥ '+cnY(todayCost)],
     ['会话数', T.sessions+' 次'],
-    ['活跃天数', T.days+' 天'],
     ['缓存命中率', cacheRate.toFixed(1)+'%'],
-    ['日均 TOKEN', hm(avg)]
+    ['日均 TOKEN', hm(avg)],
+    ['日均成本', '¥ '+cnY(avgCost)]
   ];
   var box=document.getElementById('stats');
+  box.innerHTML='';
   cards.forEach(function(c){
     var s=el('div','stat');
     s.appendChild(el('div','k',c[0]));
     s.appendChild(el('div','v',c[1]));
     box.appendChild(s);
   });
+  var pr=el('button','tog');
+  pr.style.cssText='margin-top:10px;font-size:11px';
+  pr.textContent='⚙ 价格校准';
+  pr.addEventListener('click',showPriceDialog);
+  box.parentElement.insertBefore(pr, box.nextSibling);
 })();
 
-/* 每日趋势 SVG 面积图 */
+/* 每日趋势: 面积图 + 自绘即时 tooltip(mousemove 驱动, 无 SVG title 延迟) */
 var CHART_N=30;
+var TT=null;  /* tooltip 单例 */
+function tipEl(){
+  if(TT)return TT;
+  TT=document.createElement('div');TT.className='tooltip';
+  document.body.appendChild(TT);
+  return TT;
+}
+function showTip(ev,day,models){
+  var t=tipEl();
+  var rows='';
+  models.forEach(function(m,i){
+    rows+='<div class="tt-r"><span class="dot" style="background:'+PAL[i%PAL.length]+'"></span>'
+      +m.name+'<b>'+hm(m.val)+'</b></div>';
+  });
+  var cost=0;
+  var md=day.model_detail||{};
+  Object.keys(md).forEach(function(m){var v=md[m];cost+=costOfModel(m,v[0],v[1],v[2],v[3])});
+  t.innerHTML='<div class="tt-h">'+day.d+'</div>'+rows
+    +'<div class="tt-t">'+hm(day.total)+' token · <span style="color:#fbbf24">¥ '+cnY(cost)+'</span>'
+    +(day.sessions?' · '+day.sessions+' 会话':'')+'</div>';
+  t.style.display='block';
+  var W=window.innerWidth, mw=t.offsetWidth, mh=t.offsetHeight;
+  var px=ev.clientX+14, py=ev.clientY-10;
+  if(px+mw>W-8)px=ev.clientX-mw-14;
+  if(py+mh>window.innerHeight-8)py=window.innerHeight-mh-8;
+  t.style.left=px+'px';t.style.top=py+'px';
+}
+function hideTip(){if(TT)TT.style.display='none'}
 function drawChart(){
   var box=document.getElementById('chart');
   box.innerHTML='';
@@ -238,13 +344,31 @@ function drawChart(){
     }
   });
   svg+='<path d="'+area+'" fill="url(#g)"/>'
-    +'<path d="'+path+'" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linejoin="round"/>';
+    +'<path d="'+path+'" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linejoin="round"/>'
+    +'<rect class="hover-zone" x="0" y="0" width="'+W+'" height="'+H+'" fill="transparent"/>';
   days.forEach(function(d,i){
-    svg+='<circle cx="'+x(i).toFixed(1)+'" cy="'+y(d.total).toFixed(1)+'" r="2.6" fill="#22d3ee">'
-      +'<title>'+d.d+' · '+hm(d.total)+' token</title></circle>';
+    svg+='<circle class="pt" data-i="'+i+'" cx="'+x(i).toFixed(1)+'" cy="'+y(d.total).toFixed(1)+'" r="3.4" fill="#22d3ee" opacity="0"/>';
   });
   svg+='</svg>';
   box.innerHTML=svg;
+  /* mousemove: 按 SVG 坐标系换算最近数据点 → 高亮 + 即时 tooltip */
+  var svgEl=box.querySelector('svg');
+  var pts=box.querySelectorAll('.pt');
+  svgEl.addEventListener('mousemove',function(ev){
+    var r=svgEl.getBoundingClientRect();
+    var sx=(ev.clientX-r.left)/r.width*W;
+    var i=Math.max(0,Math.min(days.length-1,Math.round((sx-padL)/step)));
+    pts.forEach(function(p){p.setAttribute('opacity',p.getAttribute('data-i')==i?'1':'0')});
+    var byModel=days[i].by_model||{};
+    var ms=Object.keys(byModel).map(function(m){
+      return {name:m.replace(/^deepseek-/,'DS '),val:byModel[m]};
+    }).sort(function(a,b){return b.val-a.val});
+    showTip(ev,days[i],ms);
+  });
+  svgEl.addEventListener('mouseleave',function(){
+    hideTip();
+    pts.forEach(function(p){p.setAttribute('opacity','0')});
+  });
   var lg=document.getElementById('chartLegend');
   lg.innerHTML='<div class="lg"><span class="dot" style="background:#22d3ee"></span><b>'+hm(v.reduce(function(a,b){return a+b},0))+'</b> 近 '+CHART_N+' 天合计</div>'
     +'<div class="lg"><span class="dot" style="background:rgba(34,211,238,.35)"></span>峰值 '+hm(mx/1.1)+' / 天</div>'
@@ -253,10 +377,11 @@ function drawChart(){
 document.getElementById('tog30').addEventListener('click',function(){CHART_N=30;this.classList.add('on');document.getElementById('tog90').classList.remove('on');drawChart()});
 document.getElementById('tog90').addEventListener('click',function(){CHART_N=90;this.classList.add('on');document.getElementById('tog30').classList.remove('on');drawChart()});
 
-/* 模型分拆 */
-(function(){
+/* 模型分拆(成本随价格实时计算) */
+function renderModels(){
   var ms=U.models, tot=U.totals.tok;
   var bar=document.getElementById('mbar'), rows=document.getElementById('mrows');
+  bar.innerHTML='';rows.innerHTML='';
   ms.forEach(function(m,i){
     var seg=el('div');seg.style.width=(m.tok/tot*100).toFixed(2)+'%';
     seg.style.background=PAL[i%PAL.length];
@@ -269,48 +394,158 @@ document.getElementById('tog90').addEventListener('click',function(){CHART_N=90;
     var track=el('div','mtrack');
     track.appendChild((function(){var f=el('div','mfill');f.style.width=(m.tok/tot*100).toFixed(1)+'%';f.style.background=PAL[i%PAL.length];return f})());
     r.appendChild(track);
-    r.appendChild(el('div','mval',hm(m.tok)+' · '+(m.tok/tot*100).toFixed(1)+'%'));
+    var cost=costOfModel(m.m,m.i,m.o,m.cr,m.cc);
+    r.appendChild(el('div','mval',hm(m.tok)+' · ¥ '+cnY(cost)+' · '+(m.tok/tot*100).toFixed(1)+'%'));
     rows.appendChild(r);
   });
-})();
+}
+renderModels();
 
-/* 项目分拆 */
-(function(){
+/* 项目分拆(成本随价格实时计算) */
+function renderProjects(){
   var ps=U.projects, mx=Math.max.apply(null,ps.map(function(p){return p.tok}));
   var rows=document.getElementById('prows');
+  rows.innerHTML='';
   ps.forEach(function(p){
+    var cost=0;
+    Object.keys(p.model_detail||{}).forEach(function(m){
+      var v=p.model_detail[m];cost+=costOfModel(m,v[0],v[1],v[2],v[3]);
+    });
     var r=el('div','mrow');
     r.appendChild(el('div','mlab',p.p));
     var track=el('div','mtrack');
     track.appendChild((function(){var f=el('div','mfill');f.style.width=(p.tok/mx*100).toFixed(1)+'%';return f})());
     r.appendChild(track);
-    r.appendChild(el('div','mval',hm(p.tok)+' · '+p.sessions+' 次会话'));
+    r.appendChild(el('div','mval',hm(p.tok)+' · ¥ '+cnY(cost)+' · '+p.sessions+' 次会话'));
     rows.appendChild(r);
   });
-})();
+}
+renderProjects();
 
-/* 会话明细 */
-(function(){
+/* 会话明细(成本随价格实时计算) */
+function renderSessions(){
   var tb=document.getElementById('sessBody');
+  tb.innerHTML='';
   U.sessions.forEach(function(s,i){
+    var cost=0;
+    Object.keys(s.models||{}).forEach(function(m){
+      var v=s.models[m];cost+=costOfModel(m,v.i,v.o,v.cr,v.cc);
+    });
     var tr=el('tr');
     tr.appendChild(el('td','dim','#'+(i+1)));
     tr.appendChild(el('td',null,s.t));
     tr.appendChild(el('td','dim',s.d+(s.d2&&s.d2!==s.d?' ~ '+s.d2.slice(5):'')));
     tr.appendChild(el('td',null,s.p));
     var mc=el('td');
-    (s.models||[]).forEach(function(m){mc.appendChild(el('span','mtag',m.replace(/^deepseek-/,'DS ')))});
+    Object.keys(s.models||{}).forEach(function(m){mc.appendChild(el('span','mtag',m.replace(/^deepseek-/,'DS ')))});
     tr.appendChild(mc);
-    tr.appendChild(el('td','mono',hm(s.tok)));
+    tr.appendChild(el('td','mono',hm(s.tok)+' <span style="color:#fbbf24;font-size:11px">¥ '+cnY(cost)+'</span>'));
     tb.appendChild(tr);
   });
-})();
+}
+renderSessions();
 
 document.getElementById('foot').innerHTML =
   '构建时间 '+U.built+' · 统计口径: 主会话 assistant 消息 usage 求和(输入/输出/缓存读写全计入) · 子代理(sidechain)不计 · 令牌数源自会话转录逐字累加<br>'
-  +'数据每日 18:07 自动刷新 · 🔒 本页与 CRM 同级密码门 · 不进入公开搜索索引';
+  +'数据每日 18:07 自动刷新 · 🔒 本页与 CRM 同级密码门 · 不进入公开搜索索引 · '
+  +'成本单价为 DeepSeek V4 峰谷闲时档(第三方报道口径, 点击「⚙ 价格校准」可改)';
 drawChart();
+
+/* ================= 价格校准弹窗 ================= */
+function showPriceDialog(){
+  var prices=getPrices();
+  var dlg=document.getElementById('prDialog');
+  if(!dlg){
+    dlg=el('div','pr-dialog');dlg.id='prDialog';
+    var panel=el('div','pr-panel');
+    panel.appendChild(el('h3',null,'⚙ 价格校准'));
+    panel.appendChild(el('div','pr-sub',
+      '单价: 元 / 百万 tokens。默认 DeepSeek V4 峰谷闲时档(第三方报道口径);<br>'
+      +'h=缓存命中 m=缓存未命中 o=输出 w=缓存写(无独立官价, 默认按未命中计)。<br>'
+      +'改完保存立即全页重算, 存在浏览器本地。'));
+    var grid=el('div','pr-grid');
+    ['模型','h','m','o','w'].forEach(function(h){
+      grid.appendChild(el('div','ph',h));
+    });
+    var inputs={};
+    Object.keys(DEFAULT_PRICES).forEach(function(m){
+      grid.appendChild(el('div','pm',m.replace(/^deepseek-/,'DS ')));
+      ['h','m','o','w'].forEach(function(f){
+        var inp=document.createElement('input');inp.type='number';inp.step='0.01';inp.min='0';
+        inp.value=prices[m]?prices[m][f]:DEFAULT_PRICES[m][f];
+        grid.appendChild(inp);
+        inputs[m+'|'+f]=inp;
+      });
+    });
+    panel.appendChild(grid);
+    var btns=el('div','pr-btns');
+    var bSave=el('button','pr-save','保存');var bReset=el('button','pr-reset','恢复默认');var bCancel=el('button','pr-cancel','取消');
+    bSave.addEventListener('click',function(){
+      var p={};
+      Object.keys(DEFAULT_PRICES).forEach(function(m){
+        p[m]={};
+        ['h','m','o','w'].forEach(function(f){
+          var v=parseFloat(inputs[m+'|'+f].value);
+          p[m][f]=isFinite(v)?v:DEFAULT_PRICES[m][f];
+        });
+      });
+      localStorage.setItem('tok_prices',JSON.stringify(p));
+      dlg.classList.remove('show');
+      rerenderAll();
+    });
+    bReset.addEventListener('click',function(){
+      localStorage.removeItem('tok_prices');
+      dlg.classList.remove('show');
+      rerenderAll();
+    });
+    bCancel.addEventListener('click',function(){dlg.classList.remove('show')});
+    btns.appendChild(bSave);btns.appendChild(bReset);btns.appendChild(bCancel);
+    panel.appendChild(btns);
+    dlg.appendChild(panel);
+    dlg.addEventListener('click',function(e){if(e.target===dlg)dlg.classList.remove('show')});
+    document.body.appendChild(dlg);
+  }else{
+    /* 刷新输入框为当前价格 */
+    var prices2=getPrices();
+    var inputs2=dlg.querySelectorAll('.pr-grid input');
+    var mi=0,fj=0;
+    Object.keys(DEFAULT_PRICES).forEach(function(m){
+      ['h','m','o','w'].forEach(function(f){
+        inputs2[mi*4+fj].value=prices2[m][f];fj++;
+      });
+      fj=0;mi++;
+    });
+  }
+  dlg.classList.add('show');
+}
+function rerenderAll(){
+  /* KPI/模型/项目/会话全部重渲染(图表 token 不受价格影响, 只需重算成本提示) */
+  var T=U.totals;
+  var totCost=U.models.reduce(function(a,m){return a+costOfModel(m.m,m.i,m.o,m.cr,m.cc)},0);
+  var today=U.days.length?U.days[U.days.length-1]:null;
+  var todayCost=0;
+  if(today){
+    Object.keys(today.model_detail||{}).forEach(function(m){
+      var v=today.model_detail[m];todayCost+=costOfModel(m,v[0],v[1],v[2],v[3]);
+    });
+  }
+  var avgCost=U.days.length?totCost/U.days.length:0;
+  var box=document.getElementById('stats');
+  box.innerHTML='';
+  var cards=[
+    ['累计 TOKEN', hm(T.tok)],['累计成本', '¥ '+cnY(totCost)],
+    ['今日 TOKEN', hm(today?today.total:0)],['今日成本', '¥ '+cnY(todayCost)],
+    ['会话数', T.sessions+' 次'],['缓存命中率', (T.cr/(T.cr+T.in)*100).toFixed(1)+'%'],
+    ['日均 TOKEN', hm(Math.round(T.tok/U.days.length))],['日均成本', '¥ '+cnY(avgCost)]
+  ];
+  cards.forEach(function(c){
+    var s=el('div','stat');
+    s.appendChild(el('div','k',c[0]));
+    s.appendChild(el('div','v',c[1]));
+    box.appendChild(s);
+  });
+  renderModels();renderProjects();renderSessions();drawChart();
+}
 </script>
-<script src="../../nav-fab.js"></script>
 </body>
 </html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小月饼的足迹地图 · 34 地</title>
+<script src="echarts.min.js"></script>
+<style>
+  :root {
+    --bg0:#0b0d1a; --bg1:#1a1038; --bg2:#0b0d1a;
+    --card: rgba(255,255,255,.05); --border: rgba(255,255,255,.14);
+    --text:#f2f4ff; --muted:#aab0d0;
+    --pink:#ff5d8f; --orange:#ff9e5e; --gold:#ffd166; --green:#7bf1a8;
+    --cyan:#4fd1ff; --blue:#7a8cff; --purple:#c084fc;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    background:
+      radial-gradient(1100px 550px at 85% -8%, rgba(192,132,252,.18), transparent 60%),
+      radial-gradient(900px 500px at -5% 12%, rgba(79,209,255,.14), transparent 55%),
+      radial-gradient(1000px 600px at 55% 115%, rgba(255,93,143,.13), transparent 60%),
+      linear-gradient(160deg, var(--bg0), var(--bg1) 52%, var(--bg2));
+    background-attachment: fixed;
+    padding: 26px 30px 40px;
+    overflow-x: hidden;
+  }
+  /* 漂浮粒子背景 */
+  .particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .particle { position: absolute; border-radius: 50%; opacity: .5; animation: floatUp linear infinite; }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) scale(1); opacity: .55; }
+    85%  { opacity: .25; }
+    100% { transform: translateY(-115vh) scale(1.35); opacity: 0; }
+  }
+  .wrap { position: relative; z-index: 1; }
+
+  .header { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+  .header h1 {
+    font-size: 32px; font-weight: 800; letter-spacing: 1px;
+    background: linear-gradient(90deg,#ff5d8f,#ff9e5e,#ffd166,#7bf1a8,#4fd1ff,#c084fc);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: hueShift 8s linear infinite;
+  }
+  @keyframes hueShift { to { filter: hue-rotate(360deg); } }
+  .header .sub { color: var(--muted); font-size: 14px; }
+
+  .stats { display:flex; gap:14px; margin:18px 0 22px; flex-wrap:wrap; }
+  .stat {
+    background: var(--card); border:1px solid var(--border); border-radius:16px;
+    padding: 14px 20px; text-align:center; min-width: 118px;
+    backdrop-filter: blur(8px); transition: transform .2s, box-shadow .2s;
+  }
+  .stat:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+  .stat .num {
+    font-size: 30px; font-weight: 800; font-variant-numeric: tabular-nums;
+    background: linear-gradient(135deg,var(--pink),var(--purple));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .stat:nth-child(2) .num { background: linear-gradient(135deg,var(--orange),var(--pink)); -webkit-background-clip:text; background-clip:text; }
+  .stat:nth-child(3) .num { background: linear-gradient(135deg,var(--green),var(--cyan)); -webkit-background-clip:text; background-clip:text; }
+  .stat:nth-child(4) .num { background: linear-gradient(135deg,var(--cyan),var(--blue)); -webkit-background-clip:text; background-clip:text; }
+  .stat .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  .layout { display:grid; grid-template-columns: 1.62fr 1fr; gap:20px; }
+  @media (max-width: 940px) { .layout { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--card); border:1px solid var(--border); border-radius:20px;
+    padding: 18px; backdrop-filter: blur(10px);
+  }
+  #map { width:100%; height: 600px; }
+  .panel h2 { font-size: 16px; margin-bottom: 14px; letter-spacing:.5px; }
+  .panel h2 .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; background: linear-gradient(135deg,var(--gold),var(--pink)); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 12px var(--gold); } }
+
+  .prov-group { margin-bottom: 14px; }
+  .prov-name { font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: 2px; }
+  .city-chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip {
+    position: relative;
+    background: rgba(255,255,255,.06); border:1px solid var(--border); border-radius: 999px;
+    padding: 6px 13px; font-size: 13px; cursor: pointer; color: var(--text);
+    transition: all .18s ease; user-select: none;
+  }
+  .chip:hover { transform: scale(1.08); border-color: var(--gold); color: var(--gold); }
+  .chip.home {
+    background: linear-gradient(135deg,#ffd166,#ff9e5e); color:#241a05;
+    font-weight:700; border-color: transparent;
+    box-shadow: 0 0 14px rgba(255,209,102,.45);
+  }
+  .chip.active { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 12px rgba(79,209,255,.5); }
+  .chip .cam {
+    display:inline-block; margin-left:5px; font-size:10px; padding:1px 5px;
+    background: rgba(122,140,255,.35); border-radius: 8px; color:#cfd6ff;
+  }
+
+  /* 相册灯箱 */
+  .lightbox {
+    position: fixed; inset:0; z-index: 50; display:none;
+    background: rgba(4,5,12,.93); backdrop-filter: blur(10px);
+    align-items:center; justify-content:center; flex-direction:column;
+  }
+  .lightbox.open { display:flex; animation: fadeIn .25s ease; }
+  @keyframes fadeIn { from { opacity:0; } }
+  .lb-stage { position: relative; max-width: 88vw; max-height: 74vh; }
+  .lb-stage img {
+    max-width: 88vw; max-height: 74vh; border-radius: 12px;
+    box-shadow: 0 20px 70px rgba(0,0,0,.7);
+    animation: popIn .3s cubic-bezier(.2,.9,.3,1.2);
+  }
+  @keyframes popIn { from { transform: scale(.92); opacity:.4; } }
+  .lb-nav {
+    position:absolute; top:50%; transform:translateY(-50%);
+    background: rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
+    color:#fff; width:44px; height:44px; border-radius:50%;
+    font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    transition: background .15s;
+  }
+  .lb-nav:hover { background: rgba(255,255,255,.28); }
+  .lb-prev { left:-58px; } .lb-next { right:-58px; }
+  .lb-title { margin-top:16px; font-size:16px; font-weight:600; }
+  .lb-count { margin-top:4px; font-size:12px; color:var(--muted); }
+  .lb-close {
+    position:absolute; top:22px; right:26px; font-size:32px; color:#fff;
+    cursor:pointer; width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    border-radius:50%; background: rgba(255,255,255,.1); transition: background .15s, transform .15s;
+  }
+  .lb-close:hover { background: rgba(255,93,143,.5); transform: rotate(90deg); }
+
+  .footer { margin-top:24px; text-align:center; color:var(--muted); font-size:12px; }
+  .footer .moon { font-size:15px; }
+</style>
+</head>
+<body>
+  <div class="particles" id="particles"></div>
+  <div class="wrap">
+
+    <div class="header">
+      <h1>🌙 小月饼的足迹地图</h1>
+      <span class="sub">王斯卯 · 3 岁半 · 走四方</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num">34</div><div class="label">个足迹点</div></div>
+      <div class="stat"><div class="num">10+2</div><div class="label">省份 + 直辖市</div></div>
+      <div class="stat"><div class="num">2</div><div class="label">直辖市全打卡</div></div>
+      <div class="stat"><div class="num">5</div><div class="label">个邻省</div></div>
+    </div>
+
+    <div class="layout">
+      <div class="panel">
+        <h2><span class="dot"></span>足迹 · 中国</h2>
+        <div id="map"></div>
+      </div>
+      <div class="panel">
+        <h2><span class="dot"></span>城市墙 · 点击联动地图</h2>
+        <div id="city-wall"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="moon">🥮</span> 3 岁半 · 34 地 · 城市、草原、山海、瀑布、竹海、闽南都看过了 <span class="moon">🥮</span>
+    </div>
+  </div>
+
+  <!-- 相册灯箱 -->
+  <div class="lightbox" id="lightbox">
+    <div class="lb-close" onclick="closeLightbox()">✕</div>
+    <div class="lb-stage">
+      <div class="lb-nav lb-prev" onclick="lbNav(-1)">‹</div>
+      <img id="lb-img" src="" alt="">
+      <div class="lb-nav lb-next" onclick="lbNav(1)">›</div>
+    </div>
+    <div class="lb-title" id="lb-title"></div>
+    <div class="lb-count" id="lb-count"></div>
+  </div>
+
+<script>
+// ── 数据 ──
+const CITIES = [
+  {name:'北京', coord:[116.40,39.90], prov:'京津冀', home:true},
+  {name:'天津', coord:[117.20,39.13], prov:'京津冀'},
+  {name:'石家庄', coord:[114.51,38.04], prov:'河北'},
+  {name:'雄安', coord:[115.87,39.03], prov:'河北'},
+  {name:'保定', coord:[115.46,38.87], prov:'河北'},
+  {name:'承德', coord:[117.96,40.95], prov:'河北'},
+  {name:'秦皇岛', coord:[119.60,39.94], prov:'河北'},
+  {name:'御道口', coord:[117.13,42.29], prov:'河北'},
+  {name:'塞罕坝', coord:[117.09,42.27], prov:'河北'},
+  {name:'涞水县', coord:[115.71,39.39], prov:'河北'},
+  {name:'阿那亚', coord:[119.17,39.71], prov:'河北'},
+  {name:'南戴河', coord:[119.42,39.81], prov:'河北'},
+  {name:'济南', coord:[117.12,36.65], prov:'山东'},
+  {name:'济宁', coord:[116.59,35.42], prov:'山东'},
+  {name:'太原', coord:[112.55,37.87], prov:'山西'},
+  {name:'霍州', coord:[111.72,36.57], prov:'山西'},
+  {name:'吕梁', coord:[111.14,37.52], prov:'山西'},
+  {name:'西安', coord:[108.94,34.34], prov:'陕西'},
+  {name:'宝鸡', coord:[107.24,34.36], prov:'陕西'},
+  {name:'延安', coord:[109.49,36.59], prov:'陕西'},
+  {name:'壶口瀑布', coord:[110.44,36.15], prov:'陕西'},
+  {name:'武汉', coord:[114.31,30.59], prov:'湖北'},
+  {name:'襄阳', coord:[112.12,32.01], prov:'湖北'},
+  {name:'郑州', coord:[113.63,34.75], prov:'河南'},
+  {name:'赤峰', coord:[118.89,42.26], prov:'内蒙古'},
+  {name:'克什克腾旗', coord:[117.55,43.27], prov:'内蒙古'},
+  {name:'林西县', coord:[118.05,43.61], prov:'内蒙古'},
+  {name:'贵阳', coord:[106.63,26.65], prov:'贵州'},
+  {name:'宜宾', coord:[104.64,28.75], prov:'四川'},
+  {name:'蜀南竹海', coord:[105.02,28.48], prov:'四川'},
+  {name:'庐山', coord:[115.98,29.57], prov:'江西'},
+  {name:'厦门', coord:[118.09,24.48], prov:'福建'},
+  {name:'漳州', coord:[117.65,24.51], prov:'福建'},
+  {name:'泉州', coord:[118.68,24.87], prov:'福建'},
+];
+const RAINBOW = ['#ff5d8f','#ff9e5e','#ffd166','#7bf1a8','#4fd1ff','#7a8cff','#c084fc'];
+const PROV_ORDER = ['京津冀','河北','山东','山西','陕西','湖北','河南','内蒙古','贵州','四川','江西','福建'];
+let PHOTOS = {};
+
+// ── 漂浮粒子 ──
+(function makeParticles(){
+  const box = document.getElementById('particles');
+  const colors = RAINBOW;
+  for (let i=0; i<26; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 3 + Math.random()*6;
+    p.style.width = p.style.height = size+'px';
+    p.style.left = Math.random()*100+'vw';
+    p.style.top = (20 + Math.random()*90)+'vh';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (14 + Math.random()*16)+'s';
+    p.style.animationDelay = (-Math.random()*30)+'s';
+    box.appendChild(p);
+  }
+})();
+
+// ── 相册灯箱 ──
+let lbCity = null, lbIdx = 0, lbOpenAt = 0;
+function openLightbox(city) {
+  const imgs = PHOTOS[city] || [];
+  if (!imgs.length) return;
+  lbCity = city; lbIdx = 0;
+  lbOpenAt = Date.now();
+  document.getElementById('lightbox').classList.add('open');
+  updateLightbox();
+}
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+function lbNav(d) {
+  const imgs = PHOTOS[lbCity] || [];
+  lbIdx = (lbIdx + d + imgs.length) % imgs.length;
+  updateLightbox();
+}
+function updateLightbox() {
+  const imgs = PHOTOS[lbCity] || [];
+  const f = imgs[lbIdx].split('/').pop();
+  document.getElementById('lb-img').src = imgs[lbIdx];
+  document.getElementById('lb-title').textContent = `${lbCity} · ${f}`;
+  document.getElementById('lb-count').textContent = `${lbIdx+1} / ${imgs.length}`;
+}
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target !== document.getElementById('lightbox')) return;
+  if (Date.now() - lbOpenAt < 400) return; // 防打开瞬间的点击穿透
+  closeLightbox();
+});
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') lbNav(-1);
+  if (e.key === 'ArrowRight') lbNav(1);
+});
+
+// ── 城市墙 ──
+function buildWall() {
+  const wall = document.getElementById('city-wall');
+  const groups = {};
+  CITIES.forEach(c => { (groups[c.prov] = groups[c.prov] || []).push(c); });
+  let html = '';
+  PROV_ORDER.forEach(p => {
+    if (!groups[p]) return;
+    html += `<div class="prov-group"><div class="prov-name">${p}</div><div class="city-chips">`;
+    groups[p].forEach(c => {
+      const cls = c.home ? 'chip home' : 'chip';
+      const cam = (PHOTOS[c.name]||[]).length
+        ? `<span class="cam">📷${PHOTOS[c.name].length}</span>` : '';
+      html += `<span class="${cls}" data-city="${c.name}">${c.name}${cam}</span>`;
+    });
+    html += `</div></div>`;
+  });
+  wall.innerHTML = html;
+  wall.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const city = chip.dataset.city;
+      if ((PHOTOS[city]||[]).length) { openLightbox(city); return; }
+      highlightCity(city);
+    });
+  });
+}
+
+// ── 地图 ──
+let chart = null, geoLoaded = false, frame = 0, timer = null;
+
+function renderMap() {
+  chart = echarts.init(document.getElementById('map'));
+  chart.showLoading({text:'地图加载中…', color:'#ffd166'});
+
+  fetch('https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json')
+    .then(r => r.json())
+    .then(geojson => {
+      geoLoaded = true;
+      echarts.registerMap('china', geojson);
+      chart.hideLoading();
+      startAnimation();
+    })
+    .catch(() => {
+      chart.hideLoading(); chart.clear();
+      document.getElementById('map').innerHTML =
+        '<div style="padding:60px 20px;text-align:center;color:#aab0d0">地图数据加载失败（离线状态）<br>右侧城市墙正常可用</div>';
+    });
+}
+
+function startAnimation() {
+  const home = CITIES.find(c => c.home);
+  const others = CITIES.filter(c => !c.home);
+
+  const option = {
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'item',
+      formatter: p => p.seriesType === 'effectScatter'
+        ? `<b>${p.name}</b><br/>${p.name === '北京' ? '🏠 家 · 从这里出发' : '足迹之城'}` : p.name,
+      backgroundColor: '#1c1f33', borderColor: '#ffd166', textStyle: {color:'#f2f4ff'}
+    },
+    geo: {
+      map: 'china', roam: true,
+      itemStyle: {
+        areaColor: new echarts.graphic.LinearGradient(0,0,0,1,[
+          {offset:0,color:'#232a4d'},{offset:1,color:'#181c33'}
+        ]),
+        borderColor: '#4a557f', borderWidth: 1,
+        shadowColor: 'rgba(122,140,255,.25)', shadowBlur: 14
+      },
+      emphasis: { itemStyle: { areaColor: '#2d3560' }, label: { show:false } },
+      label: { show:false }
+    },
+    series: [
+      // 1) 家 —— 彩虹脉冲
+      {
+        type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4,
+        data: [{name: home.name, value: [...home.coord, 30]}],
+        symbolSize: v => v[2], rippleEffect: { brushType:'stroke', scale: 5, period: 3 },
+        itemStyle: {
+          color: new echarts.graphic.RadialGradient(.5,.5,.6,[
+            {offset:0,color:'#fff'},{offset:.4,color:'#ffd166'},{offset:1,color:'rgba(255,93,143,0)'}
+          ]),
+          shadowBlur: 24, shadowColor: '#ffd166'
+        },
+        label: { show:true, position:'right', formatter:'🏠 北京', color:'#ffd166', fontSize:13, fontWeight:'bold' }
+      },
+      // 2) 足迹点 —— 彩色呼吸 + 相册徽章
+      {
+        type: 'effectScatter', coordinateSystem: 'geo', zlevel: 3,
+        data: others.map((c,i) => ({
+          name: c.name, value: [...c.coord, 15 + Math.sin(i*1.7)*3],
+          itemStyle: { color: RAINBOW[i % RAINBOW.length] },
+          hasPhoto: !!(PHOTOS[c.name]||[]).length
+        })),
+        symbolSize: v => v[2], rippleEffect: { brushType:'stroke', scale: 3.2, period: 4 },
+        itemStyle: {
+          shadowBlur: 12, shadowColor: 'rgba(255,209,102,.55)'
+        },
+        label: {
+          show: true, position: 'top', formatter: p => {
+            const has = p.data && p.data.hasPhoto;
+            return '{b}' + (has ? ' 📷' : '');
+          },
+          color: '#f2f4ff', fontSize: 10
+        }
+      },
+      // 3) 家 → 各城 彩虹航线（按访问次序逐条点亮）
+      {
+        type: 'lines', coordinateSystem: 'geo', zlevel: 2, silent: true,
+        data: others.map((c,i) => ({
+          fromName: home.name, toName: c.name,
+          coords: [home.coord, c.coord],
+          lineStyle: { color: RAINBOW[i % RAINBOW.length], width: 1.4, opacity: .55, curveness: .18 }
+        })),
+        effect: {
+          show: true, period: 5, trailLength: .35, symbolSize: 5,
+          color: '#fff', loop: true
+        }
+      }
+    ]
+  };
+  chart.setOption(option);
+
+  // 航线逐条点亮动画
+  let idx = 0;
+  timer = setInterval(() => {
+    if (idx >= others.length) { clearInterval(timer); timer = null; return; }
+    chart.dispatchAction({ type:'showTip', seriesIndex:1, name: others[idx].name });
+    idx++;
+  }, 300);
+
+  chart.on('click', p => {
+    if (p.seriesType === 'effectScatter' && p.name) {
+      if (p.name !== home.name && (PHOTOS[p.name]||[]).length) { openLightbox(p.name); return; }
+      highlightCity(p.name);
+    }
+  });
+}
+
+function highlightCity(name) {
+  document.querySelectorAll('.chip').forEach(ch => {
+    ch.classList.toggle('active', ch.dataset.city === name);
+  });
+  if (chart && geoLoaded) {
+    chart.dispatchAction({type:'showTip', seriesIndex:1, name});
+    chart.dispatchAction({type:'highlight', seriesIndex:1, name});
+    setTimeout(() => chart.dispatchAction({type:'downplay', seriesIndex:1, name}), 1400);
+  }
+}
+
+window.addEventListener('resize', () => chart && chart.resize());
+
+// ── 启动 ──
+fetch('photos.json').then(r => r.json()).then(m => {
+  PHOTOS = m;
+}).catch(() => { PHOTOS = {}; }).finally(() => {
+  buildWall();
+  renderMap();
+});
+</script>
+</body>
+</html>

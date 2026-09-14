@@ -40,6 +40,7 @@ PRIVATE_PREFIXES = (
     "tools/nursery-parents/", "tools/family-links/",
     "tools/baby-name-board/", "tools/naming/",
     "tools/scattered-private/",
+    "tools/yuebing-travels/",
     "knowledge/iflyink-notes/",
     "knowledge/union-card-handbook-2026/",
     "radar-site/",

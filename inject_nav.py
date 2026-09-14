@@ -28,6 +28,7 @@ SKIP = {
     "client-list-lite.html",
     "private.html",
     "tools/counterparty/counterparty.html",
+    "tools/unassigned/unassigned.html",
 }
 
 

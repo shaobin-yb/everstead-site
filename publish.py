@@ -60,6 +60,8 @@ ROOT_ARTIFACTS = [
      "中邮价值1号(TOP10权重50.57%) + 红利质量(27.17%) 重仓股快照 · 与红利/深度观察池重叠标记"),
     ("金融客户名单·精选版", "client-list-lite.html", "2026-09-10", "🏛️", "tool",
      "980 家市级及以上机构 · 8类Tab一眼抓重点 · 剔除联合社/信用社/县级农商行 · 🔒 密码访问(与CRM同级)"),
+    ("CRM 未分配客户池", "tools/unassigned/unassigned.html", "2026-09-14", "🎯", "tool",
+     "356 家未分配团队客户 · 搜索/类型/地域筛选 + 条形图联动 · 导出CSV · 🔒 密码访问(与CRM同级)"),
     # 收盘点评卡片日期动态取 latest.md 的日期(见 load_briefing_info)
     ("每日收盘点评", "market-briefings/index.html", "", "📰", "briefing",
      "每个交易日收盘后更新 · 历史逐日归档"),

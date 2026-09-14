@@ -164,7 +164,7 @@ td.num{font-family:var(--mono);text-align:right}
       <div class="brand">UNASSIGNED <em>·</em> CRM</div>
       <h1>未分配团队客户</h1>
     </div>
-    <a class="back" href="../../index.html">← 返回成果站</a>
+    <a class="back" href="../../index.html">← 返回稳稳回报展示平台</a>
   </div>
   <div class="sub">数据来源: 金融市场中心 CRM <b>192.168.100.148:3000</b> · 筛选条件 team 为空 · 更新于 <b id="gen"></b> · 点击条形图可联动筛选</div>
 

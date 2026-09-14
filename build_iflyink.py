@@ -189,7 +189,7 @@ def main():
 </div>"""
     (OUT / "index.html").write_text(
         page("讯飞本文件 · 私人专区",
-             '<a href="../../index.html">成果站</a> / <a href="../../private.html">私人专区</a> / 讯飞本文件',
+             '<a href="../../index.html">稳稳回报</a> / <a href="../../private.html">私人专区</a> / 讯飞本文件',
              nav + body), encoding="utf-8")
     print("index.html 完成")
 
@@ -203,7 +203,7 @@ def main():
         body = "\n".join(parts) + nav.replace("2024.html", f"<a href='index.html' style='color:#22d3ee;margin:0 8px'>返回总纪要</a>")
         (OUT / f"{year}.html").write_text(
             page(f"讯飞本文件 · {year} 年明细",
-                 '<a href="../../index.html">成果站</a> / <a href="../../private.html">私人专区</a> / <a href="index.html">讯飞本文件</a> / 明细',
+                 '<a href="../../index.html">稳稳回报</a> / <a href="../../private.html">私人专区</a> / <a href="index.html">讯飞本文件</a> / 明细',
                  body), encoding="utf-8")
         print(f"{year}.html 完成")
 
@@ -215,7 +215,7 @@ def main():
         body = publish.md_to_html(md)
         (OUT / f"{slug}.html").write_text(
             page(f"讯飞本文件 · {label}",
-                 '<a href="../../index.html">成果站</a> / <a href="../../private.html">私人专区</a> / <a href="index.html">讯飞本文件</a> / 主题线',
+                 '<a href="../../index.html">稳稳回报</a> / <a href="../../private.html">私人专区</a> / <a href="index.html">讯飞本文件</a> / 主题线',
                  body), encoding="utf-8")
         print(f"{slug}.html 完成")
 

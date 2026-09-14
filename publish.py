@@ -1,5 +1,5 @@
 """
-everstead 成果站发布脚本
+稳稳回报展示平台发布脚本
 
 用法：
   py publish.py                    # 扫描 reports/*.md 全部重建
@@ -180,7 +180,7 @@ def build_report(md_file: Path) -> None:
     html = (f'<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1.0">'
             f'<title>{title} · everstead</title><style>{PAGE_CSS}</style></head><body>'
-            f'<a class="back" href="../index.html">← everstead 成果站</a>'
+            f'<a class="back" href="../index.html">← 稳稳回报展示平台</a>'
             f'<h1>{title}</h1>{body}</body></html>')
     (md_file.with_suffix(".html")).write_text(html, encoding="utf-8")
     print(f"[build] {md_file.name} → html")
@@ -267,7 +267,7 @@ def build_briefing_archive() -> None:
         html = (f'<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">'
                 f'<meta name="viewport" content="width=device-width, initial-scale=1.0">'
                 f'<title>{date} 收盘点评 · everstead</title><style>{PAGE_CSS}</style></head><body>'
-                f'<a class="back" href="../index.html">← everstead 成果站</a>'
+                f'<a class="back" href="../index.html">← 稳稳回报展示平台</a>'
                 f'<h1>{date} A股收评</h1>{body}</body></html>')
         (md.with_suffix(".html")).write_text(html, encoding="utf-8")
         entries.append((date, md.name, title))
@@ -279,7 +279,7 @@ def build_briefing_archive() -> None:
     page = (f'<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1.0">'
             f'<title>每日收盘点评 · 历史归档 · everstead</title><style>{PAGE_CSS}</style></head><body>'
-            f'<a class="back" href="../index.html">← everstead 成果站</a>'
+            f'<a class="back" href="../index.html">← 稳稳回报展示平台</a>'
             f'<h1>每日收盘点评 · 历史归档</h1>'
             f'<p>共 {len(entries)} 篇，点击查看任意一天。</p>'
             f'<ul>{"".join(items) or "<li>暂无归档</li>"}</ul></body></html>')
@@ -442,7 +442,7 @@ def main():
     inject_nav()  # 全站悬浮导航(返回上一步+返回首页), 增量幂等
     if push:
         subprocess.run(["git", "-C", str(SITE), "add", "-A"], check=True)
-        subprocess.run(["git", "-C", str(SITE), "commit", "-m", "发布: 成果站更新"], check=True)
+        subprocess.run(["git", "-C", str(SITE), "commit", "-m", "发布: 稳稳回报更新"], check=True)
         subprocess.run(["git", "-C", str(SITE), "push"], check=True)
         print("[push] done")
     print("[ok] 全部完成")

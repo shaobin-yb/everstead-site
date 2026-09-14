@@ -1,4 +1,4 @@
-"""知识库入库与页面生成脚本 — everstead 成果站"知识库"栏目唯一工具
+"""知识库入库与页面生成脚本 — 稳稳回报展示平台"知识库"栏目唯一工具
 
 用法(必须用 py 启动器, 勿用 python 商店占位符):
   py kb_ingest.py topic add <主题名> --slug <topic-slug> [--desc ...] [--order N]
@@ -715,7 +715,7 @@ def build_index(m: dict) -> None:
 </head>
 <body>
 <div class="kb-topbar">
-  <a class="kb-back" href="../index.html">← 成果站首页</a>
+  <a class="kb-back" href="../index.html">← 稳稳回报展示平台首页</a>
   <span class="kb-brand">stay hungry<span class="kb-en">KNOWLEDGE BASE · 求知若饥</span></span>
   <span class="kb-count" id="kb-count-n">{total} ITEMS</span>
 </div>
@@ -812,7 +812,7 @@ def build_item_page(it: dict, m: dict) -> None:
 <link rel="stylesheet" href="../../zy-tech.css">
 </head>
 <body>
-<div class="kb-bread"><a href="../../index.html">成果站</a> / <a href="../index.html">知识库</a> / 条目</div>
+<div class="kb-bread"><a href="../../index.html">稳稳回报</a> / <a href="../index.html">知识库</a> / 条目</div>
 <h1 class="kb-h1">{esc(it["title"])}</h1>
 <div class="kb-infoline">{"".join(meta_parts)}</div>
 {fileline}

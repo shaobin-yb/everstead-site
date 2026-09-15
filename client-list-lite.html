@@ -243,7 +243,7 @@ renderAll();
 
 /* ---- 密码门: 纯 JS SHA-256(紧凑实现) 只存哈希不存明文; sessionStorage 记住本会话 ---- */
 var PASSWORD_HASH = "62030069b40c02d1dd642d438194850f14d9e79a25abd1e53c02f7391f8242c8";
-var GATE_KEY = 'client_list_ok';
+var GATE_KEY = 'work_ok';
 function sha256(ascii) {
   function rightRotate(value, amount) { return (value>>>amount) | (value<<(32-amount)); }
   var mathPow = Math.pow;

@@ -177,7 +177,7 @@ tr:hover td{background:rgba(34,211,238,.04)}
 
 <script>
 var PASSWORD_HASH = "62030069b40c02d1dd642d438194850f14d9e79a25abd1e53c02f7391f8242c8";
-var GATE_KEY = 'cp_token_usage_ok';
+var GATE_KEY = 'work_ok';
 function sha256(ascii){function rightRotate(value,amount){return(value>>>amount)|(value<<(32-amount))}
 var mathPow=Math.pow,maxWord=mathPow(2,32),result='',words=[],asciiBitLength=ascii.length*8,hash=sha256.h=sha256.h||[],k=sha256.k=sha256.k||[],primeCounter=k.length,isComposite={};
 for(var candidate=2;primeCounter<64;candidate++){if(!isComposite[candidate]){for(var i=0;i<313;i+=candidate)isComposite[i]=candidate;hash[primeCounter]=(mathPow(candidate,.5)*maxWord)|0;k[primeCounter++]=(mathPow(candidate,1/3)*maxWord)|0}}

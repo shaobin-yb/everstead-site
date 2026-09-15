@@ -82,13 +82,8 @@ body{
   padding:22mm 20mm;
   display:flex;flex-direction:column;height:100%;
 }
-.cover-logo{display:flex;align-items:center;gap:10px;margin-bottom:auto}
-.cover-logo .mk{
-  width:34px;height:34px;border-radius:8px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--gold),#a8834a);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:800;font-size:17px;font-family:var(--serif);
-}
+.cover-logo{display:flex;align-items:center;gap:11px;margin-bottom:auto}
+.cover-logo img{height:34px;width:auto;display:block;flex-shrink:0}
 .cover-logo .nm{font-size:15px;font-weight:700;color:var(--ink);letter-spacing:.06em}
 .cover-logo .en{font-size:8.5px;color:var(--muted);letter-spacing:.12em;margin-top:-2px}
 .cover-body{margin:auto 0}
@@ -363,23 +358,6 @@ table.tb tr:nth-child(even) td:not(.k){background:rgba(255,255,255,.5)}
 .gate.err .em{display:block}
 @keyframes sh{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 
-/* ---- 浮动工具条 ---- */
-.fab{
-  position:fixed;right:22px;bottom:22px;display:flex;flex-direction:column;gap:9px;
-  z-index:50;
-}
-.fab button{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:11px 17px;border-radius:24px;cursor:pointer;
-  font-size:12.5px;font-weight:600;letter-spacing:.06em;
-  background:var(--ink);color:#fff;border:none;
-  box-shadow:0 4px 16px rgba(11,31,58,.28);
-  transition:transform .2s,box-shadow .2s;
-  font-family:'PingFang SC','Microsoft YaHei',sans-serif;
-}
-.fab button:hover{transform:translateY(-2px);box-shadow:0 7px 22px rgba(11,31,58,.34)}
-.fab button.gold{background:linear-gradient(90deg,var(--gold),#ab8446)}
-
 #locked{display:none}
 #locked.open{display:block}
 .gate.away{display:none}
@@ -390,7 +368,7 @@ table.tb tr:nth-child(even) td:not(.k){background:rgba(255,255,255,.5)}
 @page{size:A4;margin:0}
 @media print{
   body{background:#fff}
-  .fab,.gate{display:none!important}
+  .gate{display:none!important}
   /* 打印时无论是否解锁都输出正文，避免误打出空白页 */
   #locked{display:block!important}
   /* 每节严格一页 A4：内容按比例缩放到页高内，避免溢出产生空白页 */
@@ -421,8 +399,6 @@ table.tb tr:nth-child(even) td:not(.k){background:rgba(255,255,255,.5)}
   .tl-line{display:none}
   .tl-row{flex-wrap:wrap;gap:14px}
   .tl-item{flex:0 0 calc(50% - 7px)}
-  .fab{right:12px;bottom:12px}
-  .fab button{padding:10px 14px;font-size:12px}
 }
 </style>
 </head>
@@ -447,7 +423,7 @@ table.tb tr:nth-child(even) td:not(.k){background:rgba(255,255,255,.5)}
   <div class="cover-mark">中邮</div>
   <div class="cover-inner">
     <div class="cover-logo">
-      <div class="mk">邮</div>
+      <img src="logo.png" alt="中邮资管">
       <div>
         <div class="nm">中邮保险资产管理有限公司</div>
         <div class="en">CHINA POST INSURANCE ASSET MANAGEMENT CO., LTD.</div>
@@ -812,14 +788,6 @@ table.tb tr:nth-child(even) td:not(.k){background:rgba(255,255,255,.5)}
 </div>
 </section>
 
-<!-- ============ 浮动工具条 ============ -->
-<div class="fab">
-  <button class="gold" onclick="window.print()">🖨 打印 / 导出 PDF</button>
-  <button onclick="document.getElementById('locked').classList.remove('open');
-                   document.getElementById('gate').classList.remove('away');
-                   sessionStorage.removeItem('workspace_ok');">🔒 锁定</button>
-</div>
-
 </div><!-- /#locked -->
 
 <script>
@@ -1035,9 +1003,10 @@ var DATA = {
     return '<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>';
   }).join('');
 
-  /* --- 封面日期 --- */
+  /* --- 封面日期（精确到日）--- */
   var d = new Date();
-  document.getElementById('cover-date').textContent = d.getFullYear() + '-' + (d.getMonth()+1);
+  document.getElementById('cover-date').textContent =
+    d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日';
 })();
 
 /* ============================================================

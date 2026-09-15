@@ -14,7 +14,7 @@ var _hmt=_hmt||[];
 <div class="page">
   <div class="head">
     <div class="corp">中邮保险资产管理有限公司<small>CHINA POST INSURANCE ASSET MANAGEMENT CO., LTD.</small></div>
-    <div class="meta">产品一页通<br><b id="d-asof">--</b> · 净值数据</div>
+    <div class="meta">产品一页通<br>材料版本 <b id="d-asof">--</b> · 净值每日自动更新</div>
   </div>
 
   <div class="pname">
@@ -121,7 +121,7 @@ fetch('../product-panel/nav-data.json', {cache: 'no-store'})
     document.getElementById('d-nav').textContent = p.nav.toFixed(4);
     document.getElementById('d-date').textContent = p.latest_date;
     var asof = document.getElementById('d-asof');
-    if (asof) asof.textContent = p.latest_date;
+    if (asof) asof.textContent = (d.updated || '').slice(0, 10);
     document.getElementById('d-cum').textContent = signed(p.cum_return);
     document.getElementById('d-since').textContent = '自 ' + p.since;
     document.getElementById('d-dd').textContent = plain(p.max_drawdown);
@@ -129,8 +129,9 @@ fetch('../product-panel/nav-data.json', {cache: 'no-store'})
     const dp = p.daily_pct;
     document.getElementById('d-dp').textContent = (dp == null) ? '--' : signed(dp);
     document.getElementById('d-bench').innerHTML =
-      '成立以来：本产品 <b>' + signed(p.cum_return) + '</b>' +
-      ' · 近7日 ' + pn(p.ret_7d) + '% · 近30日 ' + pn(p.ret_30d) + '% · 数据更新 ' + d.updated;
+      '净值数据截至 <b>' + p.latest_date + '</b>' +
+      ' · 成立以来 ' + signed(p.cum_return) +
+      ' · 近7日 ' + pn(p.ret_7d) + '% · 近30日 ' + pn(p.ret_30d) + '%';
     renderChart(p.nav_series, d.benchmark);
     renderPeers(p, d.indices);
   })

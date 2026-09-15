@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>访客记录 · EVERSTEAD</title>
+<style>
+:root{
+  --bg:#03060c;
+  --panel:rgba(10,20,38,.55);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee; --blue:#3b82f6; --violet:#8b5cf6;
+  --green:#34d399; --orange:#fb923c;
+  --text:#e2ecf7; --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(1100px 600px at 75% -10%,rgba(59,130,246,.16),transparent 60%),
+    radial-gradient(900px 500px at -10% 110%,rgba(139,92,246,.12),transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(56,189,248,.045) 1px,transparent 1px),var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 55%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%,#000 55%,transparent 100%)}
+.wrap{position:relative;z-index:3;max-width:1100px;margin:0 auto;padding:0 24px 56px}
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 16px}
+.topbar .logo{width:40px;height:40px;border-radius:10px;flex-shrink:0;background:linear-gradient(135deg,var(--cyan),var(--violet));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:#03101f;box-shadow:var(--glow);font-family:var(--mono)}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.28em;font-size:15px}
+.topbar .brand em{font-style:normal;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .back{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:rgba(10,20,38,.4);transition:border-color .25s,color .25s}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+.sub{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.08em;padding:0 0 18px}
+
+.gate{position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;background:rgba(3,6,12,.92);backdrop-filter:blur(10px)}
+.gate-panel{background:var(--panel);border:1px solid var(--line-strong);border-radius:16px;padding:36px 40px;text-align:center;box-shadow:var(--glow);min-width:320px}
+.g-ico{font-size:34px}
+.gate h2{font-size:18px;margin-top:10px;letter-spacing:.06em}
+.gate p{font-size:12px;color:var(--muted);margin-top:6px;font-family:var(--mono)}
+.gate input{margin-top:20px;width:100%;background:rgba(5,12,25,.9);border:1px solid var(--line-strong);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;outline:none;text-align:center;letter-spacing:.3em}
+.gate input:focus{border-color:var(--cyan);box-shadow:var(--glow)}
+.gate button{margin-top:12px;width:100%;background:linear-gradient(135deg,var(--cyan),var(--blue));border:none;border-radius:8px;padding:10px;font-weight:700;color:#03101f;cursor:pointer;font-size:14px;letter-spacing:.3em}
+.gate button:hover{filter:brightness(1.15)}
+.gate.err .gate-panel{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;backdrop-filter:blur(6px)}
+.stat .k{font-size:11px;color:var(--muted);letter-spacing:.12em;font-family:var(--mono)}
+.stat .v{font-size:21px;font-weight:700;margin-top:5px;font-family:var(--mono);color:var(--cyan)}
+@media (max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;backdrop-filter:blur(6px)}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.card-head h2{font-size:14px;letter-spacing:.1em}
+.card-head .en{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.2em}
+.chart-wrap{position:relative}
+svg text{font-family:var(--mono);font-size:10px;fill:var(--muted)}
+.tooltip{position:fixed;z-index:9999;pointer-events:none;background:rgba(5,12,25,.97);
+  border:1px solid var(--line-strong);border-radius:10px;padding:10px 12px;
+  font-family:var(--mono);font-size:11px;line-height:1.75;box-shadow:var(--glow);
+  min-width:180px;display:none}
+.tooltip .tt-h{color:var(--cyan);font-weight:700;font-size:12px;margin-bottom:4px}
+.tooltip .tt-r{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.tooltip .tt-r .dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.tooltip .tt-r b{margin-left:auto;color:var(--text);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.12em;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-strong);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--line);color:var(--text)}
+td.mono{font-family:var(--mono);color:var(--cyan);text-align:right;white-space:nowrap}
+td.dim{color:var(--muted);font-family:var(--mono);font-size:11px;white-space:nowrap}
+tr:hover td{background:rgba(34,211,238,.04)}
+.foot{margin-top:18px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.06em;line-height:1.9}
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;border:1px solid var(--line-strong);border-radius:999px;padding:2px 10px;color:var(--cyan);margin-left:10px;vertical-align:2px}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="gate" id="gate">
+  <div class="gate-panel">
+    <div class="g-ico">🔒</div>
+    <h2>访客记录</h2>
+    <p>站点访问统计 · 密码访问</p>
+    <input type="password" id="pw" placeholder="请输入访问密码" autocomplete="off">
+    <button id="btn">解 锁</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">E</div>
+    <div class="brand">EVERSTEAD <em>VISITORS</em></div>
+    <a class="back" href="../../tools.html">← 工具箱</a>
+  </div>
+  <div class="sub">VISITOR ANALYTICS · GitHub 官方仓库访问统计 · 北京时间</div>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="card">
+    <div class="card-head"><h2>每日访问趋势</h2><div class="en">DAILY VIEWS</div><span class="badge" id="togBtn">切换 访问量/独立访客</span></div>
+    <div class="chart-wrap"><div id="chart"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h2>按日明细</h2><div class="en">DAILY BREAKDOWN</div></div>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr><th>日期</th><th style="text-align:right">访问量</th><th style="text-align:right">独立访客</th></tr></thead>
+      <tbody id="tblBody"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+var PASSWORD_HASH = "62030069b40c02d1dd642d438194850f14d9e79a25abd1e53c02f7391f8242c8";
+var GATE_KEY = 'cp_visitor_stats_ok';
+function sha256(ascii){function rightRotate(value,amount){return(value>>>amount)|(value<<(32-amount))}
+var mathPow=Math.pow,maxWord=mathPow(2,32),result='',words=[],asciiBitLength=ascii.length*8,hash=sha256.h=sha256.h||[],k=sha256.k=sha256.k||[],primeCounter=k.length,isComposite={};
+for(var candidate=2;primeCounter<64;candidate++){if(!isComposite[candidate]){for(var i=0;i<313;i+=candidate)isComposite[i]=candidate;hash[primeCounter]=(mathPow(candidate,.5)*maxWord)|0;k[primeCounter++]=(mathPow(candidate,1/3)*maxWord)|0}}
+ascii+='\x80';while(ascii.length%64-56)ascii+='\x00';
+for(var i=0;i<ascii.length;i++){var j=ascii.charCodeAt(i);if(j>>8)return'';words[i>>2]|=j<<((3-i)%4)*8}
+words[words.length]=((asciiBitLength/maxWord)|0);words[words.length]=(asciiBitLength);
+for(var j=0;j<words.length;){var w=words.slice(j,j+=16),oldHash=hash;hash=hash.slice(0,8);
+for(var i=0;i<64;i++){var w15=w[i-15],w2=w[i-2],a=hash[0],e=hash[4];
+var temp1=hash[7]+(rightRotate(e,6)^rightRotate(e,11)^rightRotate(e,25))+((e&hash[5])^((~e)&hash[6]))+k[i]+(w[i]=(i<16)?w[i]:(w[i-16]+(rightRotate(w15,7)^rightRotate(w15,18)^(w15>>>3))+w[i-7]+(rightRotate(w2,17)^rightRotate(w2,19)^(w2>>>10)))|0);
+var temp2=(rightRotate(a,2)^rightRotate(a,13)^rightRotate(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+hash=[(temp1+temp2)|0].concat(hash);hash[4]=(hash[4]+temp1)|0}
+for(var i=0;i<8;i++)hash[i]=(hash[i]+oldHash[i])|0}
+for(var i=0;i<8;i++){for(var j=3;j+1;j--){var b=(hash[i]>>(j*8))&255;result+=((b<16)?0:'')+b.toString(16)}}
+return result}
+function unlock(){var gate=document.getElementById('gate'),input=document.getElementById('pw');
+if(sha256(input.value)===PASSWORD_HASH){sessionStorage.setItem(GATE_KEY,'1');gate.style.display='none'}
+else{gate.classList.remove('err');void gate.offsetWidth;gate.classList.add('err');input.value='';input.focus()}}
+document.getElementById('btn').addEventListener('click',unlock);
+document.getElementById('pw').addEventListener('keydown',function(e){if(e.key==='Enter')unlock()});
+if(sessionStorage.getItem(GATE_KEY)==='1'){document.getElementById('gate').style.display='none'}
+
+/* ================= 数据加载与渲染 ================= */
+var V = null;
+var metric = 'count';  /* count=访问量 uniques=独立访客 */
+
+function hm(n){ return n>=1e4 ? (n/1e4).toFixed(1)+' 万' : String(n); }
+
+function load(){
+  fetch('../../stats/views.json', {cache:'no-store'})
+    .then(function(r){ if(!r.ok)throw new Error('HTTP '+r.status); return r.json(); })
+    .then(function(d){ V=d; render(); })
+    .catch(function(e){
+      document.getElementById('stats').innerHTML =
+        '<div class="stat"><div class="k">加载失败</div><div class="v">—</div></div>'.repeat(4);
+      document.getElementById('foot').innerHTML =
+        '⚠️ 数据加载失败: '+e.message+'。统计首次部署后需等待 GitHub 后台出数(通常 24-48 小时)。';
+    });
+}
+
+function render(){
+  var days = Object.keys(V.days||{}).sort();
+  if(!days.length){
+    document.getElementById('stats').innerHTML =
+      '<div class="stat"><div class="k">等待数据</div><div class="v">—</div></div>'.repeat(4);
+    document.getElementById('foot').textContent = '尚无访问数据。GitHub 统计自首次部署起 24-48 小时后开始出数, 每 20 分钟自动刷新快照。';
+    return;
+  }
+  var tot=0, uni=0;
+  days.forEach(function(d){ tot+=V.days[d].count||0; uni+=V.days[d].uniques||0; });
+  var last=V.days[days[days.length-1]];
+  var activeDays=days.filter(function(d){return (V.days[d].count||0)>0}).length;
+  var cards=[
+    ['累计访问量', hm(tot)],
+    ['累计独立访客', hm(uni)],
+    ['今日访问', hm(last.count||0)],
+    ['今日独立访客', hm(last.uniques||0)]
+  ];
+  var box=document.getElementById('stats'); box.innerHTML='';
+  cards.forEach(function(c){
+    var s=document.createElement('div'); s.className='stat';
+    var k=document.createElement('div'); k.className='k'; k.textContent=c[0];
+    var v=document.createElement('div'); v.className='v'; v.textContent=c[1];
+    s.appendChild(k); s.appendChild(v); box.appendChild(s);
+  });
+  drawChart(days);
+  drawTable(days);
+  document.getElementById('foot').innerHTML =
+    '快照更新于 '+ (V.updated||'—') +' (UTC) · 数据源: GitHub 仓库 Insights/流量 (统计开始约 2026-09-15)<br>'
+    +'口径说明: 访问量=页面浏览数 · 独立访客=去重访客数 · GitHub 对仓库级页面统计有约 24h 延迟, 每 20 分钟抓一次快照<br>'
+    +'🔒 本页与 CRM 同级密码门 · 不进入公开搜索索引';
+}
+
+/* 每日趋势 SVG 柱状图 */
+function drawChart(days){
+  var box=document.getElementById('chart'); box.innerHTML='';
+  var show=days.slice(-30);
+  var W=1000,H=220,padL=48,padR=10,padT=12,padB=24;
+  var v=show.map(function(d){return V.days[d][metric]||0});
+  var mx=Math.max.apply(null,v.concat([1]))*1.15;
+  var iw=W-padL-padR, ih=H-padT-padB;
+  var bw=Math.min(28, iw/Math.max(1,show.length)*0.62);
+  var gap=iw/Math.max(1,show.length);
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block">';
+  for(var t=0;t<=3;t++){
+    var yy=padT+ih*t/3, val=mx*(1-t/3);
+    svg+='<line x1="'+padL+'" y1="'+yy+'" x2="'+(W-padR)+'" y2="'+yy+'" stroke="rgba(56,189,248,.12)"/>'
+      +'<text x="'+(padL-6)+'" y="'+(yy+3)+'" text-anchor="end">'+Math.round(val)+'</text>';
+  }
+  var labelStep=Math.ceil(show.length/8);
+  show.forEach(function(d,i){
+    var val=V.days[d][metric]||0;
+    var h=ih*val/mx;
+    var x=padL+i*gap+(gap-bw)/2;
+    svg+='<rect class="bar" data-i="'+i+'" x="'+x.toFixed(1)+'" y="'+(padT+ih-h).toFixed(1)
+      +'" width="'+bw.toFixed(1)+'" height="'+Math.max(0,h).toFixed(1)
+      +'" rx="3" fill="url(#gbar)"/>';
+    if(i%labelStep===0||i===show.length-1){
+      svg+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+d.slice(5)+'</text>';
+    }
+  });
+  svg+='<defs><linearGradient id="gbar" x1="0" y1="0" x2="0" y2="1">'
+    +'<stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs>';
+  svg+='</svg>';
+  box.innerHTML=svg;
+
+  /* 即时 tooltip(与 Token 展板同款自绘, 无 SVG title 延迟) */
+  var svgEl=box.querySelector('svg');
+  var tip=document.createElement('div'); tip.className='tooltip'; document.body.appendChild(tip);
+  svgEl.addEventListener('mousemove',function(ev){
+    var r=svgEl.getBoundingClientRect();
+    var sx=(ev.clientX-r.left)/r.width*W;
+    var i=Math.max(0,Math.min(show.length-1,Math.floor((sx-padL)/gap)));
+    var d=show[i];
+    tip.innerHTML='<div class="tt-h">'+d+'</div>'
+      +'<div class="tt-r"><span class="dot" style="background:#22d3ee"></span>访问量<b>'+hm(V.days[d].count||0)+'</b></div>'
+      +'<div class="tt-r"><span class="dot" style="background:#3b82f6"></span>独立访客<b>'+hm(V.days[d].uniques||0)+'</b></div>';
+    tip.style.display='block';
+    var mw=tip.offsetWidth, mh=tip.offsetHeight;
+    var px=ev.clientX+14, py=ev.clientY-10;
+    if(px+mw>window.innerWidth-8)px=ev.clientX-mw-14;
+    if(py+mh>window.innerHeight-8)py=window.innerHeight-mh-8;
+    tip.style.left=px+'px'; tip.style.top=py+'px';
+  });
+  svgEl.addEventListener('mouseleave',function(){tip.style.display='none'});
+}
+
+function drawTable(days){
+  var tb=document.getElementById('tblBody'); tb.innerHTML='';
+  var rows=days.slice().reverse().slice(0,30);
+  rows.forEach(function(d){
+    var tr=document.createElement('tr');
+    var td1=document.createElement('td'); td1.className='dim'; td1.textContent=d;
+    var td2=document.createElement('td'); td2.className='mono'; td2.textContent=hm(V.days[d].count||0);
+    var td3=document.createElement('td'); td3.className='mono'; td3.textContent=hm(V.days[d].uniques||0);
+    tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+    tb.appendChild(tr);
+  });
+}
+
+document.getElementById('togBtn').addEventListener('click',function(){
+  metric = metric==='count' ? 'uniques' : 'count';
+  this.textContent = metric==='count' ? '切换 访问量/独立访客' : '切换 独立访客/访问量';
+  if(V) drawChart(Object.keys(V.days).sort());
+});
+
+load();
+</script>
+</body>
+</html>

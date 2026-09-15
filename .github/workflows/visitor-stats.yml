@@ -1,0 +1,100 @@
+name: Visitor Stats
+
+on:
+  schedule:
+    - cron: '*/20 * * * *'   # 每 20 分钟抓一次(保险资管情报站的访客量级)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Build history snapshot
+        id: build
+        shell: bash
+        run: |
+          ts=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+          echo "TS=$ts" >> "$GITHUB_OUTPUT"
+          if [ -f stats/views.json ]; then
+            echo "HAVE_HISTORY=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "HAVE_HISTORY=0" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download hourly views for latest day
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const res = await github.rest.repos.getViews({
+              owner: 'shaobin-yb', repo: 'everstead-site', per: 'day'
+            });
+            fs.writeFileSync('/tmp/views_day.json', JSON.stringify(res.data));
+            console.log('day views:', JSON.stringify(res.data));
+
+      - name: Download 2-week daily views
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const res = await github.rest.repos.getViews({
+              owner: 'shaobin-yb', repo: 'everstead-site', per: 'week'
+            });
+            fs.writeFileSync('/tmp/views_week.json', JSON.stringify(res.data));
+            console.log('week views:', JSON.stringify(res.data));
+
+      - name: Merge into stats/views.json
+        id: merge
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import json, os, sys
+          from datetime import datetime, timezone
+
+          ts = os.environ['GITHUB_OUTPUT'] and "${{ steps.build.outputs.TS }}"
+          day = json.load(open('/tmp/views_day.json'))
+          week = json.load(open('/tmp/views_week.json'))
+
+          # 历史累计(以前的数据只保留按天计数的去重视图; 无历史则新建)
+          hist_path = 'stats/views.json'
+          hist = json.load(open(hist_path)) if os.path.exists(hist_path) else {"days": {}}
+
+          # day: [{timestamp, count, uniques}...] 取最近 24h 条
+          now = datetime.now(timezone.utc)
+          for entry in day.get('views', []):
+              d = entry['timestamp'][:10]
+              cur = hist["days"].setdefault(d, {"count": 0, "uniques": 0, "views": []})
+              cur["count"] = max(cur["count"], entry.get('count', 0))
+              cur["uniques"] = max(cur["uniques"], entry.get('uniques', 0))
+
+          # 只保留 120 天
+          days = sorted(hist["days"].keys())
+          for d in days[:-120]:
+              del hist["days"][d]
+
+          hist["updated"] = ts
+          json.dump(hist, open(hist_path, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+          print("merged days:", len(hist["days"]))
+          print("latest day:", hist["days"][days[-1]] if days else "none")
+          PYEOF
+
+      - name: Commit stats
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add stats/views.json
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "访客统计快照 ${{ steps.build.outputs.TS }} [skip ci]"
+            git push
+          fi

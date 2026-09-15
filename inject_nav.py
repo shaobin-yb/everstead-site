@@ -31,6 +31,8 @@ SKIP = {
     "tools/counterparty/counterparty.html",
     "tools/unassigned/unassigned.html",
     "tools/scattered-private/index.html",
+    "tools/token-usage/index.html",  # 密码门页(2026-09-14)
+    "tools/stats/index.html",        # 密码门页(2026-09-15)
 }
 
 

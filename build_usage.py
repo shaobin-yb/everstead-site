@@ -455,14 +455,15 @@ document.getElementById('btn').addEventListener('click',unlock);
 document.getElementById('pw').addEventListener('keydown',function(e){if(e.key==='Enter')unlock()});
 if(sessionStorage.getItem(GATE_KEY)==='1'){document.getElementById('gate').style.display='none'}
 
-/* ================= 成本模型(2026-09-14, 页内可调, 存 localStorage) =================
-   单价: 元/百万 tokens。默认取 DeepSeek V4 峰谷定价闲时档(第三方报道口径);
+/* ================= 成本模型(2026-09-15更新, 页内可调, 存 localStorage) =================
+   单价: 元/百万 tokens。deepseek-flash 取 V4.1 Flash 官方闲时价(2026-09-10生效, 高峰翻倍);
+   deepseek-v4-pro 保留旧价估算历史用量(2026-09-14 12:00起 v4-pro 请求已被官方路由到 V4.1 Flash 计费);
    老板有真实账单时点「⚙ 价格校准」改数字, 全页立即重算。 */
 var DEFAULT_PRICES = {
   'deepseek-v4-pro':   {h: 0.15, m: 4.5,  o: 13.5, w: 1.5},
-  'deepseek-v4-flash': {h: 0.05, m: 1.5,  o: 4.5,  w: 1.5},
-  'deepseek-flash':    {h: 0.05, m: 1.5,  o: 4.5,  w: 1.5},
-  'unknown':           {h: 0.05, m: 1.5,  o: 4.5,  w: 1.5}
+  'deepseek-v4-flash': {h: 0.02, m: 1.0,  o: 4.0,  w: 1.0},
+  'deepseek-flash':    {h: 0.02, m: 1.0,  o: 4.0,  w: 1.0},
+  'unknown':           {h: 0.02, m: 1.0,  o: 4.0,  w: 1.0}
 };  /* h=缓存命中 m=缓存未命中 o=输出 w=缓存写(按未命中计, 无独立官价) */
 function getPrices(){
   try{return JSON.parse(localStorage.getItem('tok_prices')||'null')||DEFAULT_PRICES}

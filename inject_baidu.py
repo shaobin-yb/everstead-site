@@ -24,6 +24,7 @@ HM_ID = "1d958a32a6588643ee6e67da344c7693"
 SKIP = {
     "index-template.html",
     "private.html",
+    "work.html",
     "client-list.html",
     "client-list-lite.html",
     "tools/counterparty/",

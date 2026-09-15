@@ -35,7 +35,7 @@ BRIEFING_KEEP = 60       # 归档点评最多收录篇数
 # knowledge/iflyink-notes/ 是私人专区(不在 manifest, 有密码门);
 # union-card-handbook-2026 是 manifest private 条目
 PRIVATE_PREFIXES = (
-    "private.html", "client-list.html", "client-list-lite.html",
+    "private.html", "work.html", "client-list.html", "client-list-lite.html",
     "tools/counterparty/", "tools/meal/", "tools/nursery/",
     "tools/nursery-parents/", "tools/family-links/",
     "tools/baby-name-board/", "tools/naming/",

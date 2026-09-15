@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>私人专区 · EVERSTEAD</title>
+<title>工作区 · EVERSTEAD</title>
 <style>
 /* ============================================================
-   私人专区 PRIVATE · 密码门 + 私人工具卡片
-   风格与首页/工具箱一致: 深空底 + 玻璃拟态, 零外部依赖
+   工作区 WORKSPACE · 密码门(ZYZG) + 业务资料/工作材料卡片
+   与私人专区(private.html)分列: 工作用工作密码, 个人用个人密码
    ============================================================ */
 :root{
   --bg:#03060c;
@@ -19,18 +19,18 @@
   --blue:#3b82f6;
   --violet:#8b5cf6;
   --rose:#f43f5e;
+  --gold:#C6A15B;
+  --gold-bright:#E3C98F;
   --text:#e2ecf7;
   --muted:#7d92ad;
   --glow:0 0 24px rgba(34,211,238,.25);
+  --glow-gold:0 0 24px rgba(198,161,91,.28);
   --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{
   font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
+  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
 }
 a{text-decoration:none;color:inherit}
@@ -38,10 +38,10 @@ a{text-decoration:none;color:inherit}
 .bg-grid{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
-    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
-    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
+    radial-gradient(1100px 600px at 75% -10%, rgba(198,161,91,.13), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(59,130,246,.12), transparent 60%),
+    linear-gradient(rgba(198,161,91,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(198,161,91,.045) 1px, transparent 1px),
     var(--bg);
   background-size:auto,auto,44px 44px,44px 44px,auto;
   mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
@@ -50,65 +50,53 @@ a{text-decoration:none;color:inherit}
 
 .wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 56px}
 
-.topbar{
-  display:flex;align-items:center;gap:14px;
-  padding:22px 0 0;
-}
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0}
 .topbar .logo{
   width:40px;height:40px;border-radius:10px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  background:linear-gradient(135deg,var(--gold),var(--cyan));
   display:flex;align-items:center;justify-content:center;
   font-weight:800;font-size:19px;color:#03101f;
-  box-shadow:var(--glow);
-  font-family:var(--mono);
+  box-shadow:var(--glow-gold);font-family:var(--mono);
 }
 .topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.28em;font-size:15px}
-.topbar .brand em{font-style:normal;background:linear-gradient(90deg,var(--cyan),var(--blue),var(--violet));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .brand em{
+  font-style:normal;
+  background:linear-gradient(90deg,var(--gold-bright),var(--cyan));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
 .topbar .back{
   margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
   border:1px solid var(--line);border-radius:999px;padding:6px 14px;
-  background:rgba(10,20,38,.4);
-  transition:border-color .25s, color .25s;
+  background:rgba(10,20,38,.4);transition:border-color .25s,color .25s;
 }
 .topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
 
 /* ---- 密码门 ---- */
 .gate{
-  max-width:420px;margin:80px auto 0;
-  text-align:center;
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:44px 32px;
-  background:var(--panel);
-  backdrop-filter:blur(10px);
+  max-width:420px;margin:80px auto 0;text-align:center;
+  border:1px solid var(--line);border-radius:16px;padding:44px 32px;
+  background:var(--panel);backdrop-filter:blur(10px);
   box-shadow:0 8px 40px rgba(0,0,0,.35);
 }
 .gate .lock{font-size:44px;margin-bottom:14px}
 .gate h2{font-size:20px;font-weight:700;letter-spacing:.08em;margin-bottom:8px}
 .gate p{font-size:12px;color:var(--muted);margin-bottom:28px;line-height:1.8}
 .gate input{
-  width:100%;padding:12px 16px;
-  font-family:var(--mono);font-size:16px;letter-spacing:.35em;
+  width:100%;padding:12px 16px;font-family:var(--mono);font-size:16px;letter-spacing:.35em;
   color:var(--text);background:rgba(3,6,12,.6);
-  border:1px solid var(--line);border-radius:10px;
-  outline:none;text-align:center;
-  transition:border-color .25s, box-shadow .25s;
+  border:1px solid var(--line);border-radius:10px;outline:none;text-align:center;
+  transition:border-color .25s,box-shadow .25s;
 }
-.gate input:focus{border-color:var(--line-strong);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+.gate input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(198,161,91,.15)}
 .gate button{
-  margin-top:16px;width:100%;padding:12px;
-  font-size:14px;font-weight:600;letter-spacing:.2em;
+  margin-top:16px;width:100%;padding:12px;font-size:14px;font-weight:600;letter-spacing:.2em;
   color:#03101f;cursor:pointer;
-  background:linear-gradient(90deg,var(--cyan),var(--violet));
-  border:none;border-radius:10px;
-  transition:transform .2s, box-shadow .2s;
+  background:linear-gradient(90deg,var(--gold-bright),var(--cyan));
+  border:none;border-radius:10px;transition:transform .2s,box-shadow .2s;
 }
-.gate button:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.gate button:hover{transform:translateY(-2px);box-shadow:var(--glow-gold)}
 .gate.err{animation:shake .4s}
-.gate .err-msg{
-  display:none;margin-top:12px;
-  font-family:var(--mono);font-size:12px;color:var(--rose);
-}
+.gate .err-msg{display:none;margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--rose)}
 .gate.err .err-msg{display:block}
 @keyframes shake{
   0%,100%{transform:translateX(0)}
@@ -116,61 +104,49 @@ a{text-decoration:none;color:inherit}
   40%,80%{transform:translateX(8px)}
 }
 
-/* ---- 私人卡片区(解锁后) ---- */
+/* ---- 卡片区 ---- */
 .content{display:none}
 .content.open{display:block}
 .section-head{
   display:flex;align-items:baseline;gap:12px;
-  padding-bottom:12px;margin:44px 0 20px;
-  border-bottom:1px solid var(--line);
+  padding-bottom:12px;margin:44px 0 20px;border-bottom:1px solid var(--line);
 }
+.section-head:first-child{margin-top:36px}
 .section-head .no{
   font-family:var(--mono);font-weight:800;font-size:13px;
-  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  background:linear-gradient(90deg,var(--gold-bright),var(--cyan));
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
 .section-head h2{font-size:19px;font-weight:700;letter-spacing:.06em}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-  gap:16px;
-}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .card{
-  position:relative;
-  display:block;
-  padding:20px 20px 16px;
-  border:1px solid var(--line);
-  border-radius:14px;
-  background:var(--panel);
-  backdrop-filter:blur(10px);
-  transition:transform .25s, border-color .25s, background .25s, box-shadow .25s;
+  position:relative;display:block;padding:20px 20px 16px;
+  border:1px solid var(--line);border-radius:14px;
+  background:var(--panel);backdrop-filter:blur(10px);
+  transition:transform .25s,border-color .25s,background .25s,box-shadow .25s;
   overflow:hidden;
 }
 .card:hover{
-  transform:translateY(-4px);
-  border-color:var(--line-strong);
-  background:var(--panel-hover);
-  box-shadow:var(--glow);
+  transform:translateY(-4px);border-color:var(--line-strong);
+  background:var(--panel-hover);box-shadow:var(--glow);
 }
 .card-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .card-ico{font-size:22px;line-height:1}
 .card-tag{
-  font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--violet);
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--gold-bright);
   border:1px solid var(--line);border-radius:4px;padding:2px 7px;
 }
 .card .t{font-size:15px;font-weight:600;margin-bottom:6px}
 .card .m{font-size:12px;color:var(--muted);line-height:1.6}
 .card .arrow{
-  position:absolute;right:16px;top:18px;
-  font-family:var(--mono);color:var(--muted);
-  transition:transform .25s, color .25s;
+  position:absolute;right:16px;top:18px;font-family:var(--mono);color:var(--muted);
+  transition:transform .25s,color .25s;
 }
 .card:hover .arrow{transform:translateX(4px);color:var(--cyan)}
 
 .foot{
   margin-top:56px;padding-top:16px;border-top:1px solid var(--line);
-  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);
-  text-align:center;
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);text-align:center;
 }
 </style>
 </head>
@@ -179,103 +155,99 @@ a{text-decoration:none;color:inherit}
 
 <div class="wrap">
   <div class="topbar">
-    <div class="logo">🔒</div>
-    <div class="brand">PRIV<em>ATE</em> · 私人专区</div>
+    <div class="logo">💼</div>
+    <div class="brand">WORK<em>SPACE</em> · 工作区</div>
     <a class="back" href="tools.html">← 返回工具箱</a>
   </div>
 
   <!-- 密码门 -->
   <div class="gate" id="gate">
     <div class="lock">🔐</div>
-    <h2>私人专区</h2>
-    <p>家庭与私人资料<br>输入密码后解锁</p>
+    <h2>工作区</h2>
+    <p>业务资料与工作材料<br>输入工作密码后解锁</p>
     <input type="password" id="pw" placeholder="••••••" maxlength="16"
-           autocomplete="off" inputmode="numeric">
+           autocomplete="off">
     <button id="btn" type="button">解 锁</button>
     <div class="err-msg" id="err">密码不对, 再试一次</div>
   </div>
 
-  <!-- 私人卡片区 -->
+  <!-- 内容区 -->
   <div class="content" id="content">
 
     <div class="section-head">
-      <span class="no">LOCKED</span>
-      <h2>🏠 家庭与私人资料</h2>
+      <span class="no">BUSINESS</span>
+      <h2>📊 业务资料</h2>
     </div>
     <div class="grid">
-      <a class="card" href="tools/naming/index.html">
-        <div class="card-top"><div class="card-ico">🧧</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">起名档案 · 王家</div>
-        <div class="m">宝宝起名打分档案</div>
+      <a class="card" href="tools/combo-report/index.html">
+        <div class="card-top"><div class="card-ico">📕</div><div class="card-tag">财险版</div></div>
+        <div class="t">组合类产品业务情况介绍</div>
+        <div class="m">2026年9月 · 11页在线翻阅 · 可打印导出 PDF · 数据更新至 09-14</div>
         <span class="arrow">→</span>
       </a>
-      <a class="card" href="tools/baby-name-board/index.html">
-        <div class="card-top"><div class="card-ico">📋</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">好听名字榜单 · 起名参考</div>
-        <div class="m">宝宝版名字榜单</div>
+      <a class="card" href="client-list-lite.html">
+        <div class="card-top"><div class="card-ico">🏛️</div><div class="card-tag">客户</div></div>
+        <div class="t">金融客户名单 · 精选版</div>
+        <div class="m">980 家市级及以上机构 · 8类Tab一眼抓重点</div>
         <span class="arrow">→</span>
       </a>
-      <a class="card" href="tools/family-links/name-list.html">
-        <div class="card-top"><div class="card-ico">📇</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">名字榜单 · 家庭链接版</div>
-        <div class="m">家庭链接收集的名字清单</div>
+      <a class="card" href="tools/counterparty/counterparty.html">
+        <div class="card-top"><div class="card-ico">🏦</div><div class="card-tag">交易对手</div></div>
+        <div class="t">直接交易对手库</div>
+        <div class="m">在库授信 468 家 + 历史出库 58 家 · 评级/额度/省份筛选</div>
         <span class="arrow">→</span>
       </a>
-      <a class="card" href="tools/nursery/芽班王斯卯数据情况.html">
-        <div class="card-top"><div class="card-ico">🧒</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">芽年级数据统计分析 · 幼儿名单</div>
-        <div class="m">王斯卯班级数据统计</div>
-        <span class="arrow">→</span>
-      </a>
-      <a class="card" href="tools/nursery-parents/index.html">
-        <div class="card-top"><div class="card-ico">🏫</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">芽三班 · 家长待办</div>
-        <div class="m">幼儿园家长待办事项</div>
-        <span class="arrow">→</span>
-      </a>
-      <a class="card" href="tools/meal/尊贵的郑月涵女士一周餐食.html">
-        <div class="card-top"><div class="card-ico">🍚</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">尊贵的郑月涵女士 · 孕晚期一周餐食</div>
-        <div class="m">媳妇孕晚期一周餐单</div>
-        <span class="arrow">→</span>
-      </a>
-      <a class="card" href="tools/scattered-private/index.html">
-        <div class="card-top"><div class="card-ico">🗂️</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">零散私密文件</div>
-        <div class="m">私密小文件上传存档 · 仅存本机浏览器</div>
-        <span class="arrow">→</span>
-      </a>
-      <a class="card" href="knowledge/union-card-handbook-2026/index.html">
-        <div class="card-top"><div class="card-ico">🎫</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">2026 年联合年卡使用手册</div>
-        <div class="m">年卡使用 · 知识库</div>
-        <span class="arrow">→</span>
-      </a>
-      <a class="card" href="knowledge/iflyink-notes/index.html">
-        <div class="card-top"><div class="card-ico">📓</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">讯飞本文件</div>
-        <div class="m">办公本 297 篇笔记总纪要 + 按年明细 + 业务主题线</div>
-        <span class="arrow">→</span>
-      </a>
-      <a class="card" href="tools/yuebing-travels/index.html">
-        <div class="card-top"><div class="card-ico">🌙</div><div class="card-tag">PRIVATE</div></div>
-        <div class="t">小月饼足迹地图</div>
-        <div class="m">34 地足迹 · 彩虹航线 · 相册灯箱 · 点城市看照片</div>
+      <a class="card" href="tools/unassigned/unassigned.html">
+        <div class="card-top"><div class="card-ico">🎯</div><div class="card-tag">客户</div></div>
+        <div class="t">CRM 未分配客户池</div>
+        <div class="m">356 家未分配团队客户 · 搜索/类型/地域筛选 · 导出CSV</div>
         <span class="arrow">→</span>
       </a>
     </div>
+
+    <div class="section-head">
+      <span class="no">DOCS</span>
+      <h2>📁 工作材料</h2>
+    </div>
+    <div class="grid">
+      <a class="card" href="tools/work-report/index.html">
+        <div class="card-top"><div class="card-ico">💼</div><div class="card-tag">工作</div></div>
+        <div class="t">工作内容与下一步安排</div>
+        <div class="m">工作全景展示页 · 可微信分享 · 含 Word 下载</div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+
+    <div class="section-head">
+      <span class="no">DATA</span>
+      <h2>📈 数据展板</h2>
+    </div>
+    <div class="grid">
+      <a class="card" href="tools/token-usage/index.html">
+        <div class="card-top"><div class="card-ico">🪙</div><div class="card-tag">数据</div></div>
+        <div class="t">Token 用量展板</div>
+        <div class="m">用量趋势 · 模型分布 · 项目维度统计</div>
+        <span class="arrow">→</span>
+      </a>
+      <a class="card" href="tools/stats/index.html">
+        <div class="card-top"><div class="card-ico">📊</div><div class="card-tag">数据</div></div>
+        <div class="t">访客记录</div>
+        <div class="m">网站访问统计</div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+
   </div>
 
-  <div class="foot">EVERSTEAD PRIVATE · 2026-09-14</div>
+  <div class="foot">EVERSTEAD WORKSPACE · 2026-09-15</div>
 </div>
 
-<!-- DOM 就绪后再绑事件(脚本放末尾, 元素已解析) -->
 <script>
 /* ============================================================
-   纯 JS SHA-256(紧凑实现) — 源码只存哈希不存明文
-   验证通过后 sessionStorage 记住本会话
+   纯 JS SHA-256 — 源码只存哈希不存明文
+   工作密码 ZYZG；与私人专区(716437)相互独立
    ============================================================ */
-var PASSWORD_HASH = "a68afcaa33dc88de7217371b041b422543aa16e2958365dde8112487475e37cd";
+var PASSWORD_HASH = "62030069b40c02d1dd642d438194850f14d9e79a25abd1e53c02f7391f8242c8";
 
 function sha256(ascii) {
   function rightRotate(value, amount) { return (value>>>amount) | (value<<(32-amount)); }
@@ -342,27 +314,24 @@ function unlock() {
   var gate = document.getElementById('gate');
   var input = document.getElementById('pw');
   if (sha256(input.value) === PASSWORD_HASH) {
-    sessionStorage.setItem('private_ok', '1');
+    sessionStorage.setItem('work_ok', '1');
     gate.style.display = 'none';
     document.getElementById('content').classList.add('open');
   } else {
     gate.classList.remove('err');
-    void gate.offsetWidth;  /* 重触发抖动动画 */
+    void gate.offsetWidth;
     gate.classList.add('err');
     input.value = '';
     input.focus();
   }
 }
 
-/* 回车提交 */
 document.getElementById('pw').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') unlock();
 });
 document.getElementById('btn').addEventListener('click', unlock);
-console.log('[private] 事件已绑定');
 
-/* 本会话已解锁过 → 直接显示 */
-if (sessionStorage.getItem('private_ok') === '1') {
+if (sessionStorage.getItem('work_ok') === '1') {
   document.getElementById('gate').style.display = 'none';
   document.getElementById('content').classList.add('open');
 }

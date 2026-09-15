@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>员工工作内容及下一步工作安排</title>
+<meta property="og:title" content="员工工作内容及下一步工作安排 · 2026年9月">
+<meta property="og:description" content="四大板块工作全景 · 存量稳盘 / 客户深耕 / 创新破局 / 工具提效 · 含下一步工作安排">
+<meta property="og:type" content="website">
+<style>
+:root {
+  --ink: #0B1F3A;
+  --ink-2: #12294D;
+  --ink-3: #1A3763;
+  --gold: #C6A15B;
+  --gold-bright: #E3C98F;
+  --gold-dim: rgba(198, 161, 91, .35);
+  --paper: #FAF8F2;
+  --card: #FFFFFF;
+  --text: #22314E;
+  --muted: #6E7E9A;
+  --line: #E4E0D5;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+.serif { font-family: "Noto Serif SC", "Songti SC", "STZhongsong", "SimSun", serif; }
+
+/* ── 顶部报头 ── */
+header {
+  position: relative;
+  padding: 56px 48px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: var(--paper);
+  /* 坐标纸网格 */
+  background-image:
+    linear-gradient(rgba(198,161,91,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(198,161,91,.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.header-inner { position: relative; z-index: 1; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 13px; letter-spacing: .32em; color: var(--gold-bright);
+  text-transform: uppercase;
+}
+.eyebrow::before, .eyebrow::after { content: ""; width: 28px; height: 1px; background: var(--gold-dim); }
+h1 {
+  font-size: 34px; font-weight: 700; letter-spacing: .08em;
+  margin: 18px 0 10px; color: #fff;
+}
+.sub { color: var(--gold-dim); font-size: 14px; letter-spacing: .18em; }
+.stats { display: flex; gap: 32px; margin-top: 22px; }
+.stat { display: flex; align-items: baseline; gap: 8px; }
+.stat b { font-size: 30px; font-weight: 600; color: var(--gold-bright); font-family: Georgia, serif; }
+.stat span { font-size: 13px; color: #8FA0BE; letter-spacing: .12em; }
+
+.print-btn {
+  position: absolute; top: 12px; right: 0;
+  background: transparent; border: 1px solid var(--gold-dim);
+  color: var(--gold-bright); font-size: 13px; letter-spacing: .15em;
+  padding: 8px 20px; cursor: pointer; border-radius: 2px;
+  font-family: inherit; transition: all .25s;
+}
+.print-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+/* ── 工作主线曲线 ── */
+.route { max-width: 1200px; margin: 26px auto 0; padding: 0 48px; position: relative; }
+.route svg { width: 100%; height: auto; display: block; }
+.route path.line {
+  fill: none; stroke: var(--gold); stroke-width: 1.5;
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+}
+.route path.line.draw { animation: draw 1.6s cubic-bezier(.4,0,.2,1) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.route circle.halo { fill: none; stroke: transparent; stroke-width: 12; transition: stroke .35s, transform .35s; transform-box: fill-box; transform-origin: center; }
+.route circle.dot { fill: var(--ink); stroke: var(--gold); stroke-width: 1.5; transition: fill .35s; }
+.route g.node { cursor: pointer; }
+.route g.node:hover circle.dot, .route g.node.active circle.dot { fill: var(--gold); }
+.route g.node:hover circle.halo, .route g.node.active circle.halo { stroke: var(--gold-dim); transform: scale(1.6); }
+.route g.node text.num { fill: var(--gold-bright); font-size: 13px; font-family: Georgia, serif; text-anchor: middle; }
+.route g.node text.lbl { fill: #8FA0BE; font-size: 12px; text-anchor: middle; letter-spacing: .15em; transition: fill .35s; }
+.route g.node:hover text.lbl, .route g.node.active text.lbl { fill: var(--gold-bright); }
+
+/* ── 主体双栏 ── */
+main {
+  max-width: 1200px; margin: 0 auto; padding: 34px 48px 56px;
+  display: grid; grid-template-columns: 1.6fr 1fr; gap: 36px;
+}
+.section-label {
+  font-size: 13px; letter-spacing: .35em; color: var(--gold-bright);
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.section-label::after { content: ""; flex: 1; height: 1px; background: var(--gold-dim); }
+
+/* 工作卡片 */
+.cards { display: flex; flex-direction: column; gap: 18px; }
+.card {
+  background: var(--card); border-radius: 3px; padding: 20px 24px 18px;
+  border-left: 3px solid var(--gold); box-shadow: 0 4px 18px rgba(0,0,0,.25);
+  transition: transform .3s, box-shadow .3s;
+  position: relative;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,.35); }
+.card-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.card-idx {
+  font-family: Georgia, serif; font-size: 13px; color: var(--gold);
+  letter-spacing: .05em; white-space: nowrap;
+}
+.card h3 { font-size: 16.5px; font-weight: 700; color: var(--ink-2); letter-spacing: .04em; }
+.card .tag {
+  margin-left: auto; font-size: 11px; color: #8C7850; letter-spacing: .1em;
+  border: 1px solid #E0D3B4; padding: 1px 8px; border-radius: 2px; white-space: nowrap;
+  background: #FBF7EC;
+}
+.card p { font-size: 13.5px; color: #4A5872; margin-top: 4px; }
+.card p + p { margin-top: 2px; }
+
+/* 下一步时间线 */
+.timeline { position: relative; padding-left: 26px; }
+.timeline::before {
+  content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px;
+  width: 1px; background: linear-gradient(to bottom, var(--gold-bright), var(--gold-dim) 70%, transparent);
+}
+.t-step { position: relative; padding: 0 0 26px 10px; }
+.t-step:last-child { padding-bottom: 0; }
+.t-step .dot {
+  position: absolute; left: -26px; top: 7px; width: 11px; height: 11px;
+  border-radius: 50%; background: var(--ink); border: 2px solid var(--gold);
+  transition: background .3s, box-shadow .3s;
+}
+.t-step:hover .dot { background: var(--gold); box-shadow: 0 0 0 5px var(--gold-dim); }
+.t-step .phase {
+  display: inline-block; font-size: 11px; letter-spacing: .18em;
+  color: var(--gold-bright); border: 1px solid var(--gold-dim);
+  padding: 0 8px; margin-bottom: 4px; border-radius: 2px;
+}
+.t-step h4 { font-size: 14.5px; color: var(--paper); font-weight: 600; letter-spacing: .03em; }
+.t-step p { font-size: 12.5px; color: #93A3BE; margin-top: 2px; }
+
+/* 落款 */
+footer {
+  max-width: 1200px; margin: 0 auto; padding: 0 48px 44px;
+  display: flex; align-items: center; gap: 14px;
+}
+footer .rule { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dim)); }
+footer .sig { color: #8FA0BE; font-size: 13px; letter-spacing: .2em; }
+
+/* ── 响应式 ── */
+@media (max-width: 900px) {
+  main { grid-template-columns: 1fr; padding: 28px 20px 44px; }
+  header { padding: 44px 20px 0; }
+  .route { padding: 0 20px; }
+  h1 { font-size: 26px; }
+  .stats { gap: 20px; }
+  .print-btn { position: static; margin-top: 20px; display: inline-block; }
+  footer { padding: 0 20px 36px; }
+}
+
+/* ── 打印 ── */
+@media print {
+  body { background: #fff; color: var(--text); }
+  header { background: none; color: var(--ink-2); padding: 24px 0 0; }
+  h1 { color: var(--ink-2); font-size: 26px; }
+  .stat b { color: #9A7B3C; }
+  .stat span, .eyebrow, .sub { color: #7A6A48; }
+  .route path.line { stroke: #B08D4A; animation: none; stroke-dashoffset: 0; }
+  .route g.node text.lbl { fill: #5A6A88; }
+  main { grid-template-columns: 1fr; padding: 24px 0 0; gap: 28px; }
+  .card { box-shadow: none; border: 1px solid #D8D3C6; border-left: 3px solid #B08D4A; page-break-inside: avoid; }
+  .card:hover { transform: none; box-shadow: none; }
+  .card p { color: #3E4A63; }
+  .t-step h4 { color: var(--ink-2); }
+  .t-step p { color: #5A6A88; }
+  .timeline::before { background: #C9B98F; }
+  footer .sig { color: #7A6A48; }
+  .no-print { display: none !important; }
+  .section-label { color: #9A7B3C; }
+  .t-step .phase { color: #9A7B3C; border-color: #C9B98F; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route path.line { animation: none; stroke-dashoffset: 0; }
+  .card { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="eyebrow">工作全景 · 2026年9月</span>
+    <h1 class="serif">员工工作内容及下一步工作安排</h1>
+    <div class="sub">存量稳盘 · 客户深耕 · 创新破局 · 工具提效</div>
+    <div class="stats">
+      <div class="stat"><b>4</b><span>大工作板块</span></div>
+      <div class="stat"><b>6</b><span>项工作内容</span></div>
+      <div class="stat"><b>5</b><span>项下一步安排</span></div>
+    </div>
+  </div>
+  <div class="no-print" style="display:flex;gap:10px;">
+    <a class="print-btn" style="text-decoration:none;" href="员工工作内容及下一步工作安排-王少斌.docx" download>下载 Word 版</a>
+    <button class="print-btn" onclick="window.print()">打印 / 导出PDF</button>
+  </div>
+</header>
+
+<!-- 工作主线曲线:四大板块走势 -->
+<div class="route" aria-hidden="true">
+  <svg viewBox="0 0 1160 150" preserveAspectRatio="none">
+    <path class="line draw" d="M 60 118 C 200 122, 320 96, 445 88 C 570 80, 620 66, 725 58 C 830 50, 890 74, 1000 82 C 1060 86, 1095 88, 1115 88" pathLength="1"/>
+    <g class="node" data-node="1" tabindex="0">
+      <circle class="halo" cx="445" cy="88" r="10"/>
+      <circle class="dot" cx="445" cy="88" r="5"/>
+      <text class="num" x="445" y="60">1</text>
+      <text class="lbl" x="445" y="132">存量业务管理</text>
+    </g>
+    <g class="node" data-node="2" tabindex="0">
+      <circle class="halo" cx="725" cy="58" r="10"/>
+      <circle class="dot" cx="725" cy="58" r="5"/>
+      <text class="num" x="725" y="32">2</text>
+      <text class="lbl" x="725" y="106">客户经营与新客拓展</text>
+    </g>
+    <g class="node" data-node="3" tabindex="0">
+      <circle class="halo" cx="900" cy="74" r="10"/>
+      <circle class="dot" cx="900" cy="74" r="5"/>
+      <text class="num" x="900" y="46">3</text>
+      <text class="lbl" x="900" y="122">业务创新与产品落地</text>
+    </g>
+    <g class="node" data-node="4" tabindex="0">
+      <circle class="halo" cx="1075" cy="86" r="10"/>
+      <circle class="dot" cx="1075" cy="86" r="5"/>
+      <text class="num" x="1075" y="58">4</text>
+      <text class="lbl" x="1075" y="132">内部建设与效率提升</text>
+    </g>
+  </svg>
+</div>
+
+<main>
+  <!-- 左:工作内容 -->
+  <section>
+    <div class="section-label">工作内容</div>
+    <div class="cards">
+
+      <article class="card" data-node="1">
+        <div class="card-head">
+          <span class="card-idx">01</span>
+          <h3>存量非标项目跟踪与续期</h3>
+          <span class="tag">持续推进</span>
+        </div>
+        <p>持续推进存量非标项目投后跟踪管理，定期跟踪项目运行情况，落实投后管理各项要求，及时开展风险排查与预警，确保存量资产安全平稳运行。</p>
+        <p>重点做好到期项目续期工作：逐项梳理临近到期项目清单，提前制定续期方案并开展商务谈判，推动符合条件的项目顺利续作、不符合条件的平稳退出，稳定部门存量业务规模。</p>
+      </article>
+
+      <article class="card" data-node="2">
+        <div class="card-head">
+          <span class="card-idx">02</span>
+          <h3>存量客户新增融资需求跟踪</h3>
+          <span class="tag">深耕维护</span>
+        </div>
+        <p>建立存量客户定期回访机制，跟踪过往合作客户的新增融资需求，及时掌握客户经营动态与融资计划，做好需求记录与分类管理。</p>
+        <p>结合客户经营情况、资金需求及风险偏好，对接可行性融资方案，推动存量客户增单落地，提升客户合作深度与业务贡献。</p>
+      </article>
+
+      <article class="card" data-node="2">
+        <div class="card-head">
+          <span class="card-idx">03</span>
+          <h3>新客户覆盖拓展</h3>
+          <span class="tag">储备拓展</span>
+        </div>
+        <p>梳理CRM系统未覆盖客户清单，制定拜访计划并主动开展拜访，挖掘已接触但尚未下单客户的潜在合作机会，扩大客户储备与项目来源。</p>
+      </article>
+
+      <article class="card" data-node="3">
+        <div class="card-head">
+          <span class="card-idx">04</span>
+          <h3>组合类产品落地研究</h3>
+          <span class="tag">创新探索</span>
+        </div>
+        <p>研究组合类产品业务的落地场景与适用客户，明确目标客群与推广策略，推动组合类产品从研究走向落地，力争实现首单突破。</p>
+      </article>
+
+      <article class="card" data-node="3">
+        <div class="card-head">
+          <span class="card-idx">05</span>
+          <h3>部门策略与同业合作创新</h3>
+          <span class="tag">创新探索</span>
+        </div>
+        <p>围绕部门策略导向，推进券商资管计划、信托计划等业务的落地创新，探索与同业机构的合作新模式，丰富部门业务品种。</p>
+      </article>
+
+      <article class="card" data-node="4">
+        <div class="card-head">
+          <span class="card-idx">06</span>
+          <h3>工作流搭建与成果展示自动化</h3>
+          <span class="tag">效率建设</span>
+        </div>
+        <p>结合部门内部学习文件，搭建个人标准化工作流；梳理部门工作常用文件，推进工作成果展示的自动化，提升工作效率与成果呈现水平，条件成熟时在部门内分享推广。</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- 右:下一步安排 -->
+  <section>
+    <div class="section-label">下一步工作安排</div>
+    <div class="timeline">
+
+      <div class="t-step">
+        <span class="dot"></span>
+        <span class="phase">近期落地</span>
+        <h4>存量非标项目续期落实</h4>
+        <p>完成到期项目续期方案制定与商务谈判，推动存续项目按期续作或平稳退出。</p>
+      </div>
+
+      <div class="t-step">
+        <span class="dot"></span>
+        <span class="phase">持续推进</span>
+        <h4>存量客户回访与需求落地</h4>
+        <p>按计划开展存量客户回访，跟踪新增融资需求，推动可落地项目立项。</p>
+      </div>
+
+      <div class="t-step">
+        <span class="dot"></span>
+        <span class="phase">储备积累</span>
+        <h4>新客户拜访与项目储备</h4>
+        <p>完成CRM未覆盖客户拜访计划，形成新增客户及项目储备。</p>
+      </div>
+
+      <div class="t-step">
+        <span class="dot"></span>
+        <span class="phase">突破目标</span>
+        <h4>组合类产品首单落地</h4>
+        <p>完成组合类产品落地场景研究，锁定目标客户，力争实现首单落地。</p>
+      </div>
+
+      <div class="t-step">
+        <span class="dot"></span>
+        <span class="phase">持续建设</span>
+        <h4>工作流自动化与部门推广</h4>
+        <p>完成个人工作流搭建及成果展示自动化，并在部门内分享推广。</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="rule"></span>
+  <span class="sig">2026年9月15日</span>
+</footer>
+
+<script>
+// 卡片 ⇄ 曲线节点 双向联动
+const cards = document.querySelectorAll('.card');
+const nodes = document.querySelectorAll('.route g.node');
+const bind = (a, b) => {
+  const on = () => b.classList.add('active');
+  const off = () => b.classList.remove('active');
+  a.addEventListener('mouseenter', on);
+  a.addEventListener('mouseleave', off);
+  a.addEventListener('focus', on);
+  a.addEventListener('blur', off);
+};
+cards.forEach(card => {
+  const node = document.querySelector(`.route g.node[data-node="${card.dataset.node}"]`);
+  if (node) { bind(card, node); bind(node, card); }
+});
+</script>
+</body>
+</html>

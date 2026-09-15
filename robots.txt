@@ -1,0 +1,17 @@
+User-agent: *
+Disallow: /private.html
+Disallow: /tools/work-report/
+Disallow: /tools/counterparty/
+Disallow: /tools/meal/
+Disallow: /tools/nursery/
+Disallow: /tools/nursery-parents/
+Disallow: /tools/family-links/
+Disallow: /tools/baby-name-board/
+Disallow: /tools/naming/
+Disallow: /tools/scattered-private/
+Disallow: /tools/token-usage/
+Disallow: /tools/stats/
+Disallow: /tools/yuebing-travels/
+Disallow: /knowledge/iflyink-notes/
+Disallow: /knowledge/union-card-handbook-2026/
+Disallow: /radar-site/

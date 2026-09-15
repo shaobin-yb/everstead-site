@@ -39,6 +39,7 @@ SKIP = {
     "tools/baby-name-board/",
     "tools/naming/",
     "tools/yuebing-travels/",
+    "tools/work-report/",
 }
 
 

@@ -33,6 +33,7 @@ SKIP = {
     "tools/scattered-private/index.html",
     "tools/token-usage/index.html",  # 密码门页(2026-09-14)
     "tools/stats/index.html",        # 密码门页(2026-09-15)
+    "tools/work-report/index.html",  # 私人文件页(2026-09-15)
 }
 
 

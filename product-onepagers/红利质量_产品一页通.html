@@ -30,10 +30,6 @@ var _hmt=_hmt||[];
     <div class="ov-card"><h3>因子打分：提高持有期前瞻性</h3><p>5月将已披露分红预案纳入预期股息率测算，11月以 TTM 股息率更新，并以三年股利支付率均值作为未披露情形下的辅助依据，及时识别分红变化。</p></div>
     <div class="ov-card"><h3>组合构建：红利信号与约束并重</h3><p>质量筛选后按预期股息率因子选取并赋权 50 只股票，另设 20 只备选股；行业集中度及金融行业权重设 20% 上限，每年 5月/11月调仓。</p></div>
   </div>
-  <div class="chips" style="margin-top:.6rem">
-    <span class="chip">50只成分股</span><span class="chip">5月/11月调仓</span>
-    <span class="chip">预期股息率</span><span class="chip">行业上限20%</span>
-  </div>
 
   <h2 class="sec">产品要素</h2>
   <div class="facts">
@@ -41,7 +37,6 @@ var _hmt=_hmt||[];
     <div class="fact"><div class="k">Wind 代码</div><div class="v hl">ZY0053.OF</div></div>
     <div class="fact"><div class="k">风险等级</div><div class="v hl">R4 / 中高风险</div></div>
     <div class="fact"><div class="k">合同业绩比较基准</div><div class="v">中证红利指数收益率</div></div>
-    <div class="fact"><div class="k">存续期限</div><div class="v">无固定存续期限</div></div>
     <div class="fact"><div class="k">产品成立日</div><div class="v">2026-07-14</div></div>
     <div class="fact"><div class="k">管理费</div><div class="v">1.00%/年<span style="font-weight:400;font-size:.8em">，每日计提按季支付</span></div></div>
     <div class="fact"><div class="k">托管费</div><div class="v">0.01%/年<span style="font-weight:400;font-size:.8em">，每日计提按季支付</span></div></div>
@@ -57,9 +52,10 @@ var _hmt=_hmt||[];
     <div class="kpi"><div class="v" id="d-dp">--</div><div class="k">日涨跌</div></div>
   </div>
   <div class="bench-note" id="d-bench">--</div>
-  <div class="chart" style="margin-top:.7rem">
-    <svg id="d-chart" viewBox="0 0 820 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="净值走势图"></svg>
-    <div class="legend">实盘净值曲线：本产品 与 沪深300 · 数据源：iFinD 客户端 + fuyao（每日 10:03 自动更新）</div>
+  <div class="chart" style="margin-top:.5rem">
+    <svg id="d-peer-chart" viewBox="0 0 820 230" preserveAspectRatio="xMidYMid meet" role="img" aria-label="本产品与全收益指数对照走势图"></svg>
+    <div class="legend" id="d-peer-legend"></div>
+    <div class="legend">实盘净值曲线：本产品 与 沪深300全收益、创业板指全收益、科创50全收益（均自产品成立日归一）。数据源：iFinD + fuyao（每日自动更新）</div>
   </div>
 
   <h2 class="sec">历史回测与实盘观察</h2>
@@ -85,20 +81,8 @@ var _hmt=_hmt||[];
     </tbody>
   </table>
   <div class="observe" id="d-observe">--</div>
-  <div class="chart" style="margin-top:.7rem">
-    <svg id="d-peer-chart" viewBox="0 0 820 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="本产品与全收益指数对照走势图"></svg>
-    <div class="legend" id="d-peer-legend"></div>
-    <div class="legend">实盘净值曲线：本产品 与 沪深300全收益、创业板指全收益、科创50全收益（均自产品成立日归一）。数据源：iFinD + fuyao（每日自动更新）</div>
-  </div>
 
-  <h2 class="sec">机构参照指数选择</h2>
-  <div class="inst">
-    <div class="inst-card"><h3>保险机构 · 常见关注宽基口径</h3><p>沪深300覆盖面广、市场认知度高，通常更便于与保险资金常用的权益宽基考核口径进行比较。</p></div>
-    <div class="inst-card"><h3>理财机构 · 常见关注价值风格口径</h3><p>中证红利质量全收益、上证金融红利全收益可作为价值风格参照，便于讨论质量、分红持续性与金融红利特征；如关注其他指数，也可按同一期间补充比较。</p></div>
-  </div>
-  <div class="inst-note">口径提示：上述为常见机构沟通侧重点，并非固定分类或适配结论。实际参照指数应结合关注重点、考核口径和投资目标确定；分析参照不替代合同约定的业绩比较基准。</div>
-
-  <div class="note">重要提示：本材料依据产品合同及截至上述日期的运行数据整理，仅供合格机构投资者沟通参考，不构成收益承诺或投资建议。产品过往及短期业绩不代表未来表现，净值可能波动。全收益指数为补充分析参照，实际参照指数应结合关注重点、考核口径和投资目标确定，不替代合同约定的业绩比较基准。</div>
+  <div class="note">重要提示：本材料依据产品合同及截至上述日期的运行数据整理，仅供合格机构投资者沟通参考，不构成收益承诺或投资建议。产品过往及短期业绩不代表未来表现，净值可能波动。全收益指数为补充分析参照，不替代合同约定的业绩比较基准。</div>
 </div>
 <script>
 var PEER_COLORS = {
@@ -132,7 +116,6 @@ fetch('../product-panel/nav-data.json', {cache: 'no-store'})
       '净值数据截至 <b>' + p.latest_date + '</b>' +
       ' · 成立以来 ' + signed(p.cum_return) +
       ' · 近7日 ' + pn(p.ret_7d) + '% · 近30日 ' + pn(p.ret_30d) + '%';
-    renderChart(p.nav_series, d.benchmark);
     renderPeers(p, d.indices);
   })
   .catch(e => {
@@ -162,56 +145,10 @@ function renderPeers(p, idx) {
   renderPeerChart(p, idx);
 }
 
-function renderChart(navs, bench) {
-  const svg = document.getElementById('d-chart');
-  const W = 820, H = 260, L = 46, R = 12, T = 14, B = 26;
-  const idx = navs.map(x => x.d), ib = bench.map(x => x.date);
-  const joined = Array.from(new Set(idx.concat(ib))).sort();
-  const get = (arr, d) => (arr.find(x => x.d === d) || {}).v;
-  const getb = (arr, d) => (arr.find(x => x.date === d) || {}).close;
-  let x0 = null, x1 = null;
-  for (const d of joined) {
-    const v = get(navs, d), b = getb(bench, d);
-    if (v != null && b != null) { if (x0 === null) x0 = d; x1 = d; }
-  }
-  if (!x0) return;
-  const pts = [];
-  let vmin = Infinity, vmax = -Infinity, bmin = Infinity, bmax = -Infinity;
-  for (const d of joined) {
-    const v = get(navs, d), b = getb(bench, d);
-    if (v == null || b == null || d < x0 || d > x1) continue;
-    pts.push({ d, v, b });
-    vmin = Math.min(vmin, v); vmax = Math.max(vmax, v);
-    bmin = Math.min(bmin, b); bmax = Math.max(bmax, b);
-  }
-  const t0 = new Date(x0).getTime(), t1 = new Date(x1).getTime();
-  const sx = d => L + (new Date(d).getTime() - t0) / (t1 - t0) * (W - L - R);
-  const syp = v => T + (1 - (v - vmin) / (vmax - vmin)) * (H - T - B);
-  const syb = b => T + (1 - (b - bmin) / (bmax - bmin)) * (H - T - B);
-  const px = pts.map(p => sx(p.d) + ',' + syp(p.v)).join(' ');
-  const bx = pts.map(p => sx(p.d) + ',' + syb(p.b)).join(' ');
-  const xTicks = [0, .25, .5, .75, 1].map(f => {
-    const ms = t0 + (t1 - t0) * f, dd = new Date(ms);
-    return '<text x="' + (L + f * (W - L - R)) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10" fill="#8A6F45">' +
-      dd.getFullYear() + '-' + String(dd.getMonth() + 1).padStart(2, '0') + '-' + String(dd.getDate()).padStart(2, '0') + '</text>';
-  }).join('');
-  const yTicks = [0, .5, 1].map(f => {
-    const v = vmin + (vmax - vmin) * (1 - f);
-    return '<text x="' + (L - 5) + '" y="' + (T + f * (H - T - B) + 4) + '" text-anchor="end" font-size="10" fill="#8A6F45">' + v.toFixed(3) + '</text>';
-  }).join('');
-  svg.innerHTML =
-    '<line x1="' + L + '" y1="' + T + '" x2="' + L + '" y2="' + (H - B) + '" stroke="#E8D9B6"/>' +
-    '<line x1="' + L + '" y1="' + (H - B) + '" x2="' + (W - R) + '" y2="' + (H - B) + '" stroke="#E8D9B6"/>' +
-    '<polyline points="' + bx + '" fill="none" stroke="#C7B898" stroke-width="1.4" stroke-dasharray="4 3"/>' +
-    '<polyline points="' + px + '" fill="none" stroke="#B08F1C" stroke-width="2.2"/>' +
-    '<circle cx="' + sx(pts[pts.length - 1].d) + '" cy="' + syp(pts[pts.length - 1].v) + '" r="3.4" fill="#96751A"/>' +
-    yTicks + xTicks;
-}
-
 /* 四线对照图: 本产品与三条全收益指数, 各自按成立日(或产品成立日)归一 */
 function renderPeerChart(p, idx) {
   const svg = document.getElementById('d-peer-chart');
-  const W = 820, H = 260, L = 52, R = 12, T = 14, B = 26;
+  const W = 820, H = 230, L = 52, R = 12, T = 12, B = 24;
   const start = p.inception || p.since;
   const lines = [];
   const mine = (p.nav_series || []).filter(x => x.d >= start);

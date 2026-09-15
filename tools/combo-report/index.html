@@ -393,13 +393,17 @@ table.tb tr:nth-child(even) td:not(.k){background:rgba(255,255,255,.5)}
   .fab,.gate{display:none!important}
   /* 打印时无论是否解锁都输出正文，避免误打出空白页 */
   #locked{display:block!important}
+  /* 每节严格一页 A4：内容按比例缩放到页高内，避免溢出产生空白页 */
   .sheet{
-    width:210mm;min-height:0;margin:0;box-shadow:none;
+    width:210mm;height:297mm;margin:0;box-shadow:none;
     page-break-after:always;break-after:page;
+    display:flex;flex-direction:column;
+    overflow:hidden;
   }
+  .pad{flex:1;display:flex;flex-direction:column;min-height:0}
   .sheet:last-child{page-break-after:auto;break-after:auto}
   h2.ch,h3.sub{break-after:avoid;page-break-after:avoid}
-  .card,.kpi-cell,table.tb,.loop,.tl,.cmp{break-inside:avoid;page-break-inside:avoid}
+  .card,.kpi-cell,table.tb,.loop,.tl,.cmp,.flow{break-inside:avoid;page-break-inside:avoid}
   p.b,.concl{orphans:2;widows:2}
   .cover{height:297mm}
 }

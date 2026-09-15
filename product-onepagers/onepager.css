@@ -134,30 +134,43 @@ table.cmp td.me { color: var(--primary); font-weight: 700; }
   table.cmp th, table.cmp td { padding: .32rem .35rem; }
 }
 @media print {
-  @page { size: A4; margin: 8mm; }
-  body { background: #fff; padding: 0; font-size: 12px; }
+  @page { size: A4; margin: 6mm; }
+  body { background: #fff; padding: 0; font-size: 10.5px; }
   .page { border: none; box-shadow: none; max-width: 100%; padding: 0; }
-  /* 压缩纵向留白, 让整份材料尽量落在 2 页内 */
-  .head { padding-bottom: .4rem; margin-bottom: .6rem; }
-  .pname h1 { font-size: 1.2rem; }
-  h2.sec { margin: .7rem 0 .4rem; font-size: .95rem; }
-  .ov-intro { padding: .5rem .7rem; margin-bottom: .5rem; font-size: .84rem; }
-  .overview { gap: .5rem; }
-  .ov-card { padding: .5rem .6rem; font-size: .78rem; }
-  .facts { gap: .4rem; }
-  .fact { padding: .4rem .5rem; }
-  .kpis { gap: .4rem; }
-  .kpi { padding: .5rem .2rem .45rem; }
-  .kpi .v { font-size: 1.2rem; }
-  .bench-note { margin-top: .3rem; }
-  .chart { padding: .5rem; }
-  .observe { padding: .5rem .7rem; font-size: .78rem; margin-top: .5rem; }
-  .inst { gap: .5rem; }
-  .inst-card { padding: .5rem .6rem; font-size: .78rem; }
-  .inst-note { padding: .4rem .6rem; margin-top: .4rem; }
-  .note { margin-top: .8rem; padding-top: .4rem; font-size: .68rem; }
+  /* 单页 A4 目标: 全面压缩纵向留白 */
+  .head { padding-bottom: .25rem; margin-bottom: .35rem; }
+  .head .corp { font-size: .82rem; }
+  .head .meta { font-size: .68rem; }
+  .pname { margin-bottom: 0; }
+  .pname h1 { font-size: 1.02rem; }
+  .pname .sub { font-size: .72rem; margin-top: .1rem; }
+  .pname .badge { margin-top: .25rem; padding: .08rem .6rem; font-size: .66rem; }
+  h2.sec { margin: .42rem 0 .22rem; font-size: .84rem; padding-left: .45rem; border-left-width: 3px; }
+  .ov-intro { padding: .35rem .55rem; margin-bottom: .3rem; font-size: .72rem; line-height: 1.5; }
+  .overview { gap: .35rem; }
+  .ov-card { padding: .32rem .45rem; font-size: .66rem; line-height: 1.45; }
+  .ov-card h3 { font-size: .72rem; margin-bottom: .12rem; }
+  .facts { gap: .3rem; }
+  .fact { padding: .26rem .38rem; }
+  .fact .k { font-size: .6rem; }
+  .fact .v { font-size: .76rem; margin-top: 0; }
+  .kpis { gap: .3rem; }
+  .kpi { padding: .32rem .18rem .28rem; }
+  .kpi .v { font-size: 1.02rem; }
+  .kpi .k { font-size: .62rem; margin-top: .05rem; }
+  .kpi .n { font-size: .58rem; margin-top: .04rem; }
+  .kpis.bt-kpis .kpi .v { font-size: .96rem; }
+  .bench-note { margin-top: .2rem; font-size: .66rem; }
+  .chart { padding: .3rem; }
+  .chart .legend { font-size: .62rem; margin-top: .15rem; line-height: 1.35; }
+  table.cmp { font-size: .68rem; }
+  table.cmp th, table.cmp td { padding: .2rem .3rem; }
+  .observe { padding: .3rem .5rem; font-size: .66rem; margin-top: .3rem; line-height: 1.45; }
+  .note { margin-top: .45rem; padding-top: .3rem; font-size: .56rem; line-height: 1.4; }
+  .bt-head { font-size: .68rem; margin-bottom: .28rem; }
+  .bt-head .bt-warn { font-size: .62rem; }
   /* 避免板块被拦腰截断 */
-  .kpis, .facts, .overview, table.cmp, .chart, .observe, .inst { break-inside: avoid; }
+  .kpis, .facts, .overview, table.cmp, .chart, .observe { break-inside: avoid; }
   h2.sec { break-after: avoid; }
   /* 站点悬浮导航不进正式材料 */
   #fab-nav, .nav-fab { display: none !important; }

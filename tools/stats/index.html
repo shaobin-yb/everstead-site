@@ -96,7 +96,7 @@ tr:hover td{background:rgba(34,211,238,.04)}
     <div class="brand">EVERSTEAD <em>VISITORS</em></div>
     <a class="back" href="../../tools.html">← 工具箱</a>
   </div>
-  <div class="sub">VISITOR ANALYTICS · GitHub 官方仓库访问统计 · 北京时间</div>
+  <div class="sub">VISITOR ANALYTICS · 百度统计埋点数据 · 北京时间</div>
 
   <div class="stats" id="stats"></div>
 
@@ -118,6 +118,7 @@ tr:hover td{background:rgba(34,211,238,.04)}
   <div class="foot" id="foot"></div>
 </div>
 
+<!-- 数据源切换为百度统计: 埋点已全站注入, 数据经本地管道拉取 API 写入 stats/views.json(2026-09-15) -->
 <script>
 var PASSWORD_HASH = "62030069b40c02d1dd642d438194850f14d9e79a25abd1e53c02f7391f8242c8";
 var GATE_KEY = 'cp_visitor_stats_ok';
@@ -154,9 +155,10 @@ function load(){
     .then(function(d){ V=d; render(); })
     .catch(function(e){
       document.getElementById('stats').innerHTML =
-        '<div class="stat"><div class="k">加载失败</div><div class="v">—</div></div>'.repeat(4);
+        '<div class="stat"><div class="k">等待接入</div><div class="v">—</div></div>'.repeat(4);
       document.getElementById('foot').innerHTML =
-        '⚠️ 数据加载失败: '+e.message+'。统计首次部署后需等待 GitHub 后台出数(通常 24-48 小时)。';
+        '⚠️ 数据加载失败: '+e.message+'。百度统计埋点接入后, 数据管道每日自动拉取写入。'
+        +'全量分析请登录百度统计后台 tongji.baidu.com 查看。';
     });
 }
 
@@ -188,8 +190,8 @@ function render(){
   drawChart(days);
   drawTable(days);
   document.getElementById('foot').innerHTML =
-    '快照更新于 '+ (V.updated||'—') +' (UTC) · 数据源: GitHub 仓库 Insights/流量 (统计开始约 2026-09-15)<br>'
-    +'口径说明: 访问量=页面浏览数 · 独立访客=去重访客数 · GitHub 对仓库级页面统计有约 24h 延迟, 每 20 分钟抓一次快照<br>'
+    '快照更新于 '+ (V.updated||'—') +' · 数据源: 百度统计(全站埋点) · 完整后台分析: tongji.baidu.com<br>'
+    +'口径说明: 访问量=页面浏览数(PV) · 独立访客=去重访客数(UV) · 私人专区/密码门页不埋点, 不计入<br>'
     +'🔒 本页与 CRM 同级密码门 · 不进入公开搜索索引';
 }
 

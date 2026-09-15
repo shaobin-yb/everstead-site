@@ -111,6 +111,9 @@ table.cmp td.me { color: var(--primary); font-weight: 700; }
   padding: .8rem; }
 .chart svg { width: 100%; height: auto; display: block; }
 .chart .legend { font-size: .76rem; color: var(--muted); margin-top: .3rem; text-align: center; }
+/* 图例项不换行(打印/窄容器下 inline-flex 会被挤成竖排文字) */
+.chart .legend > span { white-space: nowrap; }
+.chart .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: .2rem .8rem; align-items: center; }
 
 /* 费用与托管（国新型） */
 .custody { font-size: .86rem; background: #FBF3E0; border: 1px solid var(--border);
@@ -131,6 +134,31 @@ table.cmp td.me { color: var(--primary); font-weight: 700; }
   table.cmp th, table.cmp td { padding: .32rem .35rem; }
 }
 @media print {
-  body { background: #fff; padding: 0; }
-  .page { border: none; box-shadow: none; }
+  @page { size: A4; margin: 8mm; }
+  body { background: #fff; padding: 0; font-size: 12px; }
+  .page { border: none; box-shadow: none; max-width: 100%; padding: 0; }
+  /* 压缩纵向留白, 让整份材料尽量落在 2 页内 */
+  .head { padding-bottom: .4rem; margin-bottom: .6rem; }
+  .pname h1 { font-size: 1.2rem; }
+  h2.sec { margin: .7rem 0 .4rem; font-size: .95rem; }
+  .ov-intro { padding: .5rem .7rem; margin-bottom: .5rem; font-size: .84rem; }
+  .overview { gap: .5rem; }
+  .ov-card { padding: .5rem .6rem; font-size: .78rem; }
+  .facts { gap: .4rem; }
+  .fact { padding: .4rem .5rem; }
+  .kpis { gap: .4rem; }
+  .kpi { padding: .5rem .2rem .45rem; }
+  .kpi .v { font-size: 1.2rem; }
+  .bench-note { margin-top: .3rem; }
+  .chart { padding: .5rem; }
+  .observe { padding: .5rem .7rem; font-size: .78rem; margin-top: .5rem; }
+  .inst { gap: .5rem; }
+  .inst-card { padding: .5rem .6rem; font-size: .78rem; }
+  .inst-note { padding: .4rem .6rem; margin-top: .4rem; }
+  .note { margin-top: .8rem; padding-top: .4rem; font-size: .68rem; }
+  /* 避免板块被拦腰截断 */
+  .kpis, .facts, .overview, table.cmp, .chart, .observe, .inst { break-inside: avoid; }
+  h2.sec { break-after: avoid; }
+  /* 站点悬浮导航不进正式材料 */
+  #fab-nav, .nav-fab { display: none !important; }
 }

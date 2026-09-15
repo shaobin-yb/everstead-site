@@ -155,10 +155,13 @@ function load(){
     .then(function(d){ V=d; render(); })
     .catch(function(e){
       document.getElementById('stats').innerHTML =
-        '<div class="stat"><div class="k">等待接入</div><div class="v">—</div></div>'.repeat(4);
+        '<div class="stat"><div class="k">等待开通</div><div class="v">—</div></div>'.repeat(4);
       document.getElementById('foot').innerHTML =
-        '⚠️ 数据加载失败: '+e.message+'。百度统计埋点接入后, 数据管道每日自动拉取写入。'
-        +'全量分析请登录百度统计后台 tongji.baidu.com 查看。';
+        '⚠️ 自动快照暂未开通: 百度统计「数据导出服务」要求站点 PV 达到门槛后才能开 API'
+        +'(当前 PV 过低被百度拒绝)。<br>'
+        +'访客数据不受影响, 请直接登录百度统计后台查看: <a style="color:var(--cyan)" '
+        +'href="https://tongji.baidu.com" target="_blank">tongji.baidu.com</a> · 全量分析(实时/地域/来源)都在后台。<br>'
+        +'待 PV 涨到门槛后, 我重新在后台开 API, 本页自动恢复趋势图。';
     });
 }
 

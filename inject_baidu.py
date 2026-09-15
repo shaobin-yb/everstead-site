@@ -18,8 +18,8 @@ from pathlib import Path
 SITE = Path(__file__).parent
 MARKS = SITE / ".baidu_marks"
 
-# 百度统计埋点 ID(老板注册 tongji.baidu.com 后从"获取代码"里抄)
-HM_ID = "__BAIDU_HM_ID__"
+# 百度统计埋点 ID(老板 2026-09-15 注册 tongji.baidu.com 提供)
+HM_ID = "1d958a32a6588643ee6e67da344c7693"
 
 SKIP = {
     "index-template.html",

@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中邮资管组合类产品业务发展报告</title>
+<meta property="og:title" content="中邮资管组合类产品业务发展报告 · 2026-09">
+<meta property="og:description" content="业务发展概况 · 产品线布局 · 运营服务能力 · 合作模式 · 附 PDF 预览与 Word 下载">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --bg:#03060c;
+  --panel:rgba(10,20,38,.55);
+  --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --violet:#8b5cf6;
+  --rose:#f43f5e;
+  --gold:#C6A15B;
+  --gold-bright:#E3C98F;
+  --text:#e2ecf7;
+  --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
+    var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+}
+
+.wrap{position:relative;z-index:3;max-width:1000px;margin:0 auto;padding:0 24px 56px}
+
+/* ---- 顶部栏 ---- */
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0}
+.topbar .logo{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--gold),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:19px;color:#03101f;box-shadow:var(--glow);
+}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.22em;font-size:14px}
+.topbar .back{
+  margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;
+  background:rgba(10,20,38,.4);transition:border-color .25s,color .25s;
+}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+
+/* ---- 报告头 ---- */
+.hero{
+  margin-top:34px;padding:28px 30px;
+  border:1px solid var(--line);border-radius:16px;
+  background:var(--panel);backdrop-filter:blur(10px);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(180deg,var(--gold),var(--cyan));
+}
+.hero .eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold-bright);
+  margin-bottom:12px;
+}
+.hero h1{font-size:25px;font-weight:700;letter-spacing:.03em;line-height:1.45;margin-bottom:12px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  border:1px solid var(--line);border-radius:999px;padding:4px 12px;color:var(--muted);
+  background:rgba(3,6,12,.4);
+}
+.chip b{color:var(--cyan);font-weight:600}
+
+.acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 22px;border-radius:10px;font-size:13.5px;font-weight:600;letter-spacing:.08em;
+  cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;
+  border:1px solid transparent;
+}
+.btn-primary{background:linear-gradient(90deg,var(--gold),var(--cyan));color:#03101f;border:none}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.btn-ghost{
+  border-color:var(--line);color:var(--text);background:rgba(10,20,38,.5);
+}
+.btn-ghost:hover{border-color:var(--line-strong);color:var(--cyan);transform:translateY(-2px)}
+
+/* ---- 正文预览 ---- */
+.sec-head{
+  display:flex;align-items:baseline;gap:12px;
+  padding-bottom:12px;margin:40px 0 18px;border-bottom:1px solid var(--line);
+}
+.sec-head .no{
+  font-family:var(--mono);font-weight:800;font-size:13px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.sec-head h2{font-size:18px;font-weight:700;letter-spacing:.05em}
+.sec-head .hint{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+.viewer{
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  background:rgba(10,20,38,.45);
+}
+.viewer-bar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:12px 16px;border-bottom:1px solid var(--line);
+  background:rgba(3,6,12,.4);
+}
+.viewer-bar .nav{
+  display:flex;align-items:center;gap:6px;
+}
+.viewer-bar button{
+  width:32px;height:32px;border-radius:8px;cursor:pointer;
+  border:1px solid var(--line);background:rgba(10,20,38,.6);
+  color:var(--text);font-size:15px;line-height:1;
+  transition:border-color .2s,color .2s;
+}
+.viewer-bar button:hover:not(:disabled){border-color:var(--line-strong);color:var(--cyan)}
+.viewer-bar button:disabled{opacity:.32;cursor:not-allowed}
+.viewer-bar .pg{
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  letter-spacing:.1em;min-width:104px;text-align:center;
+}
+.viewer-bar .pg b{color:var(--cyan)}
+.viewer-bar .zoom{margin-left:auto;display:flex;align-items:center;gap:6px}
+.viewer-bar .zoom span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.stage{
+  padding:22px 16px;max-height:78vh;overflow-y:auto;overflow-x:hidden;
+  background:rgba(3,6,12,.55);
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+  scroll-behavior:smooth;
+}
+.stage canvas{
+  max-width:100%;height:auto;display:block;
+  border-radius:6px;box-shadow:0 6px 28px rgba(0,0,0,.5);
+  background:#fff;
+}
+.stage .hint-loading{
+  font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em;
+  padding:60px 0;
+}
+
+/* ---- 目录 ---- */
+.toc{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;
+}
+.toc a{
+  display:block;padding:14px 16px;border:1px solid var(--line);border-radius:11px;
+  background:var(--panel);transition:transform .22s,border-color .22s,background .22s;
+}
+.toc a:hover{transform:translateY(-3px);border-color:var(--line-strong);background:var(--panel-hover)}
+.toc .n{font-family:var(--mono);font-size:11px;color:var(--gold-bright);letter-spacing:.14em;margin-bottom:5px}
+.toc .t{font-size:14px;font-weight:600}
+
+.foot{
+  margin-top:52px;padding-top:16px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);text-align:center;
+}
+
+/* ---- 密码门 ---- */
+.gate{
+  max-width:420px;margin:72px auto 0;text-align:center;
+  border:1px solid var(--line);border-radius:16px;padding:44px 32px;
+  background:var(--panel);backdrop-filter:blur(10px);
+  box-shadow:0 8px 40px rgba(0,0,0,.35);
+}
+.gate .lock{font-size:44px;margin-bottom:14px}
+.gate h2{font-size:20px;font-weight:700;letter-spacing:.08em;margin-bottom:8px}
+.gate p{font-size:12px;color:var(--muted);margin-bottom:28px;line-height:1.8}
+.gate input{
+  width:100%;padding:12px 16px;font-family:var(--mono);font-size:16px;letter-spacing:.35em;
+  color:var(--text);background:rgba(3,6,12,.6);
+  border:1px solid var(--line);border-radius:10px;outline:none;text-align:center;
+  transition:border-color .25s,box-shadow .25s;
+}
+.gate input:focus{border-color:var(--line-strong);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+.gate button{
+  margin-top:16px;width:100%;padding:12px;font-size:14px;font-weight:600;letter-spacing:.2em;
+  color:#03101f;cursor:pointer;
+  background:linear-gradient(90deg,var(--gold),var(--cyan));
+  border:none;border-radius:10px;transition:transform .2s,box-shadow .2s;
+}
+.gate button:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.gate.err{animation:shake .4s}
+.gate .err-msg{display:none;margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--rose)}
+.gate.err .err-msg{display:block}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%,60%{transform:translateX(-8px)}
+  40%,80%{transform:translateX(8px)}
+}
+#locked{display:none}
+#locked.open{display:block}
+.gate.away{display:none}
+
+@media (max-width:640px){
+  .hero{padding:22px 20px}
+  .hero h1{font-size:20px}
+  .viewer-bar .zoom{display:none}
+  .stage{max-height:66vh;padding:14px 10px}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">💼</div>
+    <div class="brand">WORKSPACE · 工作区</div>
+    <a class="back" href="../../private.html">← 返回私人专区</a>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">PORTFOLIO PRODUCT BUSINESS · 2026-09</div>
+    <h1>中邮资管组合类产品业务发展报告</h1>
+    <div class="meta">
+      <span class="chip">报告期 <b>2026年9月</b></span>
+      <span class="chip">共 <b>13</b> 页</span>
+      <span class="chip">管理规模 <b>307.09亿元</b></span>
+      <span class="chip">产品 <b>42只</b></span>
+      <span class="chip">仅供机构交流</span>
+    </div>
+    <div class="acts">
+      <a class="btn btn-primary" id="dl-word" download>⬇ 下载 Word 版</a>
+      <a class="btn btn-ghost" id="dl-pdf" download>⬇ 下载 PDF</a>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <span class="no">PREVIEW</span>
+    <h2>📄 在线预览</h2>
+    <span class="hint">滚动翻阅 · 支持缩放</span>
+  </div>
+
+  <div class="viewer">
+    <div class="viewer-bar">
+      <div class="nav">
+        <button id="prev" title="上一页">‹</button>
+        <span class="pg">第 <b id="cur">1</b> / <span id="tot">—</span> 页</span>
+        <button id="next" title="下一页">›</button>
+      </div>
+      <div class="zoom">
+        <span>缩放</span>
+        <button id="zoom-out" title="缩小">−</button>
+        <span id="zval">100%</span>
+        <button id="zoom-in" title="放大">+</button>
+        <button id="zoom-fit" title="适应宽度" style="width:auto;padding:0 10px;font-size:11px;font-family:var(--mono)">适应</button>
+      </div>
+    </div>
+    <div class="stage" id="stage">
+      <div class="hint-loading" id="loading">正在加载 PDF …</div>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <span class="no">CONTENTS</span>
+    <h2>🧭 报告结构</h2>
+  </div>
+  <div class="toc">
+    <a href="#" data-page="2"><div class="n">概览</div><div class="t">业务全景速览</div></a>
+    <a href="#" data-page="2"><div class="n">一</div><div class="t">业务发展概况</div></a>
+    <a href="#" data-page="4"><div class="n">二</div><div class="t">产品线布局</div></a>
+    <a href="#" data-page="10"><div class="n">三</div><div class="t">运营服务能力</div></a>
+    <a href="#" data-page="11"><div class="n">四</div><div class="t">合作模式</div></a>
+    <a href="#" data-page="13"><div class="n">结语</div><div class="t">总结与展望</div></a>
+  </div>
+
+  <div class="foot">EVERSTEAD WORKSPACE · 中邮资管金融市场中心 · 仅供机构交流</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+/* 文件路径含中文，统一在此处引用 */
+var FILES = {
+  pdf:  '中邮资管组合类产品业务发展报告_投资人版_2026-09.pdf',
+  word: '中邮资管组合类产品业务发展报告_投资人版_2026-09.docx'
+};
+document.getElementById('dl-word').href = FILES.word;
+document.getElementById('dl-pdf').href  = FILES.pdf;
+
+var stage   = document.getElementById('stage');
+var loading = document.getElementById('loading');
+var curEl   = document.getElementById('cur');
+var totEl   = document.getElementById('tot');
+var zvalEl  = document.getElementById('zval');
+var btnPrev = document.getElementById('prev');
+var btnNext = document.getElementById('next');
+
+var pdfDoc = null, scale = 1.0, fitScale = 1.0, dpr = window.devicePixelRatio || 1;
+var canvases = [];
+
+if (!window.pdfjsLib) {
+  loading.textContent = 'PDF 预览组件加载失败，可直接下载上方 Word / PDF 文件查看';
+} else {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  pdfjsLib.getDocument(encodeURI(FILES.pdf)).promise.then(function(doc){
+    pdfDoc = doc;
+    totEl.textContent = doc.numPages;
+    loading.remove();
+    /* 先用首页尺寸定好缩放（A4 原宽 595px，窄屏会溢出），
+       再按最终比例渲染，避免渲染两次 */
+    return doc.getPage(1).then(function(p0){
+      var base = p0.getViewport({scale: 1});
+      fitScale = (stage.clientWidth - 32) / base.width;
+      scale = Math.min(fitScale, 1.4);
+      zvalEl.textContent = Math.round(scale * 100) + '%';
+      var tasks = [];
+      for (var i = 1; i <= doc.numPages; i++) tasks.push(renderPage(i));
+      return Promise.all(tasks);
+    });
+  }).then(function(){
+    observePages();
+  }).catch(function(err){
+    loading.textContent = 'PDF 加载失败：' + err.message + '（可直接下载上方文件查看）';
+    console.error(err);
+  });
+}
+
+function renderPage(num){
+  return pdfDoc.getPage(num).then(function(page){
+    var vp = page.getViewport({scale: 1});
+    var cv = document.createElement('canvas');
+    cv.dataset.page = num;
+    cv.dataset.w = vp.width;
+    cv.dataset.h = vp.height;
+    cv.style.width = vp.width + 'px';
+    stage.appendChild(cv);
+    canvases.push(cv);
+    return paint(page, cv);
+  });
+}
+
+function paint(page, cv){
+  var w = parseFloat(cv.dataset.w), h = parseFloat(cv.dataset.h);
+  var vp = page.getViewport({scale: scale * dpr});
+  cv.width  = Math.floor(vp.width);
+  cv.height = Math.floor(vp.height);
+  cv.style.width = (w * scale) + 'px';
+  cv.style.height = (h * scale) + 'px';
+  return page.render({
+    canvasContext: cv.getContext('2d'),
+    viewport: vp
+  }).promise;
+}
+
+function repaintAll(){
+  if (!pdfDoc) return;
+  zvalEl.textContent = Math.round(scale * 100) + '%';
+  canvases.forEach(function(cv){
+    var n = parseInt(cv.dataset.page, 10);
+    pdfDoc.getPage(n).then(function(p){ paint(p, cv); });
+  });
+}
+
+function computeFitScale(){
+  var avail = stage.clientWidth - 32;
+  var first = canvases[0];
+  if (!first) return;
+  fitScale = avail / parseFloat(first.dataset.w);
+}
+
+function layout(){
+  document.getElementById('zval').textContent = Math.round(scale * 100) + '%';
+}
+
+/* 缩放 */
+document.getElementById('zoom-in').addEventListener('click', function(){
+  scale = Math.min(scale * 1.25, 4); repaintAll();
+});
+document.getElementById('zoom-out').addEventListener('click', function(){
+  scale = Math.max(scale / 1.25, 0.3); repaintAll();
+});
+document.getElementById('zoom-fit').addEventListener('click', function(){
+  computeFitScale(); scale = fitScale; repaintAll();
+});
+
+/* 翻页 */
+btnPrev.addEventListener('click', function(){ gotoPage(currentPage() - 1); });
+btnNext.addEventListener('click', function(){ gotoPage(currentPage() + 1); });
+
+function currentPage(){
+  var mid = stage.scrollTop + stage.clientHeight / 2;
+  for (var i = 0; i < canvases.length; i++) {
+    var cv = canvases[i];
+    if (cv.offsetTop + cv.offsetHeight > mid) return i + 1;
+  }
+  return canvases.length;
+}
+
+function gotoPage(n){
+  n = Math.max(1, Math.min(n, canvases.length));
+  var cv = canvases[n - 1];
+  if (cv) stage.scrollTo({top: cv.offsetTop - 12, behavior: 'smooth'});
+}
+
+/* 滚动时更新页码 */
+var tick = false;
+stage.addEventListener('scroll', function(){
+  if (tick) return;
+  tick = true;
+  requestAnimationFrame(function(){
+    var n = currentPage();
+    curEl.textContent = n;
+    btnPrev.disabled = n <= 1;
+    btnNext.disabled = n >= canvases.length;
+    tick = false;
+  });
+});
+function observePages(){
+  curEl.textContent = 1;
+  btnPrev.disabled = true;
+  btnNext.disabled = canvases.length <= 1;
+}
+
+/* 目录跳转 */
+document.querySelectorAll('.toc a').forEach(function(a){
+  a.addEventListener('click', function(e){
+    e.preventDefault();
+    gotoPage(parseInt(a.dataset.page, 10));
+  });
+});
+
+/* 窗口尺寸变化 → 重算适应宽度 */
+var rz;
+window.addEventListener('resize', function(){
+  clearTimeout(rz);
+  rz = setTimeout(function(){ computeFitScale(); }, 200);
+});
+</script>
+</body>
+</html>

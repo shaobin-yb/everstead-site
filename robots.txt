@@ -1,6 +1,7 @@
 User-agent: *
 Disallow: /private.html
 Disallow: /tools/work-report/
+Disallow: /tools/combo-report/
 Disallow: /tools/counterparty/
 Disallow: /tools/meal/
 Disallow: /tools/nursery/

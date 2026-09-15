@@ -40,6 +40,7 @@ SKIP = {
     "tools/naming/",
     "tools/yuebing-travels/",
     "tools/work-report/",
+    "tools/combo-report/",
 }
 
 

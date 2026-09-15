@@ -42,6 +42,7 @@ PRIVATE_PREFIXES = (
     "tools/scattered-private/",
     "tools/yuebing-travels/",
     "tools/work-report/",
+    "tools/combo-report/",  # 组合类产品业务发展报告(密码门, 2026-09-15)
     "tools/token-usage/",  # Token 用量展板(密码门, 2026-09-14)
     "tools/stats/",        # 访客记录(密码门, 2026-09-15)
     "knowledge/iflyink-notes/",

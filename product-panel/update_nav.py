@@ -467,7 +467,10 @@ def calc_metrics(hist):
         # 成立以来收益对照: 三条全收益指数取产品成立日起的同窗口
         peer = {}
         for key, imeta in INDEXES.items():
-            seg = [r["close"] for r in hist.get(key, []) if r["date"] >= meta["inception"]]
+            # 与产品同窗口: 起点取产品成立日, 终点截止到产品最新净值日
+            # (否则指数多出的交易日会让对照失真 —— PDF 口径即同区间)
+            seg = [r["close"] for r in hist.get(key, [])
+                   if meta["inception"] <= r["date"] <= latest["date"]]
             m = series_metrics(seg)
             if m:
                 peer[key] = m

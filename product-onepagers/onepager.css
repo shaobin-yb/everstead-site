@@ -78,6 +78,33 @@ table.cmp th, table.cmp td { padding: .42rem .6rem; border: 1px solid var(--bord
 table.cmp thead th { background: var(--inner); color: var(--deep); font-weight: 700; }
 table.cmp td.rowk { text-align: left; background: var(--pale); font-weight: 600; color: var(--muted); width: 8rem; }
 table.cmp td.me { color: var(--primary); font-weight: 700; }
+.up { color: #B93A32; }        /* 红涨: A股惯例 */
+.down { color: #1E8449; }      /* 绿跌 */
+
+/* 历史回测 */
+.bt-head { display: flex; justify-content: space-between; align-items: baseline;
+  font-size: .8rem; color: var(--muted); margin-bottom: .55rem; flex-wrap: wrap; gap: .3rem; }
+.bt-head .bt-warn { color: var(--deep); font-size: .74rem; }
+.kpis.bt-kpis .kpi { padding: .8rem .3rem .7rem; }
+.kpis.bt-kpis .kpi .v { font-size: 1.3rem; }
+.kpis.bt-kpis .kpi .v.up { color: #B93A32; }
+.kpis.bt-kpis .kpi .v.down { color: #1E8449; }
+.kpis.bt-kpis .kpi .v.plain { color: var(--text); }
+
+/* 简要观察 */
+.observe { background: var(--pale); border-left: 3px solid var(--primary);
+  border-radius: var(--radius); padding: .7rem .9rem; font-size: .84rem;
+  margin-top: .7rem; color: var(--text); }
+.observe b { color: var(--deep); }
+
+/* 机构参照指数选择 */
+.inst { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+.inst-card { background: #FBF3E0; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: .7rem .85rem; font-size: .84rem; }
+.inst-card h3 { font-size: .88rem; color: var(--deep); margin-bottom: .3rem; }
+.inst-note { font-size: .76rem; color: var(--muted); background: var(--inner);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: .5rem .8rem; margin-top: .6rem; }
 
 /* 曲线 */
 .chart { background: #FBF3E0; border: 1px solid var(--border); border-radius: var(--radius);
@@ -99,6 +126,9 @@ table.cmp td.me { color: var(--primary); font-weight: 700; }
 @media (max-width: 760px) {
   .overview, .facts { grid-template-columns: 1fr 1fr; }
   .kpis { grid-template-columns: repeat(3, 1fr); }
+  .inst { grid-template-columns: 1fr; }
+  table.cmp { font-size: .76rem; }
+  table.cmp th, table.cmp td { padding: .32rem .35rem; }
 }
 @media print {
   body { background: #fff; padding: 0; }

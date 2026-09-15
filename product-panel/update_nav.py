@@ -26,7 +26,7 @@ import json
 import sys
 import time
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -54,18 +54,36 @@ DATA = BASE / "nav-data.json"
 SITE = BASE.parent  # everstead-site
 
 PRODUCTS = {
-    "ZY0049": {"name": "中邮资管价值策略1号", "code": "ZY0049.BZJ"},
-    "ZY0053": {"name": "中邮资管红利质量量化选股策略", "code": "ZY0053.BZJ"},
+    "ZY0049": {"name": "中邮资管价值策略1号", "code": "ZY0049.BZJ",
+               "wind": "ZY0049.OF", "inception": "2026-06-10"},
+    "ZY0053": {"name": "中邮资管红利质量量化选股策略", "code": "ZY0053.BZJ",
+               "wind": "ZY0053.OF", "inception": "2026-07-14"},
 }
 
+# 全收益指数(2026-09-15 新增): 一页通「成立以来收益对照」三条基准线。
+# ifind 源走远程 MCP HTTP(H00300.CSI / 000688CNY01.SH 为沪深/科创全收益官方代码,
+# fuyao 目录里无行情); 创业板指全收益在 fuyao 有行情(399606.SZ, 简称"创业板R")。
+INDEXES = {
+    "hs300_tr": {"name": "沪深300全收益", "code": "H00300.CSI", "src": "ifind"},
+    "cyb_tr": {"name": "创业板指全收益", "code": "399606.SZ", "src": "fuyao"},
+    "kc50_tr": {"name": "科创50全收益", "code": "000688CNY01.SH", "src": "ifind"},
+}
 
-def _fuyao_key():
-    """fuyao key 从 ~/.claude.json 读"""
-    cfg = json.loads(open(Path.home() / ".claude.json", encoding="utf-8").read())
-    for name, srv in cfg.get("mcpServers", {}).items():
-        if name == "fuyao-a-share-index":
-            return srv.get("headers", {}).get("X-api-key", "")
-    return ""
+IFIND_INDEX_URL = "https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-ds-index-mcp"
+
+
+def _claude_cfg():
+    return json.loads(open(Path.home() / ".claude.json", encoding="utf-8").read())
+
+
+def _fuyao_cfg(server):
+    """fuyao MCP 配置(url + key)从 ~/.claude.json 读。注意 url 路径与 server 名不同名。"""
+    srv = _claude_cfg().get("mcpServers", {}).get(server) or {}
+    return srv.get("url", ""), (srv.get("headers") or {}).get("X-api-key", "")
+
+
+def _fuyao_key(server="fuyao-a-share-index"):
+    return _fuyao_cfg(server)[1]
 
 
 def fetch_hs300(end, days_back=120):
@@ -104,6 +122,120 @@ def fetch_hs300(end, days_back=120):
                 d = datetime.fromtimestamp(ts / 1000).strftime("%Y-%m-%d")
                 out.append({"date": d, "close": float(close)})
     out.sort(key=lambda x: x["date"])
+    return out
+
+
+def _fuyao_call(server, name, arguments, timeout=90):
+    """fuyao MCP HTTP 调用 → 内层 data 字段(JSON)"""
+    import requests
+    url, key = _fuyao_cfg(server)
+    if not url:
+        raise RuntimeError("~/.claude.json 缺 %s 配置" % server)
+    r = requests.post(
+        url,
+        json={"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+              "params": {"name": name, "arguments": arguments}},
+        headers={"Content-Type": "application/json", "X-api-key": key},
+        timeout=timeout,
+    )
+    content = r.json().get("result", {}).get("content", [])
+    if not content:
+        raise RuntimeError("fuyao 返回异常: %s" % r.text[:200])
+    return json.loads(content[0]["text"])
+
+
+def fetch_trading_days():
+    """fuyao 近一年交易日集合(YYYY-MM-DD)。iFinD 日线含周末填充行, 必须按此过滤。"""
+    inner = _fuyao_call("fuyao-a-share", "get_a_share_calendar_trading_days", {})
+    out = set()
+    for row in inner.get("data", {}).get("item", []):
+        d8 = row.get("date", "")
+        if len(d8) == 8:
+            out.add("%s-%s-%s" % (d8[:4], d8[4:6], d8[6:]))
+    return out
+
+
+def fetch_fuyao_index(thscode, end, days_back=400):
+    """fuyao 指数日线 → [{date, close}] (升序)"""
+    inner = _fuyao_call("fuyao-a-share-index", "get_a_share_index_prices_historical", {
+        "thscode": thscode, "interval": "1d",
+        "start": int((datetime.strptime(end, "%Y-%m-%d").timestamp() - days_back * 86400) * 1000),
+        "end": int(datetime.strptime(end, "%Y-%m-%d").timestamp() * 1000),
+    })
+    out = []
+    for row in inner.get("data", {}).get("item", []):
+        ts, close = row.get("date_ms"), row.get("close_price")
+        if ts and close:
+            out.append({"date": datetime.fromtimestamp(ts / 1000).strftime("%Y-%m-%d"),
+                        "close": float(close)})
+    out.sort(key=lambda x: x["date"])
+    return out
+
+
+def _ifind_index_window(thscode, d0, d1):
+    """iFinD index_data 单窗口(≤55 自然日)。返回 {date: close}"""
+    import requests
+    auth = ""
+    for name, srv in _claude_cfg().get("mcpServers", {}).items():
+        if name == "ifind-index":
+            auth = srv.get("env", {}).get("IFIND_AUTH", "")
+    headers = {"Content-Type": "application/json",
+               "Accept": "application/json, text/event-stream",
+               "Authorization": "Bearer " + auth}
+    requests.post(IFIND_INDEX_URL, json={
+        "jsonrpc": "2.0", "id": 1, "method": "initialize",
+        "params": {"protocolVersion": "2024-11-05", "capabilities": {},
+                   "clientInfo": {"name": "nav-pipeline", "version": "1"}}},
+        headers=headers, timeout=60)
+    q = "%s 在%s年%s月%s日至%s年%s月%s日期间的每日收盘点位" % (
+        thscode, d0.year, d0.month, d0.day, d1.year, d1.month, d1.day)
+    r = requests.post(IFIND_INDEX_URL, json={
+        "jsonrpc": "2.0", "id": 2, "method": "tools/call",
+        "params": {"name": "index_data", "arguments": {"query": q}}},
+        headers=headers, timeout=120)
+    inner = json.loads(r.json()["result"]["content"][0]["text"])
+    ans = inner.get("data", "")
+    if isinstance(ans, str):
+        ans = json.loads(ans)
+    out = {}
+    for line in ans.get("answer", "").splitlines():
+        c = [x.strip() for x in line.strip().strip("|").split("|")]
+        if len(c) >= 4 and c[2].isdigit() and len(c[2]) == 8:
+            d8 = c[2]
+            try:
+                out["%s-%s-%s" % (d8[:4], d8[4:6], d8[6:])] = float(c[3].replace(",", ""))
+            except ValueError:
+                pass
+    return out
+
+
+def fetch_ifind_index(thscode, end, days_back=400):
+    """iFinD 指数日线, 分块抓取绕开单次 100 行截断 → [{date, close}] (升序)"""
+    d1 = datetime.strptime(end, "%Y-%m-%d").date()
+    cur = d1 - timedelta(days=days_back)
+    merged = {}
+    while cur <= d1:
+        nxt = min(cur + timedelta(days=55), d1)
+        merged.update(_ifind_index_window(thscode, cur, nxt))
+        cur = nxt + timedelta(days=1)
+    return [{"date": d, "close": v} for d, v in sorted(merged.items())]
+
+
+def fetch_indexes(end, calendar):
+    """三条全收益指数 → {key: [{date, close}]}, 按交易日历过滤非交易日填充行"""
+    out = {}
+    for key, meta in INDEXES.items():
+        try:
+            rows = (fetch_ifind_index(meta["code"], end) if meta["src"] == "ifind"
+                    else fetch_fuyao_index(meta["code"], end))
+            rows = [r for r in rows if r["date"] in calendar and r["date"] <= end]
+            if not rows:
+                raise RuntimeError("空序列")
+            out[key] = rows
+            print("  [%s] %s %d 个交易日, %s -> %s" % (
+                meta["src"], meta["name"], len(rows), rows[0]["date"], rows[-1]["date"]))
+        except Exception as e:
+            print("  [WARN] %s 抓取失败: %s" % (meta["name"], str(e)[:120]))
     return out
 
 
@@ -169,9 +301,14 @@ def read_ifind_tables():
 
 
 def load_history():
+    base = {"ZY0049": [], "ZY0053": [], "benchmark": []}
+    base.update({k: [] for k in INDEXES})
     if HISTORY.exists():
-        return json.loads(HISTORY.read_text(encoding="utf-8"))
-    return {"ZY0049": [], "ZY0053": [], "benchmark": []}
+        hist = json.loads(HISTORY.read_text(encoding="utf-8"))
+        for k, v in base.items():
+            hist.setdefault(k, v)
+        return hist
+    return base
 
 
 def norm_num(x: str | float | int | None) -> str:
@@ -267,6 +404,35 @@ def merge(hist, fresh, bench):
     return hist
 
 
+def merge_indexes(hist, idx):
+    for key, rows in idx.items():
+        by_date = {r["date"]: r for r in hist[key]}
+        for r in rows:
+            by_date[r["date"]] = r
+        hist[key] = sorted(by_date.values(), key=lambda x: x["date"])
+    return hist
+
+
+def series_metrics(vals):
+    """串行指标: 成立以来% / 最大回撤% / 年化波动率%(252 日)"""
+    import math
+    if len(vals) < 3:
+        return None
+    rets = [vals[i] / vals[i - 1] - 1 for i in range(1, len(vals))]
+    peak, mdd = vals[0], 0.0
+    for v in vals:
+        peak = max(peak, v)
+        mdd = min(mdd, v / peak - 1)
+    n = len(rets)
+    mean = sum(rets) / n
+    var = sum((r - mean) ** 2 for r in rets) / (n - 1)
+    return {
+        "cum": round((vals[-1] / vals[0] - 1) * 100, 2),
+        "mdd": round(mdd * 100, 2),
+        "vol": round(math.sqrt(var) * math.sqrt(252) * 100, 2),
+    }
+
+
 def calc_metrics(hist):
     """从净值序列自算指标。数字全部可溯源,无估计值。"""
     out = {"updated": datetime.now().strftime("%Y-%m-%d %H:%M"), "products": {}}
@@ -275,40 +441,51 @@ def calc_metrics(hist):
         if len(rows) < 2:
             continue
         latest = rows[-1]
-        start_nav = rows[0]["nav"]
-        cum = (latest["nav"] / start_nav - 1) * 100
+        # 成立以来: 产品成立日面值 1.0000 为基准(与一页通 PDF 口径一致)
+        cum = (latest["nav"] / 1.0 - 1) * 100
 
         def win_ret(n):
             if len(rows) <= n:
                 return None
             return (latest["nav"] / rows[-(n + 1)]["nav"] - 1) * 100
 
-        peak, max_dd = rows[0]["nav"], 0.0
-        for r in rows:
-            peak = max(peak, r["nav"])
-            dd = (r["nav"] / peak - 1) * 100
-            max_dd = min(max_dd, dd)
+        own = series_metrics([r["nav"] for r in rows])
 
         d0 = datetime.strptime(rows[0]["date"], "%Y-%m-%d")
         d1 = datetime.strptime(latest["date"], "%Y-%m-%d")
         years = max((d1 - d0).days / 365.25, 1e-6)
-        ann = ((latest["nav"] / start_nav) ** (1 / years) - 1) * 100
+        ann = ((latest["nav"] / 1.0) ** (1 / years) - 1) * 100
+
+        # 成立以来收益对照: 三条全收益指数取产品成立日起的同窗口
+        peer = {}
+        for key, imeta in INDEXES.items():
+            seg = [r["close"] for r in hist.get(key, []) if r["date"] >= meta["inception"]]
+            m = series_metrics(seg)
+            if m:
+                peer[key] = m
 
         out["products"][code] = {
             "name": meta["name"],
+            "wind": meta["wind"],
+            "inception": meta["inception"],
             "latest_date": latest["date"],
             "nav": latest["nav"],
             "daily_pct": latest.get("pct"),
             "cum_return": round(cum, 2),
             "ret_7d": None if win_ret(7) is None else round(win_ret(7), 2),
             "ret_30d": None if win_ret(30) is None else round(win_ret(30), 2),
-            "max_drawdown": round(max_dd, 2),
+            "max_drawdown": own["mdd"] if own else 0.0,
+            "vol": own["vol"] if own else None,
             "annualized": round(ann, 2),
             "since": rows[0]["date"],
+            "peer": peer,
             "nav_series": [{"d": r["date"], "v": r["nav"]} for r in rows],
         }
     out["benchmark"] = hist["benchmark"]
     out["benchmark_name"] = "沪深300"
+    out["indices"] = {k: {"name": INDEXES[k]["name"],
+                          "series": [{"d": r["date"], "v": r["close"]} for r in hist.get(k, [])]}
+                      for k in INDEXES}
     return out
 
 
@@ -328,7 +505,17 @@ def main():
 
     # 基准(沪深300)永远可以更新: fuyao API, 不碰 UI
     print("[2/3] fuyao 拉沪深300")
-    bench = fetch_hs300(datetime.now().strftime("%Y-%m-%d"))
+    today = datetime.now().strftime("%Y-%m-%d")
+    bench = fetch_hs300(today)
+
+    # 三条全收益指数(一页通对照表用): iFinD HTTP + fuyao, 均不碰 UI
+    print("[2.5/3] 拉全收益指数(300/创业板/科创50)")
+    try:
+        calendar = fetch_trading_days()
+        idx = fetch_indexes(today, calendar)
+        hist = merge_indexes(hist, idx)
+    except Exception as e:
+        print("[WARN] 指数抓取整体失败, 沿用历史值: %s" % str(e)[:150])
 
     xls_ok = all((excel_dir / ("业绩表现(%s).xls" % c)).exists() for c in PRODUCTS)
     got_fresh = False
@@ -396,6 +583,8 @@ def main():
     for k in ("ZY0049", "ZY0053"):
         hist[k] = hist[k][-400:]
     hist["benchmark"] = hist["benchmark"][-250:]
+    for k in INDEXES:
+        hist[k] = hist[k][-300:]
 
     if dry:
         print("[dry-run] 不写库")

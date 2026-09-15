@@ -14,7 +14,7 @@ var _hmt=_hmt||[];
 <div class="page">
   <div class="head">
     <div class="corp">中邮保险资产管理有限公司<small>CHINA POST INSURANCE ASSET MANAGEMENT CO., LTD.</small></div>
-    <div class="meta">产品一页通<br>截至 <b>2026-09-08</b> · 净值数据每日自动更新</div>
+    <div class="meta">产品一页通<br>截至 <b id="d-asof">2026-09-08</b> · 净值数据每日自动更新</div>
   </div>
 
   <div class="pname">
@@ -62,31 +62,104 @@ var _hmt=_hmt||[];
     <div class="legend">实盘净值曲线：本产品 与 沪深300 · 数据源：iFinD 客户端 + fuyao（每日 10:03 自动更新）</div>
   </div>
 
-  <div class="note">历史回测：2012-12-31 至 2026-07-13（累计 835.21% / CAGR 18.73% / 最大回撤 -25.06% / 夏普 0.91，沪深300 同期累计 154.10% / 年化 7.42% / 夏普 0.37）。回测结果不代表产品实际业绩或未来表现。本材料依据产品合同及运行数据整理，仅供合格机构投资者沟通参考，不构成收益承诺或投资建议。全收益指数为补充分析参照，实际参照指数应结合关注重点、考核口径和投资目标确定，不替代合同约定的业绩比较基准。</div>
+  <h2 class="sec">历史回测与实盘观察</h2>
+  <div class="bt-head">
+    <div>历史回测：<b>2012.12.31 - 2026.07.13</b> &nbsp;|&nbsp; 回撤区间：<b>2018.01 - 2018.10</b></div>
+    <div class="bt-warn">回测结果不代表产品实际业绩或未来表现</div>
+  </div>
+  <div class="kpis bt-kpis">
+    <div class="kpi"><div class="k">累计收益率</div><div class="v up">835.21%</div><div class="n">沪深300累计 154.10%</div></div>
+    <div class="kpi"><div class="k">年化收益率（CAGR）</div><div class="v up">18.73%</div><div class="n">沪深300年化 7.42%</div></div>
+    <div class="kpi"><div class="k">区间最大回撤</div><div class="v down">-25.06%</div><div class="n">2018.01 - 2018.10</div></div>
+    <div class="kpi"><div class="k">夏普比率</div><div class="v plain">0.91</div><div class="n">沪深300 0.37</div></div>
+    <div class="kpi"><div class="k">月胜率 / 年胜率</div><div class="v plain">62% / 79%</div><div class="n">基准 58% / 60%</div></div>
+  </div>
+
+  <h2 class="sec">成立以来收益对照（每日自动更新）</h2>
+  <table class="cmp">
+    <thead><tr><th>指标</th><th>本产品</th><th>沪深300全收益</th><th>创业板指全收益</th><th>科创50全收益</th></tr></thead>
+    <tbody id="d-cmp">
+      <tr><td class="rowk">成立以来</td><td class="me">--</td><td>--</td><td>--</td><td>--</td></tr>
+      <tr><td class="rowk">最大回撤</td><td class="me">--</td><td>--</td><td>--</td><td>--</td></tr>
+      <tr><td class="rowk">年化波动率</td><td class="me">--</td><td>--</td><td>--</td><td>--</td></tr>
+    </tbody>
+  </table>
+  <div class="observe" id="d-observe">--</div>
+  <div class="chart" style="margin-top:.7rem">
+    <svg id="d-peer-chart" viewBox="0 0 820 260" preserveAspectRatio="xMidYMid meet" role="img" aria-label="本产品与全收益指数对照走势图"></svg>
+    <div class="legend" id="d-peer-legend"></div>
+    <div class="legend">实盘净值曲线：本产品 与 沪深300全收益、创业板指全收益、科创50全收益（均自产品成立日归一）。数据源：iFinD + fuyao（每日自动更新）</div>
+  </div>
+
+  <h2 class="sec">机构参照指数选择</h2>
+  <div class="inst">
+    <div class="inst-card"><h3>保险机构 · 常见关注宽基口径</h3><p>沪深300覆盖面广、市场认知度高，通常更便于与保险资金常用的权益宽基考核口径进行比较。</p></div>
+    <div class="inst-card"><h3>理财机构 · 常见关注价值风格口径</h3><p>中证红利质量全收益、上证金融红利全收益可作为价值风格参照，便于讨论质量、分红持续性与金融红利特征；如关注其他指数，也可按同一期间补充比较。</p></div>
+  </div>
+  <div class="inst-note">口径提示：上述为常见机构沟通侧重点，并非固定分类或适配结论。实际参照指数应结合关注重点、考核口径和投资目标确定；分析参照不替代合同约定的业绩比较基准。</div>
+
+  <div class="note">重要提示：本材料依据产品合同及截至上述日期的运行数据整理，仅供合格机构投资者沟通参考，不构成收益承诺或投资建议。产品过往及短期业绩不代表未来表现，净值可能波动。全收益指数为补充分析参照，实际参照指数应结合关注重点、考核口径和投资目标确定，不替代合同约定的业绩比较基准。</div>
 </div>
 <script>
+var PEER_COLORS = {
+  hs300_tr: {c: '#8C7B5A', dash: '5 3'},
+  cyb_tr:   {c: '#B93A32', dash: '2 3'},
+  kc50_tr:  {c: '#2E6DA4', dash: '6 2 2 2'}
+};
+function pn(x) { return (x == null) ? '--' : x; }
+function signed(x, d) {
+  if (x == null) return '--';
+  return (x >= 0 ? '+' : '') + x.toFixed(d == null ? 2 : d) + '%';
+}
+function plain(x, d) { return (x == null) ? '--' : x.toFixed(d == null ? 2 : d) + '%'; }
+
 fetch('../product-panel/nav-data.json', {cache: 'no-store'})
   .then(r => r.json())
   .then(d => {
     const p = d.products && d.products.ZY0053;
     if (!p) throw new Error('ZY0053 数据缺失');
-    const fmt = x => (x == null) ? '--' : x;
     document.getElementById('d-nav').textContent = p.nav.toFixed(4);
     document.getElementById('d-date').textContent = p.latest_date;
-    document.getElementById('d-cum').textContent = (p.cum_return >= 0 ? '+' : '') + p.cum_return.toFixed(2) + '%';
+    var asof = document.getElementById('d-asof');
+    if (asof) asof.textContent = p.latest_date;
+    document.getElementById('d-cum').textContent = signed(p.cum_return);
     document.getElementById('d-since').textContent = '自 ' + p.since;
-    document.getElementById('d-dd').textContent = p.max_drawdown.toFixed(2) + '%';
-    document.getElementById('d-ann').textContent = (p.annualized >= 0 ? '+' : '') + p.annualized.toFixed(2) + '%';
+    document.getElementById('d-dd').textContent = plain(p.max_drawdown);
+    document.getElementById('d-ann').textContent = signed(p.annualized);
     const dp = p.daily_pct;
-    document.getElementById('d-dp').textContent = (dp == null) ? '--' : ((dp >= 0 ? '+' : '') + dp.toFixed(2) + '%');
+    document.getElementById('d-dp').textContent = (dp == null) ? '--' : signed(dp);
     document.getElementById('d-bench').innerHTML =
-      '成立以来：本产品 <b>' + (p.cum_return >= 0 ? '+' : '') + p.cum_return.toFixed(2) + '%</b>' +
-      ' · 近7日 ' + fmt(p.ret_7d) + '% · 近30日 ' + fmt(p.ret_30d) + '% · 数据更新 ' + d.updated;
+      '成立以来：本产品 <b>' + signed(p.cum_return) + '</b>' +
+      ' · 近7日 ' + pn(p.ret_7d) + '% · 近30日 ' + pn(p.ret_30d) + '% · 数据更新 ' + d.updated;
     renderChart(p.nav_series, d.benchmark);
+    renderPeers(p, d.indices);
   })
   .catch(e => {
     document.getElementById('d-bench').textContent = '⚠️ 净值数据加载失败：' + e.message + '（联网后刷新）';
+    document.getElementById('d-observe').textContent = '⚠️ 对照数据加载失败：' + e.message;
   });
+
+function renderPeers(p, idx) {
+  const peers = p.peer || {};
+  const meCum = p.cum_return, meMdd = p.max_drawdown, meVol = p.vol;
+  const KEYS = ['hs300_tr', 'cyb_tr', 'kc50_tr'];
+  const row = (label, meVal, field, fmt) =>
+    '<tr><td class="rowk">' + label + '</td><td class="me">' + fmt(meVal) + '</td>' +
+    KEYS.map(k => '<td>' + fmt((peers[k] || {})[field]) + '</td>').join('') + '</tr>';
+  document.getElementById('d-cmp').innerHTML =
+    row('成立以来', meCum, 'cum', signed) +
+    row('最大回撤', meMdd, 'mdd', plain) +
+    row('年化波动率', meVol, 'vol', plain);
+  const h = peers.hs300_tr || {}, c = peers.cyb_tr || {}, k = peers.kc50_tr || {};
+  document.getElementById('d-observe').innerHTML =
+    '<b>简要观察</b>：截至 ' + p.latest_date + '，本产品成立以来收益为 <b>' + signed(meCum) + '</b>，' +
+    (meCum > (h.cum || 0) ? '高于' : '低于') + '沪深300全收益（' + signed(h.cum) + '）、' +
+    (meCum > (c.cum || 0) ? '高于' : '低于') + '创业板指全收益（' + signed(c.cum) + '）' +
+    (meCum > (k.cum || 0) ? '和' : '和') + '科创50全收益（' + signed(k.cum) + '）。' +
+    '实盘样本较短（自 ' + p.since + '），收益、回撤和波动率仍需持续跟踪。' +
+    '最新交易日产品净值为行情数据估算，精确数值待估值表更新。';
+  renderPeerChart(p, idx);
+}
 
 function renderChart(navs, bench) {
   const svg = document.getElementById('d-chart');
@@ -132,6 +205,60 @@ function renderChart(navs, bench) {
     '<polyline points="' + px + '" fill="none" stroke="#B08F1C" stroke-width="2.2"/>' +
     '<circle cx="' + sx(pts[pts.length - 1].d) + '" cy="' + syp(pts[pts.length - 1].v) + '" r="3.4" fill="#96751A"/>' +
     yTicks + xTicks;
+}
+
+/* 四线对照图: 本产品与三条全收益指数, 各自按成立日(或产品成立日)归一 */
+function renderPeerChart(p, idx) {
+  const svg = document.getElementById('d-peer-chart');
+  const W = 820, H = 260, L = 52, R = 12, T = 14, B = 26;
+  const start = p.inception || p.since;
+  const lines = [];
+  const mine = (p.nav_series || []).filter(x => x.d >= start);
+  if (mine.length) lines.push({name: '本产品', c: '#B08F1C', w: 2.4, dash: '',
+    pts: mine.map(x => ({d: x.d, v: x.v}))});
+  const KEYS = ['hs300_tr', 'cyb_tr', 'kc50_tr'];
+  KEYS.forEach(k => {
+    const meta = (idx || {})[k];
+    if (!meta || !meta.series) return;
+    const seg = meta.series.filter(x => x.d >= start);
+    if (!seg.length) return;
+    lines.push({name: meta.name, c: PEER_COLORS[k].c, w: 1.5, dash: PEER_COLORS[k].dash,
+      pts: seg.map(x => ({d: x.d, v: x.v}))});
+  });
+  if (lines.length < 2) { svg.innerHTML = ''; return; }
+  lines.forEach(L2 => {
+    const base = L2.pts[0].v;
+    L2.norm = L2.pts.map(x => ({d: x.d, v: x.v / base}));
+  });
+  const all = [].concat(...lines.map(l => l.norm.map(x => x.v)));
+  const vmin = Math.min(...all), vmax = Math.max(...all);
+  const ds = [].concat(...lines.map(l => l.pts.map(x => x.d))).sort();
+  const t0 = new Date(ds[0]).getTime(), t1 = new Date(ds[ds.length - 1]).getTime();
+  const sx = d => L + (new Date(d).getTime() - t0) / (t1 - t0) * (W - L - R);
+  const sy = v => T + (1 - (v - vmin) / (vmax - vmin)) * (H - T - B);
+  const gl = lines.map(l =>
+    '<polyline points="' + l.norm.map(x => sx(x.d) + ',' + sy(x.v)).join(' ') +
+    '" fill="none" stroke="' + l.c + '" stroke-width="' + l.w + '"' +
+    (l.dash ? ' stroke-dasharray="' + l.dash + '"' : '') + '/>').join('');
+  const xTicks = [0, .25, .5, .75, 1].map(f => {
+    const dd = new Date(t0 + (t1 - t0) * f);
+    return '<text x="' + (L + f * (W - L - R)) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="10" fill="#8A6F45">' +
+      dd.getFullYear() + '-' + String(dd.getMonth() + 1).padStart(2, '0') + '-' + String(dd.getDate()).padStart(2, '0') + '</text>';
+  }).join('');
+  const yTicks = [0, .5, 1].map(f => {
+    const v = vmin + (vmax - vmin) * (1 - f);
+    return '<text x="' + (L - 5) + '" y="' + (T + f * (H - T - B) + 4) + '" text-anchor="end" font-size="10" fill="#8A6F45">' + v.toFixed(3) + '</text>';
+  }).join('');
+  const lg = lines.map(l =>
+    '<span style="display:inline-flex;align-items:center;gap:.3rem;margin:0 .6rem">' +
+    '<svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="' + l.c +
+    '" stroke-width="' + l.w + '"' + (l.dash ? ' stroke-dasharray="' + l.dash + '"' : '') + '/></svg>' + l.name + '</span>').join('');
+  svg.innerHTML =
+    '<line x1="' + L + '" y1="' + T + '" x2="' + L + '" y2="' + (H - B) + '" stroke="#E8D9B6"/>' +
+    '<line x1="' + L + '" y1="' + (H - B) + '" x2="' + (W - R) + '" y2="' + (H - B) + '" stroke="#E8D9B6"/>' +
+    '<line x1="' + L + '" y1="' + sy(1) + '" x2="' + (W - R) + '" y2="' + sy(1) + '" stroke="#E0D2AE" stroke-dasharray="2 4"/>' +
+    gl + yTicks + xTicks;
+  document.getElementById('d-peer-legend').innerHTML = lg;
 }
 </script>
 <script src="../nav-fab.js"></script>

@@ -36,7 +36,7 @@ BRIEFING_KEEP = 60       # 归档点评最多收录篇数
 # union-card-handbook-2026 是 manifest private 条目
 PRIVATE_PREFIXES = (
     "private.html", "work.html", "client-list.html", "client-list-lite.html",
-    "tools/counterparty/", "tools/meal/", "tools/nursery/",
+    "tools/counterparty/", "tools/deck/", "tools/meal/", "tools/nursery/",
     "tools/nursery-parents/", "tools/family-links/",
     "tools/baby-name-board/", "tools/naming/",
     "tools/scattered-private/",

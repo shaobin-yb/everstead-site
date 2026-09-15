@@ -4,6 +4,7 @@ Disallow: /work.html
 Disallow: /tools/work-report/
 Disallow: /tools/combo-report/
 Disallow: /tools/counterparty/
+Disallow: /tools/deck/
 Disallow: /tools/meal/
 Disallow: /tools/nursery/
 Disallow: /tools/nursery-parents/

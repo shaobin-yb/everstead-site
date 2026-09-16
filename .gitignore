@@ -1,3 +1,7 @@
 knowledge/.work/
 __pycache__/
 .cert_watch_token
+
+# 足迹地图原图(3.8GB) — 不入库, 上线只用压缩版 photos/
+# 原图留在本地, 需要重新导出时跑 tools/yuebing-travels/_compress_*.py
+tools/yuebing-travels/photos-original/

@@ -3,10 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小月饼的足迹地图 · 34 地</title>
+<title>小月饼的足迹地图 · 42 地</title>
 <script src="echarts.min.js"></script>
+<!-- Three.js r149 UMD (锁版本: r160 起官方移除 UMD 构建) -->
+<script src="three.min.js"></script>
 <style>
+  /* 地名书法体: 马善政毛笔楷书(Google Fonts 开源, SIL OFL 1.1)
+     已子集化 —— 5720KB → 90KB, 只含页面用到的 341 字; 重新生成见 fonts/subset_font.py */
+  @font-face {
+    font-family: 'MaoBiKai';
+    src: url('fonts/mashanzheng-sub.woff2') format('woff2');
+    font-weight: normal; font-style: normal; font-display: swap;
+  }
   :root {
+    --ink: 'MaoBiKai', 'KaiTi', 'STKaiti', 'Kaiti SC', serif;   /* 地名书法体 */
     --bg0:#0b0d1a; --bg1:#1a1038; --bg2:#0b0d1a;
     --card: rgba(255,255,255,.05); --border: rgba(255,255,255,.14);
     --text:#f2f4ff; --muted:#aab0d0;
@@ -14,6 +24,9 @@
     --cyan:#4fd1ff; --blue:#7a8cff; --purple:#c084fc;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
+  /* 全局交互反馈(老板 09-16: 原则上界面都要有交互) */
+  button, .chip, .fs-cell, .s3d-card, .timeline-item, .map-pin, .stat[style*="cursor"],
+  .view-toggle, .lb-nav, .th-close, .lb-close, .edit-toggle { cursor: pointer; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
     color: var(--text);
@@ -62,15 +75,246 @@
   .stat:nth-child(2) .num { background: linear-gradient(135deg,var(--orange),var(--pink)); -webkit-background-clip:text; background-clip:text; }
   .stat:nth-child(3) .num { background: linear-gradient(135deg,var(--green),var(--cyan)); -webkit-background-clip:text; background-clip:text; }
   .stat:nth-child(4) .num { background: linear-gradient(135deg,var(--cyan),var(--blue)); -webkit-background-clip:text; background-clip:text; }
+  .stat.playing { border-color: var(--gold); box-shadow: 0 0 18px rgba(255,209,102,.35); }
+  .stat.playing .num { animation: pulse 1.2s ease-in-out infinite; }
   .stat .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
   .layout { display:grid; grid-template-columns: 1.62fr 1fr; gap:20px; }
-  @media (max-width: 940px) { .layout { grid-template-columns: 1fr; } }
   .panel {
     background: var(--card); border:1px solid var(--border); border-radius:20px;
     padding: 18px; backdrop-filter: blur(10px);
   }
-  #map { width:100%; height: 600px; }
+  /* ★ 地图面板去掉 backdrop-filter —— WebGL canvas 在里面, 每帧重算模糊会拖垮性能
+     (老板 09-16 反馈卡顿; 地图本身深色不透明, 视觉无差别) */
+  #map-panel {
+    backdrop-filter: none;
+    background: linear-gradient(160deg, #141628 0%, #0e1020 100%);
+  }
+  /* 胶片条同理(紧邻 canvas, 也是大面积模糊) */
+  .map-3d .film-strip, #map-panel .film-strip { backdrop-filter: none; background: rgba(20,22,40,.92); }
+  #map { width:100%; height: 780px; }
+  /* overflow:hidden —— 照片 pin 不许溢出到隔壁胶片条上(老板 09-16 反馈) */
+  #map-wrap { position: relative; flex:1; min-width:0; height:780px; overflow:hidden; }
+  #map { position:absolute; inset:0; }
+  .map-row { display:flex; gap:14px; align-items:stretch; }
+  #map-overlay { position:absolute; inset:0; pointer-events:none; z-index:10; }
+  /* 地图操作提示: 左下角, 半透明不抢戏 */
+  .map-hint {
+    position:absolute; left:10px; bottom:8px; z-index:12; pointer-events:none;
+    font-size:11px; color:var(--muted); letter-spacing:.5px;
+    background: rgba(10,12,24,.62); border:1px solid rgba(255,255,255,.1);
+    border-radius:999px; padding:4px 12px;
+    backdrop-filter: blur(4px);
+  }
+  .map-hint .hint-touch { display:none; }
+  /* 窄屏直接切触摸文案(比 @media(hover) 可靠, 无头浏览器也能正确判定) */
+  @media (max-width: 939px) {
+    .map-hint .hint-desk { display:none; }
+    .map-hint .hint-touch { display:inline; }
+  }
+  @media (hover: none) and (pointer: coarse) {
+    .map-hint .hint-desk { display:none; }
+    .map-hint .hint-touch { display:inline; }
+  }
+  /* 地图浮层照片卡 */
+  .map-pin {
+    position:absolute; pointer-events:auto; cursor:pointer;
+    transform: translate(-50%, -50%);
+    transition: transform .18s ease, filter .18s ease, opacity .7s ease;
+    opacity:0;  /* 开屏动画与足迹点同步点亮 */
+  }
+  .map-pin.lit { opacity:1; }
+  .map-pin:hover { transform: translate(-50%, -50%) scale(1.15); filter: brightness(1.15); }
+  .map-pin .pin-photo {
+    width:52px; height:52px; border-radius:50%;
+    object-fit:cover; border:2.5px solid rgba(255,255,255,.85);
+    box-shadow: 0 4px 16px rgba(0,0,0,.5), 0 0 12px rgba(255,209,102,.5);
+  }
+  .map-pin .pin-ring {
+    position:absolute; inset:-6px; border-radius:50%;
+    border:1.5px dashed rgba(255,209,102,.7);
+    animation: pinSpin 9s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes pinSpin { to { transform: rotate(360deg); } }
+  .map-pin.home .pin-photo { border-color: var(--gold); }
+  /* 浮层记忆卡(hover 弹出) */
+  .map-card {
+    position:absolute; pointer-events:none; z-index:11;
+    min-width:190px; max-width:240px;
+    background: rgba(12,14,26,.92); border:1px solid rgba(255,209,102,.4);
+    border-radius:12px; padding:10px 12px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 28px rgba(0,0,0,.6);
+    opacity:0; transform: translateY(6px) scale(.96);
+    transition: opacity .18s ease, transform .18s ease;
+    font-size:12px; line-height:1.55;
+  }
+  .map-card.show { opacity:1; transform: translateY(0) scale(1); }
+  .map-card .mc-city { font-size:14px; font-weight:700; color:var(--gold); margin-bottom:3px; }
+  .map-card .mc-since { color:var(--green); font-size:11px; }
+  .map-card .mc-note { color:var(--text); margin-top:4px; }
+  .map-card .mc-imgs { display:flex; gap:4px; margin-top:6px; }
+  .map-card .mc-imgs img {
+    width:40px; height:40px; border-radius:6px; object-fit:cover;
+    border:1px solid rgba(255,255,255,.25);
+  }
+  .map-card .mc-count { color:var(--muted); font-size:10px; margin-top:3px; }
+  /* 小 pin(默认): 比大 pin 小一圈 */
+  .map-pin.small .pin-photo { width:26px; height:26px; border-width:1.5px; }
+  .map-pin.small .pin-ring { inset:-3px; border-width:1px; }
+  /* 放大后小 pin 升格(临时类, 缩回自动还原) */
+  .map-pin.small.zoom-big .pin-photo { width:44px; height:44px; border-width:2.5px; }
+  .map-pin.small.zoom-big .pin-ring { inset:-6px; border-width:1.5px; }
+
+  /* ═══ 3D 版式(老板 09-16 拍板: 照片直接钉在各自城市上) ═══
+     小圆角方块, 不避让、位置准; 悬停放大看细节 */
+  /* 尺寸 × --pin-scale(随缩放反向调整, 由 applyZoomFold 写入) */
+  .map-3d .map-pin .pin-photo {
+    width: calc(40px * var(--pin-scale, 1));
+    height: calc(40px * var(--pin-scale, 1));
+    border-radius: 9px;
+    border: 1.5px solid rgba(255,255,255,.72);
+    box-shadow: 0 3px 12px rgba(0,0,0,.65), 0 0 10px rgba(255,209,102,.4);
+  }
+  .map-3d .map-pin .pin-ring { inset: -4px; border-radius: 12px; border-width: 1px; }
+  .map-3d .map-pin.home .pin-photo {
+    width: calc(52px * var(--pin-scale, 1));
+    height: calc(52px * var(--pin-scale, 1));
+    border: 2.5px solid var(--gold);
+    box-shadow: 0 4px 18px rgba(0,0,0,.7), 0 0 20px rgba(255,209,102,.85);
+  }
+  .map-3d .map-pin.home .pin-ring { inset: -7px; border-radius: 14px; border-width: 1.5px; }
+  /* 悬停: 放大 + 抬高, 看得清是哪张 */
+  .map-3d .map-pin:hover { z-index: 20; transform: translate(-50%,-50%) scale(1.7); filter: none; }
+  .map-3d .map-pin:hover .pin-photo { box-shadow: 0 8px 26px rgba(0,0,0,.85), 0 0 26px rgba(255,209,102,.95); }
+  /* 缩放到很近时整体放大 */
+  .map-3d .map-pin.small.zoom-big .pin-photo { width: 44px; height: 44px; }
+
+  /* ═══ 3D 旋转照片环(老板 2026-09-15 晚创意: 常驻窗口, 全方位展示) ═══ */
+  /* 3D 照片环: 地图下方的附属条, 不单独成框(老板 09-16: 之前太大喧宾夺主) */
+  .stage3d {
+    position:relative; margin-top:6px; height:190px;
+    overflow:hidden;
+    /* 无边框、无底色, 融进地图面板 */
+    background: radial-gradient(ellipse at 50% 46%, rgba(122,140,255,.10), transparent 68%);
+    /* 透视距离大 → 近大远小更平缓, 卡片不易甩出框 */
+    perspective: 1500px; perspective-origin: 50% 48%;
+    cursor:grab; user-select:none;
+    touch-action: pan-y;   /* 手机上纵向滚动照常, 横向滑动转环 */
+  }
+  .stage3d.grabbing { cursor:grabbing; }
+  .s3d-hint {
+    position:absolute; top:2px; left:0; right:0; text-align:center; z-index:3;
+    font-size:9px; color:var(--muted); letter-spacing:1.5px; pointer-events:none;
+    opacity:.65;
+  }
+  /* 地面光晕: 环的倒影感 */
+  .stage3d::after {
+    content:''; position:absolute; left:50%; bottom:-64px; transform:translateX(-50%);
+    width:620px; height:150px; pointer-events:none;
+    background: radial-gradient(ellipse at center, rgba(79,209,255,.2), rgba(255,209,102,.09) 42%, transparent 72%);
+    filter: blur(22px);
+  }
+  .s3d-scene {
+    position:absolute; inset:0;
+    transform-style: preserve-3d;
+    transform: rotateX(7deg);   /* 环面微前倾(扁平条里角度要小, 否则前排卡片被顶出框) */
+  }
+  /* 自转由 JS 驱动(拖拽与自转共用同一角度, 避免 CSS 动画打架) */
+  .s3d-ring {
+    /* 圆心略低于容器中心: 上圈卡片抬升后仍在框内 */
+    position:absolute; left:50%; top:52%;
+    width:0; height:0;
+    transform-style: preserve-3d;
+  }
+  .s3d-card {
+    position:absolute; left:0; top:0;
+    width:92px; height:122px; margin:-61px 0 0 -46px;
+    border-radius:10px; overflow:hidden; cursor:pointer;
+    border:1.5px solid rgba(255,255,255,.28);
+    box-shadow: 0 6px 22px rgba(0,0,0,.55);
+    background:#0d1020;
+    transition: border-color .3s ease, box-shadow .3s ease;
+    backface-visibility: hidden;
+  }
+  /* 下圈略暗: 制造前后层次 */
+  .s3d-card.ring-lower { filter: brightness(.88) saturate(.94); }
+  .s3d-card.ring-lower:hover { filter: brightness(1.05); }
+  .s3d-card img { width:100%; height:100%; object-fit:cover; display:block; }
+  .s3d-card .c3d-name {
+    position:absolute; left:0; right:0; bottom:0; padding:3px 2px 4px;
+    font-size:11px; font-weight:600; color:#fff; text-align:center;
+    background: linear-gradient(transparent, rgba(0,0,0,.85));
+    text-shadow: 0 1px 3px #000;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .s3d-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 10px 32px rgba(0,0,0,.7), 0 0 22px rgba(255,209,102,.55);
+  }
+  .s3d-card.is-home { border-color: var(--gold); box-shadow: 0 0 18px rgba(255,209,102,.5); }
+
+  /* 右侧多列胶片条(辅助栏, 老板 2026-09-15: 一列放不下就多放几列) */
+  /* 胶片条: 多列网格(老板 09-16 "5 张摆不下就分列")
+     每列最多 6 格, 列数按总数自动增减; 列间可横向滚动 */
+  .film-strip {
+    width:auto; flex:none; max-width:206px; padding:12px 10px;
+    background: var(--card); border:1px solid var(--border); border-radius:16px;
+    backdrop-filter: blur(10px); display:flex; flex-direction:column;
+  }
+  .film-strip .fs-label { font-size:10px; color:var(--muted); margin-bottom:8px; letter-spacing:1px; text-align:center; }
+  .film-strip .fs-row {
+    flex:1; display:grid;
+    /* 每列 6 格, 行数固定 6, 列数按内容自动增 */
+    grid-template-rows: repeat(6, 52px);
+    grid-auto-flow: column;
+    grid-auto-columns: 52px;
+    gap:7px;
+    justify-content:center; align-content:start;
+    overflow-x:auto; overflow-y:hidden;
+    padding-bottom:3px;
+  }
+  .film-strip .fs-row::-webkit-scrollbar { height:5px; width:5px; }
+  .film-strip .fs-row::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); border-radius:3px; }
+
+  /* ── 3D 滚动效果(老板 09-16: 胶片也要有点 3D) ──
+     景深值走 CSS 变量(--dz/--dy/--db), JS 只改变量不改 transform,
+     这样 :hover 的立体翻转还能叠加生效 */
+  .film-strip { perspective: 900px; }
+  .film-strip .fs-row { transform-style: preserve-3d; }
+  .fs-cell {
+    flex:none; width:52px; cursor:pointer; position:relative;
+    transform-style: preserve-3d;
+    /* 默认由变量驱动(JS 写入); 未写入时是平贴 */
+    transform: translateZ(var(--dz, 0px)) rotateY(var(--dy, 0deg));
+    filter: brightness(var(--db, 1));
+    transition: transform .28s cubic-bezier(.2,.8,.3,1), filter .28s;
+    will-change: transform;
+  }
+  /* 悬停: 在景深基础上再抬起 + 前倾 + 放大 */
+  .fs-cell:hover {
+    transform:
+      translateZ(calc(var(--dz, 0px) + 44px))
+      rotateY(var(--dy, 0deg)) rotateX(-9deg) scale(1.16);
+    filter: brightness(1.2);
+    z-index: 3;
+  }
+  .fs-cell:hover img {
+    border-color: var(--gold);
+    box-shadow: 0 12px 26px rgba(0,0,0,.75), 0 0 20px rgba(255,209,102,.7);
+  }
+  .fs-cell img {
+    width:52px; height:52px; border-radius:8px; object-fit:cover;
+    border:2px solid rgba(255,255,255,.2); box-shadow: 0 2px 8px rgba(0,0,0,.4);
+    transition: opacity .22s ease, border-color .25s, box-shadow .25s;
+  }
+  .fs-cell .fs-city {
+    position:absolute; bottom:-2px; left:0; right:0; text-align:center;
+    font-size:9px; color:var(--gold); text-shadow: 0 1px 3px rgba(0,0,0,.9);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .fs-cell.active img { border-color: var(--gold); box-shadow: 0 0 14px rgba(255,209,102,.6); }
   .panel h2 { font-size: 16px; margin-bottom: 14px; letter-spacing:.5px; }
   .panel h2 .dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; background: linear-gradient(135deg,var(--gold),var(--pink)); animation: pulse 1.6s ease-in-out infinite; }
   @keyframes pulse { 50% { box-shadow: 0 0 12px var(--gold); } }
@@ -95,21 +339,63 @@
     display:inline-block; margin-left:5px; font-size:10px; padding:1px 5px;
     background: rgba(122,140,255,.35); border-radius: 8px; color:#cfd6ff;
   }
+  .chip .cam.since {
+    background: rgba(123,241,168,.18); color:#9ff0c0;
+  }
+  .view-toggle {
+    margin-left:12px; font-size:11px; padding:4px 10px; cursor:pointer;
+    background: rgba(255,255,255,.06); border:1px solid var(--border);
+    border-radius:999px; color:var(--muted); transition:all .18s;
+  }
+  .view-toggle:hover, .view-toggle.on { border-color:var(--green); color:var(--green); }
+  .timeline-item {
+    display:flex; align-items:baseline; gap:10px; padding:8px 10px;
+    border-radius:10px; margin-bottom:4px; cursor:pointer;
+    background: rgba(255,255,255,.03); border:1px solid transparent;
+    transition: all .18s;
+  }
+  .timeline-item:hover { border-color:var(--border); background: rgba(255,255,255,.06); }
+  .timeline-item .t-date { font-family:var(--mono, monospace); font-size:12px; color:var(--green); min-width:76px; }
+  .timeline-item .t-name { font-size:14px; font-weight:600; }
+  .timeline-item .t-prov { font-size:11px; color:var(--muted); }
+  .timeline-item.active { border-color: var(--cyan); box-shadow: 0 0 10px rgba(79,209,255,.35); }
 
   /* 相册灯箱 */
   .lightbox {
     position: fixed; inset:0; z-index: 50; display:none;
     background: rgba(4,5,12,.93); backdrop-filter: blur(10px);
     align-items:center; justify-content:center; flex-direction:column;
+    width:100vw; height:100vh; overflow:hidden;   /* 同剧场: 避开滚动条挤偏 */
   }
   .lightbox.open { display:flex; animation: fadeIn .25s ease; }
   @keyframes fadeIn { from { opacity:0; } }
-  .lb-stage { position: relative; max-width: 88vw; max-height: 74vh; }
-  .lb-stage img {
-    max-width: 88vw; max-height: 74vh; border-radius: 12px;
+  /* 灯箱用固定高度的舞台, 缩放走 transform(老板 2026-09-15: 原 max-* 方案放大后把控制条顶出屏幕) */
+  .lightbox .lb-stage {
+    position: relative; flex:none;
+    width: 88vw; height: 62vh;                 /* 固定舞台, 给下方信息条留位 */
+    display:flex; align-items:center; justify-content:center;
+    overflow: hidden;                          /* 放大后超出部分裁掉, 不挤压下方 */
+  }
+  #lb-media-box {
+    position:relative; display:flex;
+    align-items:center; justify-content:center;
+    width:100%; height:100%;
+  }
+  #lb-media-box img, #lb-media-box video {
+    max-width:100%; max-height:100%;
+    border-radius: 12px;
     box-shadow: 0 20px 70px rgba(0,0,0,.7);
+    /* 缩放 + 平移(放大后拖拽看边缘) */
+    transform: translate(var(--lb-pan-x, 0px), var(--lb-pan-y, 0px)) scale(var(--lb-zoom, 1));
+    transition: transform .15s ease;
+    cursor: grab;
     animation: popIn .3s cubic-bezier(.2,.9,.3,1.2);
   }
+  .lightbox .lb-stage:active #lb-media-box img,
+  .lightbox .lb-stage:active #lb-media-box video { cursor: grabbing; }
+  /* 拖拽中关掉过渡, 否则跟手有延迟 */
+  .lightbox .lb-stage.dragging #lb-media-box img,
+  .lightbox .lb-stage.dragging #lb-media-box video { transition: none; }
   @keyframes popIn { from { transform: scale(.92); opacity:.4; } }
   .lb-nav {
     position:absolute; top:50%; transform:translateY(-50%);
@@ -128,12 +414,409 @@
     border-radius:50%; background: rgba(255,255,255,.1); transition: background .15s, transform .15s;
   }
   .lb-close:hover { background: rgba(255,93,143,.5); transform: rotate(90deg); }
+  .lb-note {
+    margin-top:10px; font-size:14px; color:var(--gold);
+    max-width:80vw; text-align:center; line-height:1.6;
+    padding: 8px 18px; background: rgba(255,209,102,.08); border-radius: 12px;
+  }
+  /* 灯箱缩放滑条 */
+  /* 缩放提示条(滚轮/双指交互, 无滑条) */
+  .lb-zoom {
+    margin-top:12px; display:flex; align-items:center; gap:14px;
+    background: rgba(255,255,255,.05); border:1px solid var(--border);
+    border-radius:999px; padding:6px 18px;
+    font-size:12px; color:var(--muted);
+  }
+  .lb-zoom .lz-hint { letter-spacing:.5px; }
+  .lb-zoom .lz-val {
+    color:var(--gold); font-variant-numeric: tabular-nums; font-weight:600;
+  }
+  /* 放大后舞台显示抓手光标, 提示可拖 */
+  .lb-stage { cursor: grab; }
+  .lb-stage.dragging { cursor: grabbing; }
+
+  /* 成就墙 */
+  .achieve-panel {
+    max-width: 640px; width: 92vw; max-height: 80vh; overflow-y:auto;
+    background: var(--card); border:1px solid var(--border); border-radius:20px;
+    padding: 28px; backdrop-filter: blur(14px);
+  }
+  .achieve-title { font-size:22px; font-weight:800; text-align:center; margin-bottom:20px; }
+  .achieve-grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap:12px; }
+  .achieve-item {
+    background: rgba(255,255,255,.05); border:1px solid var(--border); border-radius:14px;
+    padding:14px; text-align:center; transition: transform .2s, border-color .2s;
+  }
+  .achieve-item:hover { transform: translateY(-3px); border-color: var(--gold); }
+  .achieve-item .a-ico { font-size:28px; margin-bottom:6px; }
+  .achieve-item .a-name { font-size:13px; font-weight:600; }
+  .achieve-item .a-desc { font-size:11px; color:var(--muted); margin-top:4px; line-height:1.5; }
+  .achieve-item.locked { opacity:.38; filter:grayscale(.7); }
+  .achieve-item.locked:hover { transform:none; border-color:var(--border); }
+
+  /* 剧场浮层 · 照片轮播 */
+  .theater {
+    position:fixed; inset:0; z-index:60; display:none;
+    background: rgba(4,5,12,.96); backdrop-filter: blur(14px);
+    align-items:center; justify-content:center; flex-direction:column;
+    /* 满屏浮层不受页面滚动条影响(老板 2026-09-15 晚: 修居中偏 7px) */
+    width:100vw; height:100vh; overflow:hidden;
+  }
+  .theater.open { display:flex; animation: fadeIn .3s ease; }
+  .th-close {
+    position:absolute; top:22px; right:26px; font-size:32px; color:#fff;
+    cursor:pointer; width:48px; height:48px; display:flex; align-items:center; justify-content:center;
+    border-radius:50%; background: rgba(255,255,255,.1); transition: background .15s, transform .15s;
+    z-index:2;
+  }
+  .th-close:hover { background: rgba(255,93,143,.5); transform: rotate(90deg); }
+  /* 暂停键: 挂在图片框左上角外 */
+  .th-pause {
+    position:absolute; left:-56px; top:0;
+    z-index:2; width:44px; height:44px; border-radius:50%;
+    background: rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.25);
+    color:#fff; font-size:18px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: background .15s, transform .15s;
+  }
+  .th-pause:hover { background: rgba(79,209,255,.35); transform:scale(1.1); }
+  /* 舞台 = 图片框本身, 由 theater 的 flex 精确居中; 标题/注释浮动在框外
+     (老板 2026-09-15 晚: 标题在上注释在下会把图片挤偏, 改浮动后图片永远在正中) */
+  .th-stage { position:relative; display:block; text-align:center; }
+  .th-city {
+    position:absolute; bottom:100%; left:50%; transform:translateX(-50%);
+    margin-bottom:14px; white-space:nowrap;
+    font-size:26px; font-weight:800;
+    background: linear-gradient(90deg,#ff5d8f,#ffd166,#7bf1a8,#4fd1ff,#c084fc);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  /* 注释 + 进度条打包在图片框正下方, 高度随文案变化也不影响图片居中 */
+  .th-below {
+    position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    margin-top:14px; width:100%;
+  }
+  /* 双层交叉淡入: 两槽都绝对定位叠放, frame 尺寸由 JS 固定
+     (老板 2026-09-15 晚: 旧槽清空后 frame 塌陷 200px, 图片突然跳位 → 尺寸改由 JS 算好并锁定) */
+  .th-frame {
+    position:relative; width:78vw; height:58vh;   /* 初值, JS 按图片比例重设 */
+    display:flex; align-items:center; justify-content:center;
+    transition: width .7s ease, height .7s ease;
+  }
+  .th-media-slot {
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .th-media-slot img, .th-media-slot video {
+    max-width:100%; max-height:100%; border-radius:14px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.8);
+    display:block;
+  }
+  .th-media-slot.fade-out { animation: thFadeOut .9s ease forwards; }
+  .th-media-slot.fade-in { animation: thFadeIn .9s ease forwards; }
+  @keyframes thFadeOut { to { opacity:0; } }
+  @keyframes thFadeIn { from { opacity:0; transform:scale(1.03); } to { opacity:1; transform:scale(1); } }
+  /* 周边动态: 呼吸光晕 */
+  .th-glow {
+    position:absolute; inset:-26px; border-radius:24px; pointer-events:none;
+    background: radial-gradient(ellipse at center, rgba(255,209,102,.22), rgba(255,93,143,.12) 45%, transparent 72%);
+    animation: thGlow 3s ease-in-out infinite;
+    filter: blur(10px);
+    z-index:-1;
+    transition: opacity .6s;
+  }
+  .th-glow.off { opacity:0; }
+  @keyframes thGlow {
+    0%,100% { transform: scale(1); opacity:.75; }
+    50% { transform: scale(1.06); opacity:1; }
+  }
+  /* 周边动态: 旋转星尘 */
+  .th-sparkle { position:absolute; pointer-events:none; z-index:-1; }
+  .th-spark {
+    position:absolute; width:5px; height:5px; border-radius:50%;
+    background: #ffd166;
+    box-shadow: 0 0 8px 2px rgba(255,209,102,.7);
+    animation: thSpark 2.6s ease-in-out infinite;
+  }
+  @keyframes thSpark {
+    0%,100% { opacity:0; transform: translateY(0) scale(.4); }
+    50% { opacity:1; transform: translateY(-18px) scale(1.15); }
+  }
+  /* 周边动态: 环绕流光弧 */
+  .th-arc {
+    position:absolute; inset:-38px; pointer-events:none; z-index:-1;
+    border-radius:50%;
+    border:2px solid transparent;
+    border-top-color: rgba(79,209,255,.5);
+    border-right-color: rgba(192,132,252,.35);
+    animation: thArc 8s linear infinite;
+    transition: opacity .6s;
+  }
+  .th-arc.off { opacity:0; }
+  @keyframes thArc { to { transform: rotate(360deg); } }
+  .th-arc.reverse { animation-direction: reverse; animation-duration: 11s; inset:-52px; }
+  .th-note {
+    /* margin-top 由 .th-below 统一给, 这里不再重复 */
+    font-size:21px; font-weight:600; color:var(--gold); min-height:34px;
+    padding: 10px 26px; background: rgba(255,209,102,.1); border-radius: 999px;
+    display:inline-block; max-width:70vw;
+    text-shadow: 0 2px 12px rgba(255,209,102,.35);
+    animation: noteGlow 2.4s ease-in-out infinite;
+  }
+  @keyframes noteGlow {
+    0%,100% { text-shadow: 0 2px 12px rgba(255,209,102,.3); transform: scale(1); }
+    50% { text-shadow: 0 2px 22px rgba(255,209,102,.65); transform: scale(1.04); }
+  }
+  .th-progress {
+    margin:14px auto 0; width:min(420px, 60vw); height:5px;
+    background: rgba(255,255,255,.12); border-radius:3px; overflow:hidden;
+  }
+  .th-bar { height:100%; width:0%; border-radius:3px;
+    background: linear-gradient(90deg,#ff5d8f,#ffd166,#7bf1a8);
+    transition: width .1s linear; }
+  @keyframes fadeIn { from { opacity:0; } }
 
   .footer { margin-top:24px; text-align:center; color:var(--muted); font-size:12px; }
   .footer .moon { font-size:15px; }
+
+  /* 编辑弹窗 */
+  .edit-panel {
+    text-align:left; padding: 26px;
+    background: var(--card); border:1px solid var(--border); border-radius:20px;
+    backdrop-filter: blur(14px); max-width:440px; width:92vw;
+  }
+  .edit-title { font-size:18px; font-weight:700; margin-bottom:16px; }
+  .edit-label { display:block; font-size:12px; color:var(--muted); margin:12px 0 6px; }
+  .edit-input {
+    width:100%; padding:10px 14px; font-size:14px;
+    background: rgba(255,255,255,.06); border:1px solid var(--border);
+    border-radius:10px; color:var(--text); outline:none;
+    font-family: inherit; resize:vertical;
+  }
+  .edit-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(79,209,255,.12); }
+  .edit-actions { display:flex; gap:10px; margin-top:18px; }
+  .edit-hint { font-size:11px; color:var(--muted); margin-top:10px; }
+  .city-pick-list { max-height: 56vh; overflow-y:auto; margin: 8px 0; }
+  .city-pick-row {
+    display:flex; align-items:center; gap:10px; padding:9px 12px; cursor:pointer;
+    border-radius:8px; font-size:14px; transition: background .15s;
+  }
+  .city-pick-row:hover { background: rgba(255,255,255,.08); }
+  .pick-status { width:22px; font-size:12px; }
+  .pick-name { font-weight:600; }
+  .pick-prov { font-size:11px; color:var(--muted); margin-left:auto; }
+
+  /* ═══════════════════════════════════════════════════════════
+     双端适配(老板 2026-09-15 晚: 电脑版 + 手机版两套比例)
+     断点: ≥1200 大屏电脑 | 940-1199 小电脑 | 641-939 平板 | ≤640 手机
+     ═══════════════════════════════════════════════════════════ */
+
+  /* ── 小电脑 (940-1199): 侧栏收窄, 地图略降 ── */
+  @media (max-width: 1199px) {
+    #map, #map-wrap { height: 660px; }
+    .film-strip { width: 170px; }
+    .stage3d { height: 175px; }
+    .header h1 { font-size: 28px; }
+  }
+
+  /* ── 平板 & 手机 (≤939): 单列纵向, 地图降高 ── */
+  @media (max-width: 939px) {
+    .layout { grid-template-columns: 1fr; gap:16px; }
+    .map-row { flex-direction:column; }
+    /* 胶片条横排(手机/平板放地图下方) */
+    .film-strip { width:auto; height:auto; max-height:150px; }
+    .film-strip .fs-row {
+      grid-template-columns:repeat(auto-fill, 52px);
+      max-height:124px; overflow-y:auto; overflow-x:hidden;
+    }
+    #map, #map-wrap { height: 56vh; min-height: 340px; }
+    .stage3d { height: 165px; }
+    .panel { padding: 14px; border-radius: 16px; }
+    .panel h2 { font-size: 15px; }
+    .header h1 { font-size: 24px; }
+    .header .sub { font-size: 13px; }
+    .stats { gap: 10px; margin: 14px 0 18px; }
+    .stat { padding: 10px 14px; min-width: 92px; border-radius: 13px; }
+    .stat .num { font-size: 23px; }
+    .stat .label { font-size: 11px; }
+    /* 地图 pin 缩小(手指点得中即可) */
+    .map-pin .pin-photo { width: 42px; height: 42px; border-width: 2px; }
+    .map-pin.small .pin-photo { width: 26px; height: 26px; }
+    .map-pin:hover { transform: translate(-50%,-50%) scale(1.08); }
+    /* 记忆卡避免超出窄屏 */
+    .map-card { min-width: 160px; max-width: 200px; font-size: 11px; }
+    .map-card .mc-imgs img { width: 34px; height: 34px; }
+    /* 灯箱: 竖屏给更高空间 */
+    .lightbox .lb-stage { width: 94vw; height: 56vh; }
+    .lb-title { font-size: 14px; }
+    .lb-note { font-size: 13px; max-width: 90vw; }
+    /* 滑条加长: 手机上 120px 太窄, 手指一碰就跳过几十个百分点(老板 09-16) */
+    .lb-zoom input[type="range"] { width: 190px; height: 28px; }
+    .lb-prev { left: 6px; } .lb-next { right: 6px; }
+    .lb-nav { width: 38px; height: 38px; font-size: 17px; background: rgba(0,0,0,.42); }
+    /* 剧场: 竖屏字小一号, 暂停键挪进框内 */
+    .th-city { font-size: 20px; margin-bottom: 10px; }
+    .th-note { font-size: 15px; padding: 8px 16px; max-width: 88vw; }
+    .th-pause { left: 8px; top: 8px; }
+    .th-below { margin-top: 12px; }
+    .th-progress { width: min(320px, 72vw); }
+    .th-close { top: 14px; right: 14px; font-size: 26px; width: 40px; height: 40px; }
+    /* 弹窗 */
+    .achieve-panel { padding: 20px 16px; border-radius: 16px; }
+    .achieve-grid { grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; }
+    .achieve-title { font-size: 18px; }
+  }
+
+  /* ── 手机 (≤640): 更紧凑 ── */
+  @media (max-width: 640px) {
+    body { padding: 10px 10px 24px; }
+    /* 手机: 地图要高一些, 3D 版 39 个照片点才展得开(老板 09-16) */
+    #map, #map-wrap { height: 62vh; min-height: 380px; }
+    .stage3d { height: 150px; margin-top: 6px; }
+    .s3d-hint { font-size: 10px; letter-spacing: 1px; }
+    .header { gap: 8px; }
+    .header h1 { font-size: 20px; letter-spacing: 0; }
+    .header .sub { font-size: 11px; }
+    .stats { gap: 8px; }
+    .stat { padding: 8px 10px; min-width: 72px; border-radius: 11px; }
+    .stat .num { font-size: 19px; }
+    .stat .label { font-size: 10px; }
+    .panel { padding: 12px; }
+    .panel h2 { font-size: 14px; }
+    .view-toggle { font-size: 11px; padding: 4px 9px; }
+    .chip { padding: 5px 11px; font-size: 12px; }
+    .timeline-item { padding: 7px 10px; }
+    .timeline-item .t-date { font-size: 11px; min-width: 66px; }
+    .timeline-item .t-name { font-size: 13px; }
+    /* 灯箱 */
+    .lightbox .lb-stage { width: 96vw; height: 52vh; }
+    .lb-zoom { gap: 8px; padding: 6px 14px; margin-top: 10px; }
+    /* 手机滑条: 尽量长 + 加大触摸高度, 便于精确拖到想要的百分比 */
+    .lb-zoom input[type="range"] { width: min(56vw, 220px); height: 30px; }
+    .lb-zoom .lz-val { min-width: 38px; font-size: 11px; }
+    .lb-close { top: 12px; right: 12px; font-size: 26px; width: 38px; height: 38px; }
+    /* 剧场 */
+    .th-city { font-size: 17px; margin-bottom: 8px; }
+    .th-note { font-size: 13px; padding: 7px 14px; }
+    .th-frame { transition-duration: .5s; }
+    .footer { font-size: 12px; }
+  }
+
+  /* ── 横屏矮屏 (高度≤500): 优先保画面 ── */
+  @media (max-height: 500px) and (orientation: landscape) {
+    #map, #map-wrap { height: 70vh; }
+    .stage3d { height: 40vh; }
+    .lightbox .lb-stage { height: 62vh; }
+  }
+
+  /* ═══ 地名书法体应用(老板 09-16 拍板国风方向) ═══
+     只给"地名/标题"用; 小字与正文保持系统字体(书法体小字可读性差) */
+  .header h1,
+  .fs-cell .fs-city,
+  .map-card .mc-city,
+  .s3d-card .c3d-name,
+  .th-city,
+  .timeline-item .t-name,
+  .achieve-title { font-family: var(--ink); font-weight: normal; }
+
+  /* 书法体笔画粗, 字号相应加大一点才好认 */
+  .header h1 { font-size: 36px; letter-spacing: 2px; }
+  .fs-cell .fs-city { font-size: 11px; }
+  .map-card .mc-city { font-size: 16px; letter-spacing: 1px; }
+  .s3d-card .c3d-name { font-size: 12px; }
+  .th-city { font-size: 30px; letter-spacing: 3px; }
+  .timeline-item .t-name { font-size: 16px; }
+  .achieve-title { font-size: 26px; letter-spacing: 2px; }
+  /* 城市墙 chip: 书法体 + 略大 */
+  .chip { font-family: var(--ink); font-weight: normal; font-size: 15px; letter-spacing: .5px; }
+  .chip.home { font-weight: normal; }
+
+  @media (max-width: 939px) {
+    .header h1 { font-size: 27px; }
+    .th-city { font-size: 22px; }
+    .map-card .mc-city { font-size: 14px; }
+    .timeline-item .t-name { font-size: 15px; }
+    .chip { font-size: 14px; }
+  }
+  @media (max-width: 640px) {
+    .header h1 { font-size: 23px; letter-spacing: 1px; }
+    .th-city { font-size: 19px; }
+    .chip { font-size: 13px; }
+  }
+
+  /* ═══ 触屏保护(老板 09-16: 手机端也要能用) ═══
+     触屏上 :hover 会"粘住"(点一下放大效果就永久留着),
+     这里在触摸设备上取消所有会粘住的悬停位移/放大, 只保留颜色变化。 */
+  @media (hover: none), (pointer: coarse) {
+    .map-pin:hover,
+    .map-3d .map-pin:hover { transform: translate(-50%,-50%) scale(1); filter: none; }
+    .fs-cell:hover { transform: translateZ(var(--dz,0px)) rotateY(var(--dy,0deg)); filter: brightness(var(--db,1)); }
+    .map-row:hover .fs-cell:not(:hover) { transform: translateZ(var(--dz,0px)) rotateY(var(--dy,0deg)); }
+    .s3d-card:hover, .s3d-card.ring-lower:hover { filter: none; }
+    .stat:hover, .chip:hover, .timeline-item:hover { transform: none; }
+  }
+
+  /* ═══ 密码门(家庭私人内容, 与成果站私人专区同密码) ═══ */
+  #gate {
+    position:fixed; inset:0; z-index:999; display:flex;
+    align-items:center; justify-content:center;
+    background:
+      radial-gradient(1100px 550px at 85% -8%, rgba(192,132,252,.18), transparent 60%),
+      radial-gradient(900px 500px at -5% 12%, rgba(79,209,255,.14), transparent 55%),
+      linear-gradient(160deg, #0b0d1a, #1a1038 52%, #0b0d1a);
+  }
+  #gate .gate-box {
+    max-width:420px; width:calc(100% - 40px); text-align:center;
+    border:1px solid var(--border); border-radius:16px;
+    padding:44px 32px; background:rgba(255,255,255,.05);
+    backdrop-filter:blur(10px);
+    box-shadow:0 8px 40px rgba(0,0,0,.35);
+  }
+  #gate .lock { font-size:44px; margin-bottom:14px; }
+  #gate h2 { font-size:20px; font-weight:700; letter-spacing:.08em; margin-bottom:8px; color:var(--text); }
+  #gate p { font-size:12px; color:var(--muted); margin-bottom:28px; line-height:1.8; }
+  #gate input {
+    width:100%; padding:12px 16px;
+    font-family:ui-monospace,monospace; font-size:16px; letter-spacing:.35em;
+    color:var(--text); background:rgba(3,6,12,.6);
+    border:1px solid var(--border); border-radius:10px;
+    outline:none; text-align:center;
+    transition:border-color .25s, box-shadow .25s;
+  }
+  #gate input:focus { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(79,209,255,.12); }
+  #gate button {
+    margin-top:16px; width:100%; padding:12px;
+    font-size:14px; font-weight:600; letter-spacing:.2em;
+    color:#03101f; cursor:pointer;
+    background:linear-gradient(90deg,var(--cyan),var(--purple));
+    border:none; border-radius:10px;
+    transition:transform .2s, box-shadow .2s;
+  }
+  #gate button:hover { transform:translateY(-2px); box-shadow:0 0 24px rgba(79,209,255,.5); }
+  #gate.err { animation:gateShake .4s; }
+  #gate .err-msg { display:none; margin-top:12px; font-size:12px; color:var(--pink); }
+  #gate.err .err-msg { display:block; }
+  @keyframes gateShake {
+    0%,100% { transform:translateX(0) }
+    20%,60% { transform:translateX(-8px) }
+    40%,80% { transform:translateX(8px) }
+  }
+  body.locked .wrap, body.locked .particles { display:none; }
 </style>
 </head>
-<body>
+<body class="locked">
+  <!-- 密码门: 家庭私人内容(与成果站私人专区同密码) -->
+  <div id="gate">
+    <div class="gate-box">
+      <div class="lock">🌙</div>
+      <h2>小月饼的足迹</h2>
+      <p>这是家里的私人相册<br>请输入密码</p>
+      <input type="password" id="gate-pw" placeholder="••••••" maxlength="16"
+             autocomplete="off" inputmode="numeric">
+      <button id="gate-btn" type="button">进 入</button>
+      <div class="err-msg">密码不对，再试一次</div>
+    </div>
+  </div>
+
   <div class="particles" id="particles"></div>
   <div class="wrap">
 
@@ -143,25 +826,64 @@
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="num">34</div><div class="label">个足迹点</div></div>
+      <div class="stat"><div class="num">42</div><div class="label">个足迹点</div></div>
       <div class="stat"><div class="num">10+2</div><div class="label">省份 + 直辖市</div></div>
       <div class="stat"><div class="num">2</div><div class="label">直辖市全打卡</div></div>
       <div class="stat"><div class="num">5</div><div class="label">个邻省</div></div>
+      <div class="stat" id="achieve-btn" style="cursor:pointer" title="查看足迹成就">
+        <div class="num">🏆</div><div class="label">足迹成就</div>
+      </div>
+      <div class="stat" id="random-btn" style="cursor:pointer" title="随机抽一个城市看回忆">
+        <div class="num">🎲</div><div class="label">随机旅程</div>
+      </div>
+      <div class="stat" id="music-btn" style="cursor:pointer" title="背景音乐">
+        <div class="num">🎵</div><div class="label">音乐</div>
+      </div>
     </div>
 
     <div class="layout">
-      <div class="panel">
-        <h2><span class="dot"></span>足迹 · 中国</h2>
-        <div id="map"></div>
+      <div class="panel" id="map-panel">
+        <h2><span class="dot"></span>足迹 · 中国
+          <button class="view-toggle" id="reset-view-btn" type="button" title="回到足迹密集区">🎯 复位视角</button>
+          <button class="view-toggle" id="replay-btn" type="button">▶️ 旅程重放</button>
+        </h2>
+        <div class="map-row">
+          <div id="map-wrap">
+            <div id="map"></div>
+            <!-- 照片/记忆浮层: 直接叠在地图上 -->
+            <div id="map-overlay"></div>
+            <!-- 操作提示(桌面鼠标 / 手机触摸 两套文案) -->
+            <div class="map-hint" id="map-hint">
+              <span class="hint-desk">🖱 拖动旋转 · 滚轮缩放 · 双击复位</span>
+              <span class="hint-touch">👆 拖动旋转 · 双指缩放 · 双击复位</span>
+            </div>
+          </div>
+          <!-- 胶片条: 地图右侧竖排 -->
+          <div class="film-strip" id="film-strip" style="display:none">
+            <div class="fs-label">🎞️ 胶片</div>
+            <div class="fs-row" id="fs-row"></div>
+          </div>
+        </div>
+
+        <!-- 3D 旋转照片环: 常驻窗口, 全方位展示足迹(老板 2026-09-15 晚创意) -->
+        <div class="stage3d" id="stage3d">
+          <div class="s3d-hint">拖拽旋转 · 点击看照片</div>
+          <div class="s3d-scene">
+            <div class="s3d-ring" id="s3d-ring"></div>
+          </div>
+        </div>
       </div>
       <div class="panel">
-        <h2><span class="dot"></span>城市墙 · 点击联动地图</h2>
+        <h2><span class="dot"></span>城市墙 · 点击联动地图
+          <button class="view-toggle" id="view-toggle" type="button">🕐 按时间线</button>
+          <button class="view-toggle" id="edit-toggle" type="button">✏️ 编辑</button>
+        </h2>
         <div id="city-wall"></div>
       </div>
     </div>
 
     <div class="footer">
-      <span class="moon">🥮</span> 3 岁半 · 34 地 · 城市、草原、山海、瀑布、竹海、闽南都看过了 <span class="moon">🥮</span>
+      <span class="moon">🥮</span> 3 岁半 · 42 地 · 城市、草原、山海、雪场、瀑布、竹海、闽南都看过了 <span class="moon">🥮</span>
     </div>
   </div>
 
@@ -170,101 +892,364 @@
     <div class="lb-close" onclick="closeLightbox()">✕</div>
     <div class="lb-stage">
       <div class="lb-nav lb-prev" onclick="lbNav(-1)">‹</div>
-      <img id="lb-img" src="" alt="">
+      <div id="lb-media-box">
+        <img id="lb-img" src="" alt="" style="display:none">
+        <video id="lb-video" style="display:none" controls autoplay muted loop playsinline></video>
+      </div>
       <div class="lb-nav lb-next" onclick="lbNav(1)">›</div>
     </div>
     <div class="lb-title" id="lb-title"></div>
     <div class="lb-count" id="lb-count"></div>
+    <div class="lb-note" id="lb-note"></div>
+    <!-- 缩放提示(老板 09-16: 滑条太笨, 改成滚轮/双指交互) -->
+    <div class="lb-zoom">
+      <span class="lz-hint" id="lz-hint">🖱 滚轮缩放 · 拖动平移 · 双击还原</span>
+      <span class="lz-val" id="lz-val">100%</span>
+    </div>
+  </div>
+
+  <!-- 成就弹窗 -->
+  <div class="lightbox" id="achieve-box">
+    <div class="lb-close" onclick="document.getElementById('achieve-box').classList.remove('open')">✕</div>
+    <div class="achieve-panel">
+      <div class="achieve-title">🏆 月饼足迹成就墙</div>
+      <div class="achieve-grid" id="achieve-grid"></div>
+    </div>
+  </div>
+
+  <!-- 剧场浮层 · 照片轮播(旅程重放/随机旅程共用) -->
+  <div class="theater" id="theater">
+    <div class="th-close" onclick="stopTheater()">✕</div>
+    <div class="th-stage">
+      <div class="th-pause" id="th-pause" onclick="toggleTheaterPause()" title="暂停/继续">⏸</div>
+      <div class="th-city" id="th-city"></div>
+      <div class="th-frame">
+        <div class="th-glow"></div>
+        <div class="th-arc"></div>
+        <div class="th-arc reverse"></div>
+        <div class="th-sparkle" id="th-sparkle"></div>
+        <div class="th-media-slot" id="th-slot-a"></div>
+        <div class="th-media-slot" id="th-slot-b"></div>
+      </div>
+      <div class="th-below">
+        <div class="th-note" id="th-note"></div>
+        <div class="th-progress" id="th-progress">
+          <div class="th-bar" id="th-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 编辑弹窗（首访时间 + 每城一句话） -->
+  <div class="lightbox" id="edit-box">
+    <div class="lb-close" onclick="closeEditBox()">✕</div>
+    <div class="edit-panel">
+      <div class="edit-title">✏️ 编辑 <span id="edit-city-name"></span></div>
+      <label class="edit-label">🕐 首访时间</label>
+      <input class="edit-input" id="edit-since" type="text" placeholder="如 2024-05 或 2024-05-01">
+      <label class="edit-label">💬 一句话趣事</label>
+      <textarea class="edit-input" id="edit-note" rows="2" placeholder="如：第一次吃泡馍，辣得直吸气"></textarea>
+      <div class="edit-actions">
+        <button class="random-go" id="edit-save" type="button">保存</button>
+        <button class="random-go" id="edit-export" type="button" style="background:linear-gradient(135deg,var(--green),var(--cyan));color:#0b0d1a">导出数据</button>
+      </div>
+      <div class="edit-hint">保存后存本地浏览器；「导出数据」可复制给铁蛋入库</div>
+    </div>
   </div>
 
 <script>
 // ── 数据 ──
+// since = 首访时间(YYYY-MM 或 YYYY-MM-DD)，空串 = 待补
+// note = 每城一句话(月饼当时的趣事)，空串 = 待补
+// tags: sea=海 grassland=草原 river=黄河 mountain=名山
 const CITIES = [
-  {name:'北京', coord:[116.40,39.90], prov:'京津冀', home:true},
-  {name:'天津', coord:[117.20,39.13], prov:'京津冀'},
-  {name:'石家庄', coord:[114.51,38.04], prov:'河北'},
-  {name:'雄安', coord:[115.87,39.03], prov:'河北'},
-  {name:'保定', coord:[115.46,38.87], prov:'河北'},
-  {name:'承德', coord:[117.96,40.95], prov:'河北'},
-  {name:'秦皇岛', coord:[119.60,39.94], prov:'河北'},
-  {name:'御道口', coord:[117.13,42.29], prov:'河北'},
-  {name:'塞罕坝', coord:[117.09,42.27], prov:'河北'},
-  {name:'涞水县', coord:[115.71,39.39], prov:'河北'},
-  {name:'阿那亚', coord:[119.17,39.71], prov:'河北'},
-  {name:'南戴河', coord:[119.42,39.81], prov:'河北'},
-  {name:'济南', coord:[117.12,36.65], prov:'山东'},
-  {name:'济宁', coord:[116.59,35.42], prov:'山东'},
-  {name:'太原', coord:[112.55,37.87], prov:'山西'},
-  {name:'霍州', coord:[111.72,36.57], prov:'山西'},
-  {name:'吕梁', coord:[111.14,37.52], prov:'山西'},
-  {name:'西安', coord:[108.94,34.34], prov:'陕西'},
-  {name:'宝鸡', coord:[107.24,34.36], prov:'陕西'},
-  {name:'延安', coord:[109.49,36.59], prov:'陕西'},
-  {name:'壶口瀑布', coord:[110.44,36.15], prov:'陕西'},
-  {name:'武汉', coord:[114.31,30.59], prov:'湖北'},
-  {name:'襄阳', coord:[112.12,32.01], prov:'湖北'},
-  {name:'郑州', coord:[113.63,34.75], prov:'河南'},
-  {name:'赤峰', coord:[118.89,42.26], prov:'内蒙古'},
-  {name:'克什克腾旗', coord:[117.55,43.27], prov:'内蒙古'},
-  {name:'林西县', coord:[118.05,43.61], prov:'内蒙古'},
-  {name:'贵阳', coord:[106.63,26.65], prov:'贵州'},
-  {name:'宜宾', coord:[104.64,28.75], prov:'四川'},
-  {name:'蜀南竹海', coord:[105.02,28.48], prov:'四川'},
-  {name:'庐山', coord:[115.98,29.57], prov:'江西'},
-  {name:'厦门', coord:[118.09,24.48], prov:'福建'},
-  {name:'漳州', coord:[117.65,24.51], prov:'福建'},
-  {name:'泉州', coord:[118.68,24.87], prov:'福建'},
+  {name:'北京', coord:[116.40,39.90], prov:'京津冀', home:true, since:'', note:'', tags:[]},
+  {name:'天津', coord:[117.20,39.13], prov:'京津冀', since:'', note:'', tags:[]},
+  {name:'石家庄', coord:[114.51,38.04], prov:'河北', since:'', note:'', tags:[]},
+  {name:'雄安', coord:[115.87,39.03], prov:'河北', since:'', note:'', tags:[]},
+  {name:'保定', coord:[115.46,38.87], prov:'河北', since:'', note:'', tags:[]},
+  {name:'承德', coord:[117.96,40.95], prov:'河北', since:'', note:'', tags:[]},
+  {name:'唐山', coord:[118.18,39.63], prov:'河北', since:'', note:'', tags:[]},
+  {name:'北戴河', coord:[119.48,39.83], prov:'河北', since:'', note:'', tags:['sea']},
+  {name:'野三坡', coord:[115.39,39.67], prov:'河北', since:'', note:'', tags:[]},
+  {name:'延庆', coord:[115.97,40.45], prov:'京津冀', since:'', note:'', tags:[]},
+  {name:'隰县', coord:[110.94,36.69], prov:'山西', since:'', note:'', tags:[]},
+  {name:'御道口', coord:[117.13,42.29], prov:'河北', since:'', note:'', tags:['grassland']},
+  {name:'塞罕坝', coord:[117.09,42.27], prov:'河北', since:'', note:'', tags:['grassland']},
+  {name:'涞水县', coord:[115.71,39.39], prov:'河北', since:'', note:'', tags:[]},
+  {name:'阿那亚', coord:[119.17,39.71], prov:'河北', since:'', note:'', tags:['sea']},
+  {name:'太舞小镇', coord:[115.45,40.90], prov:'河北', since:'', note:'', tags:['ski']},
+  {name:'蓟县', coord:[117.41,40.05], prov:'京津冀', since:'', note:'', tags:[]},
+  {name:'南山滑雪', coord:[116.86,40.33], prov:'京津冀', since:'', note:'', tags:['ski']},
+  {name:'济南', coord:[117.12,36.65], prov:'山东', since:'', note:'', tags:[]},
+  {name:'济宁', coord:[116.59,35.42], prov:'山东', since:'', note:'', tags:[]},
+  {name:'太原', coord:[112.55,37.87], prov:'山西', since:'', note:'', tags:[]},
+  {name:'霍州', coord:[111.72,36.57], prov:'山西', since:'', note:'', tags:[]},
+  {name:'吕梁', coord:[111.14,37.52], prov:'山西', since:'', note:'', tags:[]},
+  {name:'西安', coord:[108.94,34.34], prov:'陕西', since:'', note:'', tags:[]},
+  {name:'宝鸡', coord:[107.24,34.36], prov:'陕西', since:'', note:'', tags:['mountain']},
+  {name:'太白山', coord:[107.90,34.12], prov:'陕西', since:'', note:'', tags:['mountain']},
+  {name:'西庄子', coord:[108.01,34.54], prov:'陕西', since:'', note:'', tags:['hometown']},
+  {name:'延安', coord:[109.49,36.59], prov:'陕西', since:'', note:'', tags:[]},
+  {name:'壶口瀑布', coord:[110.44,36.15], prov:'陕西', since:'', note:'', tags:['river']},
+  {name:'武汉', coord:[114.31,30.59], prov:'湖北', since:'', note:'', tags:[]},
+  {name:'襄阳', coord:[112.12,32.01], prov:'湖北', since:'', note:'', tags:[]},
+  {name:'郑州', coord:[113.63,34.75], prov:'河南', since:'', note:'', tags:[]},
+  {name:'赤峰', coord:[118.89,42.26], prov:'内蒙古', since:'', note:'', tags:[]},
+  {name:'克什克腾旗', coord:[117.55,43.27], prov:'内蒙古', since:'', note:'', tags:['grassland']},
+  {name:'林西县', coord:[118.05,43.61], prov:'内蒙古', since:'', note:'', tags:[]},
+  {name:'贵阳', coord:[106.63,26.65], prov:'贵州', since:'', note:'', tags:[]},
+  {name:'宜宾', coord:[104.64,28.75], prov:'四川', since:'', note:'', tags:[]},
+  {name:'蜀南竹海', coord:[105.02,28.48], prov:'四川', since:'', note:'', tags:[]},
+  {name:'庐山', coord:[115.98,29.57], prov:'江西', since:'', note:'', tags:['mountain']},
+  {name:'厦门', coord:[118.09,24.48], prov:'福建', since:'', note:'', tags:['sea']},
+  {name:'漳州', coord:[117.65,24.51], prov:'福建', since:'', note:'', tags:[]},
+  {name:'泉州', coord:[118.68,24.87], prov:'福建', since:'', note:'', tags:[]},
 ];
 const RAINBOW = ['#ff5d8f','#ff9e5e','#ffd166','#7bf1a8','#4fd1ff','#7a8cff','#c084fc'];
 const PROV_ORDER = ['京津冀','河北','山东','山西','陕西','湖北','河南','内蒙古','贵州','四川','江西','福建'];
 let PHOTOS = {};
 
-// ── 漂浮粒子 ──
+// ── 漂浮粒子(性能优化: 16 个, 只用 transform 动画, 不用大尺寸) ──
 (function makeParticles(){
   const box = document.getElementById('particles');
   const colors = RAINBOW;
-  for (let i=0; i<26; i++) {
+  for (let i=0; i<16; i++) {
     const p = document.createElement('div');
     p.className = 'particle';
-    const size = 3 + Math.random()*6;
+    const size = 2 + Math.random()*4;
     p.style.width = p.style.height = size+'px';
     p.style.left = Math.random()*100+'vw';
     p.style.top = (20 + Math.random()*90)+'vh';
     p.style.background = colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDuration = (14 + Math.random()*16)+'s';
+    p.style.animationDuration = (18 + Math.random()*16)+'s';
     p.style.animationDelay = (-Math.random()*30)+'s';
+    p.style.willChange = 'transform';
     box.appendChild(p);
   }
 })();
 
 // ── 相册灯箱 ──
 let lbCity = null, lbIdx = 0, lbOpenAt = 0;
+function photoImgs(city) {
+  const v = PHOTOS[city];
+  if (!v) return [];
+  return Array.isArray(v) ? v : (v.imgs || []);
+}
+// 是否视频
+const VID_EXT_RE = /\.(mp4|mov|webm|avi)$/i;
+function isVideo(p) { return VID_EXT_RE.test(p); }
+// 原图 → 缩略图路径(性能: pin/记忆卡用 thumb, 灯箱才加载原图)
+function thumbOf(imgPath) {
+  // photos/武汉/IMG_x.jpg → thumbs/武汉/IMG_x_thumb.jpg
+  const parts = imgPath.split("/");
+  const city = parts[1];
+  const fname = parts[2];
+  const stem = fname.replace(/\.[^.]+$/, "");
+  return `thumbs/${city}/${stem}_thumb.jpg`;
+}
+// 媒体封面: 照片用缩略图, 视频用 🎬 图标(数据 URI SVG)
+function mediaCover(mediaPath) {
+  if (isVideo(mediaPath)) return '';
+  return thumbOf(mediaPath);
+}
+const VID_ICON_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
+  '<rect width="100" height="100" rx="18" fill="#1c1f33"/>' +
+  '<circle cx="50" cy="50" r="26" fill="#ffd166"/>' +
+  '<polygon points="44,38 44,62 64,50" fill="#1c1f33"/>' +
+  '</svg>');
+function photoCount(city) { return photoImgs(city).length; }
+// 缩略图只选照片, 视频不参与(老板 2026-09-15 晚); 该地只有视频时才退回第一项
+function photoPool(city) { return photoImgs(city).filter(p => !isVideo(p)); }
+// pin 封面: 稳定取第一张照片, 无照片时用 🎬 图标
+function photoCover(city) {
+  const photos = photoPool(city);
+  return photos.length ? thumbOf(photos[0]) : VID_ICON_SVG;
+}
+// 胶片封面: 随机一张照片(轮动); exclude 为当前显示, 避免换到同一张
+function randomPhotoCover(city, exclude) {
+  const photos = photoPool(city);
+  if (!photos.length) return VID_ICON_SVG;
+  const all = photos.map(thumbOf);
+  const rest = all.filter(t => t !== exclude);
+  const pool = rest.length ? rest : all;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
 function openLightbox(city) {
-  const imgs = PHOTOS[city] || [];
+  const imgs = photoImgs(city);
   if (!imgs.length) return;
   lbCity = city; lbIdx = 0;
   lbOpenAt = Date.now();
   document.getElementById('lightbox').classList.add('open');
   updateLightbox();
 }
-function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  // 停止视频
+  const v = document.getElementById('lb-video');
+  v.pause(); v.removeAttribute('src');
+}
 function lbNav(d) {
-  const imgs = PHOTOS[lbCity] || [];
+  const imgs = photoImgs(lbCity);
   lbIdx = (lbIdx + d + imgs.length) % imgs.length;
   updateLightbox();
 }
 function updateLightbox() {
-  const imgs = PHOTOS[lbCity] || [];
-  const f = imgs[lbIdx].split('/').pop();
-  document.getElementById('lb-img').src = imgs[lbIdx];
-  document.getElementById('lb-title').textContent = `${lbCity} · ${f}`;
+  const imgs = photoImgs(lbCity);
+  const media = imgs[lbIdx];
+  const f = media.split('/').pop();
+  const img = document.getElementById('lb-img');
+  const vid = document.getElementById('lb-video');
+  if (isVideo(media)) {
+    // 视频: 自动播放(静音+循环, 浏览器自动播放策略)
+    img.style.display = 'none';
+    vid.style.display = '';
+    vid.src = media;
+    vid.play().catch(() => {});
+  } else {
+    vid.pause();
+    vid.removeAttribute('src');
+    vid.style.display = 'none';
+    img.style.display = '';
+    img.src = media;
+  }
+  document.getElementById('lb-title').textContent = `${lbCity} · ${f}${isVideo(media) ? ' 🎬' : ''}`;
   document.getElementById('lb-count').textContent = `${lbIdx+1} / ${imgs.length}`;
+  const note = noteFor(lbCity);
+  document.getElementById('lb-note').textContent = note;
+  document.getElementById('lb-note').style.display = note ? '' : 'none';
+  resetLbZoom();  // 切照片重置缩放
 }
 document.getElementById('lightbox').addEventListener('click', e => {
   if (e.target !== document.getElementById('lightbox')) return;
   if (Date.now() - lbOpenAt < 400) return; // 防打开瞬间的点击穿透
   closeLightbox();
 });
+
+// ═══ 灯箱缩放: 滚轮 + 双指捏合(老板 09-16 拍板: 交互式, 不要手动滑条) ═══
+const LB_MIN = 0.4, LB_MAX = 4.0;      // 40% ~ 400%
+let lbZoom = 1, lbPanX = 0, lbPanY = 0, lbDrag = null, lbPinch = 0;
+const lbStageEl = document.querySelector('.lb-stage');
+
+function setLbZoom(z, opts) {
+  const old = lbZoom;
+  lbZoom = Math.max(LB_MIN, Math.min(LB_MAX, z));
+  const box = document.getElementById('lb-media-box');
+  box.style.setProperty('--lb-zoom', lbZoom);
+  document.getElementById('lz-val').textContent = Math.round(lbZoom * 100) + '%';
+  // 以鼠标位置为锚点缩放: 光标下的内容不动
+  if (opts && opts.anchor && old > 0) {
+    const k = lbZoom / old - 1;
+    lbPanX -= (opts.anchor.x - lbStageEl.clientWidth / 2) * k;
+    lbPanY -= (opts.anchor.y - lbStageEl.clientHeight / 2) * k;
+  }
+  applyLbPan();
+}
+
+function applyLbPan() {
+  const box = document.getElementById('lb-media-box');
+  const media = document.getElementById('lb-img').style.display !== 'none'
+              ? document.getElementById('lb-img') : document.getElementById('lb-video');
+  // 可平移量 = (缩放后尺寸 - 舞台尺寸) / 2(超出部分才可拖)
+  const stage = lbStageEl.getBoundingClientRect();
+  const r = media.getBoundingClientRect();
+  const baseW = r.width / lbZoom, baseH = r.height / lbZoom;
+  const maxX = Math.max(0, (baseW * lbZoom - stage.width) / 2);
+  const maxY = Math.max(0, (baseH * lbZoom - stage.height) / 2);
+  lbPanX = Math.max(-maxX, Math.min(maxX, lbPanX));
+  lbPanY = Math.max(-maxY, Math.min(maxY, lbPanY));
+  box.style.setProperty('--lb-pan-x', lbPanX + 'px');
+  box.style.setProperty('--lb-pan-y', lbPanY + 'px');
+}
+
+// 切换照片时重置缩放
+function resetLbZoom() {
+  lbZoom = 1; lbPanX = 0; lbPanY = 0;
+  const box = document.getElementById('lb-media-box');
+  box.style.setProperty('--lb-zoom', 1);
+  box.style.setProperty('--lb-pan-x', '0px');
+  box.style.setProperty('--lb-pan-y', '0px');
+  document.getElementById('lz-val').textContent = '100%';
+}
+
+// 滚轮缩放(桌面)
+lbStageEl.addEventListener('wheel', e => {
+  e.preventDefault();
+  const r = lbStageEl.getBoundingClientRect();
+  setLbZoom(lbZoom * (1 - e.deltaY * 0.0016), {
+    anchor: { x: e.clientX - r.left, y: e.clientY - r.top }
+  });
+}, { passive: false });
+
+// 双指捏合(手机)
+lbStageEl.addEventListener('touchstart', e => {
+  if (e.touches.length === 2) {
+    lbDrag = null;   // 双指时不做平移
+    lbPinch = Math.hypot(
+      e.touches[0].clientX - e.touches[1].clientX,
+      e.touches[0].clientY - e.touches[1].clientY);
+  }
+}, { passive: true });
+lbStageEl.addEventListener('touchmove', e => {
+  if (e.touches.length !== 2 || !lbPinch) return;
+  e.preventDefault();
+  const d = Math.hypot(
+    e.touches[0].clientX - e.touches[1].clientX,
+    e.touches[0].clientY - e.touches[1].clientY);
+  const r = lbStageEl.getBoundingClientRect();
+  const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2 - r.left;
+  const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2 - r.top;
+  setLbZoom(lbZoom * (d / lbPinch), { anchor: { x: cx, y: cy } });
+  lbPinch = d;
+}, { passive: false });
+lbStageEl.addEventListener('touchend', e => {
+  if (e.touches.length < 2) lbPinch = 0;
+}, { passive: true });
+
+// 双击: 100% ↔ 200% 切换
+lbStageEl.addEventListener('dblclick', e => {
+  e.preventDefault();
+  resetLbZoom();
+  if (lbZoom <= 1.01) {
+    const r = lbStageEl.getBoundingClientRect();
+    setLbZoom(lbZoom > 1.5 ? 1 : 2, { anchor: { x: e.clientX - r.left, y: e.clientY - r.top } });
+  }
+});
+
+// 拖动平移(鼠标 + 单指)
+lbStageEl.addEventListener('mousedown', e => {
+  if (lbZoom <= 1.01) return;      // 未放大不拖
+  lbDrag = { x: e.clientX, y: e.clientY, px: lbPanX, py: lbPanY };
+  lbStageEl.classList.add('dragging');
+  e.preventDefault();
+});
+window.addEventListener('mousemove', e => {
+  if (!lbDrag) return;
+  lbPanX = lbDrag.px + (e.clientX - lbDrag.x);
+  lbPanY = lbDrag.py + (e.clientY - lbDrag.y);
+  applyLbPan();
+});
+window.addEventListener('mouseup', () => {
+  lbDrag = null;
+  lbStageEl.classList.remove('dragging');
+});
+
+// 单指拖动(手机)
+lbStageEl.addEventListener('touchstart', e => {
+  if (e.touches.length !== 1 || lbZoom <= 1.01) return;
+  const t = e.touches[0];
+  lbDrag = { x: t.clientX, y: t.clientY, px: lbPanX, py: lbPanY };
+}, { passive: true });
+lbStageEl.addEventListener('touchmove', e => {
+  if (!lbDrag || e.touches.length !== 1) return;
+  e.preventDefault();
+  const t = e.touches[0];
+  lbPanX = lbDrag.px + (t.clientX - lbDrag.x);
+  lbPanY = lbDrag.py + (t.clientY - lbDrag.y);
+  applyLbPan();
+}, { passive: false });
+lbStageEl.addEventListener('touchend', () => { lbDrag = null; }, { passive: true });
 document.addEventListener('keydown', e => {
   if (!document.getElementById('lightbox').classList.contains('open')) return;
   if (e.key === 'Escape') closeLightbox();
@@ -273,6 +1258,41 @@ document.addEventListener('keydown', e => {
 });
 
 // ── 城市墙 ──
+let wallMode = 'prov'; // 'prov' 按省份 | 'timeline' 按时间线
+
+function buildTimeline() {
+  const wall = document.getElementById('city-wall');
+  const known = CITIES.filter(c => c.since);
+  const unknown = CITIES.filter(c => !c.since);
+  const sorted = [...known].sort((a, b) => (a.since < b.since ? -1 : 1));
+  let html = '';
+  sorted.forEach(c => {
+    html += `<div class="timeline-item" data-city="${c.name}">
+      <span class="t-date">${c.since}</span>
+      <span class="t-name">${c.name}</span>
+      <span class="t-prov">${c.prov}</span>
+      ${photoCount(c.name) ? `<span class="cam">📷${photoCount(c.name)}</span>` : ''}
+    </div>`;
+  });
+  if (unknown.length) {
+    html += `<div class="prov-group"><div class="prov-name">⏳ 待补首访时间（${unknown.length}）</div></div>`;
+    html += `<div class="city-chips">`;
+    unknown.forEach(c => {
+      html += `<span class="chip" data-city="${c.name}">${c.name}</span>`;
+    });
+    html += `</div>`;
+  }
+  wall.innerHTML = html || '<div style="color:#aab0d0">待补首访时间</div>';
+  wall.querySelectorAll('.timeline-item, .chip').forEach(el => {
+    el.addEventListener('click', () => {
+      const city = el.dataset.city;
+      if (editMode) { openEditBox(city); return; }
+      if (photoCount(city)) { flyAndOpen(city); return; }
+      MapAPI.flyTo(city); highlightCity(city);
+    });
+  });
+}
+
 function buildWall() {
   const wall = document.getElementById('city-wall');
   const groups = {};
@@ -283,9 +1303,16 @@ function buildWall() {
     html += `<div class="prov-group"><div class="prov-name">${p}</div><div class="city-chips">`;
     groups[p].forEach(c => {
       const cls = c.home ? 'chip home' : 'chip';
-      const cam = (PHOTOS[c.name]||[]).length
-        ? `<span class="cam">📷${PHOTOS[c.name].length}</span>` : '';
-      html += `<span class="${cls}" data-city="${c.name}">${c.name}${cam}</span>`;
+      const cam = photoCount(c.name)
+        ? `<span class="cam">📷${photoCount(c.name)}</span>` : '';
+      // 编辑数据优先于内置数据
+      const edits = loadEdits();
+      const e = edits[c.name] || {};
+      const sinceStr = e.since || c.since || '';
+      const noteStr = e.note || c.note || '';
+      const since = sinceStr ? `<span class="cam since">${sinceStr}</span>` : '';
+      const note = noteStr ? `<span class="cam">💬</span>` : '';
+      html += `<span class="${cls}" data-city="${c.name}">${c.name}${since}${note}${cam}</span>`;
     });
     html += `</div></div>`;
   });
@@ -293,32 +1320,958 @@ function buildWall() {
   wall.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
       const city = chip.dataset.city;
-      if ((PHOTOS[city]||[]).length) { openLightbox(city); return; }
-      highlightCity(city);
+      if (editMode) { openEditBox(city); return; }
+      if (photoCount(city)) { flyAndOpen(city); return; }
+      MapAPI.flyTo(city); highlightCity(city);
     });
   });
 }
 
+// ═══ 地图适配层 ═══
+// 页面其余部分只认 MapAPI 这层契约, 不直接碰底层引擎。
+// 目前后端是 echarts; 换 Three.js 3D 地球时只需新增一个同契约的后端。
+// 8 个触点: project / isVisible / getZoom / getCenter / setCenter /
+//           highlight / onRoam / onClick / resize
+const MapAPI = {
+  _backend: null,
+  ready() { return !!(this._backend && this._backend.ready()); },
+  mount(backend, el, opts) { this._backend = backend; backend.mount(el, opts); },
+  dispose() { if (this._backend) this._backend.dispose(); this._backend = null; },
+
+  project(coord)   { return this._backend ? this._backend.project(coord) : null; },
+  isVisible(coord) { return this._backend ? this._backend.isVisible(coord) : false; },
+  getZoom()        { return this._backend ? this._backend.getZoom() : 1; },
+  getCenter()      { return this._backend ? this._backend.getCenter() : null; },
+  setCenter(c)     { if (this._backend) this._backend.setCenter(c); },
+  highlight(name)  { if (this._backend) this._backend.highlight(name); },
+  onRoam(fn)       { if (this._backend) this._backend.onRoam(fn); },
+  onClick(fn)      { if (this._backend) this._backend.onClick(fn); },
+  resize()         { if (this._backend) this._backend.resize(); },
+  // 3D 专属(阶段 2+ 才有实现, echarts 后端是空操作)
+  flyTo(name, opts) { if (this._backend && this._backend.flyTo) this._backend.flyTo(name, opts); },
+};
+
+// ── echarts 后端(2D 中国地图, 默认) ──
+const EchartsBackend = {
+  chart: null,
+  _roamFn: null, _clickFn: null,
+  ready() { return !!this.chart && geoLoaded; },
+  mount(el, opts) {
+    this.chart = echarts.init(el);
+    this.chart.showLoading({text:'地图加载中…', color:'#ffd166'});
+    fetch('china.json')
+      .then(r => r.json())
+      .then(geojson => {
+        geoLoaded = true;
+        echarts.registerMap('china', geojson);
+        this.chart.hideLoading();
+        if (opts && opts.onReady) opts.onReady();
+      })
+      .catch(() => {
+        this.chart.hideLoading(); this.chart.clear();
+        el.replaceChildren();
+        el.innerHTML =
+          '<div style="padding:60px 20px;text-align:center;color:#aab0d0">地图数据加载失败（离线状态）<br>右侧城市墙正常可用</div>';
+      });
+  },
+  dispose() { if (this.chart) { this.chart.dispose(); this.chart = null; } },
+  // 经纬度 → 屏幕像素 [x,y]; 屏幕外返回 null
+  project(coord) {
+    if (!this.chart) return null;
+    return this.chart.convertToPixel({geoIndex: 0}, coord);
+  },
+  // echarts 是平面地图, 没有背面概念 —— 恒 true
+  isVisible() { return true; },
+  getZoom() { return (this.chart && this.chart.getOption().geo[0].zoom) || 1; },
+  getCenter() { return this.chart ? this.chart.getOption().geo[0].center : null; },
+  setCenter(c) { if (this.chart) this.chart.setOption({ geo: [{ center: c }] }); },
+  highlight(name) {
+    if (!this.chart) return;
+    this.chart.dispatchAction({ type:'showTip',   seriesIndex:1, name });
+    this.chart.dispatchAction({ type:'highlight', seriesIndex:1, name });
+    setTimeout(() => this.chart && this.chart.dispatchAction({type:'downplay', seriesIndex:1, name}), 1400);
+  },
+  onRoam(fn) { this._roamFn = fn; if (this.chart) this.chart.on('georoam', fn); },
+  onClick(fn) {
+    this._clickFn = fn;
+    if (this.chart) this.chart.on('click', p => fn({ seriesType: p.seriesType, name: p.name }));
+  },
+  resize() { if (this.chart) this.chart.resize(); },
+};
+
+// ═══ Three.js 中国版图立体化后端 ═══
+// 与 EchartsBackend 同契约。做法: GeoJSON → 墨卡托投影 → Shape → ExtrudeGeometry 挤出
+// 省份成为可旋转的 3D 板块, 照片/足迹点立在地图表面。
+const MAP_UNIT = 620;        // 投影后地图的基准尺度(世界单位), 3D 版视觉大小由它定
+const EXTRUDE_DEPTH = 6;     // 省份挤出厚度
+const FIT_MARGIN = 1.26;     // 相机留白系数(要容得下斜视时的厚度与边缘)
+
+// ── 唯一一份投影: 经纬度 → 平面世界坐标 {x, y, z=0} ──
+// 墨卡托 + 包围盒归一化: 投影后把整图缩放到 MAP_UNIT 量级并居中到原点
+// 归一化参数在 _buildMap 里按实际数据算好存在 _proj 上
+const _proj = { cx: 0, cy: 0, scale: 1 };
+
+function mercator(lon, lat) {
+  const x = lon * Math.PI / 180;
+  const y = Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2));
+  return [x, y];
+}
+// 经纬度 → three 世界坐标 (XZ 平面, Y 朝上)
+function mapVec(lon, lat, h) {
+  const [mx, my] = mercator(lon, lat);
+  return new THREE.Vector3(
+    (mx - _proj.cx) * _proj.scale,
+    h || 0,
+    -(my - _proj.cy) * _proj.scale      // z 取反: 纬度越北 z 越负(屏幕上方)
+  );
+}
+// 逆运算: 世界坐标 → 经纬度(给 getCenter 用)
+function mapToLonLat(v) {
+  const mx = v.x / _proj.scale + _proj.cx;
+  const my = -v.z / _proj.scale + _proj.cy;
+  const lon = mx * 180 / Math.PI;
+  const lat = (Math.atan(Math.exp(my)) - Math.PI / 4) * 2 * 180 / Math.PI;
+  return [lon, lat];
+}
+
+const _ZERO = { x: 0, z: 0 };   // 注视点默认值(相机看向原点)
+
+const ThreeBackend = {
+  renderer: null, scene: null, cam: null, mapGroup: null,
+  _lookAt: null,                 // 相机注视点 {x, z}; 推近到足迹区时设成足迹重心
+  marks: {},
+  provinces: [],                // 省份 mesh(raycast 用)
+  _raf: null, _roamFn: null, _clickFn: null, _tween: null,
+  // 球坐标相机: theta=俯仰(0=正俯视, π/2=平视), phi=水平旋转
+  // 俯 68°: 兼顾"立体厚度可见"与"地图尽量占满画面"(老板 09-16)
+  rig: { theta: 0.38, phi: 0.0, dist: 0 },
+  rigTgt: { theta: 0.38, phi: 0.0, dist: 0 },
+  _defaultDist: 0,
+  _spin: 0, _drag: null, _lastPt: null, _pinch: 0,
+  _hoverName: null, _raycaster: null, _mouse: null,
+  _ready: false, _wrap: null,
+  _roamTimer: null,
+
+  ready() { return this._ready; },
+
+  mount(el, opts) {
+    this._wrap = el.parentElement || el;
+    const W = this._wrap.clientWidth || 600, H = this._wrap.clientHeight || 600;
+
+    try {
+      const t = document.createElement('canvas');
+      if (!(t.getContext('webgl') || t.getContext('experimental-webgl'))) throw 0;
+    } catch (e) { console.warn('[map3d] WebGL 不可用, 保持 2D'); return; }
+
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    this.renderer.setSize(W, H, false);
+    this.renderer.domElement.style.cssText =
+      'position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y';
+    el.replaceChildren(this.renderer.domElement);
+
+    this.scene = new THREE.Scene();
+    this.cam = new THREE.PerspectiveCamera(38, W / H, 1, 6000);
+    this._raycaster = new THREE.Raycaster();
+    this._mouse = new THREE.Vector2();
+
+    // 光照: 压低强度, 只做立体明暗层次(太强会把深蓝打平成浅蓝)
+    this.scene.add(new THREE.AmbientLight(0x6c7bb8, 0.55));
+    const key = new THREE.DirectionalLight(0xc8d4ff, 0.62);
+    key.position.set(-0.6, 1, 0.75).multiplyScalar(1200);
+    this.scene.add(key);
+    const rim = new THREE.DirectionalLight(0x3f5bd0, 0.5);
+    rim.position.set(0.8, 0.35, -0.9).multiplyScalar(1200);
+    this.scene.add(rim);
+
+    this.mapGroup = new THREE.Group();
+    this.scene.add(this.mapGroup);
+
+    // 省份全部就绪后再定相机
+    fetch('china.json').then(r => r.json()).then(geo => {
+      this._projCompute(geo);
+      this._buildProvinces(geo);
+
+      // 默认视角: 推近到"足迹密集区"(老板 09-16 拍板)
+      // 39 个地点集中在华北-华中一带, 全国视角下照片会挤成一小团;
+      // 推近后照片占满画面、看得清。想看全国自己拉远即可。
+      const pts = CITIES.map(c => mapVec(c.coord[0], c.coord[1], 0));
+      // 用"包围盒中心"而不是"重心" —— 视觉居中要看最外侧的点, 不是平均值
+      // (重心会被密集区拉偏, 导致厦门/泉州这些东南端的点把画面撑向右下)
+      const minX = Math.min(...pts.map(p => p.x)), maxX = Math.max(...pts.map(p => p.x));
+      const minZ = Math.min(...pts.map(p => p.z)), maxZ = Math.max(...pts.map(p => p.z));
+      const cx = (minX + maxX) / 2;
+      const cz = (minZ + maxZ) / 2;
+      // 足迹半径用"包围盒半宽" —— 照片群铺满画面的依据
+      // 系数 1.05: 有自动居中兜底后可以放心推近, 照片更大更清楚
+      const halfW = (maxX - minX) / 2, halfZ = (maxZ - minZ) / 2;
+      const span = Math.max(60, Math.max(halfW, halfZ) * 1.05);
+
+      this._homeCenter = { x: cx, z: cz, span };    // 供"复位"用
+      this._fitDistFull = this._fitDist();          // 全国视角(拉远的上限)
+      this._defaultDist = this._fitDistFull;
+      // 相机对准"包围盒中心"; 俯角 35°(0.61 rad)
+      // 俯角太小(22°)时垂直线被压得很扁, 照片群被推到画面下半; 35° 兼顾立体感与居中
+      this.rig.theta = 0.61;
+      this.rig.phi = Math.atan2(cx, cz);
+      this.rig.dist = this._distForSpan(span);
+      // 残余的透视下移: 把注视点沿视线方向外推补偿
+      const halfFov = this.cam.fov * Math.PI / 360;
+      const back = 0.22 * this.rig.dist * Math.tan(halfFov) * 2;
+      this._lookAt = {
+        x: cx + Math.sin(this.rig.phi) * back,
+        z: cz + Math.cos(this.rig.phi) * back
+      };
+      Object.assign(this.rigTgt, this.rig);
+      this._lastCenter = [110, 36];
+
+      // ★ 立刻摆一次相机再启动循环 —— 标签页在后台时 RAF 不跑,
+      //   若不预摆, project() 会因相机停在原点而全部返回 null(老板 09-16 反馈照片全挤成一点)
+      this.cam.position.copy(this._camPos());
+      this.cam.lookAt(0, 0, 0);
+      this.cam.updateMatrixWorld();
+
+      this._loop();
+      this._bindInput();
+      this._ready = true;
+      if (opts && opts.onReady) opts.onReady();
+    }).catch(err => {
+      console.warn('[map3d] china.json 加载失败', err);
+      if (opts && opts.onReady) opts.onReady();   // 让上层走回退判定
+    });
+  },
+
+  dispose() {
+    if (this._raf) cancelAnimationFrame(this._raf), this._raf = null;
+    if (this.renderer) {
+      this.renderer.dispose();
+      if (this.renderer.domElement.parentElement) this.renderer.domElement.remove();
+    }
+    this._ready = false;
+  },
+
+  // ── 投影归一化: 算整图的中心与缩放, 让地图居中且大小稳定 ──
+  _projCompute(geo) {
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    const scan = coords => {
+      for (const c of coords) {
+        if (typeof c[0] === 'number') {
+          const [x, y] = mercator(c[0], c[1]);
+          if (x < minX) minX = x; if (x > maxX) maxX = x;
+          if (y < minY) minY = y; if (y > maxY) maxY = y;
+        } else scan(c);
+      }
+    };
+    for (const f of geo.features) scan(f.geometry.coordinates);
+    _proj.cx = (minX + maxX) / 2;
+    _proj.cy = (minY + maxY) / 2;
+    // 以经度跨度为主定尺度(纬度跨度受墨卡托拉伸, 用经度更稳)
+    _proj.scale = MAP_UNIT / Math.max(1e-6, (maxX - minX));
+    this._bounds = { minX, maxX, minY, maxY };
+  },
+
+  // ── 省份挤出 ──
+  _buildProvinces(geo) {
+    // 顶面: 深蓝紫, 靠自发光维持底色, 光照只做明暗层次(避免被打亮成浅蓝)
+    const topMat = new THREE.MeshPhongMaterial({
+      color: 0x1b2247, emissive: 0x0d1428, emissiveIntensity: 0.75,
+      shininess: 30, specular: 0x2b3a6e, flatShading: false
+    });
+    const sideMat = new THREE.MeshPhongMaterial({
+      color: 0x141d3d, emissive: 0x0a1024, emissiveIntensity: 0.7,
+      shininess: 8
+    });
+    const lineMat = new THREE.LineBasicMaterial({
+      color: 0x7d93d6, transparent: true, opacity: 0.85
+    });
+    const outlinePts = [];      // 所有省的轮廓点(最后合并成一条线, 避免几百个 draw call)
+
+    for (const f of geo.features) {
+      const polys = f.geometry.type === 'Polygon'
+        ? [f.geometry.coordinates]
+        : f.geometry.coordinates;
+      const shapes = [];
+      for (const poly of polys) {
+        if (!poly.length) continue;
+        const outer = poly[0];
+        if (outer.length < 3) continue;
+        const shape = new THREE.Shape();
+        outer.forEach((pt, i) => {
+          const v = mapVec(pt[0], pt[1], 0);
+          i ? shape.lineTo(v.x, v.z) : shape.moveTo(v.x, v.z);
+        });
+        // 内环(洞/飞地)
+        for (let h = 1; h < poly.length; h++) {
+          const ring = poly[h];
+          if (ring.length < 3) continue;
+          const hole = new THREE.Path();
+          ring.forEach((pt, i) => {
+            const v = mapVec(pt[0], pt[1], 0);
+            i ? hole.lineTo(v.x, v.z) : hole.moveTo(v.x, v.z);
+          });
+          shape.holes.push(hole);
+        }
+        shapes.push(shape);
+      }
+      if (!shapes.length) continue;
+
+      // 挤出: ExtrudeGeometry 沿 +Z 挤出, 转成沿 +Y(朝上)
+      const geoms = [];
+      for (const sh of shapes) {
+        const g = new THREE.ExtrudeGeometry(sh, {
+          depth: EXTRUDE_DEPTH, bevelEnabled: false, curveSegments: 1
+        });
+        g.rotateX(-Math.PI / 2);        // XY 平面 → XZ 平面, 挤出方向变成 +Y
+        geoms.push(g);
+      }
+      // 合并同省的所有 polygon 为两个 mesh(顶面用材质组区分)
+      const merged = this._mergeGeoms(geoms);
+      // 材质组: ExtrudeGeometry 的第 0 组是顶/底面, 第 1 组是侧面
+      const mesh = new THREE.Mesh(merged, [topMat, sideMat]);
+      mesh.name = f.properties.name;
+      mesh.userData.province = f.properties.name;
+      mesh.userData.center = f.properties.center || f.properties.centroid;
+      this.mapGroup.add(mesh);
+      this.provinces.push(mesh);
+
+      // 省界描边(顶面轮廓) —— 收集起来最后一次性合并
+      for (const sh of shapes) {
+        const pts = sh.getPoints(0);
+        for (let i = 0; i < pts.length - 1; i++) {
+          outlinePts.push(new THREE.Vector3(pts[i].x, EXTRUDE_DEPTH + 0.15, pts[i].y));
+          outlinePts.push(new THREE.Vector3(pts[i+1].x, EXTRUDE_DEPTH + 0.15, pts[i+1].y));
+        }
+      }
+    }
+    // 一条 LineSegments 画完所有省界(1 个 draw call)
+    if (outlinePts.length) {
+      const lg = new THREE.BufferGeometry().setFromPoints(outlinePts);
+      this.mapGroup.add(new THREE.LineSegments(lg, lineMat));
+    }
+    // 记录实际包围盒, 供相机适配距离使用
+    const box = new THREE.Box3();
+    this.provinces.forEach(p => box.expandByObject(p));
+    const size = box.getSize(new THREE.Vector3());
+    this._bbox = { halfW: Math.max(1, size.x / 2), halfD: Math.max(1, size.z / 2) };
+    this._mapCenter = box.getCenter(new THREE.Vector3());
+  },
+
+  // 合并一个省的所有 ExtrudeGeometry → 单几何体, 只留 2 个材质组(顶面/侧面)
+  // ★ ExtrudeGeometry 无 index; 且默认每个多边形各带 2 个组 → 339 个多边形会产生
+  //   600+ 组 = 600+ draw call。这里按材质重排顶点, 压成 2 组。
+  _mergeGeoms(geoms) {
+    const top = { p: [], n: [], u: [] };
+    const side = { p: [], n: [], u: [] };
+    for (const g of geoms) {
+      const P = g.attributes.position, N = g.attributes.normal, U = g.attributes.uv;
+      const gs = (g.groups && g.groups.length) ? g.groups
+               : [{ start: 0, count: P.count, materialIndex: 0 }];
+      for (const grp of gs) {
+        const t = grp.materialIndex === 0 ? top : side;
+        for (let i = grp.start; i < grp.start + grp.count; i++) {
+          t.p.push(P.getX(i), P.getY(i), P.getZ(i));
+          if (N) t.n.push(N.getX(i), N.getY(i), N.getZ(i));
+          if (U) t.u.push(U.getX(i), U.getY(i));
+        }
+      }
+    }
+    const out = new THREE.BufferGeometry();
+    const allP = new Float32Array(top.p.length + side.p.length);
+    const allN = new Float32Array(top.n.length + side.n.length);
+    const allU = new Float32Array(top.u.length + side.u.length);
+    allP.set(top.p, 0);  allP.set(side.p, top.p.length);
+    allN.set(top.n, 0);  allN.set(side.n, top.n.length);
+    allU.set(top.u, 0);  allU.set(side.u, top.u.length);
+    out.setAttribute('position', new THREE.BufferAttribute(allP, 3));
+    out.setAttribute('normal',   new THREE.BufferAttribute(allN, 3));
+    out.setAttribute('uv',       new THREE.BufferAttribute(allU, 2));
+    const topCount = top.p.length / 3;
+    if (topCount) out.addGroup(0, topCount, 0);
+    if (side.p.length) out.addGroup(topCount, side.p.length / 3, 1);
+    return out;
+  },
+
+  // ── 相机: 球坐标(绕地图中心转), 始终看向原点 ──
+  _camPos() {
+    const r = this.rig.dist;
+    const st = Math.sin(this.rig.theta);
+    const v = new THREE.Vector3(
+      Math.sin(this.rig.phi) * st,
+      Math.cos(this.rig.theta),
+      Math.cos(this.rig.phi) * st
+    ).multiplyScalar(r);
+    // 相对注视点偏移(绕注视点转, 而不是绕原点)
+    if (this._lookAt) { v.x += this._lookAt.x; v.z += this._lookAt.z; }
+    return v;
+  },
+
+  // 照片 pin 跟随: 缓存 DOM 引用 + 只在坐标真变时写(每帧写 39 个元素会拖慢)
+  _pinEls: null, _pinCache: null,
+  _followPins() {
+    if (!this._pinEls) {
+      this._pinEls = [...document.querySelectorAll('.map-pin')];
+      this._pinCache = new WeakMap();
+      this._pinEls.forEach(el => {
+        const c = CITIES.find(x => x.name === el.dataset.city);
+        if (c) this._pinCache.set(el, c.coord);
+      });
+      this._centerOff = null;      // 居中补偿量(下一轮重算)
+    }
+    const cam = this.cam;
+    // 第一遍: 算出所有可见 pin 的原始屏幕坐标
+    const pts = [];
+    for (const el of this._pinEls) {
+      if (el.style.display === 'none') continue;
+      const coord = this._pinCache.get(el);
+      if (!coord) continue;
+      const p = this.project(coord);
+      pts.push({ el, p });
+    }
+    // 自动居中: 把照片群的包围盒中心挪到画面中心
+    // 这是闭环补偿 —— 相机怎么转都能把照片群摆正, 不依赖手调参数
+    if (pts.length) {
+      const vis = pts.filter(t => t.p);
+      if (vis.length) {
+        const W = this._wrap.clientWidth, H = this._wrap.clientHeight;
+        const xs = vis.map(t => t.p[0]), ys = vis.map(t => t.p[1]);
+        const wantX = W / 2 - (Math.min(...xs) + Math.max(...xs)) / 2;
+        const wantY = H / 2 - (Math.min(...ys) + Math.max(...ys)) / 2;
+        // 平滑逼近, 避免拖拽时抖动
+        const k = 0.18;
+        if (!this._centerOff) this._centerOff = { x: wantX, y: wantY };
+        else {
+          this._centerOff.x += (wantX - this._centerOff.x) * k;
+          this._centerOff.y += (wantY - this._centerOff.y) * k;
+        }
+      }
+    }
+    const off = this._centerOff || { x: 0, y: 0 };
+    // 第二遍: 应用补偿 + 避让偏移, 写 DOM
+    for (const { el, p } of pts) {
+      if (!p) {
+        if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden';
+        continue;
+      }
+      const x = Math.round(p[0] + (el._pinDX || 0) + off.x);
+      const y = Math.round(p[1] + (el._pinDY || 0) + off.y);
+      if (el._lastX !== x || el._lastY !== y) {
+        el._lastX = x; el._lastY = y;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+      }
+      if (el.style.visibility === 'hidden') el.style.visibility = '';
+    }
+  },
+  // renderOverlay 重建 pin 后要重置缓存(居中补偿让它重新收敛)
+  resetPinCache() { this._pinEls = null; this._pinCache = null; this._centerOff = null; },
+
+  // 让"半径 span 的范围"刚好铺满画面的相机距离(比 _fitDist 更通用)
+  _distForSpan(span) {
+    const W = this._wrap.clientWidth || 600, H = this._wrap.clientHeight || 600;
+    const vFov = this.cam.fov * Math.PI / 180;
+    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * (W / H));
+    const dV = span / Math.tan(vFov / 2);
+    const dH = span / Math.tan(hFov / 2);
+    return Math.max(dV, dH) * 1.05;
+  },
+
+  // 按视口算"地图刚好完整入框"的距离
+  // 斜视角下地图在屏幕上的实际占比: 水平取地面半宽, 垂直取"半深×sin(俯角) + 厚度"
+  _fitDist() {
+    const W = this._wrap.clientWidth || 600, H = this._wrap.clientHeight || 600;
+    const vFov = this.cam.fov * Math.PI / 180;
+    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * (W / H));
+    const b = this._bbox || { halfW: MAP_UNIT / 2, halfD: MAP_UNIT / 2 };
+    // 俯角越大(越接近俯视)垂直方向占地越小
+    const sinT = Math.max(0.45, Math.sin(this.rig.theta));
+    const halfV = b.halfD * sinT + EXTRUDE_DEPTH;
+    const dV = halfV / Math.tan(vFov / 2);
+    const dH = b.halfW / Math.tan(hFov / 2);
+    return Math.max(dV, dH) * FIT_MARGIN;
+  },
+
+  _loop() {
+    const tick = () => {
+      this._raf = requestAnimationFrame(tick);
+      if (this._tween) {
+        const t = Math.min(1, (performance.now() - this._tween.t0) / this._tween.ms);
+        const e = t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+        const T = this._tween;
+        this.rig.phi   = T.f0.phi   + (T.t1.phi   - T.f0.phi)   * e;
+        this.rig.theta = T.f0.theta + (T.t1.theta - T.f0.theta) * e;
+        this.rig.dist  = T.f0.dist  + (T.t1.dist  - T.f0.dist)  * e;
+        if (t >= 1) this._tween = null;
+      } else if (!this._drag && this._spin) {
+        this.rig.phi += 0.0011 * this._spin;
+        this._lastCenter = null;
+      }
+      this.cam.position.copy(this._camPos());
+      // 看向原点; 地图整体已按足迹重心平移过(mapGroup.position), 所以这样就是居中
+      this.cam.lookAt(0, 0, 0);
+      this.cam.updateMatrixWorld();
+      this.renderer.render(this.scene, this.cam);
+      this._followPins();          // 照片 pin 每帧跟随(只做坐标加法, 很轻)
+    };
+    if (this._raf) cancelAnimationFrame(this._raf);
+    this._raf = requestAnimationFrame(tick);
+  },
+
+  // ── 输入 ──
+  _bindInput() {
+    const cv = this.renderer.domElement;
+    const pt = e => ({ x: e.clientX, y: e.clientY });
+
+    cv.addEventListener('pointerdown', e => {
+      this._tween = null;
+      if (e.button !== 0) return;
+      this._drag = pt(e); this._lastPt = pt(e);
+      cv.setPointerCapture && cv.setPointerCapture(e.pointerId);
+      cv.style.cursor = 'grabbing';
+    });
+    cv.addEventListener('pointermove', e => {
+      if (this._drag) {
+        const dx = e.clientX - this._lastPt.x, dy = e.clientY - this._lastPt.y;
+        this._lastPt = pt(e);
+        if (Math.abs(dx) + Math.abs(dy) < 0.4) return;
+        this.rig.phi += dx * 0.0062;
+        this.rig.theta = Math.max(0.12 * Math.PI, Math.min(0.86 * Math.PI, this.rig.theta - dy * 0.0048));
+        Object.assign(this.rigTgt, this.rig);
+        this._lastCenter = null;
+        this._fireRoam();
+        return;
+      }
+      // 悬停: 射线拾取省份
+      this._hoverPick(e);
+    });
+    const endDrag = () => {
+      if (!this._drag) return;
+      this._drag = null; cv.style.cursor = 'grab';
+      this._fireRoam();
+    };
+    cv.addEventListener('pointerup', endDrag);
+    cv.addEventListener('pointercancel', endDrag);
+    cv.addEventListener('pointerleave', endDrag);
+    cv.style.cursor = 'grab';
+
+    // 滚轮缩放
+    cv.addEventListener('wheel', e => {
+      e.preventDefault(); this._tween = null;
+      // 下钳到比初始更近, 上钳到全国视角(能拉回看全图)
+      const lo = Math.min(this.rig.dist * 0.8, this._defaultDist * 0.30), hi = this._defaultDist * 1.15;
+      this.rig.dist = Math.max(lo, Math.min(hi, this.rig.dist * (1 + e.deltaY * 0.0013)));
+      Object.assign(this.rigTgt, this.rig);
+      this._lastCenter = null;
+      this._fireRoam();
+    }, { passive: false });
+
+    // 双指捏合
+    cv.addEventListener('touchmove', e => {
+      if (e.touches.length !== 2) return;
+      e.preventDefault(); this._tween = null;
+      const d = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY);
+      if (this._pinch) {
+        // 下钳到比初始更近, 上钳到全国视角(能拉回看全图)
+      const lo = Math.min(this.rig.dist * 0.8, this._defaultDist * 0.30), hi = this._defaultDist * 1.15;
+        this.rig.dist = Math.max(lo, Math.min(hi, this.rig.dist * (this._pinch / d)));
+        Object.assign(this.rigTgt, this.rig);
+        this._lastCenter = null;
+        this._fireRoam();
+      }
+      this._pinch = d;
+    }, { passive: false });
+    cv.addEventListener('touchend', () => { this._pinch = 0; });
+
+    // 点击: 屏幕距离最近的城市(比 raycast 更省)
+    cv.addEventListener('click', e => {
+      if (!this._clickFn) return;
+      const r = cv.getBoundingClientRect();
+      const mx = e.clientX - r.left, my = e.clientY - r.top;
+      let best = null, bestD = 26;
+      for (const name in this.marks) {
+        const p = this.project(this.marks[name].city.coord);
+        if (!p) continue;
+        const d = Math.hypot(p[0] - mx, p[1] - my);
+        if (d < bestD) { bestD = d; best = name; }
+      }
+      if (best) this._clickFn({ seriesType: 'effectScatter', name: best });
+    });
+
+    // 双击: 复位到初始视角(推近到足迹区)
+    cv.addEventListener('dblclick', e => {
+      e.preventDefault();
+      this.resetView();
+    });
+
+    // 键盘: 方向键旋转, +/- 缩放(无障碍 + 桌面顺手)
+    cv.tabIndex = 0;                       // 让 canvas 可聚焦
+    cv.addEventListener('keydown', e => {
+      const step = 0.09, dstep = 1.12;
+      let handled = true;
+      switch (e.key) {
+        case 'ArrowLeft':  this.rig.phi -= step; break;
+        case 'ArrowRight': this.rig.phi += step; break;
+        case 'ArrowUp':    this.rig.theta = Math.max(0.12*Math.PI, this.rig.theta - step); break;
+        case 'ArrowDown':  this.rig.theta = Math.min(0.86*Math.PI, this.rig.theta + step); break;
+        case '+': case '=':
+          this.rig.dist = Math.max(this._defaultDist*0.30, this.rig.dist / dstep); break;
+        case '-': case '_':
+          this.rig.dist = Math.min(this._defaultDist*1.15, this.rig.dist * dstep); break;
+        case 'r': case 'R': this.resetView(); break;
+        default: handled = false;
+      }
+      if (handled) {
+        e.preventDefault();
+        this._tween = null;
+        Object.assign(this.rigTgt, this.rig);
+        this._lastCenter = null;
+        this._fireRoam();
+      }
+    });
+  },
+
+  // 复位: 回到"推近到足迹区"的初始视角
+  resetView() {
+    if (!this._ready || !this._homeCenter) return;
+    const h = this._homeCenter;
+    this.rig.phi = Math.atan2(h.x, h.z);
+    this.rig.theta = 0.61;                   // 与初始俯角一致
+    this.rig.dist = this._distForSpan(h.span);
+    const halfFov = this.cam.fov * Math.PI / 360;
+    const back = 0.22 * this.rig.dist * Math.tan(halfFov) * 2;
+    this._lookAt = { x: h.x + Math.sin(this.rig.phi) * back,
+                     z: h.z + Math.cos(this.rig.phi) * back };
+    Object.assign(this.rigTgt, this.rig);
+    this._lastCenter = null;
+    this._fireRoam();
+  },
+
+  // 悬停省份高亮
+  _hoverPick(e) {
+    const cv = this.renderer.domElement;
+    const r = cv.getBoundingClientRect();
+    this._mouse.set(((e.clientX - r.left) / r.width) * 2 - 1,
+                    -((e.clientY - r.top) / r.height) * 2 + 1);
+    this._raycaster.setFromCamera(this._mouse, this.cam);
+    const hits = this._raycaster.intersectObjects(this.provinces, false);
+    const name = hits.length ? hits[0].object.userData.province : null;
+    if (name === this._hoverName) return;
+    // 还原上一个
+    if (this._hoverName) {
+      const prev = this.provinces.find(p => p.userData.province === this._hoverName);
+      if (prev) prev.position.y = 0;
+    }
+    this._hoverName = name;
+    if (name) {
+      const cur = this.provinces.find(p => p.userData.province === name);
+      if (cur) cur.position.y = 3.5;       // 抬起, 立体感
+      cv.style.cursor = 'pointer';
+    } else {
+      cv.style.cursor = this._drag ? 'grabbing' : 'grab';
+    }
+  },
+
+  _fireRoam() {
+    if (this._roamTimer) clearTimeout(this._roamTimer);
+    this._roamTimer = setTimeout(() => { if (this._roamFn) this._roamFn(); }, 80);
+  },
+
+  // ── MapAPI 契约 ──
+  // 经纬度 → 屏幕像素 [x,y]; 屏外返回 null
+  project(coord) {
+    if (!this._ready || !this.cam) return null;
+    // 保险: 相机若还在原点(后台标签页 RAF 未跑), 先摆正再算
+    if (this.cam.position.lengthSq() < 1) {
+      this.cam.position.copy(this._camPos());
+      this.cam.lookAt(0, 0, 0);
+      this.cam.updateMatrixWorld();
+    }
+    const p = mapVec(coord[0], coord[1], EXTRUDE_DEPTH + 2);
+    // 加上地图整体的平移(足迹重心已移到原点)
+    const g = this.mapGroup ? this.mapGroup.position : null;
+    if (g) { p.x += g.x; p.z += g.z; }
+    const v = p.clone().project(this.cam);
+    if (v.z > 1) return null;
+    const W = this._wrap.clientWidth, H = this._wrap.clientHeight;
+    const x = (v.x * 0.5 + 0.5) * W, y = (-v.y * 0.5 + 0.5) * H;
+    if (x < -80 || x > W + 80 || y < -80 || y > H + 80) return null;
+    return [x, y];
+  },
+
+  // 平面地图没有背面概念
+  isVisible() { return this._ready; },
+
+  getZoom() {
+    // 基线 1.55 对齐 echarts; _defaultDist = 全国视角距离(拉远的上限)
+    // 初始推近到足迹区时约 1.9~2.4, 拉近到 0.5× 得 3.1 > 2.5 ✓ 触发小 pin 升格
+    return 1.55 * (this._defaultDist / this.rig.dist);
+  },
+
+  getCenter() {
+    if (!this._ready) return null;
+    // 用相机水平方位反推视线落点(近似取地图中心往相机方向偏移)
+    const ll = this._lastCenter || this._computeCenter();
+    return ll;
+  },
+  _computeCenter() {
+    const d = this.rig.dist;
+    const t = Math.min(0.92, (d - this._defaultDist * 0.42) / (this._defaultDist * 1.8));
+    // 距离越近, 视线中心越靠相机方位对应的点
+    const dir = new THREE.Vector3(Math.sin(this.rig.phi), 0, Math.cos(this.rig.phi));
+    const pt = dir.multiplyScalar(MAP_UNIT * 0.45 * t);
+    const ll = mapToLonLat(pt);
+    this._lastCenter = ll;
+    return ll;
+  },
+
+  setCenter(c) {
+    if (!this._ready) return;
+    const v = mapVec(c[0], c[1], 0);
+    this.rig.phi = Math.atan2(v.x, v.z);
+    Object.assign(this.rigTgt, this.rig);
+    this._lastCenter = null;
+  },
+
+  // 高亮: 只脉冲(pin 层的效果), 不运镜
+  highlight(name) {
+    const m = this.marks[name];
+    if (!m || !m.sprite) return;
+    const base = m.baseScale, t0 = performance.now();
+    const pulse = () => {
+      const t = (performance.now() - t0) / 1400;
+      if (t >= 1) { m.sprite.scale.setScalar(base); return; }
+      m.sprite.scale.setScalar(base * (1 + 1.1 * Math.sin(Math.PI * t)));
+      requestAnimationFrame(pulse);
+    };
+    pulse();
+    // 省份也抬一下
+    const prov = this.provinces.find(p => p.name === name ||
+      (name && p.userData.province && p.userData.province.indexOf(name) >= 0));
+    if (prov) {
+      const t2 = performance.now();
+      const rise = () => {
+        const t = (performance.now() - t2) / 1400;
+        if (t >= 1) { prov.position.y = 0; return; }
+        prov.position.y = 4 * Math.sin(Math.PI * t);
+        requestAnimationFrame(rise);
+      };
+      rise();
+    }
+  },
+
+  onRoam(fn) { this._roamFn = fn; },
+  onClick(fn) { this._clickFn = fn; },
+
+  resize() {
+    if (!this._ready) return;
+    const W = this._wrap.clientWidth, H = this._wrap.clientHeight;
+    if (!W || !H) return;
+    this.renderer.setSize(W, H, false);
+    this.cam.aspect = W / H;
+    this.cam.updateProjectionMatrix();
+    const old = this._defaultDist;
+    this._defaultDist = this._fitDist();
+    if (old > 0) {
+      const k = this._defaultDist / old;
+      this.rig.dist *= k; this.rigTgt.dist *= k;
+      if (this._tween) { this._tween.f0.dist *= k; this._tween.t1.dist *= k; }
+    }
+  },
+
+  // ── 3D 专属 ──
+  flyTo(name, opts) {
+    const c = CITIES.find(x => x.name === name);
+    if (!c || !this._ready) return;
+    const o = opts || {};
+    const v = mapVec(c.coord[0], c.coord[1], 0);
+    const g = this.mapGroup ? this.mapGroup.position : null;
+    if (g) { v.x += g.x; v.z += g.z; }          // 补偿地图平移
+    let phi = Math.atan2(v.x, v.z);
+    const f = this.rig;
+    let dPhi = ((phi - f.phi + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+    this._tween = {
+      f0: { phi: f.phi, theta: f.theta, dist: f.dist },
+      t1: { phi: f.phi + dPhi, theta: Math.max(0.2, Math.min(0.5, f.theta)), dist: this._defaultDist * 0.55 },
+      t0: performance.now(), ms: o.ms || 1000
+    };
+    Object.assign(this.rigTgt, this._tween.t1);
+    this._lastCenter = null;
+  },
+
+  // 足迹点
+  addMark(city, color) {
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({
+      map: this._dotTex(), color: new THREE.Color(color),
+      transparent: true, depthWrite: false, depthTest: false,
+      blending: THREE.AdditiveBlending
+    }));
+    sp.position.copy(mapVec(city.coord[0], city.coord[1], EXTRUDE_DEPTH + 3));
+    const base = 9;
+    sp.scale.setScalar(base);
+    sp.renderOrder = 10;
+    this.mapGroup.add(sp);
+    this.marks[city.name] = { sprite: sp, city, baseScale: base };
+    return sp;
+  },
+
+  // 航线: 家 → 各城的空间弧线(抬高, 不穿过地面)
+  // 合并成一个 LineSegments, 1 个 draw call; 支持逐个点亮
+  buildRoutes(home, others) {
+    const pts = [], colors = [], spans = [];
+    const a = mapVec(home.coord[0], home.coord[1], EXTRUDE_DEPTH);
+    const cTmp = new THREE.Color();
+    others.forEach((c, i) => {
+      const b = mapVec(c.coord[0], c.coord[1], EXTRUDE_DEPTH);
+      const mid = a.clone().add(b).multiplyScalar(0.5);
+      const chord = a.distanceTo(b);
+      const ctrl = mid.clone();
+      ctrl.y += chord * 0.30 + 12;          // 顶点抬高 → 拱形
+      const SEG = 22;
+      cTmp.set(RAINBOW[i % RAINBOW.length]);
+      const startIdx = pts.length;
+      for (let k = 0; k < SEG; k++) {
+        const t0 = k / SEG, t1 = (k + 1) / SEG;
+        const p0 = this._bez(a, ctrl, b, t0), p1 = this._bez(a, ctrl, b, t1);
+        pts.push(p0, p1);
+        for (let m = 0; m < 2; m++) colors.push(cTmp.r, cTmp.g, cTmp.b);
+      }
+      spans.push({ start: startIdx, end: pts.length, city: c.name });
+    });
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    const mat = new THREE.LineBasicMaterial({
+      vertexColors: true, transparent: true, opacity: 0.0,
+      blending: THREE.AdditiveBlending, depthWrite: false
+    });
+    const line = new THREE.LineSegments(geo, mat);
+    line.renderOrder = 5;
+    this.mapGroup.add(line);
+    this.routes = { line, spans, groups: {} };
+    return line;
+  },
+  _bez(a, c, b, t) {
+    const u = 1 - t;
+    return new THREE.Vector3(
+      u*u*a.x + 2*u*t*c.x + t*t*b.x,
+      u*u*a.y + 2*u*t*c.y + t*t*b.y,
+      u*u*a.z + 2*u*t*c.z + t*t*b.z
+    );
+  },
+  // 逐条点亮航线: 用 drawRange 控制已显示的线段数
+  revealRoutes(n) {
+    if (!this.routes) return;
+    const total = this.routes.spans.length ? this.routes.spans[this.routes.spans.length-1].end : 0;
+    const upto = n >= this.routes.spans.length ? total
+               : (n > 0 ? this.routes.spans[n-1].end : 0);
+    this.routes.line.geometry.setDrawRange(0, upto);
+    this.routes.line.material.opacity = n > 0 ? 0.55 : 0;
+  },
+
+  _dotTexCache: null,
+  _dotTex() {
+    if (this._dotTexCache) return this._dotTexCache;
+    const S = 64, cv = document.createElement('canvas');
+    cv.width = cv.height = S;
+    const g = cv.getContext('2d');
+    const grd = g.createRadialGradient(S/2, S/2, 0, S/2, S/2, S/2);
+    grd.addColorStop(0, 'rgba(255,255,255,1)');
+    grd.addColorStop(0.35, 'rgba(255,255,255,0.9)');
+    grd.addColorStop(0.7, 'rgba(255,255,255,0.25)');
+    grd.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = grd; g.fillRect(0, 0, S, S);
+    this._dotTexCache = new THREE.CanvasTexture(cv);
+    return this._dotTexCache;
+  },
+};
+
+
 // ── 地图 ──
 let chart = null, geoLoaded = false, frame = 0, timer = null;
+// 后端选择: 'three' = 3D 地球 | 'echarts' = 2D 中国地图(备用/低端机回退)
+// WebGL 不可用时自动降级到 echarts
+let MAP_BACKEND = localStorage.getItem('yuebing_map_backend') || 'three';
 
 function renderMap() {
-  chart = echarts.init(document.getElementById('map'));
-  chart.showLoading({text:'地图加载中…', color:'#ffd166'});
-
-  fetch('china.json')
-    .then(r => r.json())
-    .then(geojson => {
-      geoLoaded = true;
-      echarts.registerMap('china', geojson);
-      chart.hideLoading();
-      startAnimation();
-    })
-    .catch(() => {
-      chart.hideLoading(); chart.clear();
-      document.getElementById('map').innerHTML =
-        '<div style="padding:60px 20px;text-align:center;color:#aab0d0">地图数据加载失败（离线状态）<br>右侧城市墙正常可用</div>';
+  const el = document.getElementById('map');
+  const useThree = MAP_BACKEND === 'three' && typeof THREE !== 'undefined';
+  if (useThree) {
+    document.querySelector('.map-row').classList.add('map-3d');   // 触发 3D 版 pin 样式
+    MapAPI.mount(ThreeBackend, el, {
+      onReady: () => {
+        if (!ThreeBackend.ready()) {          // WebGL 检测没过 → 回退
+          MAP_BACKEND = 'echarts';
+          renderMap();
+          return;
+        }
+        startGlobeOpening();
+      }
     });
+    return;
+  }
+  // echarts 后端内部会 init/registerMap; 就绪后回调 startAnimation 画开屏动画
+  MapAPI.mount(EchartsBackend, el, {
+    onReady: () => { chart = EchartsBackend.chart; startAnimation(); },
+  });
+}
+
+// ── 3D 版开屏: 足迹点逐个点亮 → 航线浮现 → 照片 pin 上屏 → 烟花 ──
+function startGlobeOpening() {
+  const home = CITIES.find(c => c.home);
+  const others = CITIES.filter(c => !c.home);
+  // 足迹点(全部城市, 含无照片的)
+  CITIES.forEach((c, i) => ThreeBackend.addMark(c, RAINBOW[i % RAINBOW.length]));
+  ThreeBackend.buildRoutes(home, others);
+  ThreeBackend.revealRoutes(0);
+  // 初始全部隐藏
+  Object.values(ThreeBackend.marks).forEach(m => { m.sprite.visible = false; });
+
+  // 照片层先建好; pin 初始 opacity:0(CSS), 由 lit 逐个点亮
+  // ★ 顺序要紧: 必须"先 renderOverlay 再点亮", 反了会被重建冲掉(老板 09-16 反馈缩略图消失)
+  renderOverlay();
+  const litPins = names => {
+    const set = names instanceof Set ? names : new Set(names);
+    document.querySelectorAll('.map-pin').forEach(p => {
+      if (set.has(p.dataset.city)) p.classList.add('lit');
+    });
+  };
+
+  const REVEAL_MS = 135;                 // 与 2D 版一致(老板认可的开屏节奏)
+  const t0 = performance.now();
+  const litCities = new Set([home.name]);
+  let idx = 0;
+  const timer = setInterval(() => {
+    const target = Math.min(others.length, Math.floor((performance.now() - t0) / REVEAL_MS));
+    if (target > idx) idx = target; else idx++;
+    if (idx >= others.length) {
+      clearInterval(timer);
+      // 收尾: 全部点 + 航线 + 全部照片
+      CITIES.forEach(c => { const m = ThreeBackend.marks[c.name]; if (m) m.sprite.visible = true; });
+      ThreeBackend.revealRoutes(others.length);
+      litPins(CITIES.map(c => c.name));
+      setTimeout(() => fireworkBurst(home.coord), 350);
+      return;
+    }
+    for (let i = 0; i < idx; i++) {
+      const c = others[i];
+      const m = ThreeBackend.marks[c.name];
+      if (m) m.sprite.visible = true;
+      litCities.add(c.name);
+    }
+    ThreeBackend.revealRoutes(idx);
+    litPins(litCities);
+  }, 160);
+
+  // 兜底: 标签页在后台时 setInterval 被节流, 3.5 秒后无论如何全亮
+  setTimeout(() => litPins(CITIES.map(c => c.name)), 3500);
+
+  MapAPI.onClick(p => {
+    if (p.seriesType === 'effectScatter' && p.name) {
+      if (p.name !== home.name && photoCount(p.name)) { openLightbox(p.name); return; }
+      highlightCity(p.name);
+    }
+  });
+  MapAPI.onRoam(repositionOverlay);
 }
 
 function startAnimation() {
@@ -329,12 +2282,30 @@ function startAnimation() {
     backgroundColor: 'transparent',
     tooltip: {
       trigger: 'item',
-      formatter: p => p.seriesType === 'effectScatter'
-        ? `<b>${p.name}</b><br/>${p.name === '北京' ? '🏠 家 · 从这里出发' : '足迹之城'}` : p.name,
+      formatter: p => {
+        if (p.seriesType !== 'effectScatter') return p.name;
+        const c = CITIES.find(x => x.name === p.name);
+        if (!c) return p.name;
+        const edits = loadEdits();
+        const e = edits[c.name] || {};
+        const since = e.since || c.since || '';
+        const n = photoCount(c.name);
+        const note = e.note || c.note || '';
+        let lines = '';
+        if (c.home) lines += '🏠 家 · 从这里出发<br/>';
+        if (since) lines += `🕐 首访 ${since}<br/>`;
+        if (n) lines += `📷 ${n} 张照片<br/>`;
+        if (note) lines += `💬 ${note}<br/>`;
+        if (!lines) lines = `🗺️ ${c.prov} · 待补记忆<br/>`;
+        return `<b>${p.name}</b><br/>${lines}`;
+      },
       backgroundColor: '#1c1f33', borderColor: '#ffd166', textStyle: {color:'#f2f4ff'}
     },
     geo: {
       map: 'china', roam: true,
+      zoom: 1.55,  // 足迹密集区为主体, 没去过的地方放地图边缘(老板 2026-09-15)
+      center: [110, 36],  // 重心: 足迹主覆盖区(华北-华中-陕川)
+      scaleLimit: { min: 0.9, max: 7 },  // 防缩放大后地图漂出画布留白(2026-09-15 修复)
       itemStyle: {
         areaColor: new echarts.graphic.LinearGradient(0,0,0,1,[
           {offset:0,color:'#232a4d'},{offset:1,color:'#181c33'}
@@ -348,6 +2319,7 @@ function startAnimation() {
     series: [
       // 1) 家 —— 彩虹脉冲
       {
+        id: 'home1',
         type: 'effectScatter', coordinateSystem: 'geo', zlevel: 4,
         data: [{name: home.name, value: [...home.coord, 30]}],
         symbolSize: v => v[2], rippleEffect: { brushType:'stroke', scale: 5, period: 3 },
@@ -361,11 +2333,12 @@ function startAnimation() {
       },
       // 2) 足迹点 —— 彩色呼吸 + 相册徽章
       {
+        id: 'scatter1',
         type: 'effectScatter', coordinateSystem: 'geo', zlevel: 3,
         data: others.map((c,i) => ({
           name: c.name, value: [...c.coord, 15 + Math.sin(i*1.7)*3],
           itemStyle: { color: RAINBOW[i % RAINBOW.length] },
-          hasPhoto: !!(PHOTOS[c.name]||[]).length
+          hasPhoto: !!photoCount(c.name)
         })),
         symbolSize: v => v[2], rippleEffect: { brushType:'stroke', scale: 3.2, period: 4 },
         itemStyle: {
@@ -381,6 +2354,7 @@ function startAnimation() {
       },
       // 3) 家 → 各城 彩虹航线（按访问次序逐条点亮）
       {
+        id: 'lines1',
         type: 'lines', coordinateSystem: 'geo', zlevel: 2, silent: true,
         data: others.map((c,i) => ({
           fromName: home.name, toName: c.name,
@@ -396,45 +2370,1320 @@ function startAnimation() {
   };
   chart.setOption(option);
 
-  // 航线逐条点亮动画
+  // 开屏动画: 地图渐显 + 足迹点像烟花逐个点亮(不弹 tooltip 抢视线)
+  const scatterData = others;
   let idx = 0;
-  timer = setInterval(() => {
-    if (idx >= others.length) { clearInterval(timer); timer = null; return; }
-    chart.dispatchAction({ type:'showTip', seriesIndex:1, name: others[idx].name });
-    idx++;
-  }, 300);
+  const revealInterval = 135;  // 37 个点 × 135ms ≈ 5 秒亮完(老板拍板 2026-09-15)
+  // 先把所有足迹点隐藏, 逐个点亮
+  const tmpData = scatterData.map(c => ({ ...c, value: [...c.coord, 0] }));
+  chart.setOption({ series: [{ id: 'scatter1', data: tmpData }] });
+  // 航线和光点也延迟出现
+  chart.setOption({ series: [{ id: 'lines1', data: [] }] });
+  chart.setOption({ series: [{ id: 'home1', data: [] }] });
 
-  chart.on('click', p => {
+  // 时间戳驱动: 后台标签页 setInterval 被节流时, 每 tick 按实际经过时间补点亮多个点
+  const revealStart = Date.now();
+  timer = setInterval(() => {
+    const elapsed = Date.now() - revealStart;
+    const target = Math.min(scatterData.length, Math.floor(elapsed / revealInterval));
+    if (target > idx) idx = target;
+    else idx++;
+    if (idx >= scatterData.length) {
+      clearInterval(timer); timer = null;
+      // 收尾: 足迹点补满 + 家的光点 + 航线全部浮现
+      const fullScatter = scatterData.map(c => ({ ...c, value: [...c.coord, 15 + Math.sin(scatterData.indexOf(c)*1.7)*3] }));
+      chart.setOption({ series: [
+        { id: 'scatter1', data: fullScatter },
+        { id: 'home1', data: [{name: home.name, value: [...home.coord, 30]}] },
+        { id: 'lines1', data: others.map((c,i) => ({
+          fromName: home.name, toName: c.name,
+          coords: [home.coord, c.coord],
+          lineStyle: { color: RAINBOW[i % RAINBOW.length], width: 1.4, opacity: .55, curveness: .18 }
+        })) }
+      ] });
+      // 收尾: 剩余照片 pin 全点亮
+      document.querySelectorAll('.map-pin').forEach(p => p.classList.add('lit'));
+      // 烟花绽放: 在"家"上空绽放
+      setTimeout(() => fireworkBurst(home.coord), 350);
+      return;
+    }
+    // 点亮到当前进度 + 同步点亮已亮地点的照片 pin
+    const lit = scatterData.slice(0, idx).map(c => ({ ...c, value: [...c.coord, 15 + Math.sin(scatterData.indexOf(c)*1.7)*3] }));
+    chart.setOption({ series: [{ id: 'scatter1', data: lit }] });
+    lit.forEach(c => {
+      const pin = Array.from(document.querySelectorAll('.map-pin'))
+                      .find(p => p.querySelector('img').alt === c.name);
+      if (pin) pin.classList.add('lit');
+    });
+  }, 200);
+
+  MapAPI.onClick(p => {
     if (p.seriesType === 'effectScatter' && p.name) {
-      if (p.name !== home.name && (PHOTOS[p.name]||[]).length) { openLightbox(p.name); return; }
+      if (p.name !== home.name && photoCount(p.name)) { openLightbox(p.name); return; }
       highlightCity(p.name);
     }
   });
+
+  // 地图缩放/平移后重定位浮层照片
+  MapAPI.onRoam(repositionOverlay);
+
+  // 照片浮层上屏
+  renderOverlay();
+}
+
+// ── 🎆 烟花绽放: canvas 粒子系统, 在地图"家"坐标上空炸开 ──
+const FIREWORK_COLORS = ['#ffd166','#ff5d8f','#7bf1a8','#4fd1ff','#c084fc','#ff9e5e','#ffffff'];
+let fwCanvas = null, fwCtx = null, fwParts = [], fwRunning = false, fwTimer = null, fwLastTick = 0;
+
+function ensureFwCanvas() {
+  if (fwCanvas) return;
+  const wrap = document.getElementById('map-wrap');
+  fwCanvas = document.createElement('canvas');
+  fwCanvas.style.cssText = 'position:absolute;inset:0;z-index:5;pointer-events:none;';
+  wrap.appendChild(fwCanvas);
+  const resize = () => {
+    fwCanvas.width = wrap.clientWidth;
+    fwCanvas.height = wrap.clientHeight;
+  };
+  resize();
+  window.addEventListener('resize', resize);
+  fwCtx = fwCanvas.getContext('2d');
+}
+
+let fwFinalPhotoShown = false, fwBurstChain = null;
+
+function fireworkBurst(coord) {
+  ensureFwCanvas();
+  // 地图坐标 → 画布像素
+  const px = MapAPI.project(coord);
+  if (!px) return;
+  const cx = px[0], cy = px[1];
+  fwFinalPhotoShown = false;
+  // 三连炸: 第一波立即发, 后两波用时间戳驱动的链式 setTimeout
+  const styles = FW_STYLES.sort(() => Math.random() - 0.5).slice(0, 3);
+  launchOne(cx, cy, 70, styles[0]);  // 立即第一炸
+  let burst = 1;
+  const nextBurst = (start) => {
+    if (burst >= 3) return;
+    const wait = burst * 450 - (Date.now() - start);
+    fwBurstChain = setTimeout(() => {
+      launchOne(cx, cy, 70 + burst * 25, styles[burst]);
+      burst++;
+      nextBurst(start);
+    }, Math.max(0, wait));
+  };
+  nextBurst(Date.now());
+}
+
+// 烟花收尾: 随机一张照片浮现, 显示 3 秒后消失
+function showRandomFinalPhoto() {
+  const cities = theaterCitiesWithPhotos();
+  const c = cities[Math.floor(Math.random() * cities.length)];
+  const imgs = photoImgs(c.name);
+  const img = imgs[Math.floor(Math.random() * imgs.length)];
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position:absolute; inset:0; z-index:8; display:flex;
+    align-items:center; justify-content:center; pointer-events:none;
+    animation: fwPhotoIn .8s ease forwards;
+  `;
+  overlay.innerHTML = `
+    <div style="text-align:center; position:relative;">
+      <img src="${thumbOf(img)}" alt=""
+        style="max-width:46%; max-height:46vh; border-radius:16px;
+        box-shadow: 0 16px 60px rgba(0,0,0,.75), 0 0 40px rgba(255,209,102,.35);
+        border:2px solid rgba(255,209,102,.5);">
+      <div style="margin-top:8px; font-size:15px; color:#ffd166; font-weight:600;
+        text-shadow: 0 1px 6px rgba(0,0,0,.8);">${c.name} · 月饼的足迹</div>
+    </div>`;
+  // 加 keyframes(动态注入)
+  if (!document.getElementById('fw-photo-keyframes')) {
+    const st = document.createElement('style');
+    st.id = 'fw-photo-keyframes';
+    st.textContent = `
+      @keyframes fwPhotoIn {
+        0% { opacity:0; transform: scale(.7); }
+        60% { opacity:1; transform: scale(1.05); }
+        100% { opacity:1; transform: scale(1); }
+      }`;
+    document.head.appendChild(st);
+  }
+  document.getElementById('map-wrap').appendChild(overlay);
+  // 3.2 秒后淡出移除
+  setTimeout(() => {
+    overlay.style.transition = 'opacity .7s';
+    overlay.style.opacity = '0';
+    setTimeout(() => overlay.remove(), 700);
+  }, 3200);
+}
+
+// 烟花样式库: 圆环/双色/心形/螺旋, 随机选用
+const FW_STYLES = ['ring', 'dual', 'heart', 'spiral', 'bloom'];
+
+function launchOne(cx, cy, count, styleOverride) {
+  const style = styleOverride || FW_STYLES[Math.floor(Math.random() * FW_STYLES.length)];
+  const color = FIREWORK_COLORS[Math.floor(Math.random() * FIREWORK_COLORS.length)];
+  const color2 = FIREWORK_COLORS[(FIREWORK_COLORS.indexOf(color) + 3) % FIREWORK_COLORS.length];
+  const push = (vx, vy, size, col) => {
+    fwParts.push({
+      x: cx, y: cy, vx, vy,
+      life: 1,
+      decay: 0.012 + Math.random() * 0.014,
+      size, color: col,
+    });
+  };
+  if (style === 'ring') {
+    // 完美圆环: 均匀角度 + 等速
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2;
+      const sp = 3.2;
+      push(Math.cos(a) * sp, Math.sin(a) * sp, 2, color);
+    }
+  } else if (style === 'dual') {
+    // 双色交错: 内外两环
+    for (let i = 0; i < count; i++) {
+      const a = (i / count) * Math.PI * 2;
+      const sp = i % 2 === 0 ? 2.4 : 4.0;
+      push(Math.cos(a) * sp, Math.sin(a) * sp, 1.8, i % 2 === 0 ? color : color2);
+    }
+  } else if (style === 'heart') {
+    // 心形参数方程
+    for (let i = 0; i < count; i++) {
+      const t = (i / count) * Math.PI * 2;
+      const x = 16 * Math.pow(Math.sin(t), 3);
+      const y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+      push(x * 0.22, -y * 0.22, 1.8, color);
+    }
+  } else if (style === 'spiral') {
+    // 螺旋: 角度递进 + 速度递增
+    for (let i = 0; i < count; i++) {
+      const a = i * 0.35;
+      const sp = 1.2 + i * 0.05;
+      push(Math.cos(a) * sp, Math.sin(a) * sp, 1.5, color);
+    }
+  } else {
+    // bloom: 经典球形散开
+    for (let i = 0; i < count; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const sp = 1.5 + Math.random() * 3.5;
+      push(Math.cos(a) * sp, Math.sin(a) * sp - 0.6, 1.5 + Math.random() * 2, color);
+    }
+  }
+  if (!fwRunning) {
+    fwRunning = true;
+    fwLastTick = Date.now();
+    fwTimer = setInterval(fwTick, 33);
+  }
+}
+
+function fwTick() {
+  const now = Date.now();
+  const dt = Math.min(100, now - fwLastTick) / 16.7;  // 帧数换算, 封顶防跳变
+  fwLastTick = now;
+  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+  fwParts = fwParts.filter(p => p.life > 0);
+  for (const p of fwParts) {
+    p.x += p.vx * dt;
+    p.y += p.vy * dt;
+    p.vy += 0.03 * dt;   // 重力
+    p.vx *= Math.pow(0.985, dt);  // 空气阻力
+    p.vy *= Math.pow(0.985, dt);
+    p.life -= p.decay * dt;
+    fwCtx.globalAlpha = Math.max(0, p.life);
+    fwCtx.fillStyle = p.color;
+    fwCtx.beginPath();
+    fwCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    fwCtx.fill();
+    // 拖尾光晕
+    fwCtx.globalAlpha = Math.max(0, p.life * 0.35);
+    fwCtx.beginPath();
+    fwCtx.arc(p.x, p.y, p.size * 2.2, 0, Math.PI * 2);
+    fwCtx.fill();
+  }
+  fwCtx.globalAlpha = 1;
+  if (fwParts.length === 0) {
+    clearInterval(fwTimer);
+    fwTimer = null;
+    fwRunning = false;
+    fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+    // 烟花粒子全部飞完 → 随机一张月饼照片收尾
+    if (!fwFinalPhotoShown) {
+      fwFinalPhotoShown = true;
+      showRandomFinalPhoto();
+    }
+  }
+}
+
+// ── 照片浮层: 照片+记忆直接钉在地图上 ──
+// 拥挤优化(老板拍板 A+B): 默认只显示照片最多的 6 个大 pin, 放大后全部展开
+const PIN_BIG_DEFAULT = 6;
+let mapZoomLevel = 1;
+
+function renderOverlay() {
+  const overlay = document.getElementById('map-overlay');
+  overlay.innerHTML = '';
+  if (ThreeBackend.resetPinCache) ThreeBackend.resetPinCache();   // pin 重建, 清跟随缓存
+  if (!MapAPI.ready()) return;
+  const pinCities = CITIES.filter(c => photoCount(c.name) > 0)
+    .sort((a, b) => photoCount(b.name) - photoCount(a.name));
+  const bigOnes = new Set(pinCities.slice(0, PIN_BIG_DEFAULT).map(c => c.name));
+  pinCities.forEach(c => {
+    const imgs = photoImgs(c.name);
+    const edits = loadEdits();
+    const e = edits[c.name] || {};
+    const since = e.since || c.since || '';
+    const note = e.note || c.note || '';
+
+    const pin = document.createElement('div');
+    pin.className = 'map-pin' + (c.home ? ' home' : '') + (bigOnes.has(c.name) ? ' big' : ' small');
+    pin.dataset.city = c.name;
+    pin.innerHTML = `
+      <div class="pin-ring"></div>
+      <img class="pin-photo" src="${photoCover(c.name)}" alt="${c.name}" loading="lazy">`;
+    pin.addEventListener('mouseenter', () => showMapCard(pin, c, imgs, since, note));
+    pin.addEventListener('mouseleave', hideMapCard);
+    pin.addEventListener('click', () => flyAndOpen(c.name));
+    overlay.appendChild(pin);
+  });
+  layoutPins();
+  renderFilmStrip();
+  applyZoomFold();
+}
+
+// ── pin 避让布局: 照片多的优先占住锚点, 被挤的沿黄金角螺旋外推 ──
+// 目的: 39 个地点全部露出缩略图, 又不糊成一坨(老板 2026-09-15 晚)
+function layoutPins() {
+  if (!MapAPI.ready()) return;
+  const wrap = document.getElementById('map-wrap');
+  const wrapW = wrap.clientWidth, wrapH = wrap.clientHeight;
+  const narrow = wrapW < 560;   // 窄屏只排大 pin(其余隐藏, 见 applyZoomFold)
+  // 3D 模式: 照片直接钉在城市投影点上, 不做避让(老板 09-16 拍板)
+  if (MAP_BACKEND === 'three') {
+    document.querySelectorAll('.map-pin').forEach(el => {
+      const c = CITIES.find(x => x.name === el.dataset.city);
+      if (!c) return;
+      const px = MapAPI.project(c.coord);
+      if (!px) { el.style.visibility = 'hidden'; return; }
+      el.style.visibility = '';
+      el._pinDX = 0; el._pinDY = 0;             // 无避让偏移
+      el._pinAnchor = [px[0], px[1]];
+      el.style.left = px[0] + 'px';
+      el.style.top  = px[1] + 'px';
+    });
+    return;
+  }
+  const items = [];
+  document.querySelectorAll('.map-pin').forEach(el => {
+    if (narrow && !el.classList.contains('big')) return;
+    const c = CITIES.find(x => x.name === el.dataset.city);
+    if (!c) return;
+    const px = MapAPI.project(c.coord);
+    if (!px) return;
+    items.push({ el, count: photoCount(c.name), ax: px[0], ay: px[1] });
+  });
+  // 照片多的先占位(视觉主体不挪窝), 少的让位
+  items.sort((a, b) => b.count - a.count);
+  const placed = [];
+  items.forEach(p => {
+    const r = (p.el.offsetWidth || 26) / 2;
+    let x = p.ax, y = p.ay, best = null, bestD = 0;
+    // 沿黄金角螺旋外推找一个不撞的位置; 找不到就用"离最近邻居最远"的那个
+    for (let k = 1; k <= 60; k++) {
+      const ang = k * 2.39996;
+      const rad = 5 * Math.sqrt(k) * 2.6;
+      x = Math.max(r + 2, Math.min(wrapW - r - 2, p.ax + Math.cos(ang) * rad));
+      y = Math.max(r + 2, Math.min(wrapH - r - 2, p.ay + Math.sin(ang) * rad));
+      const minGap = placed.length
+        ? Math.min(...placed.map(q => Math.hypot(q.x - x, q.y - y) - (q.r + r)))
+        : 999;
+      if (minGap > 1.5) { best = { x, y }; break; }
+      if (minGap > bestD) { bestD = minGap; best = { x, y }; }
+    }
+    if (best) { x = best.x; y = best.y; }
+    placed.push({ x, y, r });
+    // 记录"相对投影点的偏移", 供每帧快速跟随(3D 拖动时用)
+    p.el._pinDX = x - p.ax;
+    p.el._pinDY = y - p.ay;
+    p.el._pinAnchor = [p.ax, p.ay];
+    p.el.style.left = x + 'px';
+    p.el.style.top = y + 'px';
+  });
+}
+
+// ── 底部胶片条 ──
+function renderFilmStrip() {
+  const strip = document.getElementById('film-strip');
+  const row = document.getElementById('fs-row');
+  const pinCities = CITIES.filter(c => photoCount(c.name) > 0);
+  if (!pinCities.length) { strip.style.display = 'none'; return; }
+  strip.style.display = '';
+  // 按首访时间排序
+  const ordered = [...pinCities].sort((a, b) => {
+    const ea = loadEdits()[a.name] || {};
+    const eb = loadEdits()[b.name] || {};
+    return (ea.since || a.since || '9999').localeCompare(eb.since || b.since || '9999');
+  });
+  row.innerHTML = ordered.map(c => {
+    const imgs = photoImgs(c.name);
+    const cover = randomPhotoCover(c.name);
+    const nVid = imgs.filter(isVideo).length;
+    const title = `${c.name}（${imgs.length} 个媒体${nVid ? `, 视频 ${nVid}` : ''}）`;
+    return `<div class="fs-cell" data-city="${c.name}" title="${title}">
+      <img src="${cover}" alt="${c.name}" loading="lazy">
+      <div class="fs-city">${c.name}</div>
+    </div>`;
+  }).join('');
+  row.querySelectorAll('.fs-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const city = cell.dataset.city;
+      // 定位地图
+      const c = CITIES.find(x => x.name === city);
+      if (c && MapAPI.ready()) MapAPI.highlight(city);
+      // 高亮胶片格
+      row.querySelectorAll('.fs-cell').forEach(x => x.classList.remove('active'));
+      cell.classList.add('active');
+      flyAndOpen(city);
+    });
+  });
+  startFilmRotate();
+  filmDepthTilt();
+}
+
+// 胶片条 3D 景深: 滚到左右边缘的格子向后倾斜(像转动的胶片轮)
+// 只用一次 rAF 循环做节流, 静止时不跑
+let filmTiltRaf = null;
+function filmDepthTilt() {
+  const row = document.getElementById('fs-row');
+  if (!row) return;
+  const update = () => {
+    filmTiltRaf = null;
+    if (document.hidden) return;
+    const rr = row.getBoundingClientRect();
+    if (!rr.width) return;
+    const cx = rr.left + rr.width / 2;
+    row.querySelectorAll('.fs-cell').forEach(el => {
+      const r = el.getBoundingClientRect();
+      const ex = r.left + r.width / 2;
+      // -1(最左) ~ +1(最右); 越靠边越后仰
+      const t = Math.max(-1, Math.min(1, (ex - cx) / (rr.width / 2)));
+      // 只写变量, 不碰 transform —— :hover 才能叠加
+      el.style.setProperty('--dz', (-Math.abs(t) * 26).toFixed(1) + 'px');
+      el.style.setProperty('--dy', (t * 12).toFixed(1) + 'deg');
+      el.style.setProperty('--db', (1 - Math.abs(t) * 0.25).toFixed(3));
+    });
+  };
+  const schedule = () => { if (!filmTiltRaf) filmTiltRaf = requestAnimationFrame(update); };
+  row.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule);
+  schedule();
+}
+
+// 胶片封面轮动: 每次随机换几格(老板 2026-09-15 晚拍的), 后台标签页不跑
+let fsRotateTimer = null;
+const FS_ROTATE_MS = 3500;      // 轮动间隔
+const FS_ROTATE_PER_TICK = 4;   // 每次换几格
+function startFilmRotate() {
+  if (fsRotateTimer) clearInterval(fsRotateTimer);
+  fsRotateTimer = setInterval(() => {
+    if (document.hidden) return;
+    const cells = [...document.querySelectorAll('.fs-cell')]
+      .filter(c => photoPool(c.dataset.city).length > 1);
+    if (!cells.length) return;
+    // 随机挑几格, 换成该城市的另一张照片
+    for (let i = 0; i < Math.min(FS_ROTATE_PER_TICK, cells.length); i++) {
+      const cell = cells.splice(Math.floor(Math.random() * cells.length), 1)[0];
+      const img = cell.querySelector('img');
+      const cur = img.getAttribute('src');
+      const next = randomPhotoCover(cell.dataset.city, cur);
+      if (next === cur) continue;
+      img.style.opacity = '0';
+      setTimeout(() => { img.src = next; img.style.opacity = '1'; }, 230);
+    }
+  }, FS_ROTATE_MS);
+}
+
+// 缩放分级展开(老板 09-16 拍板: 先出展示版, 照片不能糊成一团)
+// 远景只显照片最多的 8 个; 拉近逐级展开到全部。每个地点在 3D 场景里始终有发光点。
+function applyZoomFold() {
+  const zoom = MapAPI.getZoom();
+  mapZoomLevel = zoom;
+  const narrow = document.getElementById('map-wrap').clientWidth < 560;
+  const is3d = MAP_BACKEND === 'three';
+  // 手机屏窄, 照片再小一档, 才排得开
+  const narrowK = document.getElementById('map-wrap').clientWidth < 560 ? 0.78 : 1;
+  const s3d = is3d ? Math.max(0.5, Math.min(1.2, 1.45 / Math.max(1, zoom))) * narrowK : 1;
+  // 展开档位: zoom 越大显越多(放宽过, 避免手机上只露十来个)
+  let quota = Infinity;
+  if (is3d) {
+    if (zoom < 1.6)       quota = 20;
+    else if (zoom < 2.4)  quota = 30;
+    else                  quota = Infinity;
+  } else if (narrow) {
+    quota = 14;                 // 纯 2D 窄屏沿用旧行为
+  }
+  // 按照片数排序定"谁能上"; 家(home)永远优先
+  const ranked = CITIES.filter(c => photoCount(c.name) > 0 && !c.home)
+    .sort((a, b) => photoCount(b.name) - photoCount(a.name));
+  const allowed = new Set(ranked.slice(0, Math.max(0, quota - 1)).map(c => c.name));
+  const homeCity = CITIES.find(c => c.home);
+  if (homeCity && photoCount(homeCity.name)) allowed.add(homeCity.name);   // ★ 家必显
+
+  document.querySelectorAll('.map-pin').forEach(pin => {
+    pin.style.display = allowed.has(pin.dataset.city) ? '' : 'none';
+    pin.classList.toggle('zoom-big', zoom > 2.5);
+  });
+
+  // 3D: 屏幕位置太近的城市只留一张照片(其余仍有发光点, hover 记忆卡可看)
+  // 这些城市地理上就重合(西庄子/宝鸡/太白山同在陕西), 不聚类会永远糊在一起
+  if (is3d) {
+    // 手机上地图窄, 城市投影间距小, 阈值要同比收窄(否则大半被合并)
+    const wrapW = document.getElementById('map-wrap').clientWidth;
+    const minGap = Math.max(16, wrapW / 673 * 30);
+    // 照片多的优先; 家最高优先(不能被别人挤掉)
+    const cands = [];
+    document.querySelectorAll('.map-pin').forEach(pin => {
+      if (pin.style.display === 'none') return;
+      const c = CITIES.find(x => x.name === pin.dataset.city);
+      if (!c) return;
+      const p = MapAPI.project(c.coord);
+      if (!p) return;
+      cands.push({ pin, p, n: photoCount(c.name), home: !!c.home });
+    });
+    cands.sort((a, b) => (b.home - a.home) || (b.n - a.n));
+    const kept = [];
+    for (const cd of cands) {
+      const clash = kept.some(k => Math.hypot(k[0] - cd.p[0], k[1] - cd.p[1]) < minGap);
+      // 家即使撞车也保留(它是视觉锚点)
+      if (clash && !cd.home) cd.pin.style.display = 'none';
+      else kept.push(cd.p);
+    }
+    // 变量写在 overlay 上, 所有 .map-pin 继承
+    document.getElementById('map-overlay').style.setProperty('--pin-scale', s3d);
+  }
+}
+
+let mapCardEl = null;
+function showMapCard(pin, c, imgs, since, note) {
+  hideMapCard();
+  mapCardEl = document.createElement('div');
+  mapCardEl.className = 'map-card';
+  // 记忆卡缩略图也只取照片, 视频不进(老板 2026-09-15 晚)
+  const thumbs = photoPool(c.name).slice(0, 3)
+    .map(s => `<img src="${thumbOf(s)}" alt="" loading="lazy">`).join('');
+  const sinceHtml = since ? `<div class="mc-since">🕐 ${since}</div>` : '';
+  const noteHtml = note ? `<div class="mc-note">${note}</div>` : '';
+  const more = imgs.length > 3 ? `<div class="mc-count">+${imgs.length - 3} 张 · 点击看全部</div>` : '';
+  mapCardEl.innerHTML = `
+    <div class="mc-city">${c.name}${c.home ? ' 🏠' : ''}</div>
+    ${sinceHtml}${noteHtml}
+    <div class="mc-imgs">${thumbs}</div>${more}`;
+  document.getElementById('map-overlay').appendChild(mapCardEl);
+  const pinRect = pin.getBoundingClientRect();
+  const wrapRect = document.getElementById('map-wrap').getBoundingClientRect();
+  let left = pinRect.left - wrapRect.left + 36;
+  let top = pinRect.top - wrapRect.top - 10;
+  if (left + 240 > wrapRect.width) left -= 240;
+  if (top < 4) top = pinRect.top - wrapRect.top + 40;
+  mapCardEl.style.left = left + 'px';
+  mapCardEl.style.top = top + 'px';
+  requestAnimationFrame(() => mapCardEl.classList.add('show'));
+}
+function hideMapCard() {
+  if (mapCardEl) { mapCardEl.remove(); mapCardEl = null; }
+}
+
+// 地图缩放/平移后重定位浮层(防抖, 缩放拖拽高频触发)
+let overlayReposTimer = null;
+function repositionOverlay() {
+  if (overlayReposTimer) clearTimeout(overlayReposTimer);
+  overlayReposTimer = setTimeout(() => {
+    // 拖拽越界拉回: 中心点跑太远就把地图拉回可见范围(防纯空白)
+    const c = MapAPI.getCenter();
+    if (c && (Math.abs(c[0] - 110) > 35 || Math.abs(c[1] - 36) > 30)) {
+      MapAPI.setCenter([
+        Math.max(75, Math.min(145, c[0])),
+        Math.max(6, Math.min(66, c[1]))
+      ]);
+    }
+    layoutPins();
+    applyZoomFold();
+    hideMapCard();
+  }, 80);
 }
 
 function highlightCity(name) {
   document.querySelectorAll('.chip').forEach(ch => {
     ch.classList.toggle('active', ch.dataset.city === name);
   });
-  if (chart && geoLoaded) {
-    chart.dispatchAction({type:'showTip', seriesIndex:1, name});
-    chart.dispatchAction({type:'highlight', seriesIndex:1, name});
-    setTimeout(() => chart.dispatchAction({type:'downplay', seriesIndex:1, name}), 1400);
+  if (MapAPI.ready()) MapAPI.highlight(name);
+}
+
+// 用户主动点某个地点: 先让镜头飞过去, 再开灯箱(有运镜感)
+// 注意: 只用在"用户点击"的路径上; 剧场自动切图那条走 highlightCity, 不飞
+function flyAndOpen(city) {
+  if (MAP_BACKEND === 'three' && MapAPI.ready()) {
+    MapAPI.flyTo(city, { ms: 620 });
+    setTimeout(() => openLightbox(city), 220);
+  } else {
+    openLightbox(city);
   }
 }
 
-window.addEventListener('resize', () => chart && chart.resize());
+window.addEventListener('resize', () => MapAPI.resize());
+
+// ── ① 成就系统 ──
+function computeAchievements() {
+  const items = [];
+  const add = (icon, name, desc, earned, city=null) =>
+    items.push({icon, name, desc, earned, city});
+
+  // 极值勋章
+  const pts = CITIES.filter(c => !c.home);
+  const north = pts.reduce((a,b) => b.coord[1] > a.coord[1] ? b : a);
+  const south = pts.reduce((a,b) => b.coord[1] < a.coord[1] ? b : a);
+  const east  = pts.reduce((a,b) => b.coord[0] > a.coord[0] ? b : a);
+  const west  = pts.reduce((a,b) => b.coord[0] < a.coord[0] ? b : a);
+
+  add('🧭','最北足迹', `到达最北点 · ${north.name}（北纬 ${north.coord[1].toFixed(1)}°）`, true, north.name);
+  add('🧭','最南足迹', `到达最南点 · ${south.name}（北纬 ${south.coord[1].toFixed(1)}°）`, true, south.name);
+  add('🧭','最东足迹', `到达最东点 · ${east.name}（东经 ${east.coord[0].toFixed(1)}°）`, true, east.name);
+  add('🧭','最西足迹', `到达最西点 · ${west.name}（东经 ${west.coord[0].toFixed(1)}°）`, true, west.name);
+
+  // 自然景观
+  const tagDefs = {
+    sea: ['🌊','看过大海', '踩过沙滩，吹过海风'],
+    grassland: ['🌿','草原骑士', '在草原上撒过野'],
+    river: ['🌊','黄河少年', '亲眼见过壶口瀑布的黄河'],
+    ski: ['⛷️','雪场飞驰', '上过滑雪场'],
+  };
+  for (const [tag, [ico, name, desc]] of Object.entries(tagDefs)) {
+    const hit = CITIES.find(c => (c.tags||[]).includes(tag) && !c.home);
+    add(ico, name, desc, !!hit, hit ? hit.name : null);
+  }
+
+  // 山岳系列（独立勋章，爬过几座给几枚）
+  const mountains = CITIES.filter(c => (c.tags||[]).includes('mountain'));
+  const mountainDefs = {
+    '庐山': ['⛰️','庐山登顶', '江西庐山'],
+    '宝鸡': ['🏔️','太白山少年', '秦岭主峰太白山（宝鸡眉县）'],
+  };
+  for (const m of mountains) {
+    const def = mountainDefs[m.name];
+    if (def) add(def[0], def[1], def[2], true, m.name);
+  }
+
+  // 数量勋章
+  add('🥉','十城达成', '足迹达到 10 个地点', CITIES.length >= 10);
+  add('🥈','二十城达成', '足迹达到 20 个地点', CITIES.length >= 20);
+  add('🥇','三十城达成', '足迹达到 30 个地点', CITIES.length >= 30);
+  add('💯','四十城冲刺', '足迹达到 40 个地点', CITIES.length >= 40);
+
+  // 省份
+  const provCount = new Set(CITIES.map(c => c.prov)).size;
+  add('🗺️','行遍十省', `足迹遍布 10 个省级区域（当前 ${provCount}）`, provCount >= 10);
+  add('🚩','四大直辖市', '北京天津打卡，其他直辖市待解锁', CITIES.filter(c => ['北京','天津','上海','重庆'].includes(c.name)).length >= 4);
+
+  return items;
+}
+
+function showAchievements() {
+  const items = computeAchievements();
+  const grid = document.getElementById('achieve-grid');
+  grid.innerHTML = items.map(a => `
+    <div class="achieve-item${a.earned ? '' : ' locked'}"${a.city ? ` data-city="${a.city}"` : ''}>
+      <div class="a-ico">${a.icon}</div>
+      <div class="a-name">${a.name}${a.earned ? '' : ' 🔒'}</div>
+      <div class="a-desc">${a.desc}</div>
+    </div>`).join('');
+  grid.querySelectorAll('.achieve-item[data-city]').forEach(el => {
+    el.addEventListener('click', () => {
+      const city = el.dataset.city;
+      document.getElementById('achieve-box').classList.remove('open');
+      highlightCity(city);
+      if (MapAPI.ready()) MapAPI.highlight(city);
+    });
+  });
+  document.getElementById('achieve-box').classList.add('open');
+}
+
+// ── ② 每城一句话 ──
+function noteFor(city) {
+  const c = CITIES.find(x => x.name === city);
+  const edits = loadEdits();
+  const e = edits[city] || {};
+  const note = e.note || (c && c.note) || '';
+  return note ? `💬 ${note}` : '';
+}
+
+// ── ③ 剧场引擎 · 照片轮播(旅程重放/随机旅程共用) ──
+const THEATER_PER_PHOTO = 2500;  // 每张照片停留 ms
+let theaterTimer = null, theaterProgressTimer = null;
+let theaterQueue = [];           // [{city, imgs:[...]}] 播放队列
+let theaterIdx = 0;              // 队列位置
+let theaterPhotoIdx = 0;         // 当前城市照片位置
+let theaterPaused = false;       // 暂停状态
+
+function theaterCitiesWithPhotos() {
+  return CITIES.filter(c => photoCount(c.name) > 0);
+}
+
+function startTheater(queue) {
+  theaterQueue = queue;
+  theaterIdx = 0;
+  theaterPhotoIdx = 0;
+  theaterPaused = false;
+  thCurLayer = 'b';  // 让第一张落在 a 层正常淡入
+  ['a','b'].forEach(k => {
+    const slot = document.getElementById('th-slot-' + k);
+    slot.classList.remove('fade-out','fade-in');
+    slot.innerHTML = '';
+  });
+  document.getElementById('theater').classList.add('open');
+  document.getElementById('th-pause').textContent = '⏸';
+  playTheaterStep();
+}
+
+// 暂停/继续
+function toggleTheaterPause() {
+  if (!document.getElementById('theater').classList.contains('open')) return;
+  theaterPaused = !theaterPaused;
+  const btn = document.getElementById('th-pause');
+  if (theaterPaused) {
+    btn.textContent = '▶';
+    if (theaterTimer) { clearTimeout(theaterTimer); theaterTimer = null; }
+  } else {
+    btn.textContent = '⏸';
+    playTheaterStep();
+  }
+}
+
+// 双层交叉淡入: 当前显层 A 或 B
+let thCurLayer = 'a';
+let videoStepMs = 2500;  // 当前媒体步长(视频 8s, 照片 2.5s)
+
+function playTheaterStep() {
+  if (theaterIdx >= theaterQueue.length) { stopTheater(); return; }
+  const item = theaterQueue[theaterIdx];
+  const c = item.city;
+  const imgs = item.imgs;
+  // 同步地图高亮(只脉冲, 不运镜 —— 否则剧场每 2.5 秒飞一次镜头)
+  if (MapAPI.ready()) MapAPI.highlight(c.name);
+  document.getElementById('th-city').textContent = c.name;
+  // 没有"每城一句话"时隐藏药丸, 不留空白框(老板 2026-09-15 晚)
+  const noteText = noteFor(c.name);
+  const noteEl = document.getElementById('th-note');
+  noteEl.textContent = noteText;
+  noteEl.style.display = noteText ? '' : 'none';
+
+  // 交叉淡入: 在非当前槽放新媒体 fade-in, 当前槽 fade-out
+  const cur = document.getElementById('th-slot-' + thCurLayer);
+  const nxt = document.getElementById('th-slot-' + (thCurLayer === 'a' ? 'b' : 'a'));
+  const mediaPath = imgs[theaterPhotoIdx];
+  // 视频: 自动播放(静音循环); 照片: 原图
+  const styleAttr = 'border-radius:14px;box-shadow:0 24px 80px rgba(0,0,0,.8);display:block';
+  if (isVideo(mediaPath)) {
+    nxt.innerHTML = `<video src="${mediaPath}" autoplay muted loop playsinline style="${styleAttr}"></video>`;
+    // 视频时长未知, 固定给 8s 展示时间(足够看一段); 视频按 16:9 预留框
+    videoStepMs = 8000;
+    fitTheaterFrame(16 / 9);
+  } else {
+    nxt.innerHTML = `<img src="${mediaPath}" alt="" style="${styleAttr}">`;
+    videoStepMs = THEATER_PER_PHOTO;
+    // 图片按真实比例预留框, 避免不同比例切换时画面跳位(老板 2026-09-15 晚)
+    const im = nxt.querySelector('img');
+    if (im.complete) fitTheaterFrame(im.naturalWidth / im.naturalHeight);
+    else im.onload = () => fitTheaterFrame(im.naturalWidth / im.naturalHeight);
+  }
+  // 清理旧槽的视频/图(等淡入结束再清, 不影响 frame 尺寸)
+  const oldCur = cur;
+  setTimeout(() => { oldCur.innerHTML = ''; }, 950);
+  cur.classList.remove('fade-in');
+  cur.classList.add('fade-out');
+  nxt.classList.remove('fade-out');
+  nxt.classList.add('fade-in');
+  thCurLayer = thCurLayer === 'a' ? 'b' : 'a';
+
+  // 周边动态: 每次切图随机组合效果(光晕/流光弧/星尘), 避免一直一个样
+  randomizeEffects();
+
+  // 进度条
+  const bar = document.getElementById('th-bar');
+  bar.style.width = '0%';
+  bar.style.transition = 'none';
+  void bar.offsetWidth;
+  bar.style.transition = `width ${videoStepMs}ms linear`;
+  bar.style.width = '100%';
+
+  theaterPhotoIdx++;
+  if (theaterPhotoIdx >= imgs.length) {
+    theaterPhotoIdx = 0;
+    theaterIdx++;
+  }
+  if (theaterTimer) clearTimeout(theaterTimer);
+  theaterTimer = setTimeout(playTheaterStep, videoStepMs);
+}
+
+// 剧场框按图片比例自适应(老板 2026-09-15 晚: 修"图片突然偏离中心")
+// 竖图留竖框、横图留横框, 两槽共用同一尺寸 → 交叉淡入全程同心
+function fitTheaterFrame(ratio) {
+  if (!ratio || !isFinite(ratio)) ratio = 4 / 3;
+  const MAX_W = window.innerWidth * 0.78;
+  const MAX_H = window.innerHeight * 0.58;
+  // 按比例先撑满宽, 再按高度回缩; 结果框内只留这一张图, 不塌不跳
+  let w = MAX_W, h = w / ratio;
+  if (h > MAX_H) { h = MAX_H; w = h * ratio; }
+  const frame = document.querySelector('.th-frame');
+  frame.style.width = Math.round(w) + 'px';
+  frame.style.height = Math.round(h) + 'px';
+}
+
+// 周边动态随机引擎: 每张照片随机组合光晕/流光弧/星尘
+const SPARK_COLORS = ['#ffd166','#ff5d8f','#7bf1a8','#4fd1ff','#c084fc','#ff9e5e'];
+let lastEffectSet = -1;
+
+function randomizeEffects() {
+  const glow = document.querySelector('.th-glow');
+  const arcs = document.querySelectorAll('.th-arc');
+  // 3 种效果随机开/关(至少保留 1-2 种)
+  let set;
+  do {
+    set = Math.floor(Math.random() * 8); // 000~111 位掩码: glow|arc|spark
+  } while (set === lastEffectSet);
+  lastEffectSet = set;
+
+  const glowOn = (set & 1) === 1;
+  const arcOn = (set & 2) === 2;
+  const sparkOn = (set & 4) === 4;
+
+  glow.classList.toggle('off', !glowOn);
+  arcs.forEach(a => a.classList.toggle('off', !arcOn));
+  const sparkle = document.getElementById('th-sparkle');
+  if (sparkOn) {
+    refreshSparkles();
+    sparkle.style.display = '';
+  } else {
+    sparkle.style.display = 'none';
+  }
+}
+
+// 星尘: 8 颗彩点环绕照片漂浮
+function refreshSparkles() {
+  const box = document.getElementById('th-sparkle');
+  box.innerHTML = '';
+  for (let i = 0; i < 8; i++) {
+    const s = document.createElement('div');
+    s.className = 'th-spark';
+    const angle = (i / 8) * Math.PI * 2;
+    const dist = 30 + Math.random() * 26;
+    s.style.left = (50 + Math.cos(angle) * dist) + '%';
+    s.style.top = (50 + Math.sin(angle) * dist * 0.6) + '%';
+    s.style.background = SPARK_COLORS[i % SPARK_COLORS.length];
+    s.style.boxShadow = `0 0 8px 2px ${SPARK_COLORS[i % SPARK_COLORS.length]}88`;
+    s.style.animationDelay = (Math.random() * 1.4) + 's';
+    s.style.animationDuration = (2 + Math.random() * 1.4) + 's';
+    box.appendChild(s);
+  }
+}
+
+function stopTheater() {
+  if (theaterTimer) { clearTimeout(theaterTimer); theaterTimer = null; }
+  theaterPaused = false;
+  document.getElementById('theater').classList.remove('open');
+  replayOn = false;
+  const btn = document.getElementById('replay-btn');
+  if (btn) { btn.textContent = '▶️ 旅程重放'; btn.classList.remove('on'); }
+  document.querySelectorAll('.map-pin').forEach(resetReplayPin);
+  applyZoomFold();
+}
+
+// 随机旅程: 随机抽一个有照片的城市, 剧场轮播
+function randomJourney() {
+  const candidates = theaterCitiesWithPhotos();
+  if (!candidates.length) { alert('还没有照片哦，先传一些照片吧'); return; }
+  const c = candidates[Math.floor(Math.random() * candidates.length)];
+  startTheater([{ city: c, imgs: photoImgs(c.name) }]);
+}
+
+// ── ✏️ 编辑模式（首访时间 + 每城一句话） ──
+let editMode = false, editingCity = null;
+
+function loadEdits() {
+  try {
+    const raw = localStorage.getItem('yuebing_edits');
+    return raw ? JSON.parse(raw) : {};
+  } catch { return {}; }
+}
+function saveEdits(edits) {
+  localStorage.setItem('yuebing_edits', JSON.stringify(edits));
+}
+
+function openCityPicker() {
+  const box = document.getElementById('edit-box');
+  const panel = box.querySelector('.edit-panel');
+  const edits = loadEdits();
+  let rows = '';
+  CITIES.forEach(c => {
+    const e = edits[c.name] || {};
+    const done = (e.since || e.note) ? '✅' : '○';
+    rows += `<div class="city-pick-row" data-city="${c.name}">
+      <span class="pick-status">${done}</span>
+      <span class="pick-name">${c.name}</span>
+      <span class="pick-prov">${c.prov}</span>
+    </div>`;
+  });
+  panel.innerHTML = `
+    <div class="edit-title">✏️ 选择要编辑的地点</div>
+    <div class="city-pick-list">${rows}</div>
+    <div class="edit-hint">✅=已填写 ○=待补 · 点城市进入编辑</div>`;
+  box.classList.add('open');
+  box.querySelectorAll('.city-pick-row').forEach(row => {
+    row.addEventListener('click', () => openEditBox(row.dataset.city));
+  });
+}
+
+function openEditBox(city) {
+  editingCity = city;
+  const edits = loadEdits();
+  const e = edits[city] || {};
+  const box = document.getElementById('edit-box');
+  const panel = box.querySelector('.edit-panel');
+  // 重建表单(openCityPicker 会覆盖 panel 内容, 不能依赖初始 DOM)
+  panel.innerHTML = `
+    <div class="edit-title">✏️ 编辑 <span id="edit-city-name">${city}</span></div>
+    <label class="edit-label">🕐 首访时间</label>
+    <input class="edit-input" id="edit-since" type="text" placeholder="如 2024-05 或 2024-05-01" value="${(e.since||'').replace(/"/g,'&quot;')}">
+    <label class="edit-label">💬 一句话趣事</label>
+    <textarea class="edit-input" id="edit-note" rows="2" placeholder="如：第一次吃泡馍，辣得直吸气">${(e.note||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</textarea>
+    <div class="edit-actions">
+      <button class="random-go" id="edit-save" type="button">保存</button>
+      <button class="random-go" id="edit-back" type="button" style="background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff">← 返回列表</button>
+      <button class="random-go" id="edit-export" type="button" style="background:linear-gradient(135deg,var(--green),var(--cyan));color:#0b0d1a">导出数据</button>
+    </div>
+    <div class="edit-hint">保存后存本地浏览器；「导出数据」可复制给铁蛋入库</div>`;
+  box.classList.add('open');
+  box.querySelector('#edit-save').addEventListener('click', saveCurrentEdit);
+  box.querySelector('#edit-back').addEventListener('click', openCityPicker);
+  box.querySelector('#edit-export').addEventListener('click', exportEdits);
+}
+function closeEditBox() {
+  document.getElementById('edit-box').classList.remove('open');
+  editingCity = null;
+}
+function saveCurrentEdit() {
+  if (!editingCity) return;
+  const edits = loadEdits();
+  edits[editingCity] = {
+    since: document.getElementById('edit-since').value.trim(),
+    note: document.getElementById('edit-note').value.trim(),
+  };
+  saveEdits(edits);
+  // 重渲染城市墙
+  wallMode === 'prov' ? buildWall() : buildTimeline();
+  // 保存后返回城市选择列表, 继续填下一个(老板拍板 2026-09-15)
+  openCityPicker();
+}
+
+function exportEdits() {
+  const edits = loadEdits();
+  const text = JSON.stringify(edits, null, 2);
+  navigator.clipboard.writeText(text).then(() => {
+    alert('已复制到剪贴板，粘贴给铁蛋即可入库');
+  }).catch(() => {
+    alert('复制失败，请手动复制：\n' + text);
+  });
+}
+document.getElementById('edit-toggle').addEventListener('click', () => {
+  editMode = !editMode;
+  document.getElementById('edit-toggle').classList.toggle('on', editMode);
+  wallMode === 'prov' ? buildWall() : buildTimeline();
+  if (editMode) {
+    openCityPicker();
+  }
+});
+
+// ── ▶️ 旅程重放: 随机顺序 · 剧场照片轮播 ──
+let replayOn = false;
+
+// 复位视角: 回到"推近到足迹密集区"的初始机位
+document.getElementById('reset-view-btn').addEventListener('click', () => {
+  if (ThreeBackend.resetView) ThreeBackend.resetView();
+});
+
+document.getElementById('replay-btn').addEventListener('click', () => {
+  if (replayOn) { stopTheater(); return; }
+  const candidates = theaterCitiesWithPhotos();
+  if (!candidates.length) { alert('还没有照片哦，先传一些照片吧'); return; }
+  // 随机打乱城市顺序
+  const shuffled = [...candidates].sort(() => Math.random() - 0.5);
+  replayOn = true;
+  const btn = document.getElementById('replay-btn');
+  btn.textContent = '⏸ 停止重放';
+  btn.classList.add('on');
+  // 重放期间全部 pin 显示(含折叠的小 pin)
+  document.querySelectorAll('.map-pin').forEach(p => { p.style.display = ''; });
+  startTheater(shuffled.map(c => ({ city: c, imgs: photoImgs(c.name) })));
+});
+
+function resetReplayPin(pin) {
+  if (!pin) return;
+  pin.style.transform = 'translate(-50%,-50%) scale(1)';
+  // 恢复第一张
+  const alt = pin.querySelector('img').alt;
+  const cover = photoCover(alt);
+  if (cover) pin.querySelector('.pin-photo').src = cover;
+}
+
+// ── 🎵 背景音乐: 随机播放, 点击切换(默认关, 浏览器自动播放策略) ──
+let musicList = [], musicIdx = -1;
+// ★ musicIntent = 用户意图, 同步置位, 是唯一真相。
+//   旧版把 musicPlaying 放在 play() 的异步回调里设置, 连点两下就错位 →
+//   "按了暂停停不掉"(老板 2026-09-16 反馈)。这里彻底改成同步状态。
+let musicIntent = false;
+const musicAudio = new Audio();
+
+function loadMusicList() {
+  // music.json 由铁蛋扫描 music/ 目录生成; 没有就静默
+  return fetch('music.json?t=' + Date.now())
+    .then(r => r.json())
+    .then(m => { musicList = m.files || []; })
+    .catch(() => { musicList = []; });
+}
+
+function updateMusicUI(playing) {
+  const btn = document.getElementById('music-btn');
+  if (!btn) return;
+  if (playing && musicList[musicIdx]) {
+    // 曲名显示(去掉扩展名)
+    const fname = musicList[musicIdx].split('/').pop().replace(/\.[^.]+$/, '');
+    btn.innerHTML = `<div class="num">🎵</div><div class="label">${fname.slice(0, 14)}</div>`;
+    btn.classList.add('playing');
+  } else {
+    btn.innerHTML = `<div class="num">🎵</div><div class="label">音乐</div>`;
+    btn.classList.remove('playing');
+  }
+}
+
+function playNextMusic() {
+  if (!musicList.length) return;
+  musicIntent = true;                       // 同步置位, 不留竞态窗口
+  musicIdx = (musicIdx + 1) % musicList.length;
+  musicAudio.src = musicList[musicIdx];
+  musicAudio.volume = 0.8;  // 更清楚(老板反馈听不到, 0.6→0.8)
+  updateMusicUI(true);
+  musicAudio.play().catch(err => {
+    console.log('[music] 播放被拦, 等用户手势', err.name);
+    if (musicIntent) { musicIntent = false; updateMusicUI(false); }
+  });
+}
+
+// 彻底停止: 除 pause 外还清空 src, 防止待决的 play() 把声音又拉起来
+function stopMusic() {
+  musicIntent = false;
+  try {
+    musicAudio.pause();
+    musicAudio.removeAttribute('src');
+    musicAudio.load();
+  } catch (e) {}
+  updateMusicUI(false);
+}
+
+// (浮层方案已废弃 2026-09-15: 老板反馈弹窗体验差, 改回滑动/点击即播)
+function toggleMusic() {
+  musicAutoArmed = true;  // 手动点过音乐按钮 = 用户已交互
+  // 意图或实际声音任一为"开"就停 —— 双保险, 不会出现停不掉的情况
+  if (musicIntent || !musicAudio.paused) stopMusic();
+  else playNextMusic();
+}
+musicAudio.addEventListener('ended', () => { if (musicIntent) playNextMusic(); });
+
+// 自动播放: 滑动/点击即播(老板 2026-09-15 拍板, 不要弹窗)
+let musicAutoArmed = false;
+function armAutoMusic(e) {
+  // 音乐按钮上的点击交给 toggleMusic 处理, 避免 pointerdown 开播后 click 又关掉
+  if (e && e.target && document.getElementById('music-btn').contains(e.target)) return;
+  if (musicAutoArmed || musicIntent) return;
+  musicAutoArmed = true;
+  playNextMusic();
+}
+// 注意: 滑动手势可能触发 pointerdown, 统一交给 pointerdown; wheel 做兜底
+document.addEventListener('pointerdown', armAutoMusic, { passive: true });
+document.addEventListener('wheel', armAutoMusic, { passive: true });
+document.addEventListener('touchstart', armAutoMusic, { passive: true });
+document.addEventListener('keydown', armAutoMusic, { passive: true });
+
+// ═══ 3D 旋转照片环(老板 2026-09-15 晚创意) ═══
+// 常驻窗口: 全部有照片的地点沿圆柱排布, 缓慢自转 + 可拖拽, 点击进灯箱
+const S3D_SPEED = 0.06;        // 自转角速度(度/帧), 慢速常转
+let s3dAngle = 0, s3dRaf = null, s3dDrag = null, s3dVX = 0;
+let s3dLastT = 0;
+
+function buildStage3d() {
+  const ring = document.getElementById('s3d-ring');
+  const stage = document.getElementById('stage3d');
+  if (!ring || !stage) return;
+  let cities = CITIES.filter(c => photoCount(c.name) > 0);
+  if (!cities.length) { stage.style.display = 'none'; return; }
+  stage.style.display = '';
+
+  // 手机端屏幕窄: 只上照片最多的 18 个城市, 否则卡片小到看不清(其余仍在地图/胶片/城市墙)
+  const narrowStage = stage.clientWidth < 560;
+  if (narrowStage && cities.length > 18) {
+    cities = [...cities].sort((a, b) => photoCount(b.name) - photoCount(a.name)).slice(0, 18);
+  }
+
+
+  // 双层环: 卡片分上下两圈(各占一半)
+  // 尺寸按"地图下方的附属条"定 —— 小一号, 不喧宾夺主(老板 09-16)
+  // 卡片宽: 由条高反推(上下两圈 + 卡高要塞得下)
+  const stageW = Math.max(300, stage.clientWidth);
+  const stageH = Math.max(90, stage.clientHeight);
+  const TILT = 7 * Math.PI / 180;     // 与 CSS .s3d-scene 的 rotateX 一致
+  const PERSP = 1500;                 // 与 CSS .stage3d 的 perspective 一致
+  const cw = Math.round(Math.min(58, Math.max(30, stageH * 0.21)));
+  const ch = Math.round(cw * 1.33);
+  const nameSize = cw < 44 ? 8 : (cw < 54 ? 9 : 10);
+  const RING_Y = Math.round(ch * 0.5);
+  // 半径: 迭代求解, 保证"最前排卡片"(透视放大 + 倾斜位移后)不越界
+  let R = stageW / 2 * 0.72;
+  for (let i = 0; i < 8; i++) {
+    const m = PERSP / Math.max(1, PERSP - R);                     // 前排放大率
+    const need = (RING_Y + R * Math.sin(TILT) + ch / 2) * m;      // 竖向占位
+    if (need > stageH * 0.46) R *= 0.88; else break;
+  }
+  // 弧长也要够放卡片(太密就退回小半径)
+  const perRing = Math.ceil(cities.length / 2);
+  const rArc = (perRing * cw * 1.3) / (2 * Math.PI);
+  R = Math.round(Math.max(78, Math.min(R, Math.max(rArc, R * 0.85))));
+  ring.innerHTML = '';
+  cities.forEach((c, i) => {
+    const ringIdx = i < perRing ? 0 : 1;              // 0=上圈, 1=下圈
+    const posInRing = ringIdx === 0 ? i : i - perRing;
+    const countInRing = ringIdx === 0 ? perRing : cities.length - perRing;
+    // 下圈错开半个身位, 让上下卡不叠在一条竖线上
+    const offset = ringIdx === 1 ? Math.PI / countInRing : 0;
+    const a = (posInRing / countInRing) * Math.PI * 2 + offset;
+    const yLift = (ringIdx === 0 ? -RING_Y : RING_Y)
+                + (ringIdx === 0 ? -Math.min(14, photoCount(c.name) * 0.4) : 0);
+
+    const card = document.createElement('div');
+    card.className = 's3d-card' + (c.home ? ' is-home' : '')
+                   + (ringIdx === 1 ? ' ring-lower' : ' ring-upper');
+    card.dataset.city = c.name;
+    card.innerHTML = `
+      <img src="${photoCover(c.name)}" alt="${c.name}" loading="lazy">
+      <div class="c3d-name" style="font-size:${nameSize}px">${c.home ? '🏠 ' : ''}${c.name}</div>`;
+    // 卡片尺寸 + 居中偏移(负一半宽高)
+    card.style.width = cw + 'px';
+    card.style.height = ch + 'px';
+    card.style.margin = `${-ch / 2}px 0 0 ${-cw / 2}px`;
+    // 环面法线朝外: translateZ(R) 后反向旋转面向观察者
+    const deg = (a * 180) / Math.PI;
+    card.style.transform =
+      `rotateY(${deg}deg) translateZ(${R}px) rotateY(${-deg}deg) translateY(${yLift}px)`;
+    card.style.transformStyle = 'preserve-3d';
+    card.addEventListener('click', e => {
+      if (s3dDrag && s3dDrag.moved) return;   // 拖拽结束的那一下不算点击
+      e.stopPropagation();
+      openLightbox(c.name);
+    });
+    ring.appendChild(card);
+  });
+
+  // 半径写回场景, 让透视比例稳定
+  ring.dataset.radius = R;
+}
+
+// 自转 + 惯性 + 拖拽(角度统一管理, 避免 CSS 动画与拖拽互相覆盖)
+function s3dStart() {
+  const ring = document.getElementById('s3d-ring');
+  const stage = document.getElementById('stage3d');
+  if (!ring || !stage || !ring.children.length) return;
+
+  const spin = t => {
+    const dt = s3dLastT ? Math.min(48, t - s3dLastT) : 16;
+    s3dLastT = t;
+    if (!s3dDrag) {
+      s3dAngle += S3D_SPEED * (dt / 16);
+      // 拖拽惯性衰减
+      if (Math.abs(s3dVX) > 0.02) {
+        s3dAngle += s3dVX * (dt / 16);
+        s3dVX *= 0.94;
+      }
+    }
+    ring.style.transform = `rotateY(${s3dAngle}deg)`;
+    s3dRaf = requestAnimationFrame(spin);
+  };
+  if (s3dRaf) cancelAnimationFrame(s3dRaf);
+  s3dLastT = 0;
+  s3dRaf = requestAnimationFrame(spin);
+
+  // 拖拽旋转
+  stage.addEventListener('pointerdown', e => {
+    // 卡片上的按下交给 click, 但也要能拖 —— 统一在 stage 层处理
+    s3dDrag = {x: e.clientX, lastX: e.clientX, moved: false, id: e.pointerId};
+    s3dVX = 0;
+    stage.classList.add('grabbing');
+    stage.setPointerCapture?.(e.pointerId);
+  });
+  stage.addEventListener('pointermove', e => {
+    if (!s3dDrag || e.pointerId !== s3dDrag.id) return;
+    const dx = e.clientX - s3dDrag.lastX;
+    s3dDrag.lastX = e.clientX;
+    if (Math.abs(e.clientX - s3dDrag.x) > 4) s3dDrag.moved = true;
+    s3dAngle += dx * 0.32;      // 水平拖动 → 绕 Y 轴
+    s3dVX = dx * 0.32;          // 记录末速度做惯性
+  });
+  const endDrag = e => {
+    if (!s3dDrag) return;
+    s3dDrag = null;
+    stage.classList.remove('grabbing');
+    // 拖拽结束后短暂屏蔽 click, 防误触打开灯箱
+    if (stage._clickGuard) clearTimeout(stage._clickGuard);
+    stage._clickGuard = setTimeout(() => {}, 60);
+  };
+  stage.addEventListener('pointerup', endDrag);
+  stage.addEventListener('pointercancel', endDrag);
+  stage.addEventListener('pointerleave', endDrag);
+  // 滚轮也转(桌面顺手)
+  stage.addEventListener('wheel', e => {
+    e.preventDefault();
+    s3dAngle += e.deltaY * 0.18;
+  }, {passive:false});
+}
 
 // ── 启动 ──
-fetch('photos.json').then(r => r.json()).then(m => {
-  PHOTOS = m;
-}).catch(() => { PHOTOS = {}; }).finally(() => {
-  buildWall();
-  renderMap();
+document.getElementById('achieve-btn').addEventListener('click', showAchievements);
+document.getElementById('random-btn').addEventListener('click', randomJourney);
+document.getElementById('music-btn').addEventListener('click', toggleMusic);
+loadMusicList();
+
+const viewToggle = document.getElementById('view-toggle');
+viewToggle.addEventListener('click', () => {
+  wallMode = wallMode === 'prov' ? 'timeline' : 'prov';
+  viewToggle.textContent = wallMode === 'prov' ? '🕐 按时间线' : '🗺️ 按省份';
+  viewToggle.classList.toggle('on', wallMode === 'timeline');
+  wallMode === 'prov' ? buildWall() : buildTimeline();
 });
+
+fetch('photos.json?t=' + Date.now()).then(r => r.json()).then(m => {
+  // 新版 manifest: {城市: {imgs:[], since:''}}; 兼容旧版数组格式
+  for (const [city, v] of Object.entries(m)) {
+    if (Array.isArray(v)) {
+      m[city] = { imgs: v, since: '' };
+    }
+  }
+  PHOTOS = m;
+  // 照片时间兜底写入 CITIES(仅当老板没手工填过)
+  const edits = loadEdits();
+  for (const c of CITIES) {
+    if (!c.since && m[c.name] && m[c.name].since && !(edits[c.name] && edits[c.name].since)) {
+      c.since = m[c.name].since.slice(0, 7); // 首访时间取到月
+    }
+  }
+}).catch(() => { PHOTOS = {}; }).finally(() => {
+  wallMode === 'prov' ? buildWall() : buildTimeline();
+  renderMap();
+  buildStage3d();
+  s3dStart();
+});
+
+// ═══ 密码门 ═══
+// 家庭私人相册, 与成果站私人专区同密码(哈希比对, 源码不含明文)
+(function () {
+  var PASSWORD_HASH = 'a68afcaa33dc88de7217371b041b422543aa16e2958365dde8112487475e37cd';
+
+  // sha256 实现与 private.html 完全一致(那边已验证可用)
+  function sha256(ascii) {
+    function rightRotate(value, amount) { return (value>>>amount) | (value<<(32-amount)); }
+    var mathPow = Math.pow;
+    var maxWord = mathPow(2, 32);
+    var result = '';
+    var words = [];
+    var asciiBitLength = ascii.length*8;
+    var hash = sha256.h = sha256.h || [];
+    var k = sha256.k = sha256.k || [];
+    var primeCounter = k.length;
+    var isComposite = {};
+    for (var candidate = 2; primeCounter < 64; candidate++) {
+      if (!isComposite[candidate]) {
+        for (var i = 0; i < 313; i += candidate) isComposite[i] = candidate;
+        hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+        k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
+      }
+    }
+    ascii += '\x80';
+    while (ascii.length%64 - 56) ascii += '\x00';
+    for (var i = 0; i < ascii.length; i++) {
+      var j = ascii.charCodeAt(i);
+      if (j>>8) return '';
+      words[i>>2] |= j << ((3 - i)%4)*8;
+    }
+    words[words.length] = ((asciiBitLength/maxWord)|0);
+    words[words.length] = (asciiBitLength);
+    for (var j = 0; j < words.length;) {
+      var w = words.slice(j, j += 16);
+      var oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (var i = 0; i < 64; i++) {
+        var w15 = w[i - 15], w2 = w[i - 2];
+        var a = hash[0], e = hash[4];
+        var temp1 = hash[7]
+          + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
+          + ((e&hash[5])^((~e)&hash[6]))
+          + k[i]
+          + (w[i] = (i < 16) ? w[i] : (
+              w[i - 16]
+              + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3))
+              + w[i - 7]
+              + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10))
+            )|0
+          );
+        var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
+          + ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+        hash = [(temp1 + temp2)|0].concat(hash);
+        hash[4] = (hash[4] + temp1)|0;
+      }
+      for (var i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i])|0;
+    }
+    for (var i = 0; i < 8; i++) {
+      for (var j = 3; j + 1; j--) {
+        var b = (hash[i]>>(j*8))&255;
+        result += ((b < 16) ? 0 : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+
+  var gate = document.getElementById('gate');
+  var input = document.getElementById('gate-pw');
+  var btn = document.getElementById('gate-btn');
+
+  function unlock() {
+    if (sha256(input.value) === PASSWORD_HASH) {
+      sessionStorage.setItem('yuebing_ok', '1');
+      document.body.classList.remove('locked');
+      gate.style.display = 'none';
+      // 解锁后重算尺寸(3D 地图在隐藏时拿不到容器尺寸)
+      setTimeout(function () { if (window.MapAPI) MapAPI.resize(); }, 60);
+    } else {
+      gate.classList.remove('err');
+      void gate.offsetWidth;
+      gate.classList.add('err');
+      input.value = '';
+      input.focus();
+    }
+  }
+  btn.addEventListener('click', unlock);
+  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') unlock(); });
+  setTimeout(function () { input.focus(); }, 300);
+
+  // 本会话已解锁过 → 直接进
+  if (sessionStorage.getItem('yuebing_ok') === '1') {
+    document.body.classList.remove('locked');
+    gate.style.display = 'none';
+    setTimeout(function () { if (window.MapAPI) MapAPI.resize(); }, 60);
+  }
+})();
 </script>
-<script src="../../nav-fab.js"></script>
-<script src="../../nav-fab.js"></script>
-<script src="../../nav-fab.js"></script>
 </body>
 </html>

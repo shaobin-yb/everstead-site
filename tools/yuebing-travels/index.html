@@ -3660,7 +3660,7 @@ fetch('photos.json?t=' + Date.now()).then(r => r.json()).then(m => {
 
   function unlock() {
     if (sha256(input.value) === PASSWORD_HASH) {
-      sessionStorage.setItem('yuebing_ok', '1');
+      sessionStorage.setItem('private_ok', '1');
       document.body.classList.remove('locked');
       gate.style.display = 'none';
       // 解锁后重算尺寸(3D 地图在隐藏时拿不到容器尺寸)
@@ -3678,12 +3678,13 @@ fetch('photos.json?t=' + Date.now()).then(r => r.json()).then(m => {
   setTimeout(function () { input.focus(); }, 300);
 
   // 本会话已解锁过 → 直接进
-  if (sessionStorage.getItem('yuebing_ok') === '1') {
+  if (sessionStorage.getItem('private_ok') === '1') {
     document.body.classList.remove('locked');
     gate.style.display = 'none';
     setTimeout(function () { if (window.MapAPI) MapAPI.resize(); }, 60);
   }
 })();
 </script>
+<script src="../../nav-fab.js"></script>
 </body>
 </html>

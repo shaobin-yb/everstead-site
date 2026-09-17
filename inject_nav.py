@@ -13,6 +13,7 @@
 用法: py inject_nav.py [--all]
 默认增量(跳过当日已注入); --all 强制全量重扫(配合 --no-push 重建可测效果)。
 """
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -20,6 +21,11 @@ from pathlib import Path
 SITE = Path(__file__).parent
 FAB = SITE / "nav-fab.js"
 MARKS = SITE / ".nav_marks"
+
+# 匹配任意相对路径前缀的已注入标签: 子目录写 ../../nav-fab.js, 顶层写 nav-fab.js。
+# 2026-09-17 修: 原用固定字符串 'nav-fab.js' 比对, 深层页面永远匹配不上 →
+# 每跑一次多注入一行, 全站 61 个文件累积到 9 次重复。
+INJECTED_RE = re.compile(r'<script\s+src="(?:\.\./)*nav-fab\.js"\s*></script>')
 
 # 路径统一用正斜杠相对 SITE 的小写形式
 SKIP = {
@@ -56,7 +62,6 @@ def main() -> None:
     force = "--all" in sys.argv[1:]
     today = date.today().isoformat()
     fab = FAB.read_text(encoding="utf-8")
-    tag = '<script src="nav-fab.js"></script>'
     done_today = (MARKS / f"inject_{today}.txt").exists()
 
     if done_today and not force:
@@ -69,7 +74,15 @@ def main() -> None:
 
     for p in all_html():
         text = p.read_text(encoding="utf-8", errors="replace")
-        if tag in text:  # 已注入, 跳过
+        # 先清掉历史重复注入, 只保留 1 个(深度最深的最稳妥), 再判断是否需要注入
+        hits = INJECTED_RE.findall(text)
+        if len(hits) > 1:
+            # 全部摘除(连同其独占整行留下的空行), 下面统一补 1 个
+            text = INJECTED_RE.sub("", text)
+            text = re.sub(r'\n[ \t]*\n+(?=<script\s+src="(?:\.\./)*nav-fab\.js")', '\n', text)
+            text = re.sub(r'\n{3,}', '\n\n', text)
+            hits = []
+        if hits:  # 恰好 1 个, 已注入, 跳过
             continue
         if "</body>" not in text:
             print(f"[warn] 无 </body>, 跳过: {p.relative_to(SITE)}")

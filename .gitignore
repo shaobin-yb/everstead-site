@@ -5,3 +5,11 @@ __pycache__/
 # 足迹地图原图(3.8GB) — 不入库, 上线只用压缩版 photos/
 # 原图留在本地, 需要重新导出时跑 tools/yuebing-travels/_compress_*.py
 tools/yuebing-travels/photos-original/
+
+# 个人工具(仅局域网自用, 不上公开站): 番茄钟
+tools/pomodoro/
+
+# 调试/探测临时产物
+product-panel/_probe_*.py
+product-panel/_capture_test/
+.nav_marks/

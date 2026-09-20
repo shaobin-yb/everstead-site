@@ -4,9 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小月饼的足迹地图 · 42 地</title>
-<script src="echarts.min.js"></script>
-<!-- Three.js r149 UMD (锁版本: r160 起官方移除 UMD 构建) -->
-<script src="three.min.js"></script>
+<!-- 依赖改为非阻塞按需加载(2026-09-20): 此前 echarts(1MB)+three(608KB) 同步阻塞 <head>,
+     慢网下页面骨架要等 30 秒以上才出来。echarts 只在 WebGL 不可用退回 2D 时才需要。
+     Three.js r149 UMD (锁版本: r160 起官方移除 UMD 构建) -->
+<script>
+window._dep = {
+  three: null,
+  echarts: null,
+  loadThree() {
+    if (!this.three) this.three = this._load('three.min.js');
+    return this.three;
+  },
+  loadEcharts() {
+    if (!this.echarts) this.echarts = this._load('echarts.min.js');
+    return this.echarts;
+  },
+  _load(src) {
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = () => res(true);
+      s.onerror = () => rej(new Error(src + ' 加载失败'));
+      document.head.appendChild(s);
+    });
+  }
+};
+</script>
 <style>
   /* 地名书法体: 马善政毛笔楷书(Google Fonts 开源, SIL OFL 1.1)
      已子集化 —— 5720KB → 90KB, 只含页面用到的 341 字; 重新生成见 fonts/subset_font.py */
@@ -1095,6 +1118,7 @@ function lbNav(d) {
   lbIdx = (lbIdx + d + imgs.length) % imgs.length;
   updateLightbox();
 }
+let lbSwapToken = 0;   // 原图替换令牌: 翻页后作废旧回调
 function updateLightbox() {
   const imgs = photoImgs(lbCity);
   const media = imgs[lbIdx];
@@ -1112,7 +1136,25 @@ function updateLightbox() {
     vid.removeAttribute('src');
     vid.style.display = 'none';
     img.style.display = '';
-    img.src = media;
+    // 缩略图秒显(2026-09-20): 原图慢网单张 ~10 秒, 先保证有画面。
+    // 缩放走 --lb-zoom 变量, 换 src 不影响当前缩放/平移。
+    const thumb = thumbOf(media);
+    img.src = thumb;
+    const token = ++lbSwapToken;
+    const thumbT0 = Date.now();
+    const maybeHiRes = () => {
+      if (token !== lbSwapToken) return;              // 已翻页
+      if (img.style.display === 'none') return;       // 已切到视频
+      if (Date.now() - thumbT0 > 1000) return;        // 链路慢, 保持缩略图
+      const hi = new Image();
+      hi.onload = () => {
+        if (token !== lbSwapToken) return;
+        if (img.style.display === 'none') return;
+        img.src = media;
+      };
+      hi.src = media;
+    };
+    if (img.complete) maybeHiRes(); else img.addEventListener('load', maybeHiRes, { once: true });
   }
   document.getElementById('lb-title').textContent = `${lbCity} · ${f}${isVideo(media) ? ' 🎬' : ''}`;
   document.getElementById('lb-count').textContent = `${lbIdx+1} / ${imgs.length}`;
@@ -2194,24 +2236,37 @@ let MAP_BACKEND = localStorage.getItem('yuebing_map_backend') || 'three';
 
 function renderMap() {
   const el = document.getElementById('map');
-  const useThree = MAP_BACKEND === 'three' && typeof THREE !== 'undefined';
-  if (useThree) {
-    document.querySelector('.map-row').classList.add('map-3d');   // 触发 3D 版 pin 样式
-    MapAPI.mount(ThreeBackend, el, {
-      onReady: () => {
-        if (!ThreeBackend.ready()) {          // WebGL 检测没过 → 回退
-          MAP_BACKEND = 'echarts';
-          renderMap();
-          return;
+  // 依赖按需加载: 默认只拉 three; echarts 仅在没有 WebGL 时才需要
+  if (MAP_BACKEND === 'three') {
+    window._dep.loadThree().then(() => {
+      if (typeof THREE === 'undefined') { MAP_BACKEND = 'echarts'; renderMap(); return; }
+      document.querySelector('.map-row').classList.add('map-3d');   // 触发 3D 版 pin 样式
+      MapAPI.mount(ThreeBackend, el, {
+        onReady: () => {
+          if (!ThreeBackend.ready()) {          // WebGL 检测没过 → 回退
+            MAP_BACKEND = 'echarts';
+            renderMap();
+            return;
+          }
+          startGlobeOpening();
         }
-        startGlobeOpening();
-      }
+      });
+    }).catch(() => {
+      el.innerHTML = '<div style="padding:60px 20px;text-align:center;color:#aab0d0">地图脚本加载失败（网络异常）<br>右侧城市墙正常可用</div>';
     });
     return;
   }
   // echarts 后端内部会 init/registerMap; 就绪后回调 startAnimation 画开屏动画
-  MapAPI.mount(EchartsBackend, el, {
-    onReady: () => { chart = EchartsBackend.chart; startAnimation(); },
+  window._dep.loadEcharts().then(() => {
+    if (typeof echarts === 'undefined') {
+      el.innerHTML = '<div style="padding:60px 20px;text-align:center;color:#aab0d0">地图脚本加载失败（网络异常）<br>右侧城市墙正常可用</div>';
+      return;
+    }
+    MapAPI.mount(EchartsBackend, el, {
+      onReady: () => { chart = EchartsBackend.chart; startAnimation(); },
+    });
+  }).catch(() => {
+    el.innerHTML = '<div style="padding:60px 20px;text-align:center;color:#aab0d0">地图脚本加载失败（网络异常）<br>右侧城市墙正常可用</div>';
   });
 }
 
@@ -3060,12 +3115,27 @@ function toggleTheaterPause() {
 // 双层交叉淡入: 当前显层 A 或 B
 let thCurLayer = 'a';
 let videoStepMs = 2500;  // 当前媒体步长(视频 8s, 照片 2.5s)
+let thSwapToken = 0;     // 原图替换令牌: 切图后作废旧回调
+
+// 预取后续"缩略图"(单张 ~18KB, 便宜), 让下一张轮到时不空窗。
+// 不预取原图 —— 单张 406KB, 慢网要 10 秒以上, 抢走的带宽反而拖垮缩略图, 且永远追不上 2.5 秒的节奏。
+const thPrefetched = new Set();
+function prefetchThumbs(item, fromIdx, count) {
+  for (let i = fromIdx; i < Math.min(item.imgs.length, fromIdx + count); i++) {
+    const p = item.imgs[i];
+    if (isVideo(p) || thPrefetched.has(p)) continue;
+    thPrefetched.add(p);
+    const im = new Image();
+    im.src = thumbOf(p);
+  }
+}
 
 function playTheaterStep() {
   if (theaterIdx >= theaterQueue.length) { stopTheater(); return; }
   const item = theaterQueue[theaterIdx];
   const c = item.city;
   const imgs = item.imgs;
+  prefetchThumbs(item, theaterPhotoIdx + 1, 3);
   // 同步地图高亮(只脉冲, 不运镜 —— 否则剧场每 2.5 秒飞一次镜头)
   if (MapAPI.ready()) MapAPI.highlight(c.name);
   document.getElementById('th-city').textContent = c.name;
@@ -3079,20 +3149,41 @@ function playTheaterStep() {
   const cur = document.getElementById('th-slot-' + thCurLayer);
   const nxt = document.getElementById('th-slot-' + (thCurLayer === 'a' ? 'b' : 'a'));
   const mediaPath = imgs[theaterPhotoIdx];
-  // 视频: 自动播放(静音循环); 照片: 原图
   const styleAttr = 'border-radius:14px;box-shadow:0 24px 80px rgba(0,0,0,.8);display:block';
   if (isVideo(mediaPath)) {
+    // 视频流式播放, 缓冲出首帧即显示(没有视频封面图, 用了会 404)
     nxt.innerHTML = `<video src="${mediaPath}" autoplay muted loop playsinline style="${styleAttr}"></video>`;
     // 视频时长未知, 固定给 8s 展示时间(足够看一段); 视频按 16:9 预留框
     videoStepMs = 8000;
     fitTheaterFrame(16 / 9);
   } else {
-    nxt.innerHTML = `<img src="${mediaPath}" alt="" style="${styleAttr}">`;
+    // 缩略图秒显(2026-09-20): 原图平均 406KB、慢网单张要 ~10 秒, 而每张只停留 2.5 秒,
+    // 直接上原图必然追不上, 画面全空。先用 300px 缩略图保证"永远有画面"。
+    const thumb = thumbOf(mediaPath);
+    nxt.innerHTML = `<img src="${thumb}" alt="" style="${styleAttr}">`;
     videoStepMs = THEATER_PER_PHOTO;
     // 图片按真实比例预留框, 避免不同比例切换时画面跳位(老板 2026-09-15 晚)
     const im = nxt.querySelector('img');
-    if (im.complete) fitTheaterFrame(im.naturalWidth / im.naturalHeight);
-    else im.onload = () => fitTheaterFrame(im.naturalWidth / im.naturalHeight);
+    const fit = () => { if (im.naturalWidth) fitTheaterFrame(im.naturalWidth / im.naturalHeight); };
+    if (im.complete) fit();
+    else im.onload = fit;
+    // 原图仅"快网"才换: 用缩略图本身的耗时当探针 —— 缩略图 1 秒内下完说明链路够快,
+    // 值得再拉 406KB 的原图; 否则跳过, 不跟缩略图抢本就稀缺的带宽。
+    const token = ++thSwapToken;
+    const thumbT0 = Date.now();
+    const maybeHiRes = () => {
+      if (token !== thSwapToken) return;
+      if (Date.now() - thumbT0 > 1000) return;   // 链路慢, 保持缩略图
+      const hi = new Image();
+      hi.onload = () => {
+        if (token !== thSwapToken) return;
+        if (!im.parentElement) return;
+        if (im.getAttribute('src') !== thumb) return;
+        im.src = mediaPath;
+      };
+      hi.src = mediaPath;
+    };
+    if (im.complete) maybeHiRes(); else im.addEventListener('load', maybeHiRes, { once: true });
   }
   // 清理旧槽的视频/图(等淡入结束再清, 不影响 frame 尺寸)
   const oldCur = cur;

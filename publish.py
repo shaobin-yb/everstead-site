@@ -318,6 +318,58 @@ def fill_nav_tokens(panel: str) -> str:
     return panel
 
 
+def fill_board_tokens(panel: str) -> str:
+    """board-panel.html 的 __BP_*__ token → board-panel.json 实时值(构建期注入)。
+
+    与产品面板同款策略: 静态首屏即真实数据, 无 JS / fetch 失败也不空白。
+    heatmap 元素多(30×30), 静态只注入占位提示, 由 JS 渲染实际矩阵。
+    """
+    try:
+        d = json.loads((SITE / "board-panel.json").read_text(encoding="utf-8"))
+    except Exception:
+        d = {}
+
+    def rows(items):
+        out = []
+        for i, r in enumerate(items or [], 1):
+            cls = "bp-pos" if r["pct"] >= 0 else "bp-neg"
+            out.append(f'<div class="bp-row"><span class="bp-rank">{i}</span>'
+                       f'<span class="bp-name">{r["name"]}</span>'
+                       f'<span class="bp-turn">{r["turnover_yi"]:.0f}亿</span>'
+                       f'<span class="bp-pct {cls}">{r["pct"]:+.2f}%</span></div>')
+        return "".join(out)
+
+    def bars(items):
+        if not items:
+            return ""
+        mx = max(abs(t["cum_pct"]) for t in items) or 1
+        out = []
+        for t in items:
+            cls = "pos" if t["cum_pct"] >= 0 else "neg"
+            w = max(2, abs(t["cum_pct"]) / mx * 50)
+            out.append(f'<div class="bp-bar-row"><span class="bp-bar-name">{t["name"]}</span>'
+                       f'<span class="bp-bar-track"><span class="bp-bar-mid"></span>'
+                       f'<span class="bp-bar-fill {cls}" style="width:{w:.1f}%"></span></span>'
+                       f'<span class="bp-bar-val {cls}">{t["cum_pct"]:+.2f}%</span></div>')
+        return "".join(out)
+
+    latest = d.get("latest") or {}
+    tokens = {
+        "__BP_UPDATED__": d.get("updated", ""),
+        "__BP_DAY__": latest.get("date", ""),
+        "__BP_SINCE__": d.get("since", ""),
+        "__BP_DAYS__": str(d.get("days", "")),
+        "__BP_TOP__": rows(latest.get("top")),
+        "__BP_BOTTOM__": rows(latest.get("bottom")),
+        "__BP_TREND__": bars(d.get("trend")),
+        "__BP_HEAT__": '<div style="color:var(--muted);font-size:12px">正在加载轮动矩阵…</div>',
+        "__BP_HEATMAP_BOARDS__": json.dumps(d.get("heatmap_boards", []), ensure_ascii=False),
+    }
+    for k, v in tokens.items():
+        panel = panel.replace(k, v or "—")
+    return panel
+
+
 def build_index(reports: list) -> None:
     """从 index-template.html 科技感模板渲染首页(注入卡片 + 统计)。"""
     tpl = SITE / "index-template.html"
@@ -402,6 +454,12 @@ def build_index(reports: list) -> None:
         + [datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d") for f in reports]
     )
 
+    # 行业板块跟踪面板(独立片段, build_board_panel.py 生成数据后由 publish 注入)
+    boards_html = ""
+    board_panel = SITE / "board-panel.html"
+    if board_panel.exists():
+        boards_html = fill_board_tokens(board_panel.read_text(encoding="utf-8"))
+
     # 重点产品绩效面板(独立片段,update_nav.py 生成数据后由 publish 注入)
     products_html = ""
     panel = SITE / "product-panel" / "nav-panel.html"
@@ -409,6 +467,7 @@ def build_index(reports: list) -> None:
         products_html = fill_nav_tokens(panel.read_text(encoding="utf-8"))
 
     html = (html.replace("<!--CARDS-->", "\n".join(cards))
+                .replace("<!--BOARDS-->", boards_html)
                 .replace("<!--PRODUCTS-->", products_html)
                 .replace("<!--BRIEFING-->", briefing_html)
                 .replace("{{TOTAL}}", str(total))

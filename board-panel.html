@@ -1,0 +1,211 @@
+<!-- 行业板块跟踪面板 · 数据由 scripts/build_board_panel.py 生成 board-panel.json
+     静态首屏由 publish.py 注入真实值(与产品面板同款策略), JS 拿到数据后覆盖并绘图。 -->
+<section class="section" id="boards">
+  <div class="section-head">
+    <div class="bar"></div>
+    <div>
+      <h2>行业板块跟踪</h2>
+      <div class="en">SECTOR TRACKER · 90 INDUSTRY BOARDS</div>
+    </div>
+    <div class="count" id="bp-updated">__BP_UPDATED__</div>
+  </div>
+
+  <!-- 最新一日榜单 -->
+  <div class="bp-grid">
+    <div class="bp-card bp-up">
+      <div class="bp-card-title">
+        <span class="bp-tag">涨幅前 5</span>
+        <span class="bp-day" id="bp-day-top">__BP_DAY__</span>
+      </div>
+      <div class="bp-list" id="bp-top">__BP_TOP__</div>
+    </div>
+    <div class="bp-card bp-down">
+      <div class="bp-card-title">
+        <span class="bp-tag">跌幅前 5</span>
+        <span class="bp-day" id="bp-day-bot">__BP_DAY__</span>
+      </div>
+      <div class="bp-list" id="bp-bottom">__BP_BOTTOM__</div>
+    </div>
+  </div>
+
+  <!-- 区间累计（半年） -->
+  <div class="bp-chart-wrap">
+    <div class="bp-chart-title">
+      <span>区间累计涨跌 · 顶底各 5 个板块</span>
+      <span class="bp-chart-sub" id="bp-trend-sub">自 __BP_SINCE__ 起 · 共 __BP_DAYS__ 个交易日</span>
+    </div>
+    <div class="bp-bars" id="bp-trend">__BP_TREND__</div>
+  </div>
+
+  <!-- 板块轮动热力图 -->
+  <div class="bp-chart-wrap">
+    <div class="bp-chart-title">
+      <span>板块轮动热力图 · 近 30 个交易日</span>
+      <span class="bp-chart-sub">按区间累计排序 · 红涨绿跌</span>
+    </div>
+    <div class="bp-heat" id="bp-heat">__BP_HEAT__</div>
+  </div>
+
+  <div class="bp-note">
+    板块口径：同花顺 90 个一级行业板块 · 数据来源 扶摇 API · 每日盘后自动更新 ·
+    历史自 <span id="bp-since">__BP_SINCE__</span> 起逐日积累
+  </div>
+</section>
+
+<style>
+/* ---- 行业板块跟踪面板(科技风,与产品面板一致) ---- */
+.bp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+@media (max-width:760px){.bp-grid{grid-template-columns:1fr}}
+.bp-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:16px 18px;position:relative;overflow:hidden;
+  transition:border-color .3s,box-shadow .3s;
+}
+.bp-card:hover{border-color:var(--line-strong);box-shadow:var(--glow)}
+.bp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:.7}
+.bp-up::before{background:linear-gradient(90deg,#f43f5e,#fb923c)}
+.bp-down::before{background:linear-gradient(90deg,#22c55e,#14b8a6)}
+.bp-card-title{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.bp-tag{font-size:13px;font-weight:600;letter-spacing:.02em}
+.bp-up .bp-tag{color:#fb7185}
+.bp-down .bp-tag{color:#4ade80}
+.bp-day{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.bp-list{display:flex;flex-direction:column;gap:2px}
+.bp-row{display:grid;grid-template-columns:20px 1fr auto auto;gap:10px;align-items:center;
+  padding:7px 8px;border-radius:7px;transition:background .2s}
+.bp-row:hover{background:rgba(56,189,248,.06)}
+.bp-rank{font-family:var(--mono);font-size:11px;color:var(--muted);text-align:center}
+.bp-name{font-size:13.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-turn{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.bp-pct{font-family:var(--mono);font-size:13px;font-weight:600;min-width:62px;text-align:right}
+.bp-pos{color:#fb7185}
+.bp-neg{color:#4ade80}
+
+.bp-chart-wrap{margin:22px 0;background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;padding:18px 20px}
+.bp-chart-title{display:flex;align-items:baseline;justify-content:space-between;
+  margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.bp-chart-title span:first-child{font-size:13.5px;color:#7dd3fc}
+.bp-chart-sub{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+/* 区间累计横向条 */
+.bp-bars{display:flex;flex-direction:column;gap:9px}
+.bp-bar-row{display:grid;grid-template-columns:88px 1fr 66px;gap:12px;align-items:center}
+.bp-bar-name{font-size:12.5px;color:var(--text);text-align:right;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.bp-bar-track{position:relative;height:20px;background:rgba(13,26,48,.6);border-radius:5px;
+  overflow:hidden}
+.bp-bar-fill{position:absolute;top:0;bottom:0;border-radius:5px;transition:width .6s ease}
+.bp-bar-fill.pos{left:50%;background:linear-gradient(90deg,rgba(244,63,94,.45),#f43f5e)}
+.bp-bar-fill.neg{right:50%;background:linear-gradient(270deg,rgba(34,197,94,.45),#22c55e)}
+.bp-bar-mid{position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(125,146,173,.35)}
+.bp-bar-val{font-family:var(--mono);font-size:12.5px;font-weight:600;text-align:right}
+.bp-bar-val.pos{color:#fb7185}
+.bp-bar-val.neg{color:#4ade80}
+
+/* 轮动热力图 */
+.bp-heat{overflow-x:auto;padding-bottom:4px}
+.bp-heat-grid{display:grid;gap:2px;min-width:max-content}
+.bp-heat-hd{font-family:var(--mono);font-size:9.5px;color:var(--muted);
+  writing-mode:vertical-rl;transform:rotate(180deg);height:52px;display:flex;
+  align-items:center;justify-content:center;letter-spacing:.02em}
+.bp-heat-name{font-size:11px;color:var(--text);padding-right:8px;white-space:nowrap;
+  display:flex;align-items:center;justify-content:flex-end}
+.bp-heat-cell{width:100%;aspect-ratio:1.6;border-radius:3px;min-width:14px;
+  transition:transform .15s,outline .15s;cursor:default}
+.bp-heat-cell:hover{transform:scale(1.18);outline:1px solid var(--cyan);z-index:2}
+.bp-legend{display:flex;align-items:center;gap:8px;margin-top:12px;
+  font-family:var(--mono);font-size:11px;color:var(--muted)}
+.bp-legend-bar{width:150px;height:9px;border-radius:4px;
+  background:linear-gradient(90deg,#16a34a,#22c55e,rgba(13,26,48,.6),#f43f5e,#be123c)}
+
+.bp-note{margin-top:14px;font-size:11.5px;color:var(--muted);line-height:1.7;
+  border-top:1px solid var(--line);padding-top:12px}
+</style>
+
+<script>
+(function(){
+  var BP_BOARDS = __BP_HEATMAP_BOARDS__;
+
+  function pctCls(v){ return v >= 0 ? 'pos' : 'neg'; }
+  function fmt(v){ return (v >= 0 ? '+' : '') + v.toFixed(2) + '%'; }
+
+  function renderLatest(d){
+    var up = document.getElementById('bp-top'), dn = document.getElementById('bp-bottom');
+    if(!up || !d.latest) return;
+    document.getElementById('bp-updated').textContent = d.updated + ' · ' + d.latest.up + '涨' + d.latest.down + '跌';
+    document.getElementById('bp-day-top').textContent = d.latest.date;
+    document.getElementById('bp-day-bot').textContent = d.latest.date;
+    function rows(list){
+      return list.map(function(r,i){
+        return '<div class="bp-row"><span class="bp-rank">' + (i+1) + '</span>'
+          + '<span class="bp-name">' + r.name + '</span>'
+          + '<span class="bp-turn">' + r.turnover_yi.toFixed(0) + '亿</span>'
+          + '<span class="bp-pct ' + pctCls(r.pct) + '">' + fmt(r.pct) + '</span></div>';
+      }).join('');
+    }
+    up.innerHTML = rows(d.latest.top);
+    dn.innerHTML = rows(d.latest.bottom);
+  }
+
+  function renderTrend(d){
+    var box = document.getElementById('bp-trend');
+    if(!box || !d.trend) return;
+    document.getElementById('bp-trend-sub').textContent =
+      '自 ' + d.since + ' 起 · 共 ' + d.days + ' 个交易日';
+    document.getElementById('bp-since').textContent = d.since;
+    var max = Math.max.apply(null, d.trend.map(function(t){ return Math.abs(t.cum_pct); })) || 1;
+    box.innerHTML = d.trend.map(function(t){
+      var w = Math.max(2, Math.abs(t.cum_pct) / max * 50);
+      var cls = pctCls(t.cum_pct);
+      return '<div class="bp-bar-row"><span class="bp-bar-name">' + t.name + '</span>'
+        + '<span class="bp-bar-track"><span class="bp-bar-mid"></span>'
+        + '<span class="bp-bar-fill ' + cls + '" style="width:' + w + '%"></span></span>'
+        + '<span class="bp-bar-val ' + cls + '">' + fmt(t.cum_pct) + '</span></div>';
+    }).join('');
+  }
+
+  function heatColor(pct){
+    if(pct === null || pct === undefined) return 'rgba(13,26,48,.5)';
+    var v = Math.max(-6, Math.min(6, pct)) / 6;   // ±6% 封顶
+    var a = Math.min(1, Math.abs(v) * 0.85 + 0.12);
+    if(v >= 0) return 'rgba(244,63,94,' + a.toFixed(2) + ')';
+    return 'rgba(34,197,94,' + a.toFixed(2) + ')';
+  }
+
+  function renderHeat(d){
+    var box = document.getElementById('bp-heat');
+    if(!box || !d.heatmap || !d.heatmap.length) return;
+    var boards = d.heatmap_boards;
+    var ncol = d.heatmap.length;
+    var cols = '76px repeat(' + ncol + ', minmax(15px, 1fr))';
+    var html = '<div class="bp-heat-grid" style="grid-template-columns:' + cols + '">';
+    // 表头: 空位 + 日期
+    html += '<div></div>';
+    d.heatmap.forEach(function(col){
+      html += '<div class="bp-heat-hd">' + col.date.slice(5) + '</div>';
+    });
+    // 每行一个板块
+    boards.forEach(function(name, ri){
+      html += '<div class="bp-heat-name">' + name + '</div>';
+      d.heatmap.forEach(function(col){
+        var cell = col.cells[ri] || {};
+        var v = cell.pct;
+        var tip = name + ' ' + col.date + (v === null || v === undefined ? ' 无数据' : ' ' + fmt(v));
+        html += '<div class="bp-heat-cell" style="background:' + heatColor(v) + '" title="' + tip + '"></div>';
+      });
+    });
+    html += '</div><div class="bp-legend">跌 <span class="bp-legend-bar"></span> 涨</div>';
+    box.innerHTML = html;
+  }
+
+  function draw(d){
+    renderLatest(d); renderTrend(d); renderHeat(d);
+  }
+
+  fetch('board-panel.json', {cache: 'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(draw)
+    .catch(function(){});   // 静态注入值已够看, 拉取失败不干扰
+})();
+</script>

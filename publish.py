@@ -33,7 +33,7 @@ ROOT_ARTIFACTS = [
     ("税后收益率计算表", "yield-calc.html", "2026-09-07", "🧮", "tool",
      "资管产品税后收益率一键计算"),
     ("客户情报雷达", "radar.html", "2026-09-11", "📡", "radar",
-     "巨潮每日公告抓取 + 受托方解析 + iFind 打分 · 页内直达 433 家公司分级站点"),
+     "巨潮每日公告抓取 + 受托方解析 + iFind 打分{companies}"),
     ("产品一页通", "product-onepagers/红利质量_产品一页通.html", "2026-09-15", "📈", "tool",
      "红利质量/价值1号(净值+全收益指数对照,每日更新) + 国新红利价值/深度价值(要素型) 四张一页通"),
     ("上市公司购买理财产品情况", "上市公司购买理财产品情况.html", "2026-09-07", "📊", "report",
@@ -357,10 +357,20 @@ def build_index(reports: list) -> None:
         """外链(局域网 CRM 等)直接视为存在; 本地路径查文件。"""
         return path.startswith(("http://", "https://")) or (SITE / path).exists()
 
+    def radar_company_count() -> int:
+        """雷达分级站点的公司页数(卡片描述动态取值, 避免写死后过期)。"""
+        d = SITE / "radar-site" / "companies"
+        return len(list(d.glob("*.html"))) if d.is_dir() else 0
+
     cards, delay = [], 0.35
     for name, path, date, icon, kind, desc in ROOT_ARTIFACTS:
         # lan 卡片(仅内网)恒展示
         if kind == "lan" or exists(path):
+            if kind == "radar":
+                # 2026-09-20: 原写死 "433 家", 扩到近一年后已过期, 改为按实际产物取数
+                n = radar_company_count()
+                desc = desc.replace("{companies}",
+                                    f" · 页内直达 {n} 家公司分级站点" if n else "")
             if kind == "knowledge" and kb_date:
                 date = kb_date  # 知识库卡片日期取最新条目日期
             if kind == "briefing":

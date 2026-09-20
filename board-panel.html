@@ -44,6 +44,10 @@
       <span class="bp-chart-sub">按区间累计排序 · 红涨绿跌</span>
     </div>
     <div class="bp-heat" id="bp-heat">__BP_HEAT__</div>
+    <div class="bp-cell-info" id="bp-cell-info">
+      <span class="hint">--</span>
+    </div>
+    <div class="bp-swipe-hint">← 左右滑动查看更多日期 · 点击色块查看数值</div>
   </div>
 
   <div class="bp-note">
@@ -112,8 +116,19 @@
 .bp-heat-name{font-size:11px;color:var(--text);padding-right:8px;white-space:nowrap;
   display:flex;align-items:center;justify-content:flex-end}
 .bp-heat-cell{width:100%;aspect-ratio:1.6;border-radius:3px;min-width:14px;
-  transition:transform .15s,outline .15s;cursor:default}
-.bp-heat-cell:hover{transform:scale(1.18);outline:1px solid var(--cyan);z-index:2}
+  transition:transform .15s,outline .15s;cursor:pointer}
+.bp-heat-cell:hover,.bp-heat-cell.is-sel{transform:scale(1.18);outline:1px solid var(--cyan);z-index:2}
+/* 触摸端点击后显示的明细条: 常驻位置, 不用浮层(避免手指遮挡+边缘溢出) */
+.bp-cell-info{margin-top:10px;padding:9px 14px;border-radius:9px;
+  background:rgba(34,211,238,.08);border:1px solid var(--line);
+  font-size:12.5px;color:var(--text);display:flex;align-items:center;
+  gap:12px;justify-content:space-between;min-height:38px}
+.bp-cell-info .hint{color:var(--muted);font-family:var(--mono);font-size:11px}
+.bp-cell-info .val{font-family:var(--mono);font-weight:600;font-size:14px}
+.bp-cell-info .val.pos{color:#fb7185}
+.bp-cell-info .val.neg{color:#4ade80}
+.bp-swipe-hint{display:none;font-size:11px;color:var(--muted);margin-top:6px;font-family:var(--mono)}
+@media (max-width:760px){.bp-swipe-hint{display:block}}
 .bp-legend{display:flex;align-items:center;gap:8px;margin-top:12px;
   font-family:var(--mono);font-size:11px;color:var(--muted)}
 .bp-legend-bar{width:150px;height:9px;border-radius:4px;
@@ -185,18 +200,56 @@
     d.heatmap.forEach(function(col){
       html += '<div class="bp-heat-hd">' + col.date.slice(5) + '</div>';
     });
-    // 每行一个板块
+    // 每行一个板块（data-* 承载数值, 供点击/触摸读取 — title 在触屏上无法触发）
     boards.forEach(function(name, ri){
       html += '<div class="bp-heat-name">' + name + '</div>';
       d.heatmap.forEach(function(col){
         var cell = col.cells[ri] || {};
         var v = cell.pct;
-        var tip = name + ' ' + col.date + (v === null || v === undefined ? ' 无数据' : ' ' + fmt(v));
-        html += '<div class="bp-heat-cell" style="background:' + heatColor(v) + '" title="' + tip + '"></div>';
+        var has = (v !== null && v !== undefined);
+        var tip = name + ' ' + col.date + (has ? ' ' + fmt(v) : ' 无数据');
+        html += '<div class="bp-heat-cell" style="background:' + heatColor(v) + '"'
+             + ' title="' + tip + '"'
+             + ' data-board="' + name + '" data-date="' + col.date + '"'
+             + ' data-pct="' + (has ? v : '') + '"'
+             + ' role="button" tabindex="0" aria-label="' + tip + '"></div>';
       });
     });
     html += '</div><div class="bp-legend">跌 <span class="bp-legend-bar"></span> 涨</div>';
     box.innerHTML = html;
+    bindHeatClicks();
+  }
+
+  /* 点击/触摸色块 → 在常驻信息条显示数值(鼠标 hover 在触屏无效, 故显式绑定) */
+  function bindHeatClicks(){
+    var box = document.getElementById('bp-heat');
+    var info = document.getElementById('bp-cell-info');
+    if(!box || !info) return;
+    function show(el){
+      var name = el.getAttribute('data-board');
+      var date = el.getAttribute('data-date');
+      var raw = el.getAttribute('data-pct');
+      var prev = box.querySelector('.bp-heat-cell.is-sel');
+      if(prev) prev.classList.remove('is-sel');
+      el.classList.add('is-sel');
+      if(raw === '' || raw === null){
+        info.innerHTML = '<span class="hint">' + name + ' · ' + date + ' · 无数据</span>';
+        return;
+      }
+      var v = parseFloat(raw);
+      var cls = v >= 0 ? 'pos' : 'neg';
+      info.innerHTML = '<span class="hint">' + name + ' · ' + date + '</span>'
+                     + '<span class="val ' + cls + '">' + fmt(v) + '</span>';
+    }
+    box.addEventListener('click', function(e){
+      var el = e.target.closest ? e.target.closest('.bp-heat-cell') : null;
+      if(el) show(el);
+    });
+    box.addEventListener('keydown', function(e){
+      if(e.key !== 'Enter' && e.key !== ' ') return;
+      var el = e.target.closest ? e.target.closest('.bp-heat-cell') : null;
+      if(el){ e.preventDefault(); show(el); }
+    });
   }
 
   function draw(d){

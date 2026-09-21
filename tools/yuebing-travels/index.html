@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小月饼的足迹地图 · 42 地</title>
+<title>小月饼的足迹地图 · 42 地 · M</title>
 <!-- 依赖改为非阻塞按需加载(2026-09-20): 此前 echarts(1MB)+three(608KB) 同步阻塞 <head>,
      慢网下页面骨架要等 30 秒以上才出来。echarts 只在 WebGL 不可用退回 2D 时才需要。
      Three.js r149 UMD (锁版本: r160 起官方移除 UMD 构建) -->
@@ -82,6 +82,14 @@ window._dep = {
   }
   @keyframes hueShift { to { filter: hue-rotate(360deg); } }
   .header .sub { color: var(--muted); font-size: 14px; }
+  /* 版本徽章: M = 手机端优化版(老板 2026-09-21 要的标识) */
+  .header .ver-badge {
+    font: 700 12px/1 ui-monospace, "Cascadia Mono", Consolas, monospace;
+    letter-spacing: .5px; padding: 3px 7px; border-radius: 6px;
+    color: #7bf1a8; background: rgba(123,241,168,.14);
+    border: 1px solid rgba(123,241,168,.4);
+    transform: translateY(-4px);
+  }
 
   .stats { display:flex; gap:14px; margin:18px 0 22px; flex-wrap:wrap; }
   .stat {
@@ -177,6 +185,13 @@ window._dep = {
   .map-card .mc-city { font-size:14px; font-weight:700; color:var(--gold); margin-bottom:3px; }
   .map-card .mc-since { color:var(--green); font-size:11px; }
   .map-card .mc-note { color:var(--text); margin-top:4px; }
+  /* AI 补位的描述标注(老板手写的不标) */
+  .ai-mark {
+    display:inline-block; font-size:9px; line-height:1.5; padding:0 4px;
+    margin-right:5px; border-radius:4px; vertical-align:1px;
+    background:rgba(122,140,255,.18); color:#a8b4ff; border:1px solid rgba(122,140,255,.35);
+    font-family:ui-monospace,monospace; letter-spacing:.5px;
+  }
   .map-card .mc-imgs { display:flex; gap:4px; margin-top:6px; }
   .map-card .mc-imgs img {
     width:40px; height:40px; border-radius:6px; object-fit:cover;
@@ -691,18 +706,32 @@ window._dep = {
 
   /* ── 手机 (≤640): 更紧凑 ── */
   @media (max-width: 640px) {
-    body { padding: 10px 10px 24px; }
-    /* 手机: 地图要高一些, 3D 版 39 个照片点才展得开(老板 09-16) */
-    #map, #map-wrap { height: 62vh; min-height: 380px; }
+    /* 底部留出悬浮按钮(nav-fab)的高度, 否则最后一块内容被盖住 */
+    body { padding: 10px 10px 84px; }
+    /* 手机: 地图高度收到 52vh —— 375x667 上原 62vh+min380 会把整页顶出屏幕,
+       首屏看不到地图(2026-09-21 手机端实测) */
+    #map, #map-wrap { height: 52vh; min-height: 300px; }
     .stage3d { height: 150px; margin-top: 6px; }
     .s3d-hint { font-size: 10px; letter-spacing: 1px; }
     .header { gap: 8px; }
     .header h1 { font-size: 20px; letter-spacing: 0; }
     .header .sub { font-size: 11px; }
-    .stats { gap: 8px; }
-    .stat { padding: 8px 10px; min-width: 72px; border-radius: 11px; }
-    .stat .num { font-size: 19px; }
-    .stat .label { font-size: 10px; }
+    /* 手机: 4+3 两行(7个卡在一行会各被压到 23px, 文字糊在一起)
+       第一行 4 个纯数字, 第二行 3 个功能键 */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px; margin: 12px 0 16px;
+    }
+    .stat { padding: 7px 4px; min-width: 0; border-radius: 10px; text-align: center; }
+    .stat .num { font-size: 17px; }
+    .stat .label { font-size: 9.5px; margin-top: 2px; white-space: nowrap; }
+    .stat:nth-child(-n+4) .num { font-size: 16px; }
+    .stat:nth-child(-n+4) .label { font-size: 9px; letter-spacing: -.3px; }
+    /* 第二行 3 个功能键: 第5个跨2列起, 第6/7各1列 → 合计 4 列 */
+    .stat:nth-child(5) { grid-column: 1 / span 2; padding: 9px 6px; }
+    .stat:nth-child(6) { grid-column: 3 / span 1; padding: 9px 6px; }
+    .stat:nth-child(7) { grid-column: 4 / span 1; padding: 9px 6px; }
     .panel { padding: 12px; }
     .panel h2 { font-size: 14px; }
     .view-toggle { font-size: 11px; padding: 4px 9px; }
@@ -710,6 +739,12 @@ window._dep = {
     .timeline-item { padding: 7px 10px; }
     .timeline-item .t-date { font-size: 11px; min-width: 66px; }
     .timeline-item .t-name { font-size: 13px; }
+    /* 手机端地图内叠加元素收窄, 别压住地图 */
+    .map-hint { font-size: 10px; padding: 3px 9px; left: 8px; bottom: 6px; max-width: 62vw; }
+    .film-strip { margin-top: 8px; }
+    /* 手机屏窄, 照片pin再收一档 —— 否则 39 个点挤在中东部糊成一团(2026-09-21 实测) */
+    .map-3d .map-pin .pin-photo { width: calc(32px * var(--pin-scale, 1)); height: calc(32px * var(--pin-scale, 1)); border-radius: 8px; }
+    .map-3d .map-pin.home .pin-photo { width: calc(42px * var(--pin-scale, 1)); height: calc(42px * var(--pin-scale, 1)); }
     /* 灯箱 */
     .lightbox .lb-stage { width: 96vw; height: 52vh; }
     .lb-zoom { gap: 8px; padding: 6px 14px; margin-top: 10px; }
@@ -722,6 +757,9 @@ window._dep = {
     .th-note { font-size: 13px; padding: 7px 14px; }
     .th-frame { transition-duration: .5s; }
     .footer { font-size: 12px; }
+    /* 全站右下角有 fixed 的「返回/首页」按钮(约 84px 高), 滚动时会盖住页面底部内容。
+       body 已有 84px padding-bottom, 这里把页脚上也补一点, 保证滚到底能看全 */
+    .footer { margin-top: 20px; }
   }
 
   /* ── 横屏矮屏 (高度≤500): 优先保画面 ── */
@@ -778,73 +816,17 @@ window._dep = {
     .stat:hover, .chip:hover, .timeline-item:hover { transform: none; }
   }
 
-  /* ═══ 密码门(家庭私人内容, 与成果站私人专区同密码) ═══ */
-  #gate {
-    position:fixed; inset:0; z-index:999; display:flex;
-    align-items:center; justify-content:center;
-    background:
-      radial-gradient(1100px 550px at 85% -8%, rgba(192,132,252,.18), transparent 60%),
-      radial-gradient(900px 500px at -5% 12%, rgba(79,209,255,.14), transparent 55%),
-      linear-gradient(160deg, #0b0d1a, #1a1038 52%, #0b0d1a);
-  }
-  #gate .gate-box {
-    max-width:420px; width:calc(100% - 40px); text-align:center;
-    border:1px solid var(--border); border-radius:16px;
-    padding:44px 32px; background:rgba(255,255,255,.05);
-    backdrop-filter:blur(10px);
-    box-shadow:0 8px 40px rgba(0,0,0,.35);
-  }
-  #gate .lock { font-size:44px; margin-bottom:14px; }
-  #gate h2 { font-size:20px; font-weight:700; letter-spacing:.08em; margin-bottom:8px; color:var(--text); }
-  #gate p { font-size:12px; color:var(--muted); margin-bottom:28px; line-height:1.8; }
-  #gate input {
-    width:100%; padding:12px 16px;
-    font-family:ui-monospace,monospace; font-size:16px; letter-spacing:.35em;
-    color:var(--text); background:rgba(3,6,12,.6);
-    border:1px solid var(--border); border-radius:10px;
-    outline:none; text-align:center;
-    transition:border-color .25s, box-shadow .25s;
-  }
-  #gate input:focus { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(79,209,255,.12); }
-  #gate button {
-    margin-top:16px; width:100%; padding:12px;
-    font-size:14px; font-weight:600; letter-spacing:.2em;
-    color:#03101f; cursor:pointer;
-    background:linear-gradient(90deg,var(--cyan),var(--purple));
-    border:none; border-radius:10px;
-    transition:transform .2s, box-shadow .2s;
-  }
-  #gate button:hover { transform:translateY(-2px); box-shadow:0 0 24px rgba(79,209,255,.5); }
-  #gate.err { animation:gateShake .4s; }
-  #gate .err-msg { display:none; margin-top:12px; font-size:12px; color:var(--pink); }
-  #gate.err .err-msg { display:block; }
-  @keyframes gateShake {
-    0%,100% { transform:translateX(0) }
-    20%,60% { transform:translateX(-8px) }
-    40%,80% { transform:translateX(8px) }
-  }
-  body.locked .wrap, body.locked .particles { display:none; }
 </style>
 </head>
-<body class="locked">
-  <!-- 密码门: 家庭私人内容(与成果站私人专区同密码) -->
-  <div id="gate">
-    <div class="gate-box">
-      <div class="lock">🌙</div>
-      <h2>小月饼的足迹</h2>
-      <p>这是家里的私人相册<br>请输入密码</p>
-      <input type="password" id="gate-pw" placeholder="••••••" maxlength="16"
-             autocomplete="off" inputmode="numeric">
-      <button id="gate-btn" type="button">进 入</button>
-      <div class="err-msg">密码不对，再试一次</div>
-    </div>
-  </div>
+<body>
+  <!-- 密码门已移除(2026-09-21 老板定): 入口在私人专区, 进来就是已解锁状态, 不再二次要密码 -->
 
   <div class="particles" id="particles"></div>
   <div class="wrap">
 
     <div class="header">
       <h1>🌙 小月饼的足迹地图</h1>
+      <span class="ver-badge" title="手机端优化版">M</span>
       <span class="sub">王斯卯 · 3 岁半 · 走四方</span>
     </div>
 
@@ -1032,6 +1014,69 @@ const CITIES = [
 const RAINBOW = ['#ff5d8f','#ff9e5e','#ffd166','#7bf1a8','#4fd1ff','#7a8cff','#c084fc'];
 const PROV_ORDER = ['京津冀','河北','山东','山西','陕西','湖北','河南','内蒙古','贵州','四川','江西','福建'];
 let PHOTOS = {};
+let NOTES = {};   // 每城一句话: 服务器下发(手写优先, AI 补位); 浏览器本地编辑可覆盖
+
+// 统一读取: 本地编辑 > 服务器描述 > CITIES 内置
+function noteOf(city) {
+  const edits = loadEdits();
+  const e = edits[city] || {};
+  if (e.note) return e.note;
+  const n = NOTES[city];
+  if (n && n.note) return n.note;
+  const c = CITIES.find(x => x.name === city);
+  return (c && c.note) || '';
+}
+// 描述来源(给 UI 标注用): 'boss' | 'ai' | 'local' | 'builtin' | ''
+function noteSrcOf(city) {
+  const edits = loadEdits();
+  if ((edits[city] || {}).note) return 'local';
+  const n = NOTES[city];
+  if (n && n.note) return n.src === 'ai' ? 'ai' : 'boss';
+  const c = CITIES.find(x => x.name === city);
+  return (c && c.note) ? 'builtin' : '';
+}
+function sinceOf(city) {
+  const edits = loadEdits();
+  const e = edits[city] || {};
+  if (e.since) return e.since;
+  const n = NOTES[city];
+  if (n && n.since) return n.since;
+  const c = CITIES.find(x => x.name === city);
+  return (c && c.since) || '';
+}
+
+// ── 媒体级描述(老板 2026-09-21 定) ──
+// 该城第 1 个媒体 → 老板手写的城市描述(整体记忆, 放首图最合适)
+// 其余媒体 → 该张自己的 AI 描述
+// 老板没写过的城市 → 全程用 AI 生成的城市描述
+let PHOTO_DESC = {};   // {城市: [{f:文件名, d:描述, p:人物, m:氛围, t:标签}]}
+
+function photoDescOf(city, mediaPath) {
+  const list = PHOTO_DESC[city];
+  if (!list || !mediaPath) return '';
+  const fn = mediaPath.split('/').pop();
+  const hit = list.find(x => x.f === fn);
+  return hit ? (hit.d || '') : '';
+}
+// 该城第 1 个媒体(视频也算)是否是这张 —— 剧场/灯箱都用 photoImgs 的顺序
+function isFirstMedia(city, mediaPath) {
+  const imgs = photoImgs(city);
+  return imgs.length > 0 && imgs[0] === mediaPath;
+}
+
+// 按媒体取要显示的文字(不含装饰) + 来源
+// mode: 'media' = 剧场/灯箱逐张; 'city' = 城市墙/记忆卡(整城视角)
+function descFor(city, mediaPath) {
+  const hasOwn = !!noteOf(city);          // 本地编辑/服务器/内置 任一层有内容
+  const src = noteSrcOf(city);
+  if (mediaPath && isFirstMedia(city, mediaPath)) {
+    return { text: noteOf(city), src };
+  }
+  const pd = photoDescOf(city, mediaPath);
+  if (pd) return { text: pd, src: 'ai' };
+  // 该张没有 AI 描述(被审核拦/视频) → 回退城市描述
+  return { text: noteOf(city), src };
+}
 
 // ── 漂浮粒子(性能优化: 16 个, 只用 transform 动画, 不用大尺寸) ──
 (function makeParticles(){
@@ -1158,9 +1203,11 @@ function updateLightbox() {
   }
   document.getElementById('lb-title').textContent = `${lbCity} · ${f}${isVideo(media) ? ' 🎬' : ''}`;
   document.getElementById('lb-count').textContent = `${lbIdx+1} / ${imgs.length}`;
-  const note = noteFor(lbCity);
-  document.getElementById('lb-note').textContent = note;
-  document.getElementById('lb-note').style.display = note ? '' : 'none';
+  // 同剧场: 首媒体用老板手写, 其余用该张 AI 描述
+  const lbNoteEl = document.getElementById('lb-note');
+  const lbNoteHtml = mediaNoteHtml(lbCity, media);
+  lbNoteEl.innerHTML = lbNoteHtml;
+  lbNoteEl.style.display = lbNoteHtml ? '' : 'none';
   resetLbZoom();  // 切照片重置缩放
 }
 document.getElementById('lightbox').addEventListener('click', e => {
@@ -1347,11 +1394,8 @@ function buildWall() {
       const cls = c.home ? 'chip home' : 'chip';
       const cam = photoCount(c.name)
         ? `<span class="cam">📷${photoCount(c.name)}</span>` : '';
-      // 编辑数据优先于内置数据
-      const edits = loadEdits();
-      const e = edits[c.name] || {};
-      const sinceStr = e.since || c.since || '';
-      const noteStr = e.note || c.note || '';
+      const sinceStr = sinceOf(c.name);
+      const noteStr = noteOf(c.name);
       const since = sinceStr ? `<span class="cam since">${sinceStr}</span>` : '';
       const note = noteStr ? `<span class="cam">💬</span>` : '';
       html += `<span class="${cls}" data-city="${c.name}">${c.name}${since}${note}${cam}</span>`;
@@ -2341,11 +2385,9 @@ function startAnimation() {
         if (p.seriesType !== 'effectScatter') return p.name;
         const c = CITIES.find(x => x.name === p.name);
         if (!c) return p.name;
-        const edits = loadEdits();
-        const e = edits[c.name] || {};
-        const since = e.since || c.since || '';
+        const since = sinceOf(c.name);
         const n = photoCount(c.name);
-        const note = e.note || c.note || '';
+        const note = noteOf(c.name);
         let lines = '';
         if (c.home) lines += '🏠 家 · 从这里出发<br/>';
         if (since) lines += `🕐 首访 ${since}<br/>`;
@@ -2684,10 +2726,8 @@ function renderOverlay() {
   const bigOnes = new Set(pinCities.slice(0, PIN_BIG_DEFAULT).map(c => c.name));
   pinCities.forEach(c => {
     const imgs = photoImgs(c.name);
-    const edits = loadEdits();
-    const e = edits[c.name] || {};
-    const since = e.since || c.since || '';
-    const note = e.note || c.note || '';
+    const since = sinceOf(c.name);
+    const note = noteOf(c.name);
 
     const pin = document.createElement('div');
     pin.className = 'map-pin' + (c.home ? ' home' : '') + (bigOnes.has(c.name) ? ' big' : ' small');
@@ -2891,9 +2931,10 @@ function applyZoomFold() {
   // 3D: 屏幕位置太近的城市只留一张照片(其余仍有发光点, hover 记忆卡可看)
   // 这些城市地理上就重合(西庄子/宝鸡/太白山同在陕西), 不聚类会永远糊在一起
   if (is3d) {
-    // 手机上地图窄, 城市投影间距小, 阈值要同比收窄(否则大半被合并)
+    // 手机上地图窄, 城市投影间距小, 阈值同比收窄; 但保底要够 ——
+    // 原来是 16px, 375 屏上照片(约 37px 宽)会互相压住糊成一团(2026-09-21 实测)
     const wrapW = document.getElementById('map-wrap').clientWidth;
-    const minGap = Math.max(16, wrapW / 673 * 30);
+    const minGap = Math.max(wrapW < 560 ? 30 : 22, wrapW / 673 * 30);
     // 照片多的优先; 家最高优先(不能被别人挤掉)
     const cands = [];
     document.querySelectorAll('.map-pin').forEach(pin => {
@@ -3062,12 +3103,31 @@ function showAchievements() {
 }
 
 // ── ② 每城一句话 ──
+// 整城视角的描述(城市墙/记忆卡): 用老板手写, 没有则 AI 城市描述
 function noteFor(city) {
-  const c = CITIES.find(x => x.name === city);
-  const edits = loadEdits();
-  const e = edits[city] || {};
-  const note = e.note || (c && c.note) || '';
-  return note ? `💬 ${note}` : '';
+  const note = noteOf(city);
+  if (!note) return '';
+  // AI 补位的标注出来, 老板手写的不标注
+  const ai = noteSrcOf(city) === 'ai' ? '<span class="ai-mark" title="AI 根据照片自动生成">AI</span>' : '';
+  return `💬 ${ai}${note}`;
+}
+
+// 逐张视角(剧场/灯箱): 首媒体用老板手写, 其余用该张 AI 描述
+// 返回 HTML(带 AI 标记), 供 innerHTML 用
+function mediaNoteHtml(city, mediaPath) {
+  const r = descFor(city, mediaPath);
+  if (!r.text) return '';
+  const ai = r.src === 'ai' ? '<span class="ai-mark" title="AI 根据照片自动生成">AI</span>' : '';
+  return `💬 ${ai}${escapeHtml(r.text)}`;
+}
+// 纯文本版, 供 textContent 用
+function mediaNoteText(city, mediaPath) {
+  return descFor(city, mediaPath).text;
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, m => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[m]);
 }
 
 // ── ③ 剧场引擎 · 照片轮播(旅程重放/随机旅程共用) ──
@@ -3139,11 +3199,12 @@ function playTheaterStep() {
   // 同步地图高亮(只脉冲, 不运镜 —— 否则剧场每 2.5 秒飞一次镜头)
   if (MapAPI.ready()) MapAPI.highlight(c.name);
   document.getElementById('th-city').textContent = c.name;
-  // 没有"每城一句话"时隐藏药丸, 不留空白框(老板 2026-09-15 晚)
-  const noteText = noteFor(c.name);
+  // 描述: 该城首媒体显示老板手写, 其余显示该张 AI 描述(2026-09-21 老板定)
+  // 没有描述时隐藏药丸, 不留空白框
   const noteEl = document.getElementById('th-note');
-  noteEl.textContent = noteText;
-  noteEl.style.display = noteText ? '' : 'none';
+  const noteHtml = mediaNoteHtml(c.name, imgs[theaterPhotoIdx]);
+  noteEl.innerHTML = noteHtml;
+  noteEl.style.display = noteHtml ? '' : 'none';
 
   // 交叉淡入: 在非当前槽放新媒体 fade-in, 当前槽 fade-out
   const cur = document.getElementById('th-slot-' + thCurLayer);
@@ -3656,125 +3717,41 @@ viewToggle.addEventListener('click', () => {
   wallMode === 'prov' ? buildWall() : buildTimeline();
 });
 
-fetch('photos.json?t=' + Date.now()).then(r => r.json()).then(m => {
-  // 新版 manifest: {城市: {imgs:[], since:''}}; 兼容旧版数组格式
-  for (const [city, v] of Object.entries(m)) {
-    if (Array.isArray(v)) {
-      m[city] = { imgs: v, since: '' };
+// 照片 + 每城一句话并行拉取; 两个都到齐再渲染(否则描述会晚一拍才出现)
+// 各自失败都不阻塞页面 —— notes 拿不到就退回 CITIES 内置/本地编辑
+const fetchNotes = fetch('notes.json?t=' + Date.now()).then(r => r.json())
+  .then(n => { NOTES = (n && n.cities) || {}; })
+  .catch(() => { NOTES = {}; });
+
+// 逐张照片的 AI 描述(首媒体之外用): 拿不到就整体回退城市描述, 不影响页面
+const fetchPhotoDesc = fetch('photo_desc.json?t=' + Date.now()).then(r => r.json())
+  .then(d => { PHOTO_DESC = d || {}; })
+  .catch(() => { PHOTO_DESC = {}; });
+
+const fetchPhotos = fetch('photos.json?t=' + Date.now()).then(r => r.json())
+  .then(m => {
+    // 新版 manifest: {城市: {imgs:[], since:''}}; 兼容旧版数组格式
+    for (const [city, v] of Object.entries(m)) {
+      if (Array.isArray(v)) m[city] = { imgs: v, since: '' };
     }
-  }
-  PHOTOS = m;
-  // 照片时间兜底写入 CITIES(仅当老板没手工填过)
-  const edits = loadEdits();
-  for (const c of CITIES) {
-    if (!c.since && m[c.name] && m[c.name].since && !(edits[c.name] && edits[c.name].since)) {
-      c.since = m[c.name].since.slice(0, 7); // 首访时间取到月
+    PHOTOS = m;
+    // 照片时间兜底写入 CITIES(仅当老板没手工填过)
+    const edits = loadEdits();
+    for (const c of CITIES) {
+      if (!c.since && m[c.name] && m[c.name].since && !(edits[c.name] && edits[c.name].since)) {
+        c.since = m[c.name].since.slice(0, 7); // 首访时间取到月
+      }
     }
-  }
-}).catch(() => { PHOTOS = {}; }).finally(() => {
+  })
+  .catch(() => { PHOTOS = {}; });
+
+Promise.all([fetchNotes, fetchPhotos, fetchPhotoDesc]).finally(() => {
   wallMode === 'prov' ? buildWall() : buildTimeline();
   renderMap();
   buildStage3d();
   s3dStart();
 });
 
-// ═══ 密码门 ═══
-// 家庭私人相册, 与成果站私人专区同密码(哈希比对, 源码不含明文)
-(function () {
-  var PASSWORD_HASH = 'a68afcaa33dc88de7217371b041b422543aa16e2958365dde8112487475e37cd';
-
-  // sha256 实现与 private.html 完全一致(那边已验证可用)
-  function sha256(ascii) {
-    function rightRotate(value, amount) { return (value>>>amount) | (value<<(32-amount)); }
-    var mathPow = Math.pow;
-    var maxWord = mathPow(2, 32);
-    var result = '';
-    var words = [];
-    var asciiBitLength = ascii.length*8;
-    var hash = sha256.h = sha256.h || [];
-    var k = sha256.k = sha256.k || [];
-    var primeCounter = k.length;
-    var isComposite = {};
-    for (var candidate = 2; primeCounter < 64; candidate++) {
-      if (!isComposite[candidate]) {
-        for (var i = 0; i < 313; i += candidate) isComposite[i] = candidate;
-        hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
-        k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
-      }
-    }
-    ascii += '\x80';
-    while (ascii.length%64 - 56) ascii += '\x00';
-    for (var i = 0; i < ascii.length; i++) {
-      var j = ascii.charCodeAt(i);
-      if (j>>8) return '';
-      words[i>>2] |= j << ((3 - i)%4)*8;
-    }
-    words[words.length] = ((asciiBitLength/maxWord)|0);
-    words[words.length] = (asciiBitLength);
-    for (var j = 0; j < words.length;) {
-      var w = words.slice(j, j += 16);
-      var oldHash = hash;
-      hash = hash.slice(0, 8);
-      for (var i = 0; i < 64; i++) {
-        var w15 = w[i - 15], w2 = w[i - 2];
-        var a = hash[0], e = hash[4];
-        var temp1 = hash[7]
-          + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
-          + ((e&hash[5])^((~e)&hash[6]))
-          + k[i]
-          + (w[i] = (i < 16) ? w[i] : (
-              w[i - 16]
-              + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3))
-              + w[i - 7]
-              + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10))
-            )|0
-          );
-        var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
-          + ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
-        hash = [(temp1 + temp2)|0].concat(hash);
-        hash[4] = (hash[4] + temp1)|0;
-      }
-      for (var i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i])|0;
-    }
-    for (var i = 0; i < 8; i++) {
-      for (var j = 3; j + 1; j--) {
-        var b = (hash[i]>>(j*8))&255;
-        result += ((b < 16) ? 0 : '') + b.toString(16);
-      }
-    }
-    return result;
-  }
-
-  var gate = document.getElementById('gate');
-  var input = document.getElementById('gate-pw');
-  var btn = document.getElementById('gate-btn');
-
-  function unlock() {
-    if (sha256(input.value) === PASSWORD_HASH) {
-      sessionStorage.setItem('private_ok', '1');
-      document.body.classList.remove('locked');
-      gate.style.display = 'none';
-      // 解锁后重算尺寸(3D 地图在隐藏时拿不到容器尺寸)
-      setTimeout(function () { if (window.MapAPI) MapAPI.resize(); }, 60);
-    } else {
-      gate.classList.remove('err');
-      void gate.offsetWidth;
-      gate.classList.add('err');
-      input.value = '';
-      input.focus();
-    }
-  }
-  btn.addEventListener('click', unlock);
-  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') unlock(); });
-  setTimeout(function () { input.focus(); }, 300);
-
-  // 本会话已解锁过 → 直接进
-  if (sessionStorage.getItem('private_ok') === '1') {
-    document.body.classList.remove('locked');
-    gate.style.display = 'none';
-    setTimeout(function () { if (window.MapAPI) MapAPI.resize(); }, 60);
-  }
-})();
 </script>
 <script src="../../nav-fab.js"></script>
 </body>

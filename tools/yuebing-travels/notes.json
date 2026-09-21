@@ -1,0 +1,432 @@
+{
+ "generated_at": "2026-09-21 13:46:08",
+ "source": "boss 手写优先, AI(glm-4.6v) 补空缺",
+ "cities": {
+  "保定": {
+   "note": "怎么说，保定这个区域很大，有兴芮温泉，有野三坡，还有总督府，专属的保定还得是总督府那一趟，买了核桃，看了巨大的博物馆",
+   "src": "boss",
+   "tags": [
+    "温泉",
+    "亲子",
+    "农场",
+    "景区",
+    "家庭"
+   ]
+  },
+  "克什克腾旗": {
+   "note": "头一回撸串，月饼对这儿的羊肉串念念不忘",
+   "src": "boss",
+   "tags": [
+    "grassland",
+    "family",
+    "horse riding",
+    "barbecue",
+    "dog"
+   ]
+  },
+  "北京": {
+   "note": "北京是月饼降生的地方，这个地方见证了太多月饼的成长，只能简单放几张了",
+   "src": "boss",
+   "tags": [
+    "birthday",
+    "family",
+    "snow",
+    "swimming",
+    "travel"
+   ]
+  },
+  "北戴河": {
+   "note": "姥姥妈妈第一次带月饼出游，北戴河，南戴河，海边荡秋千，好不惬意。",
+   "src": "boss",
+   "tags": [
+    "beach",
+    "swing",
+    "sand",
+    "sculpture",
+    "family"
+   ]
+  },
+  "南山滑雪": {
+   "note": "月饼第一次滑雪，在南山，第一次就已经可以自己滑下坡了，太优秀了，也敢和爸爸一起下大陡墙溜坡，月饼很棒",
+   "src": "boss",
+   "tags": [
+    "snow",
+    "skiing",
+    "family",
+    "pink",
+    "winter"
+   ]
+  },
+  "厦门": {
+   "note": "这个地方很囧，月饼因为月龄太大，差点没上去飞机，爸爸给你重新搞了个B超报告，也是有趣的经历",
+   "src": "boss",
+   "tags": [
+    "homestay",
+    "temple",
+    "instant noodles",
+    "travel",
+    "scenic spot"
+   ]
+  },
+  "唐山": {
+   "note": "唐山景区里，孩子体验杠杆、卡丁车，夜晚看景温馨",
+   "src": "ai",
+   "tags": [
+    "scenic spot",
+    "amusement park",
+    "parent-child",
+    "night view",
+    "cherry blossoms"
+   ]
+  },
+  "壶口瀑布": {
+   "note": "老陕的心心念，就是壶口瀑布，月饼居然在睡觉",
+   "src": "boss",
+   "tags": [
+    "Hukou Waterfall",
+    "family trip",
+    "group photo",
+    "waterfall scenery"
+   ]
+  },
+  "天津": {
+   "note": "在天津第一次看海，吧自己埋进沙坑",
+   "src": "boss",
+   "tags": [
+    "library",
+    "beach",
+    "museum",
+    "family",
+    "travel"
+   ]
+  },
+  "太原": {
+   "note": "第一次逛晋祠，自驾回家路上的休息一环",
+   "src": "boss",
+   "tags": [
+    "taiyuan",
+    "family travel",
+    "ancient buildings",
+    "lanterns",
+    "warm moments"
+   ]
+  },
+  "太白山": {
+   "note": "第一次上太白山，这个是爸爸第一次真正意义上的旅游爬山，太白山海拔方面，应该是比庐山高，月饼目前打卡的最高山",
+   "src": "boss",
+   "tags": [
+    "family",
+    "nature",
+    "travel",
+    "scenic",
+    "warm"
+   ]
+  },
+  "太舞小镇": {
+   "note": "草原上躺着惬意的照片，传达的温暖隔着屏幕都能感受到。还喂了小动物。我印象应该是月饼第一次坐火车。",
+   "src": "boss",
+   "tags": [
+    "family",
+    "cable car",
+    "sika deer",
+    "camping",
+    "karting"
+   ]
+  },
+  "宜宾": {
+   "note": "宜宾，简称YB，就是月饼之城，月饼光临了两次，第一次一多半时间在睡觉，吃炒红豆，黄粑很尽兴，第二次玩得尽兴一些了。",
+   "src": "boss",
+   "tags": [
+    "scenic spots",
+    "family travel",
+    "ancient architecture",
+    "local market"
+   ]
+  },
+  "宝鸡": {
+   "note": "妈妈的家乡，月饼的到来，有闹闹哥哥，心心姐姐的呵护，有舅舅舅妈，太姥爷的疼爱",
+   "src": "boss",
+   "tags": [
+    "family",
+    "travel",
+    "children",
+    "mechanical",
+    "scenic"
+   ]
+  },
+  "庐山": {
+   "note": "跟着姥姥姥爷去庐山休养，带着牌牌仿佛小领导，第一次沉迷于站桩这个动作了。",
+   "src": "boss",
+   "tags": [
+    "Lushan",
+    "family",
+    "travel",
+    "nature",
+    "warm"
+   ]
+  },
+  "延安": {
+   "note": "延安你高强叔叔带着第一次喝的麻汤饭，相当好吃，也是月饼第一次住窑洞酒店。",
+   "src": "boss",
+   "tags": [
+    "red culture",
+    "Ansai waist drum",
+    "family travel",
+    "historical sites",
+    "revolutionary sites"
+   ]
+  },
+  "延庆": {
+   "note": "延庆亲子游，溪边捞物、花田合影、后备箱躺卧，尽享自然温馨时光。",
+   "src": "ai",
+   "tags": [
+    "camping",
+    "nature",
+    "family",
+    "outdoor",
+    "leisure"
+   ]
+  },
+  "御道口": {
+   "note": "第一次大舞台跳舞，音乐响起，刚好是月饼喜欢的Basuri Dance  那么就是DNA动了，还有漂流，还有骑马，还有仿佛下暴雨的烟花秀",
+   "src": "boss",
+   "tags": [
+    "stream",
+    "rafting",
+    "water play",
+    "outdoor",
+    "family"
+   ]
+  },
+  "承德": {
+   "note": "小月饼第一次坐宝宝椅，很乖，坐了一路，睡觉也很棒。承德的民宿可以的，月饼在民宿里面的气球屋开心到飞起，我们也是在避暑山庄见到了鹿，林深见鹿",
+   "src": "boss",
+   "tags": [
+    "Chengde",
+    "family travel",
+    "night scenery",
+    "children's exploration",
+    "warm atmosphere"
+   ]
+  },
+  "林西县": {
+   "note": "路边溪水，小山林，风吹得开心",
+   "src": "boss",
+   "tags": [
+    "family",
+    "travel",
+    "sunflower",
+    "grassland",
+    "road"
+   ]
+  },
+  "武汉": {
+   "note": "第一次下东湖玩水，不愧是朝阳区最好看的屁股，参加爸爸的毕业十周年，在武大走爸妈当年的恋爱路线",
+   "src": "boss",
+   "tags": [
+    "family",
+    "Wuhan University",
+    "lakeside",
+    "crayfish",
+    "travel"
+   ]
+  },
+  "泉州": {
+   "note": "泉州的美食可以的，我还在泉州的寺庙许愿了月饼的平安降生，承天禅寺",
+   "src": "boss",
+   "tags": [
+    "restaurant",
+    "food",
+    "ancient architecture",
+    "travel",
+    "child"
+   ]
+  },
+  "济南": {
+   "note": "玩泉城欧乐堡，印象是从此以后，就黑了，再也没有白回来",
+   "src": "boss",
+   "tags": [
+    "Jinan",
+    "hotel",
+    "baby",
+    "phone",
+    "play"
+   ]
+  },
+  "济宁": {
+   "note": "主要是参加房昭强叔叔的婚礼，月饼跟喜婆婆倒是不茬生，玩得很好，很幸运地迟到高铁站，高铁也晚点",
+   "src": "boss",
+   "tags": [
+    "family",
+    "warmth",
+    "travel",
+    "child",
+    "Jining"
+   ]
+  },
+  "漳州": {
+   "note": "一个爸爸妈妈很喜欢的城市，你在肚子里的时候骑小电驴，吹江风。",
+   "src": "boss",
+   "tags": [
+    "travel",
+    "e-bike",
+    "night view",
+    "homestay",
+    "tea"
+   ]
+  },
+  "石家庄": {
+   "note": "这么近，那么美，石家庄的酒店，开启了月饼怕住酒店的一段时光，那其实就是烟雾报警器啊。",
+   "src": "boss",
+   "tags": [
+    "Shijiazhuang",
+    "family trip",
+    "museum",
+    "scenic area",
+    "warm moments"
+   ]
+  },
+  "蓟县": {
+   "note": "第一次出京游，妈妈精心选择了蓟县的民宿，后面我们又专程去玩水了",
+   "src": "boss",
+   "tags": [
+    "Jizhou",
+    "JinHaiLake",
+    "family trip",
+    "water play",
+    "outdoor"
+   ]
+  },
+  "蜀南竹海": {
+   "note": "第一次妈妈吊威亚，月饼在竹海里第一次光溜溜坐缆车，哈哈哈哈",
+   "src": "boss",
+   "tags": [
+    "bamboo forest",
+    "family travel",
+    "natural scenery",
+    "outdoor activities"
+   ]
+  },
+  "襄阳": {
+   "note": "第一次在外地跨年，元旦，大雪襄阳，把头卡到栏杆里，后面看照片还说是爸爸玩他，唉。第二次去就是参加蔡扬帆叔叔婚礼了，那么多叔叔围着，月饼太开心了",
+   "src": "boss",
+   "tags": [
+    "Xiangyang",
+    "snowy",
+    "family trip",
+    "child interaction",
+    "scenic spot"
+   ]
+  },
+  "西安": {
+   "note": "回老家的中转休息站，姑姑，汉权叔叔都是月饼的回忆",
+   "src": "boss",
+   "tags": [
+    "Xi'an",
+    "family trip",
+    "warm moments",
+    "travel",
+    "children"
+   ]
+  },
+  "西庄子": {
+   "note": "回老家的月饼，第一次长途出行，在老家可以肆无忌惮，是一个无限包容你和爸爸妈妈的地方",
+   "src": "boss",
+   "tags": [
+    "family",
+    "strawberry",
+    "fireworks",
+    "countryside",
+    "warmth"
+   ]
+  },
+  "贵阳": {
+   "note": "第一次在外地过春节，这个地方自由，浪漫，月饼第一次吃鱼吐鱼刺，爸妈也是虚惊一场。",
+   "src": "boss",
+   "tags": [
+    "Guiyang",
+    "parent-child",
+    "travel",
+    "warm",
+    "ethnic style"
+   ]
+  },
+  "赤峰": {
+   "note": "第一次带月饼自驾游，小月饼很可以，吃菜菜，玩沙漠，也算是第一次进沙漠，玉龙沙湖",
+   "src": "boss",
+   "tags": [
+    "Chifeng",
+    "travel",
+    "child",
+    "beach",
+    "family"
+   ]
+  },
+  "郑州": {
+   "note": "第一次飞无人机，估计也是飞得最多的一天，郑州博物馆，还有东站门口开心时光",
+   "src": "boss",
+   "tags": [
+    "parent-child",
+    "grassland",
+    "park",
+    "toy",
+    "drone"
+   ]
+  },
+  "野三坡": {
+   "note": "野三坡亲子旅行，下棋骑马溶洞吃串，温馨有趣",
+   "src": "ai",
+   "tags": [
+    "family",
+    "outdoor",
+    "nature",
+    "fun",
+    "travel"
+   ]
+  },
+  "阿那亚": {
+   "note": "我们第一次把自行车骑到海里面，阿那亚的海边，月饼是极其开心的，这个包括了蔚蓝海岸，如是海，还有阿那亚。",
+   "src": "boss",
+   "tags": [
+    "beach",
+    "family",
+    "joy",
+    "outdoor",
+    "travel"
+   ]
+  },
+  "隰县": {
+   "note": "隰县旅行，孩子健身房举哑铃，大人带去寺庙祈福，温馨的亲子时光。",
+   "src": "ai",
+   "tags": [
+    "parent-child",
+    "sports",
+    "temple",
+    "blessing",
+    "travel"
+   ]
+  },
+  "雄安": {
+   "note": "咱们小绿进家以后的第一次出京游，雄安不大，但是孙大午的温泉酒店满分",
+   "src": "boss",
+   "tags": [
+    "Xiong'an",
+    "family",
+    "warmth",
+    "indoor",
+    "interaction"
+   ]
+  },
+  "霍州": {
+   "note": "第一次看到路边加特林无限火力，这个城市的烟花仿佛不要钱，过年氛围太浓厚了",
+   "src": "boss",
+   "tags": [
+    "HuoZhou",
+    "family travel",
+    "cozy moments",
+    "childhood memories",
+    "warm atmosphere"
+   ]
+  }
+ }
+}

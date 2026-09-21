@@ -43,6 +43,9 @@ SKIP = {
     "tools/stats/index.html",        # 密码门页(2026-09-15)
     "tools/work-report/index.html",  # 私人文件页(2026-09-15)
     "tools/combo-report/index.html", # 业务报告页(密码门, 2026-09-15)
+    # 家人流转页(老板 2026-09-21): 链接会在家人间转发, 带上「返回/首页」按钮
+    # 等于把私人专区的入口一起扩散出去 → 不在本页注入导航
+    "tools/yuebing-travels/index.html",
 }
 
 

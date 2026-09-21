@@ -274,7 +274,8 @@ window._dep = {
     box-shadow: 0 6px 22px rgba(0,0,0,.55);
     background:#0d1020;
     transition: border-color .3s ease, box-shadow .3s ease;
-    backface-visibility: hidden;
+    /* 不用 backface-visibility:hidden —— 环上总有一半卡片背对观察者,
+       隐藏后成片消失, 窄屏上看着就是一段黑屏(老板 2026-09-21 反馈) */
   }
   /* 下圈略暗: 制造前后层次 */
   .s3d-card.ring-lower { filter: brightness(.88) saturate(.94); }
@@ -658,16 +659,24 @@ window._dep = {
 
   /* ── 平板 & 手机 (≤939): 单列纵向, 地图降高 ── */
   @media (max-width: 939px) {
-    .layout { grid-template-columns: 1fr; gap:16px; }
+    /* minmax(0,1fr) 而非 1fr —— 胶片条 39 格的固有宽度会把 auto 撑破,
+       导致整页横向溢出(老板 2026-09-21 实测 scrollW 469 > vw 375) */
+    .layout { grid-template-columns: minmax(0, 1fr); gap:16px; }
+    .panel { min-width: 0; }
     .map-row { flex-direction:column; }
-    /* 胶片条横排(手机/平板放地图下方) */
-    .film-strip { width:auto; height:auto; max-height:150px; }
+    /* 胶片条: JS 已把它挪到旋转环下方, 这里设成通栏横排(老板 2026-09-21) */
+    /* 基础样式是 max-width:206px, 这里要放开 —— 注意 max-width 不接受 none,
+       写 100% 才能覆盖(写 none 会被整条丢弃) */
+    .film-strip { width:100%; max-width:100%; height:auto; max-height:150px; margin-top:12px; }
+    /* 格子最小 52px、可拉伸铺满 —— 原 repeat(auto-fill, 52px) 是固定宽,
+       不足整数格时右侧留一条空白(老板 2026-09-21 反馈) */
     .film-strip .fs-row {
-      grid-template-columns:repeat(auto-fill, 52px);
+      grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
       max-height:124px; overflow-y:auto; overflow-x:hidden;
     }
     #map, #map-wrap { height: 56vh; min-height: 340px; }
-    .stage3d { height: 165px; }
+    /* 旋转环: 通栏后宽度变大, 环形也该更舒展(卡片更大更好点) */
+    .stage3d { height: 200px; margin-top: 14px; }
     .panel { padding: 14px; border-radius: 16px; }
     .panel h2 { font-size: 15px; }
     .header h1 { font-size: 24px; }
@@ -706,12 +715,17 @@ window._dep = {
 
   /* ── 手机 (≤640): 更紧凑 ── */
   @media (max-width: 640px) {
-    /* 底部留出悬浮按钮(nav-fab)的高度, 否则最后一块内容被盖住 */
-    body { padding: 10px 10px 84px; }
+    /* 底部留白: 本页已移除「返回/首页」悬浮按钮, 无需再留 84px */
+    body { padding: 10px 10px 24px; }
     /* 手机: 地图高度收到 52vh —— 375x667 上原 62vh+min380 会把整页顶出屏幕,
        首屏看不到地图(2026-09-21 手机端实测) */
     #map, #map-wrap { height: 52vh; min-height: 300px; }
-    .stage3d { height: 150px; margin-top: 6px; }
+    /* 旋转环: 通栏且加大, 上下都留出空间让卡片环转得开(老板 2026-09-21) */
+    .stage3d { height: 190px; margin-top: 12px; margin-bottom: 4px; }
+    /* 手机上卡片更大, 上圈抬升后顶出容器(实测超 5px) —— 圆心压低一点 */
+    .s3d-ring { top: 60%; }
+    /* 手机上环几乎占满整条, 提示放哪都压卡片 —— 直接不显示(交互对触摸用户是本能) */
+    .s3d-hint { display: none; }
     .s3d-hint { font-size: 10px; letter-spacing: 1px; }
     .header { gap: 8px; }
     .header h1 { font-size: 20px; letter-spacing: 0; }
@@ -3569,18 +3583,37 @@ const S3D_SPEED = 0.06;        // 自转角速度(度/帧), 慢速常转
 let s3dAngle = 0, s3dRaf = null, s3dDrag = null, s3dVX = 0;
 let s3dLastT = 0;
 
+// 窄屏把胶片条挪到旋转环下面(老板 2026-09-21): 手机上地图占满一屏宽,
+// 胶片竖挤在右侧既窄又难滑; 放到环形下方通栏横排更好用。桌面保持右侧竖排。
+function layoutForViewport() {
+  const strip = document.getElementById('film-strip');
+  const stage = document.getElementById('stage3d');
+  const mapRow = document.querySelector('.map-row');
+  if (!strip || !stage || !mapRow) return;
+  const narrow = window.innerWidth <= 939;
+  const inRow = strip.parentElement === mapRow;
+  if (narrow && inRow) {
+    stage.insertAdjacentElement('afterend', strip);   // 环形之后
+  } else if (!narrow && !inRow) {
+    mapRow.appendChild(strip);                        // 回到地图右侧
+  }
+}
+
 function buildStage3d() {
   const ring = document.getElementById('s3d-ring');
   const stage = document.getElementById('stage3d');
   if (!ring || !stage) return;
+  layoutForViewport();
   let cities = CITIES.filter(c => photoCount(c.name) > 0);
   if (!cities.length) { stage.style.display = 'none'; return; }
   stage.style.display = '';
 
-  // 手机端屏幕窄: 只上照片最多的 18 个城市, 否则卡片小到看不清(其余仍在地图/胶片/城市墙)
+  // 手机端: 条窄而矮, 卡片少一些、间距拉开 —— 18 张时环上太密,
+  // 大部分卡片处于大角度被透视压成竖条, 看着就是一段黑条(老板 2026-09-21 反馈)
   const narrowStage = stage.clientWidth < 560;
-  if (narrowStage && cities.length > 18) {
-    cities = [...cities].sort((a, b) => photoCount(b.name) - photoCount(a.name)).slice(0, 18);
+  const MAX_CARDS = narrowStage ? 12 : 18;
+  if (cities.length > MAX_CARDS) {
+    cities = [...cities].sort((a, b) => photoCount(b.name) - photoCount(a.name)).slice(0, MAX_CARDS);
   }
 
 
@@ -3591,9 +3624,11 @@ function buildStage3d() {
   const stageH = Math.max(90, stage.clientHeight);
   const TILT = 7 * Math.PI / 180;     // 与 CSS .s3d-scene 的 rotateX 一致
   const PERSP = 1500;                 // 与 CSS .stage3d 的 perspective 一致
-  const cw = Math.round(Math.min(58, Math.max(30, stageH * 0.21)));
+  // 卡片宽度: 手机条矮(150px), 原系数 0.21 算出 31px 太小、名字看不清。
+  // 双圈各占一半高度, 卡片高度不超过半条高即可 —— 用 0.30 系数 + 抬高下限。
+  const cw = Math.round(Math.min(58, Math.max(38, stageH * 0.30)));
   const ch = Math.round(cw * 1.33);
-  const nameSize = cw < 44 ? 8 : (cw < 54 ? 9 : 10);
+  const nameSize = cw < 44 ? 9 : (cw < 54 ? 10 : 11);
   const RING_Y = Math.round(ch * 0.5);
   // 半径: 迭代求解, 保证"最前排卡片"(透视放大 + 倾斜位移后)不越界
   let R = stageW / 2 * 0.72;
@@ -3602,10 +3637,12 @@ function buildStage3d() {
     const need = (RING_Y + R * Math.sin(TILT) + ch / 2) * m;      // 竖向占位
     if (need > stageH * 0.46) R *= 0.88; else break;
   }
-  // 弧长也要够放卡片(太密就退回小半径)
+  // 弧长要够放卡片(太密就退回小半径); 卡片少时让半径尽量大 ——
+  // 半径越大, 卡片与视线的夹角越小, 越多卡片以正面示人(手机端尤其明显)
   const perRing = Math.ceil(cities.length / 2);
-  const rArc = (perRing * cw * 1.3) / (2 * Math.PI);
-  R = Math.round(Math.max(78, Math.min(R, Math.max(rArc, R * 0.85))));
+  const rArc = (perRing * cw * 1.25) / (2 * Math.PI);
+  // 上限放宽到 0.92: 原来 0.85 会把半径压小, 手机端卡片全挤在大角度上
+  R = Math.round(Math.max(78, Math.min(R, Math.max(rArc, R * 0.92))));
   ring.innerHTML = '';
   cities.forEach((c, i) => {
     const ringIdx = i < perRing ? 0 : 1;              // 0=上圈, 1=下圈
@@ -3752,7 +3789,14 @@ Promise.all([fetchNotes, fetchPhotos, fetchPhotoDesc]).finally(() => {
   s3dStart();
 });
 
+// 横竖屏切换 / 改窗口大小时, 重新决定胶片条位置(桌面右侧竖排 ↔ 手机环形下横排)
+let _layoutT = null;
+window.addEventListener('resize', () => {
+  clearTimeout(_layoutT);
+  _layoutT = setTimeout(() => { layoutForViewport(); buildStage3d(); }, 200);
+});
+
 </script>
-<script src="../../nav-fab.js"></script>
+<!-- 本页不注入「返回/首页」导航(2026-09-21): 链接在家人间流转, 带导航会把私人专区入口一起扩散 -->
 </body>
 </html>

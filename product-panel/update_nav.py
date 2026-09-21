@@ -218,13 +218,33 @@ def _ifind_index_window(thscode, d0, d1):
 
 
 def fetch_ifind_index(thscode, end, days_back=400):
-    """iFinD 指数日线, 分块抓取绕开单次 100 行截断 → [{date, close}] (升序)"""
+    """iFinD 指数日线, 分块抓取绕开单次 100 行截断 → [{date, close}] (升序)
+
+    防污染(2026-09-21 踩坑): iFinD 该 MCP 是**自然语言查询**(非代码查表), 偶发把
+    H00300.CSI(全收益) 当成 000300.SH(价格指数) 返回 —— 实测污染段数值与 fuyao
+    的价格指数逐位吻合, 量级 4500 vs 正常 6800, 整块突降约 34%。分块边界做连续性
+    校验, 越界块直接丢弃(宁可缺一天, 不可污染整段)。
+    """
     d1 = datetime.strptime(end, "%Y-%m-%d").date()
     cur = d1 - timedelta(days=days_back)
     merged = {}
+    prev_last = None
     while cur <= d1:
         nxt = min(cur + timedelta(days=55), d1)
-        merged.update(_ifind_index_window(thscode, cur, nxt))
+        chunk = _ifind_index_window(thscode, cur, nxt)
+        if chunk:
+            dates = sorted(chunk)
+            if prev_last is not None:
+                ratio = chunk[dates[0]] / prev_last
+                # 阈值 0.7/1.43: 正常跨块(至多 ~2 个月)指数波动远小于此,
+                # 而价格指数污染约 0.66, 可稳定判别
+                if ratio < 0.7 or ratio > 1.43:
+                    print("  [warn] %s 块 %s~%s 量级突变 %.0f→%.0f (x%.2f), 判定污染已丢弃"
+                          % (thscode, cur, nxt, prev_last, chunk[dates[0]], ratio))
+                    cur = nxt + timedelta(days=1)
+                    continue
+            merged.update(chunk)
+            prev_last = chunk[dates[-1]]
         cur = nxt + timedelta(days=1)
     return [{"date": d, "close": v} for d, v in sorted(merged.items())]
 
@@ -237,6 +257,11 @@ def fetch_indexes(end, calendar):
             rows = (fetch_ifind_index(meta["code"], end) if meta["src"] == "ifind"
                     else fetch_fuyao_index(meta["code"], end))
             rows = [r for r in rows if r["date"] in calendar and r["date"] <= end]
+            # 盘前占位行(2026-09-21 踩坑): 当日未开盘时 iFinD 把上一交易日收盘价
+            # 复制到今日(两日值完全相同), 会稀释波动率 → 末尾填充行丢弃。
+            # 仅查末尾: 历史序列里零星重复值属正常(涨跌幅恰为 0)
+            while len(rows) >= 2 and rows[-1]["close"] == rows[-2]["close"]:
+                rows.pop()
             if not rows:
                 raise RuntimeError("空序列")
             out[key] = rows
@@ -413,10 +438,25 @@ def merge(hist, fresh, bench):
 
 
 def merge_indexes(hist, idx):
+    """合并全收益指数序列。
+
+    防污染兜底(2026-09-21): 分块校验拦不住"坏块在序列开头"的情况, 这里再拿已有
+    历史值做同日期对照 —— 同一日期新旧值差超 25% 判为污染, 保留历史值。正常行情下
+    同一交易日的收盘点位不会出现这种量级差异(除非指数编制口径变更, 那需人工确认)。
+    """
     for key, rows in idx.items():
         by_date = {r["date"]: r for r in hist[key]}
+        dropped = 0
         for r in rows:
+            old = by_date.get(r["date"])
+            if old and old["close"]:
+                ratio = r["close"] / old["close"]
+                if ratio < 0.75 or ratio > 1.33:
+                    dropped += 1
+                    continue
             by_date[r["date"]] = r
+        if dropped:
+            print("  [warn] %s 有 %d 个日期新旧值差异过大, 已保留历史值" % (key, dropped))
         hist[key] = sorted(by_date.values(), key=lambda x: x["date"])
     return hist
 

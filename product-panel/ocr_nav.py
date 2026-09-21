@@ -121,8 +121,10 @@ def grab(hwnd):
     r = wintypes.RECT()
     u.GetWindowRect(hwnd, ctypes.byref(r))
     w, h = r.right - r.left, r.bottom - r.top
-    if w <= 0 or h <= 0:
-        raise RuntimeError("窗口尺寸异常（最小化？）")
+    # 最小化窗口 rect 会是 (-32000,-32000,-31724,-31955) 的 276x45 残片,
+    # 只判 w<=0 拦不住 → 会拿残片 OCR 出空结果静默失败(2026-09-21)。用绝对下限截断
+    if w < 800 or h < 600:
+        raise RuntimeError("窗口尺寸异常 %dx%d（最小化或未就绪？）" % (w, h))
     return ImageGrab.grab(all_screens=True).crop((r.left, r.top, r.right, r.bottom))
 
 
@@ -133,6 +135,13 @@ def goto_product(hwnd, code, timeout=12):
     改为**轮询窗口标题**——标题一变成目标页就立即返回, 通常 2-4 秒即可。
     """
     from pywinauto.keyboard import send_keys
+
+    # 最小化时 SetForegroundWindow 无效, 且标题轮询会误判成功
+    # (最小化标题仍含"净值走势"), 导致对着 276x45 残片 OCR → 静默失败(2026-09-21)
+    if u.IsIconic(hwnd):
+        log("  窗口最小化, 先恢复")
+        u.ShowWindow(hwnd, 9)          # SW_RESTORE
+        time.sleep(1.0)
 
     u.SetForegroundWindow(hwnd)
     time.sleep(0.5)

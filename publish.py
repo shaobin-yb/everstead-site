@@ -23,6 +23,50 @@ REPORTS = SITE / "reports"
 BRIEFINGS = SITE / "market-briefings"
 BRIEFING_ARCHIVE = BRIEFINGS / "archive"
 
+# AI 应用看板的统计口径(2026-09-22 老板拍板)
+MIN_PER_ANN = 3          # 每条公告等效人工 3 分钟
+WORKDAY_HOURS = 8        # 折算工作日
+
+
+def ai_metrics() -> dict:
+    """AI 应用看板的真实数据。全部从文件/数据库读取, 不硬编码。
+    读不到就返回 0, 页面显示 0 而不是编造的数字。"""
+    import sqlite3
+    out = {"ann": 0, "comp": 0, "hours": 0, "days": 0, "tasks": 0,
+           "range": "—"}
+
+    # ① 客户情报雷达: 公告数 / 覆盖公司 / 时间区间
+    db = Path(__file__).parent.parent / "client_radar" / "announcements.db"
+    if db.exists():
+        try:
+            con = sqlite3.connect(str(db))
+            out["ann"] = con.execute("select count(*) from announcements").fetchone()[0]
+            out["comp"] = con.execute(
+                "select count(distinct sec_code) from announcements").fetchone()[0]
+            d0, d1 = con.execute(
+                "select min(pub_date), max(pub_date) from announcements").fetchone()
+            if d0 and d1:
+                out["range"] = "%s ~ %s" % (d0, d1)
+            con.close()
+        except Exception as e:
+            print("[warn] 读雷达库失败: %s" % e)
+
+    # ② 等效工时
+    mins = out["ann"] * MIN_PER_ANN
+    out["hours"] = int(round(mins / 60.0))
+    out["days"] = int(round(out["hours"] / float(WORKDAY_HOURS)))
+
+    # ③ 工作类定时任务数(排除家庭类)
+    HOME_TASKS = {"weekly-baby-prep"}
+    tdir = Path.home() / ".claude" / "scheduled-tasks"
+    if tdir.exists():
+        out["tasks"] = sum(1 for d in tdir.iterdir()
+                           if d.is_dir() and d.name not in HOME_TASKS
+                           and (d / "SKILL.md").exists())
+    return out
+
+
+
 # 站点根目录固定展品（不经过 md 转换，直接列出卡片）
 # 每项: (名称, 路径, 日期, 图标, 类型, 描述)
 # 类型: radar=雷达/站点  report=专题报告  tool=数据工具
@@ -466,6 +510,9 @@ def build_index(reports: list) -> None:
     if panel.exists():
         products_html = fill_nav_tokens(panel.read_text(encoding="utf-8"))
 
+    # AI 应用看板数据(2026-09-22)
+    ai = ai_metrics()
+
     html = (html.replace("<!--CARDS-->", "\n".join(cards))
                 .replace("<!--BOARDS-->", boards_html)
                 .replace("<!--PRODUCTS-->", products_html)
@@ -475,9 +522,19 @@ def build_index(reports: list) -> None:
                 .replace("{{REPORT_COUNT}}", str(report_n))
                 .replace("{{KB_COUNT}}", str(kb_count))
                 .replace("{{TOOL_COUNT}}", str(tool_n))
-                .replace("{{LAST_DATE}}", last_date))
+                .replace("{{LAST_DATE}}", last_date)
+                # 注意: 这里注入纯数字, 千分位由页面 JS 渲染时加 ——
+                # 若在这里就写成 "13,088", 前端 parseInt 会截成 13
+                .replace("{{AI_ANN}}", str(ai['ann']))
+                .replace("{{AI_COMP}}", str(ai['comp']))
+                .replace("{{AI_HOURS}}", str(ai['hours']))
+                .replace("{{AI_DAYS}}", str(ai['days']))
+                .replace("{{AI_TASKS}}", str(ai["tasks"]))
+                .replace("{{AI_RANGE}}", ai["range"]))
     (SITE / "index.html").write_text(html, encoding="utf-8")
     print(f"[build] index.html ({total} 个成果卡片, 最近更新 {last_date})")
+    print(f"[build] AI 看板: 公告 {ai['ann']} / 公司 {ai['comp']} / "
+          f"等效 {ai['hours']}h / 任务 {ai['tasks']}")
 
 
 def inject_nav() -> None:

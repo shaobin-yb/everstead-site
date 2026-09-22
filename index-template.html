@@ -792,15 +792,16 @@ a{text-decoration:none;color:inherit}
 (function(){
   var TYPE_NAMES={radar:'雷达',report:'报告',tool:'工具',cockpit:'工具',kb:'知识库',
     knowledge:'知识库',briefing:'点评',lan:'内网',external:'外链',vault:'密码专区'};
-  /* 2026-09-22: 分组改按卡片 data-cat(publish.py 的分类工具结果), 不再靠 data-type 推导。
-     顺序与图标在这里定,改类别只动这张表。 */
+  /* 2026-09-22: 分组按卡片 data-cat(publish.py 的分类工具结果), 不再靠 data-type 推导。
+     顺序与图标在这里定,改类别只动这张表。顺序 = 老板分类工具里的顶级顺序。 */
   var CAT_META={
     '报告':{ico:'📊',open:true},
     '知识库':{ico:'📚',open:true},
     '工具':{ico:'🧰',open:true},
     '驾驶舱':{ico:'🖥️',open:true},
     '内网':{ico:'👥',open:true},
-    '密码专区':{ico:'🔒',open:false}
+    '密码访问':{ico:'🔐',open:true},
+    '工作区':{ico:'💼',open:true}
   };
   var bar=document.getElementById('filter-bar');
   var grid=document.getElementById('gallery-grid');

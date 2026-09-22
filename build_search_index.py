@@ -152,19 +152,18 @@ def build() -> dict:
     items: list[dict] = []
 
     # 1. 首页卡片元数据(标题/描述是首页公开信息; lan 卡无真实 URL)
-    for name, path, date, icon, type_, desc in publish.ROOT_ARTIFACTS:
+    # 2026-09-22: ROOT_ARTIFACTS 每项加了第 7 位"分类"(首页分组用), 这里解包成 _cat 忽略
+    for name, path, date, icon, type_, desc, _cat in publish.ROOT_ARTIFACTS:
         url = path if path.startswith("#") else path
         items.append(_item(name, url, date, type_, icon,
                            f"{name} {desc}", cap=ITEM_TEXT_CAP))
 
-    # 2. 专题报告全文(镜像首页排除口径)
-    for md in publish.REPORTS.glob("*.md"):
-        if md.stem in EXCLUDED_REPORTS:
-            continue
-        text = md.read_text(encoding="utf-8", errors="replace")
-        items.append(_item(md.stem, f"reports/{md.stem}.html",
-                           datetime.fromtimestamp(md.stat().st_mtime).strftime("%Y-%m-%d"),
-                           "report", "📄", text))
+    # 1b. 本地工具(launch://): 只索引名称与说明, 地址是协议链接不做站内跳转
+    for name, _proto, icon, desc in publish.LOCAL_TOOLS:
+        items.append(_item(name, "", "", "local", icon,
+                           f"{name} {desc}", cap=ITEM_TEXT_CAP))
+
+    # 2. 专题报告全文(reports/ 下的报告已并入 ROOT_ARTIFACTS, 不再单独扫描)
 
     # 3. 收盘点评: latest + 归档最近 N 篇
     latest_text, latest_date = publish.load_briefing_info()

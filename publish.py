@@ -68,47 +68,82 @@ def ai_metrics() -> dict:
 
 
 # 站点根目录固定展品（不经过 md 转换，直接列出卡片）
-# 每项: (名称, 路径, 日期, 图标, 类型, 描述)
-# 类型: radar=雷达/站点  report=专题报告  tool=数据工具
+# 每项: (名称, 路径, 日期, 图标, 类型, 描述, 分类)
+# 类型: radar=雷达/站点  report=专题报告  tool=数据工具  lan=内网  vault=密码专区
+# 分类: 首页展厅分组用(2026-09-22 按老板分类工具的结果重归)
 # 日期写死（拷贝会刷新 mtime，避免卡片日期失真）
 ROOT_ARTIFACTS = [
-    ("保险资管风险责任人知识库", "kb.html", "2026-09-07", "🛡️", "kb",
-     "5 大投资管理能力 · 40+ 机构风险责任人档案 · 搜索/折叠/从业经历"),
-    ("税后收益率计算表", "yield-calc.html", "2026-09-07", "🧮", "tool",
-     "资管产品税后收益率一键计算"),
-    ("客户情报雷达", "radar.html", "2026-09-11", "📡", "radar",
-     "巨潮每日公告抓取 + 受托方解析 + iFind 打分{companies}"),
-    ("产品一页通", "product-onepagers/红利质量_产品一页通.html", "2026-09-15", "📈", "tool",
-     "红利质量/价值1号(净值+全收益指数对照,每日更新) + 国新红利价值/深度价值(要素型) 四张一页通"),
+    # ---- 报告 ----
+    ("红利质量_产品一页通", "product-onepagers/红利质量_产品一页通.html", "2026-09-15", "📕", "report",
+     "净值 + 全收益指数对照 · 每日更新", "报告"),
+    ("价值1号_产品一页通", "product-onepagers/价值1号_产品一页通.html", "2026-09-15", "📗", "report",
+     "净值 + 全收益指数对照 · 每日更新", "报告"),
+    ("红利价值量化_产品一页通", "product-onepagers/红利价值量化_产品一页通.html", "2026-09-15", "📘", "report",
+     "国新 × 中邮 · 要素型", "报告"),
+    ("深度价值量化选股_产品一页通", "product-onepagers/深度价值量化选股_产品一页通.html", "2026-09-15", "📙", "report",
+     "国新 × 中邮 · 要素型", "报告"),
+    ("产品持仓池", "holdings.html", "2026-09-10", "📦", "report",
+     "中邮价值1号(TOP10权重50.57%) + 红利质量(27.17%) 重仓股快照 · 与红利/深度观察池重叠标记", "报告"),
     ("上市公司购买理财产品情况", "上市公司购买理财产品情况.html", "2026-09-07", "📊", "report",
-     "上市公司闲置资金理财公告全景统计"),
-    ("知识库", "knowledge/index.html", "2026-09-07", "📚", "knowledge",
-     "PPT/PDF 翻页预览 + 原文件下载，按主题归档"),
-    ("CRM 客户关系管理系统", "http://192.168.100.148:3000", "2026-09-07", "👥", "lan",
-     "客户/商机/拜访纪要 · 账号 wangshaobin · 🔒 仅公司内网可访问"),
-    ("工具箱", "tools.html", "2026-09-09", "🧰", "tool",
-     "网页工具(山东投资3件套) + 本地工具(8个 launch:// 一键唤起) + 私人专区(密码锁)"),
-    ("直接交易对手库", "tools/counterparty/counterparty.html", "2026-09-11", "🏦", "lan",
-     "在库授信对手 468 家(授信总额 1.95 万亿) + 历史出库 58 家 · 评级/额度/省份/分析师筛选 · 🔒 密码访问"),
-    ("资管投研驾驶舱", "cockpit.html", "2026-09-09", "🖥️", "cockpit",
-     "每日盘后自动更新 · 市场总览/温度/产品净值/红利·深度价值关注池异动/龙虎榜/同业新发"),
-    ("因子工厂快照", "factors.html", "2026-09-09", "⚗️", "cockpit",
-     "关注池 86 只 · 股息率TTM/动量/波动率/成交额 五因子本地计算"),
-    ("因子 IC 回测", "factor-ic.html", "2026-09-10", "🧪", "cockpit",
-     "86只周频Rank IC · 股息率TTM最强(t=5.7) · 低波异象显著 · 动量无效"),
+     "上市公司闲置资金理财公告全景统计", "报告"),
     ("资产负债管理办法概念梳理", "保险公司资产负债管理办法-概念梳理.html", "2026-09-09", "📖", "report",
-     "新规学习页 · 12张概念卡 + 人身险4项/财险3项监管指标扫盲 + IFRS9/17 + 产品化映射"),
+     "新规学习页 · 12张概念卡 + 人身险4项/财险3项监管指标扫盲 + IFRS9/17 + 产品化映射", "报告"),
+    ("铁蛋近期工作总结", "reports/铁蛋近期工作总结.html", "2026-09-08", "📄", "report",
+     "专题调研 · 工作汇报", "报告"),
+
+    # ---- 知识库 ----
+    ("保险资管风险责任人知识库", "kb.html", "2026-09-07", "🛡️", "kb",
+     "5 大投资管理能力 · 40+ 机构风险责任人档案 · 搜索/折叠/从业经历", "知识库"),
+    ("成果站知识库", "knowledge/index.html", "2026-09-07", "📚", "knowledge",
+     "PPT/PDF 翻页预览 + 原文件下载，按主题归档", "知识库"),
+
+    # ---- 工具 ----
     ("2026年贷款利率自律底线", "lending-rate-floor.html", "2026-09-10", "💹", "tool",
-     "51档标准期限(6个月-50年)全档位速查 + 利率曲线 + 非标期限向上靠档计算器"),
-    ("产品持仓池", "holdings.html", "2026-09-10", "📦", "tool",
-     "中邮价值1号(TOP10权重50.57%) + 红利质量(27.17%) 重仓股快照 · 与红利/深度观察池重叠标记"),
-    ("金融客户名单·精选版", "client-list-lite.html", "2026-09-10", "🏛️", "lan",
-     "980 家市级及以上机构 · 8类Tab一眼抓重点 · 剔除联合社/信用社/县级农商行 · 🔒 密码访问"),
-    ("CRM 未分配客户池", "tools/unassigned/unassigned.html", "2026-09-14", "🎯", "lan",
-     "356 家未分配团队客户 · 搜索/类型/地域筛选 + 条形图联动 · 导出CSV · 🔒 密码访问"),
+     "51档标准期限(6个月-50年)全档位速查 + 利率曲线 + 非标期限向上靠档计算器", "工具"),
+    ("税后收益率计算表", "yield-calc.html", "2026-09-07", "🧮", "tool",
+     "资管产品税后收益率一键计算", "工具"),
+
+    # ---- 驾驶舱 ----
+    ("客户情报雷达", "radar.html", "2026-09-11", "📡", "radar",
+     "巨潮每日公告抓取 + 受托方解析 + iFind 打分{companies}", "驾驶舱"),
+    ("资管投研驾驶舱", "cockpit.html", "2026-09-09", "🖥️", "cockpit",
+     "每日盘后自动更新 · 市场总览/温度/产品净值/红利·深度价值关注池异动/龙虎榜/同业新发", "驾驶舱"),
+    ("因子工厂快照", "factors.html", "2026-09-09", "⚗️", "cockpit",
+     "关注池 86 只 · 股息率TTM/动量/波动率/成交额 五因子本地计算", "驾驶舱"),
+    ("因子 IC 回测", "factor-ic.html", "2026-09-10", "🧪", "cockpit",
+     "86只周频Rank IC · 股息率TTM最强(t=5.7) · 低波异象显著 · 动量无效", "驾驶舱"),
     # 收盘点评卡片日期动态取 latest.md 的日期(见 load_briefing_info)
     ("每日收盘点评", "market-briefings/index.html", "", "📰", "briefing",
-     "每个交易日收盘后更新 · 历史逐日归档"),
+     "每个交易日收盘后更新 · 历史逐日归档", "驾驶舱"),
+
+    # ---- 内网 ----
+    ("CRM 客户关系管理系统", "http://192.168.100.148:3000", "2026-09-07", "👥", "lan",
+     "客户/商机/拜访纪要 · 账号 wangshaobin · 🔒 仅公司内网可访问", "内网"),
+    ("直接交易对手库", "tools/counterparty/counterparty.html", "2026-09-11", "🏦", "lan",
+     "在库授信对手 468 家(授信总额 1.95 万亿) + 历史出库 58 家 · 评级/额度/省份/分析师筛选 · 🔒 密码访问", "内网"),
+    ("金融客户名单·精选版", "client-list-lite.html", "2026-09-10", "🏛️", "lan",
+     "980 家市级及以上机构 · 8类Tab一眼抓重点 · 剔除联合社/信用社/县级农商行 · 🔒 密码访问", "内网"),
+    ("CRM 未分配客户池", "tools/unassigned/unassigned.html", "2026-09-14", "🎯", "lan",
+     "356 家未分配团队客户 · 搜索/类型/地域筛选 + 条形图联动 · 导出CSV · 🔒 密码访问", "内网"),
+
+    # ---- 密码专区 ----
+    ("工作区", "work.html", "2026-09-09", "💼", "vault",
+     "业务资料与工作材料 · 工作密码解锁 · 原挂在工具箱下", "密码专区"),
+    ("私人专区", "private.html", "2026-09-15", "🔐", "vault",
+     "家庭与私人资料 · 个人密码解锁 · 原挂在工具箱下", "密码专区"),
+]
+
+# 底部友情链接式展示：本地工具（launch:// 协议，仅本机装了 handler 才唤起）
+# 每项: (名称, 协议地址, 图标, 描述)
+LOCAL_TOOLS = [
+    ("小米 MiMo 玩票站", "launch://mimo", "🤖", "多模态 AI：API 聊天/看图 + 本地 7B"),
+    ("客户拜访台账", "launch://ledger", "🗂️", "拜访记录 / 客户画像 / 跟进提醒"),
+    ("Codex 铁锤", "launch://codex", "🔨", "OpenAI Codex CLI 编程助手"),
+    ("DeepSeek Harness", "launch://harness", "🐋", "DeepSeek 编程助手 CLI"),
+    ("Obsidian 个人操作系统", "launch://obsidian", "📓", "笔记 / 日记 / 知识库 vault"),
+    ("SDKDNS", "launch://sdkdns", "🛰️", "网络代理客户端"),
+    ("飞书", "launch://feishu", "💬", "即时通讯 / 办公协作"),
+    ("铁蛋控制面板", "launch://dashboard", "🎛️", "启动后访问 localhost:18930"),
 ]
 
 PAGE_CSS = """
@@ -429,16 +464,19 @@ def build_index(reports: list) -> None:
     # 卡片右上角标签: 按类型显示(与筛选行显示名一致)
     TYPE_TAG = {'radar': '雷达', 'tool': '工具', 'report': '报告', 'kb': '知识库',
                 'knowledge': '知识库', 'briefing': '点评', 'cockpit': '驾驶舱',
-                'lan': '内网', 'external': '外链'}
+                'lan': '内网', 'external': '外链', 'vault': '密码专区',
+                'local': '本地'}
 
-    def card(name, href, date, icon, kind, desc, delay, no, external=False):
+    def card(name, href, date, icon, kind, desc, delay, no, external=False, cat=""):
         ext = ' target="_blank" rel="noopener"' if external else ''
         # lan(仅内网)卡片保留真实内网地址, 点击新标签页打开
         # (2026-09-14 修复: 此前 href 强制置 # 导致 CRM 卡片点击无跳转)
         if kind == "lan":
             ext = ' target="_blank" rel="noopener"'
         tag = TYPE_TAG.get(kind, kind.upper())
-        return (f'<a class="card" data-type="{kind}" data-no="{no}" style="animation-delay:{delay:.2f}s" '
+        # data-cat: 首页展厅分组用(2026-09-22 起按分类工具的结果分组, 不再用 data-type 推导)
+        catattr = f' data-cat="{cat}"' if cat else ''
+        return (f'<a class="card" data-type="{kind}"{catattr} data-no="{no}" style="animation-delay:{delay:.2f}s" '
                 f'href="{href}"{ext}>'
                 f'<span class="corner c1"></span><span class="corner c2"></span>'
                 f'<span class="corner c3"></span><span class="corner c4"></span>'
@@ -448,6 +486,14 @@ def build_index(reports: list) -> None:
                 f'<div class="m">{desc}</div>'
                 f'<div class="d"><span class="card-no">{no:02d}</span><span>{date}</span></div>'
                 f'<span class="arrow">→</span></a>')
+
+    def local_link(name, href, icon, desc):
+        """底部本地工具：launch:// 协议，点击由本机 launch_handler 接管。"""
+        return (f'<a class="lt-item" href="{href}" title="{desc}">'
+                f'<span class="lt-ico">{icon}</span>'
+                f'<span class="lt-body"><span class="lt-n">{name}</span>'
+                f'<span class="lt-d">{desc}</span></span>'
+                f'<span class="lt-arrow">→</span></a>')
 
     def exists(path: str) -> bool:
         """外链(局域网 CRM 等)直接视为存在; 本地路径查文件。"""
@@ -459,7 +505,7 @@ def build_index(reports: list) -> None:
         return len(list(d.glob("*.html"))) if d.is_dir() else 0
 
     cards, delay = [], 0.35
-    for name, path, date, icon, kind, desc in ROOT_ARTIFACTS:
+    for name, path, date, icon, kind, desc, cat in ROOT_ARTIFACTS:
         # lan 卡片(仅内网)恒展示
         if kind == "lan" or exists(path):
             if kind == "radar":
@@ -473,29 +519,25 @@ def build_index(reports: list) -> None:
                 date = briefing_date(latest_briefing_text) or datetime.fromtimestamp(
                     (SITE / path).stat().st_mtime).strftime("%Y-%m-%d")
             cards.append(card(name, path, date, icon, kind, desc, delay, len(cards) + 1,
-                              external=path.startswith(("http://", "https://"))))
+                              external=path.startswith(("http://", "https://")), cat=cat))
             delay += 0.06
-    # 2026-09-11: 老板点名下线的报告(源文件保留, 首页不再出卡)
-    EXCLUDED_REPORTS = {"光大理财-客户拜访调研-五看六定"}
-    for f in reports:
-        if f.stem in EXCLUDED_REPORTS:
-            continue
-        rdate = datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d")
-        cards.append(card(f.stem, f"reports/{f.stem}.html", rdate,
-                          "📄", "report", "专题调研 · 工作汇报", delay, len(cards) + 1))
-        delay += 0.06
+    # 2026-09-22: reports/ 目录下的报告已并入 ROOT_ARTIFACTS(铁蛋近期工作总结),
+    # 不再扫描目录, 避免同一份报告重复出卡
+    EXCLUDED_REPORTS = set()
+
+    # 底部本地工具区(launch:// 协议, 友情链接式)
+    local_html = "".join(local_link(n, h, i, d) for n, h, i, d in LOCAL_TOOLS)
 
     total = len(cards)
-    radar_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "radar" and exists(a[1]))
-    report_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "report" and exists(a[1])) + len(reports)
-    tool_n = sum(1 for a in ROOT_ARTIFACTS if a[4] == "tool" and exists(a[1]))
-    # 2026-09-11: 统计卡片口径:
-    #   tool_n = 数据工具卡片数(tool + cockpit 合并, 与筛选行"工具"一致)
-    #   kb_count = 知识库条目数(manifest 公开条目, 点卡片跳 knowledge/ 能对上)
-    tool_n = sum(1 for a in ROOT_ARTIFACTS if a[4] in ("tool", "cockpit") and exists(a[1]))
+    # 2026-09-22: 统计口径改按分类工具的结果(cat 字段)
+    def cat_n(cat, kinds=None):
+        return sum(1 for a in ROOT_ARTIFACTS
+                   if a[6] == cat and exists(a[1]) and (kinds is None or a[4] in kinds))
+    report_n = cat_n("报告")
+    radar_n  = cat_n("驾驶舱", ("radar",))
+    tool_n   = cat_n("工具") + cat_n("驾驶舱", ("cockpit",))  # 与筛选行"工具"口径一致
     last_date = max(
         [a[2] for a in ROOT_ARTIFACTS if a[4] != "lan" and a[2] and exists(a[1])]
-        + [datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d") for f in reports]
     )
 
     # 行业板块跟踪面板(独立片段, build_board_panel.py 生成数据后由 publish 注入)
@@ -517,6 +559,7 @@ def build_index(reports: list) -> None:
                 .replace("<!--BOARDS-->", boards_html)
                 .replace("<!--PRODUCTS-->", products_html)
                 .replace("<!--BRIEFING-->", briefing_html)
+                .replace("<!--LOCALTOOLS-->", local_html)
                 .replace("{{TOTAL}}", str(total))
                 .replace("{{RADAR_COUNT}}", str(radar_n))
                 .replace("{{REPORT_COUNT}}", str(report_n))

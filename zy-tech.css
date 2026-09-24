@@ -236,7 +236,7 @@ img { max-width: 100%; }
   font-size: 0.8125rem; font-family: inherit;
   color: var(--zy-text);
   outline: none; margin-bottom: 0.625rem;
-  transition: all 0.2s;
+  transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 .zy-search::placeholder { color: var(--zy-muted); }
 .zy-search:focus { border-color: var(--zy-gold); box-shadow: 0 0 0 3px rgba(139,92,246,0.16); }
@@ -313,7 +313,7 @@ img { max-width: 100%; }
   background: var(--zy-gold); color: #03060c;
   font-size: 0.8125rem; font-family: inherit; cursor: pointer;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: background-color 0.2s ease-out, border-color 0.2s ease-out, transform 0.15s ease-out;
 }
 .zy-btn:hover { background: var(--zy-primary-dark); border-color: var(--zy-primary-dark); color: #03060c; text-decoration: none; }
 .zy-btn.ghost { background: var(--zy-white); color: var(--zy-primary); }
@@ -434,6 +434,12 @@ a.kb-chip:hover { color: var(--zy-primary); border-color: var(--zy-primary); tex
   background: var(--zy-inner); color: var(--zy-text); padding: 7px 18px; font-size: 13px;
   transition: border-color .2s, color .2s; }
 .viewer-btn:hover { border-color: var(--zy-primary); color: var(--zy-primary); }
+.viewer-btn:active { transform: scale(.97); }
 .viewer-btn.off { opacity: .35; cursor: default; pointer-events: none; }
 .viewer-pg { font-size: 13px; color: var(--zy-muted); min-width: 64px; text-align: center;
   font-variant-numeric: tabular-nums; }
+
+/* ================= 交互反馈 / 排版基线 ================= */
+.zy-btn:active { transform: scale(.97); }
+h1, h2, h3, h4 { text-wrap: balance; }
+p, li { text-wrap: pretty; }

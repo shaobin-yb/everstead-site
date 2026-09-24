@@ -235,7 +235,7 @@ img { max-width: 100%; }
   font-size: 0.8125rem; font-family: inherit;
   color: var(--zy-text);
   outline: none; margin-bottom: 0.625rem;
-  transition: all 0.2s;
+  transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 .zy-search::placeholder { color: var(--zy-muted); }
 .zy-search:focus { border-color: var(--zy-gold); box-shadow: 0 0 0 3px rgba(176, 143, 28, 0.14); }
@@ -312,7 +312,7 @@ img { max-width: 100%; }
   background: var(--zy-gold); color: var(--zy-dark);
   font-size: 0.8125rem; font-family: inherit; cursor: pointer;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: background-color 0.2s ease-out, border-color 0.2s ease-out, transform 0.15s ease-out;
 }
 .zy-btn:hover { background: var(--zy-primary-dark); border-color: var(--zy-primary-dark); text-decoration: none; }
 .zy-btn.ghost { background: var(--zy-white); color: var(--zy-primary-dark); }
@@ -338,6 +338,11 @@ img { max-width: 100%; }
 }
 
 /* ================= A4 打印 ================= */
+/* ================= 交互反馈 / 排版基线 ================= */
+.zy-btn:active { transform: scale(.97); }
+h1, h2, h3, h4 { text-wrap: balance; }
+p, li { text-wrap: pretty; }
+
 @media print {
   @page { size: A4; margin: 10mm; }
   body { padding: 0; background: #FFFFFF; }

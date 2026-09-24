@@ -126,7 +126,7 @@ a{text-decoration:none;color:inherit}
 .fb-kind{
   flex:1;text-align:center;padding:9px 0;border-radius:10px;cursor:pointer;
   border:1px solid var(--line);background:rgba(7,16,33,.6);color:var(--muted);
-  font-size:13px;transition:all .18s;
+  font-size:13px;transition:color .18s ease-out,border-color .18s ease-out,background-color .18s ease-out,transform .15s ease-out;
 }
 .fb-kind.on{color:var(--cyan);border-color:var(--line-strong);background:rgba(34,211,238,.1)}
 .fb-panel textarea{
@@ -138,7 +138,7 @@ a{text-decoration:none;color:inherit}
 .fb-actions{display:flex;gap:10px;margin-top:14px;align-items:center}
 .fb-actions .fb-btn{
   padding:9px 22px;border:none;border-radius:9px;cursor:pointer;
-  font-size:13.5px;font-weight:700;letter-spacing:.12em;transition:filter .18s;
+  font-size:13.5px;font-weight:700;letter-spacing:.12em;transition:filter .18s,transform .15s ease-out;
 }
 .fb-actions .fb-submit{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#03101f}
 .fb-actions .fb-cancel{background:rgba(7,16,33,.8);color:var(--muted);border:1px solid var(--line)}
@@ -375,7 +375,7 @@ a{text-decoration:none;color:inherit}
 .filter-bar button{
   font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);
   background:transparent;border:1px solid var(--line);border-radius:999px;
-  padding:5px 14px;cursor:pointer;transition:all .18s;
+  padding:5px 14px;cursor:pointer;transition:color .18s ease-out,border-color .18s ease-out,background-color .18s ease-out,transform .15s ease-out;
 }
 .filter-bar button:hover{color:var(--cyan);border-color:var(--line-strong)}
 .filter-bar button.active{
@@ -486,7 +486,7 @@ a{text-decoration:none;color:inherit}
 .card .d::before{content:'';width:14px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
 .card .arrow{
   position:absolute;right:20px;bottom:16px;color:var(--cyan);font-size:15px;
-  opacity:0;transform:translateX(-6px);transition:all .25s;
+  opacity:0;transform:translateX(-6px);transition:opacity .25s ease-out,transform .25s ease-out;
 }
 .card:hover .arrow{opacity:1;transform:none}
 
@@ -576,6 +576,13 @@ a{text-decoration:none;color:inherit}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
+/* ---- 交互反馈 / 排版基线 ---- */
+.fb-kind:active{transform:scale(.97)}
+.fb-actions .fb-btn:active{transform:scale(.97)}
+.filter-bar button:active{transform:scale(.97)}
+.hero h1,.section-head h2,.fb-panel h3,.briefing-body h1,.briefing-body h2,.briefing-body h3{text-wrap:balance}
+.briefing-body p,.hero p{text-wrap:pretty}
+@media (prefers-reduced-motion:reduce){:active{transform:none!important}}
 </style>
 </head>
 <body>

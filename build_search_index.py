@@ -48,6 +48,7 @@ PRIVATE_PREFIXES = (
     "knowledge/iflyink-notes/",
     "knowledge/union-card-handbook-2026/",
     "radar-site/",
+    "tools/mushenji/",     # 牧神记内容梳理(私人专区, 2026-09-24)
 )
 SKIP_FILES = {"index.html", "index-template.html", "kb.html", "search.json"}
 

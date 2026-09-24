@@ -18,3 +18,4 @@ Disallow: /tools/yuebing-travels/
 Disallow: /knowledge/iflyink-notes/
 Disallow: /knowledge/union-card-handbook-2026/
 Disallow: /radar-site/
+Disallow: /tools/mushenji/

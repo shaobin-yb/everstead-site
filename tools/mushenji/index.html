@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>牧神记 · 重点内容梳理</title>
+<style>
+:root{
+  --bg:#070a12;
+  --bg2:#0c1120;
+  --card:rgba(255,255,255,.035);
+  --line:rgba(201,169,97,.18);
+  --line2:rgba(255,255,255,.08);
+  --gold:#c9a961;
+  --gold-l:#e8d29a;
+  --red:#a83a3a;
+  --blue:#6b8cae;
+  --txt:#dde3ee;
+  --txt2:#8e9ab0;
+  --txt3:#5f6b80;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",sans-serif;
+  line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+h1,h2,h3,.serif{font-family:"STZhongsong","Songti SC","SimSun",serif;font-weight:700}
+img{display:block;max-width:100%}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ---------- 噪点 / 背景光 ---------- */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(900px 500px at 50% -8%, rgba(201,169,97,.10), transparent 62%),
+    radial-gradient(700px 600px at 100% 40%, rgba(80,110,160,.07), transparent 60%);
+}
+
+/* ---------- 导航 ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  backdrop-filter:blur(14px);
+  background:rgba(7,10,18,.82);
+  border-bottom:1px solid var(--line2);
+  transform:translateY(-100%);
+  transition:transform .45s cubic-bezier(.2,.7,.3,1);
+}
+.nav.show{transform:translateY(0)}
+.nav-in{max-width:1120px;margin:0 auto;padding:0 24px;height:58px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none}
+.nav-in::-webkit-scrollbar{display:none}
+.nav a{
+  flex:0 0 auto;font-size:13px;color:var(--txt2);padding:6px 11px;border-radius:6px;
+  white-space:nowrap;transition:color .25s,background-color .25s;text-decoration:none
+}
+.nav a:hover{color:var(--gold-l);background:rgba(201,169,97,.08);text-decoration:none}
+.nav .brand{font-family:"STZhongsong",serif;font-size:16px;color:var(--gold);letter-spacing:.16em;margin-right:10px;font-weight:700}
+
+/* ---------- 布局 ---------- */
+main{position:relative;z-index:1}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+section{padding:96px 0}
+.sec-head{margin-bottom:52px}
+.sec-num{
+  font-family:"STZhongsong",serif;font-size:13px;letter-spacing:.3em;color:var(--gold);
+  display:flex;align-items:center;gap:14px;margin-bottom:14px
+}
+.sec-num::after{content:"";height:1px;width:56px;background:linear-gradient(90deg,var(--gold),transparent)}
+.sec-head h2{font-size:36px;letter-spacing:.04em;line-height:1.35}
+.sec-head p{color:var(--txt2);margin-top:14px;max-width:760px;font-size:15px}
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;min-height:100vh;display:flex;align-items:center;
+  overflow:hidden;padding:0
+}
+.hero-bg{position:absolute;inset:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 42%;opacity:.62}
+.hero-bg::after{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,rgba(7,10,18,.72) 0%,rgba(7,10,18,.35) 34%,rgba(7,10,18,.88) 82%,var(--bg) 100%),
+    radial-gradient(700px 420px at 22% 46%,rgba(7,10,18,.9),transparent 70%);
+}
+.hero-in{position:relative;z-index:2;max-width:1120px;margin:0 auto;padding:120px 24px 90px;width:100%}
+.hero-tag{
+  display:inline-block;font-size:12.5px;letter-spacing:.26em;color:var(--gold);
+  border:1px solid var(--line);border-radius:99px;padding:6px 18px;margin-bottom:30px;
+  background:rgba(201,169,97,.05)
+}
+.hero h1{
+  font-size:clamp(56px,10vw,104px);line-height:1;letter-spacing:.14em;
+  background:linear-gradient(180deg,#fff 10%,var(--gold-l) 55%,#8a7136 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  margin-bottom:24px;text-shadow:0 0 60px rgba(201,169,97,.18)
+}
+.hero-sub{font-size:17px;color:var(--txt2);letter-spacing:.08em;margin-bottom:34px}
+.hero-quote{
+  font-family:"STZhongsong",serif;font-size:clamp(19px,2.4vw,25px);color:#f0e2bd;
+  border-left:2px solid var(--gold);padding-left:20px;line-height:1.75;
+  margin-bottom:44px;max-width:640px;text-shadow:0 2px 20px rgba(0,0,0,.8)
+}
+.hero-quote span{display:block;font-size:13px;color:var(--txt3);letter-spacing:.1em;margin-top:10px;font-family:"Microsoft YaHei",sans-serif}
+.hero-stats{display:flex;flex-wrap:wrap;gap:14px}
+.stat{
+  background:rgba(12,17,32,.72);border:1px solid var(--line2);border-radius:10px;
+  padding:14px 22px;backdrop-filter:blur(8px);min-width:118px
+}
+.stat b{display:block;font-family:"STZhongsong",serif;font-size:26px;color:var(--gold-l);line-height:1.2}
+.stat span{font-size:12px;color:var(--txt3);letter-spacing:.12em}
+.scroll-hint{
+  position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:2;
+  font-size:11px;letter-spacing:.28em;color:var(--txt3);writing-mode:vertical-rl;
+  animation:float 2.6s ease-in-out infinite
+}
+@keyframes float{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,9px)}}
+
+/* ---------- 通用卡片 ---------- */
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.card{
+  background:var(--card);border:1px solid var(--line2);border-radius:14px;
+  padding:26px 24px;position:relative;overflow:hidden;
+  transition:border-color .35s cubic-bezier(.2,.7,.3,1),background-color .35s cubic-bezier(.2,.7,.3,1),transform .35s cubic-bezier(.2,.7,.3,1)
+}
+.card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,169,97,.5),transparent);
+  opacity:0;transition:opacity .35s
+}
+.card:hover{border-color:var(--line);transform:translateY(-3px);background:rgba(201,169,97,.045)}
+.card:hover::before{opacity:1}
+.card h3{font-size:18px;margin-bottom:10px;letter-spacing:.03em;color:#f2f5fb}
+.card p{font-size:14px;color:var(--txt2);line-height:1.8}
+.card .k{font-size:12px;color:var(--gold);letter-spacing:.16em;margin-bottom:12px;display:block}
+
+/* ---------- 图片块 ---------- */
+.figure{
+  position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line2);
+  margin:0
+}
+.figure img{width:100%;height:100%;object-fit:cover}
+.figure figcaption{
+  position:absolute;left:0;right:0;bottom:0;padding:38px 26px 18px;font-size:12.5px;
+  color:#cfd8e8;letter-spacing:.1em;
+  background:linear-gradient(180deg,transparent,rgba(7,10,18,.92))
+}
+.fig-hero{grid-column:1/-1;height:360px}
+
+/* ---------- 时间轴（五劫） ---------- */
+.epochs{display:flex;gap:0;position:relative;margin-top:12px}
+.epochs::before{
+  content:"";position:absolute;top:34px;left:5%;right:5%;height:1px;
+  background:linear-gradient(90deg,rgba(107,140,174,.15),var(--gold),var(--red))
+}
+.epoch{flex:1;text-align:center;position:relative;padding-top:0}
+.epoch .dot{
+  width:15px;height:15px;border-radius:50%;margin:27px auto 22px;position:relative;z-index:2;
+  background:var(--bg);border:2px solid var(--gold);box-shadow:0 0 0 4px rgba(201,169,97,.10)
+}
+.epoch:last-child .dot{border-color:var(--red);box-shadow:0 0 0 4px rgba(168,58,58,.16);background:var(--red)}
+.epoch .jd{font-size:11px;letter-spacing:.2em;color:var(--txt3);margin-bottom:6px}
+.epoch h4{font-family:"STZhongsong",serif;font-size:22px;color:var(--gold-l);letter-spacing:.06em;margin-bottom:12px}
+.epoch p{font-size:12.8px;color:var(--txt2);line-height:1.75;padding:0 8px}
+.epoch .tagline{font-size:11.5px;color:var(--gold);letter-spacing:.1em;display:block;margin-bottom:8px}
+
+/* ---------- 境界阶梯 ---------- */
+.realm-wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:start}
+.realm-col h3{font-size:17px;margin-bottom:6px;color:#f2f5fb}
+.realm-col .sub{font-size:12.5px;color:var(--txt3);margin-bottom:20px;letter-spacing:.06em}
+.steps{display:flex;flex-direction:column;gap:8px}
+.step{
+  display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.028);
+  border:1px solid var(--line2);border-radius:9px;padding:11px 15px;
+  border-left:2px solid rgba(201,169,97,.3);
+  transition:background-color .28s,border-left-color .28s,transform .28s
+}
+.step:hover{background:rgba(201,169,97,.06);border-left-color:var(--gold);transform:translateX(4px)}
+.step i{
+  font-style:normal;font-family:"STZhongsong",serif;font-size:12px;color:var(--gold);
+  width:20px;flex:0 0 20px;text-align:center
+}
+.step b{font-size:14.5px;color:#e9eefa;font-weight:600;letter-spacing:.02em;min-width:66px}
+.step span{font-size:12.5px;color:var(--txt3);line-height:1.55}
+.step.hi{background:rgba(201,169,97,.07);border-color:var(--line);border-left-color:var(--gold)}
+.step.hi b{color:var(--gold-l)}
+
+.divider-lbl{
+  font-size:12px;letter-spacing:.2em;color:var(--txt3);margin:16px 0 8px;
+  padding-left:4px;display:flex;align-items:center;gap:10px
+}
+.divider-lbl::after{content:"";flex:1;height:1px;background:var(--line2)}
+
+/* ---------- 九老 ---------- */
+.elders{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.elder{
+  background:var(--card);border:1px solid var(--line2);border-radius:13px;padding:22px;
+  position:relative;
+  transition:border-color .35s,background-color .35s,transform .35s
+}
+.elder:hover{border-color:var(--line);background:rgba(201,169,97,.05);transform:translateY(-3px)}
+.elder-top{display:flex;align-items:baseline;gap:10px;margin-bottom:14px}
+.elder-top .no{
+  font-family:"STZhongsong",serif;font-size:12px;color:var(--gold);opacity:.75;
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px;flex:0 0 auto
+}
+.elder-top h4{font-family:"STZhongsong",serif;font-size:21px;color:#f5f8ff;letter-spacing:.05em}
+.elder dl{font-size:13.2px;line-height:1.75}
+.elder dt{color:var(--gold);font-size:11.5px;letter-spacing:.14em;margin-top:11px}
+.elder dt:first-child{margin-top:0}
+.elder dd{color:var(--txt2)}
+
+/* ---------- 剧情时间线 ---------- */
+.tl{position:relative;padding-left:42px}
+.tl::before{content:"";position:absolute;left:9px;top:8px;bottom:8px;width:1px;background:linear-gradient(180deg,var(--gold),rgba(168,58,58,.6),transparent)}
+.tl-item{position:relative;padding-bottom:38px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{
+  content:"";position:absolute;left:-38px;top:9px;width:9px;height:9px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 0 4px rgba(201,169,97,.12)
+}
+.tl-item h4{font-family:"STZhongsong",serif;font-size:20px;color:#f5f8ff;margin-bottom:8px;letter-spacing:.04em}
+.tl-item h4 em{
+  font-style:normal;font-size:12px;color:var(--gold);letter-spacing:.16em;
+  margin-right:12px;font-weight:400;font-family:"Microsoft YaHei",sans-serif
+}
+.tl-item p{font-size:14px;color:var(--txt2);max-width:820px}
+
+/* ---------- 主题 ---------- */
+.themes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.theme{
+  padding:26px;border-radius:14px;border:1px solid var(--line2);
+  background:linear-gradient(135deg,rgba(201,169,97,.055),rgba(255,255,255,.015))
+}
+.theme h4{font-family:"STZhongsong",serif;font-size:19px;color:var(--gold-l);margin-bottom:10px;letter-spacing:.04em}
+.theme p{font-size:13.6px;color:var(--txt2)}
+
+/* ---------- 双栏对比 ---------- */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.vs-col{border-radius:14px;padding:26px;border:1px solid var(--line2)}
+.vs-col.good{background:rgba(107,140,174,.06);border-color:rgba(107,140,174,.24)}
+.vs-col.bad{background:rgba(168,58,58,.055);border-color:rgba(168,58,58,.22)}
+.vs-col h4{font-size:16px;margin-bottom:16px;letter-spacing:.08em}
+.vs-col.good h4{color:#9db9d8}
+.vs-col.bad h4{color:#d98b8b}
+.vs-col ul{list-style:none;font-size:13.8px;color:var(--txt2)}
+.vs-col li{position:relative;padding-left:18px;margin-bottom:11px}
+.vs-col li::before{content:"";position:absolute;left:0;top:10px;width:6px;height:1px;background:currentColor;opacity:.6}
+
+/* ---------- 动画进度 ---------- */
+.anime{
+  border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  background:linear-gradient(135deg,rgba(201,169,97,.06),rgba(12,17,32,.4))
+}
+.anime-top{padding:32px 32px 26px;border-bottom:1px solid var(--line2)}
+.anime-top h3{font-size:24px;color:var(--gold-l);margin-bottom:6px;letter-spacing:.04em}
+.anime-top p{font-size:13.5px;color:var(--txt2)}
+.prog{margin-top:26px}
+.prog-bar{height:6px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;position:relative}
+.prog-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--red));animation:grow 1.6s cubic-bezier(.2,.8,.3,1) forwards;transform-origin:left}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.prog-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--txt3);margin-top:10px;letter-spacing:.08em}
+.anime-body{padding:28px 32px 32px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.anime-body div b{display:block;font-family:"STZhongsong",serif;font-size:30px;color:var(--gold-l);line-height:1.25}
+.anime-body div span{font-size:12.5px;color:var(--txt3);letter-spacing:.06em}
+.anime-note{
+  padding:20px 32px;border-top:1px solid var(--line2);font-size:13.4px;color:var(--txt2);
+  background:rgba(0,0,0,.22)
+}
+
+/* ---------- 提示框 ---------- */
+.note{
+  border-left:2px solid var(--gold);background:rgba(201,169,97,.05);
+  border-radius:0 10px 10px 0;padding:18px 22px;font-size:13.6px;color:var(--txt2);margin-top:24px
+}
+.note b{color:var(--gold-l)}
+.warn{border-left-color:var(--red);background:rgba(168,58,58,.06)}
+.warn b{color:#e0a0a0}
+.flag{
+  display:inline-block;font-size:10.5px;letter-spacing:.1em;color:#e0a0a0;
+  border:1px solid rgba(168,58,58,.35);border-radius:4px;padding:1px 6px;margin-left:6px;
+  vertical-align:2px;background:rgba(168,58,58,.1)
+}
+
+/* ---------- 来源 ---------- */
+.srcs{display:grid;gap:10px;font-size:13.2px}
+.src{
+  display:flex;gap:14px;align-items:baseline;padding:13px 18px;border-radius:9px;
+  background:rgba(255,255,255,.025);border:1px solid var(--line2)
+}
+.src em{font-style:normal;color:var(--gold);font-size:11.5px;letter-spacing:.08em;flex:0 0 auto;min-width:88px;white-space:nowrap}
+.src span{color:var(--txt2);word-break:break-all}
+
+/* ---------- 页脚 ---------- */
+footer{
+  border-top:1px solid var(--line2);padding:44px 0 60px;text-align:center;
+  font-size:12.5px;color:var(--txt3);line-height:2
+}
+footer .fmark{font-family:"STZhongsong",serif;font-size:17px;color:var(--gold);letter-spacing:.26em;margin-bottom:14px}
+
+/* ---------- 入场动画 ---------- */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .85s cubic-bezier(.2,.7,.3,1),transform .85s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ---------- 交互反馈 / 排版基线 ---------- */
+.card:active,.elder:active{transform:translateY(-1px)}
+.step:active{transform:translateX(1px)}
+.nav a:active{background:rgba(201,169,97,.14)}
+.scroll-hint{pointer-events:none}
+h1,h2,h3,h4{text-wrap:balance}
+p,li,dd{text-wrap:pretty}
+.stat b,.anime-body b,.src em{font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .rv{opacity:1;transform:none}
+}
+@media print{
+  .nav,.scroll-hint{display:none}
+  body{background:#fff;color:#000}
+  section{padding:18px 0;break-inside:avoid}
+  .card,.step,.elder,.epoch,.tl-item{break-inside:avoid}
+  .rv{opacity:1!important;transform:none!important}
+}
+
+/* ---------- 响应式 ---------- */
+@media(max-width:900px){
+  section{padding:70px 0}
+  .sec-head h2{font-size:27px}
+  .g3,.g4,.elders,.anime-body{grid-template-columns:1fr 1fr}
+  .realm-wrap,.vs,.themes,.g2{grid-template-columns:1fr}
+  .epochs{flex-direction:column;gap:26px}
+  .epochs::before{display:none}
+  .epoch{text-align:left;display:grid;grid-template-columns:30px 1fr;gap:0 14px}
+  .epoch .dot{margin:6px 0 0;grid-row:1/3}
+  .epoch .jd,.epoch h4,.epoch p{grid-column:2}
+  .epoch p{padding:0}
+  .fig-hero{height:230px}
+  .hero-in{padding:100px 24px 70px}
+}
+@media(max-width:600px){
+  .g3,.g4,.elders,.anime-body{grid-template-columns:1fr}
+  .anime-top,.anime-note{padding-left:22px;padding-right:22px}
+  .anime-body{padding:24px 22px}
+  .hero-stats{gap:10px}
+  .stat{padding:11px 16px;min-width:0;flex:1 1 44%}
+  .stat b{font-size:21px}
+  .src{flex-direction:column;gap:4px}
+  .src em{flex:none}
+}
+</style>
+<noscript><style>.rv{opacity:1;transform:none}.nav{transform:translateY(0)}</style></noscript>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <span class="brand">牧神记</span>
+    <a href="#intro">讲什么</a>
+    <a href="#world">世界观</a>
+    <a href="#epochs">五劫纪元</a>
+    <a href="#realm">修炼体系</a>
+    <a href="#elders">残老村九老</a>
+    <a href="#qinmu">秦牧是谁</a>
+    <a href="#plot">剧情六幕</a>
+    <a href="#theme">主题</a>
+    <a href="#review">评价</a>
+    <a href="#anime">动画进度</a>
+    <a href="#truth">存疑说明</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-bg"><img src="assets/01-daxu-night.webp" alt="大墟与残老村夜景" fetchpriority="high" decoding="async"></div>
+  <div class="hero-in">
+    <span class="hero-tag">宅 猪 · 东 方 玄 幻</span>
+    <h1>牧神记</h1>
+    <p class="hero-sub">起点中文网 · 2017.06 开更 — 2019.08 正文完结 · 全 1931 章 · 约 591 万字</p>
+    <div class="hero-quote serif">
+      大墟的祖训说，天黑，别出门。
+      <span>—— 全书第一句</span>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><b>1931</b><span>章 · 已完结</span></div>
+      <div class="stat"><b>591万</b><span>字 体量</span></div>
+      <div class="stat"><b>1554万</b><span>总推荐票</span></div>
+      <div class="stat"><b>97集</b><span>动画已更新</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint">向下滚动</div>
+</header>
+
+<!-- ================= 01 讲什么 ================= -->
+<section id="intro">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">壹 · 一句话读懂</div>
+      <h2>一个被当成「霸体」养大的凡体少年</h2>
+      <p>《牧神记》表面上是一个少年逆袭成神的故事，实际上写的是——凡人怎么把神从神坛上拽下来。整本书可以拆成三层，一层比一层大。</p>
+    </div>
+
+    <div class="grid g3 rv">
+      <div class="card">
+        <span class="k">第一层 · 谎言起手</span>
+        <h3>「你是天下第一霸体」</h3>
+        <p>大墟残老村的九位残疾老人从江边捡回一个婴儿，取名秦牧。他本是凡体、无法修行，村长苏幕遮却骗他生来就是「举世无双的霸体」。秦牧信了，靠着这股信念把肉身练到极致，练出一身不讲道理的蛮力——全书最动人的一笔，是这谎言最后成了真的。</p>
+      </div>
+      <div class="card">
+        <span class="k">第二层 · 变法立骨</span>
+        <h3>「神为人用，人命大于天」</h3>
+        <p>走出大墟后，秦牧踏入延康国，与国师江白圭、延丰帝并称「延康变法三杰」。他们要修通被天庭斩断的神桥，让凡人也能成神——直接动了天庭垄断成神权的奶酪。这一段的写法更像政治改革剧：朝堂、军镇、宗门、神权，层层博弈。</p>
+      </div>
+      <div class="card">
+        <span class="k">第三层 · 轮回收网</span>
+        <h3>宇宙是个被反复收割的果园</h3>
+        <p>越往后越沉：龙汉、赤明、上皇、开皇……一个个覆灭的时代并非偶然，而是十天尊故意让宇宙轮回、收割每一世文明来维持自己永生。秦牧最终要对抗的不只是神，而是「轮回」本身。</p>
+      </div>
+    </div>
+
+    <div class="note rv">
+      <b>书名题眼：</b>所谓「牧神」，不是去当神，而是<b>放牧诸神</b>——把神管起来，让神服务于黎民苍生。全书最后一句主旨就是：「改革变法，放牧诸神，让诸神服务于黎民苍生。」
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 世界观 ================= -->
+<section id="world" style="background:linear-gradient(180deg,transparent,rgba(12,17,32,.55),transparent)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">贰 · 世界观骨架</div>
+      <h2>一界三域，外加两个「不该存在」的地方</h2>
+      <p>记不住全世界，记住这五个地方基本就能跟上剧情了。</p>
+    </div>
+
+    <div class="grid g3 rv" style="margin-bottom:18px">
+      <div class="card">
+        <span class="k">物质世界</span>
+        <h3>元界</h3>
+        <p>诸天万界的总称。大墟、延康国、开皇故地、赤明余部……都在这层。也是天庭眼里的「果园」——后天生灵（人族、妖族）在这里生灭。大墟是上古天庭覆灭后的巨大废墟，夜里魔神横行，是全书起点。</p>
+      </div>
+      <div class="card">
+        <span class="k">亡者归处</span>
+        <h3>幽都</h3>
+        <p>人死后由阴差带来的地方，主事者是古神<b>土伯</b>，掌生死簿与轮回大道。秦牧的身世之根就在这儿——他的半身兄长秦凤青是「幽都神子」，出生即凌霄战力。土伯在书中不是纯粹反派，而是秩序的执行者。</p>
+      </div>
+      <div class="card">
+        <span class="k">宇宙终结之地</span>
+        <h3>归墟</h3>
+        <p>周期性引发「破灭劫」，威胁所有文明存亡。到书的末段，一切矛盾都汇聚于此：宇宙走向「终极冷寂」，这也是最后一卷的战场。</p>
+      </div>
+    </div>
+
+    <div class="grid g2 rv">
+      <div class="card">
+        <span class="k">宇宙中心 · 大道起源</span>
+        <h3>祖庭</h3>
+        <p>万物起源之地，所有大道的源头。各大天尊、上古神魔争夺祖庭地盘，中期最核心的角斗场。秦牧在此占下十万大黑山为领地，最终又以封印祖庭为代价镇守三十五亿年。</p>
+      </div>
+      <div class="card" style="border-color:rgba(168,58,58,.28)">
+        <span class="k" style="color:#d98b8b">终极黑手 · 前十六纪</span>
+        <h3>弥罗宫</h3>
+        <p>活过无数轮回的古老存在，前十六个宇宙纪的残留。它操控宇宙轮回、收割每一代文明的成果，把众生当试验棋子。全书最终 Boss，也是「为什么会有轮回」这个问题的答案。</p>
+      </div>
+    </div>
+
+    <figure class="figure rv" style="margin-top:18px;height:300px">
+      <img src="assets/06-chaos-river.webp" alt="混沌长河与宇宙轮回" loading="lazy" decoding="async" style="object-position:50% 50%">
+      <figcaption>混沌长河 · 一个又一个纪元的残骸顺流而下，同一个银河反复出现</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= 03 五劫纪元 ================= -->
+<section id="epochs">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">叁 · 时间轴</div>
+      <h2>五劫纪元：每一代人族，都在重演同一场失败</h2>
+      <p>作者宅猪不是随手编的年代名。他化用了道教《上清宝诰》的「天地之数有五劫」：东方起自子曰龙汉，南方起自寅曰赤明，中央起自卯曰上皇，北方起自午曰开皇，西方起自酉终于戌曰延康。这套劫数模板，本身就是全书「轮回」主题的隐喻。</p>
+    </div>
+
+    <div class="epochs rv">
+      <div class="epoch">
+        <div class="dot"></div>
+        <div class="jd">始劫</div>
+        <h4>龙汉</h4>
+        <span class="tagline">黑暗压迫下的挣扎</span>
+        <p>古神推举宇宙中第一位生命为天帝，成立龙汉天庭，名号即秩序，实际是奴役。为打破枷锁，御天尊为首的人族创立「七大神藏」成神法，却在瑶池盛会前遭暗杀。秦牧穿越回此时，代御天尊传下天宫成神法，创立天盟。</p>
+      </div>
+      <div class="epoch">
+        <div class="dot"></div>
+        <div class="jd">成劫</div>
+        <h4>赤明</h4>
+        <span class="tagline">探索与发展的征程</span>
+        <p>赤皇自元都废墟中崛起，建立赤明王朝，文明建立在「三头六臂」之上，约十万年历史。赤皇失踪后群雄逐鹿，后人明皇重建神朝。最终被火天尊代表的天庭所灭，余部逃入悬空界。此劫颠覆了半神对人族的血脉优势。</p>
+      </div>
+      <div class="epoch">
+        <div class="dot"></div>
+        <div class="jd">住劫</div>
+        <h4>上皇</h4>
+        <span class="tagline">人命大于天</span>
+        <p>地母元君扶持子嗣建立「北上皇天庭」，天盟扶持另一批人成立「南上皇天庭」，南北对峙近三十万年。南上皇的理念是「人命大于天，神为人服务」——这句话从此贯穿全书。地母被除，凌天尊遭袭杀，上皇终结。</p>
+      </div>
+      <div class="epoch">
+        <div class="dot"></div>
+        <div class="jd">住劫</div>
+        <h4>开皇</h4>
+        <span class="tagline">后天大道的爆发</span>
+        <p>秦天尊秦业在废墟上建开皇天庭。这是剑道、阵法、铸造、刀道等「后天大道」的巅峰期，开始与先天大道争辉。也是九老当年效力的时代——变法正当高潮，天庭势力从内部渗透，最终兵败。开皇打造「无忧乡」保全火种逃往彼岸，历时不足两万年。</p>
+      </div>
+      <div class="epoch">
+        <div class="dot"></div>
+        <div class="jd">坏劫 · 主角时代</div>
+        <h4>延康</h4>
+        <span class="tagline">变革与崛起</span>
+        <p>开皇劫中，一位道心崩溃的逃兵皇子在寻死路上遇见一群难民，被唤醒了责任感——他护着这些人找到一片可以繁衍的土地。这批人就是延康的火种。到延丰帝时，国师江白圭推行变法；秦牧登场后，变法终于推向了成功。</p>
+      </div>
+    </div>
+
+    <div class="note rv">
+      <b>看懂这条线的关键：</b>龙汉、赤明、上皇、开皇四代人族都失败了。他们的失败不是不够强，而是<b>没有跳出轮回的框架</b>。延康之所以不同，是因为秦牧把前面四代的遗产（剑道、变法、天命观、无忧乡火种）全接了起来。
+    </div>
+  </div>
+</section>
+
+<!-- ================= 04 修炼体系 ================= -->
+<section id="realm" style="background:linear-gradient(180deg,transparent,rgba(12,17,32,.55),transparent)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">肆 · 修炼体系</div>
+      <h2>两条路：给神修的，和给人走的</h2>
+      <p>牧神记的境界设定之所以值得单独说，是因为它有两个并行的体系——正统的「神藏天宫」体系和秦牧开创的革新体系。这个双轨结构本身就是全书的主题装置：谁掌握了成神法，谁就掌握了秩序。</p>
+    </div>
+
+    <div class="realm-wrap">
+      <div class="rv">
+        <div class="realm-col" style="margin-bottom:30px">
+          <h3>正统体系 · 神藏天宫</h3>
+          <div class="sub">天庭垄断的成神路径，走完全程即体制内的顶层</div>
+          <div class="steps">
+            <div class="divider-lbl">七大神藏 · 每关需「破壁」</div>
+            <div class="step"><i>一</i><b>灵胎</b><span>开启第一神藏，孕育元神基础</span></div>
+            <div class="step"><i>二</i><b>五曜</b><span>以灵胎为中心，生成金木水火土五颗星辰</span></div>
+            <div class="step"><i>三</i><b>六合</b><span>灵台衍生东南西北上下，构建空间框架</span></div>
+            <div class="step"><i>四</i><b>七星</b><span>六合之后再生日月，灵胎大成，成为天人</span></div>
+            <div class="step"><i>五</i><b>天人</b><span>元神足够强大，连通生死</span></div>
+            <div class="step"><i>六</i><b>生死</b><span>元神脚下生出幽都，超脱轮回法则</span></div>
+            <div class="step"><i>七</i><b>神桥</b><span>元神上方生出长桥，踏桥渡幽都，抵达天宫门槛</span></div>
+          </div>
+          <div class="steps" style="margin-top:4px">
+            <div class="divider-lbl">天宫七境 · 入天宫，跳出寿元限制</div>
+            <div class="step"><i>一</i><b>尊神</b><span>又称伪神，元神立于南天门外，已长生不老</span></div>
+            <div class="step"><i>二</i><b>真神</b><span>元神顶住南天门压力入内，全面成神</span></div>
+            <div class="step"><i>三</i><b>瑶池</b><span>入瑶池（天池），调和天道，人称天神</span></div>
+            <div class="step hi"><i>四</i><b>斩神台</b><span>渡过得道，渡不过元神被斩——全书最凶险的一关</span></div>
+            <div class="step"><i>五</i><b>玉京</b><span>入玉京城，参悟天帝遗留的大道法则</span></div>
+            <div class="step"><i>六</i><b>凌霄</b><span>入凌霄殿，操控天地大势，世间数一数二</span></div>
+            <div class="step"><i>七</i><b>帝座</b><span>坐上帝座，「自己就是自己的天帝」</span></div>
+            <div class="step hi"><i>终</i><b>天庭</b><span>御天尊提出的第八重，需集三十六门帝座功法，开辟三十六天宫</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rv">
+        <figure class="figure" style="height:420px;margin-bottom:26px">
+          <img src="assets/03-shenqiao-tiangong.webp" alt="神桥通天宫" loading="lazy" decoding="async" style="object-position:50% 30%">
+          <figcaption>神桥 · 一条桥架在幽都与天宫之间</figcaption>
+        </figure>
+        <div class="card">
+          <span class="k">革新体系 · 秦牧的路</span>
+          <h3>不走天宫，在体内自成一界</h3>
+          <p style="margin-bottom:12px">秦牧干的事，本质上是<b>绕开天庭的收费站</b>——既然成神要过天庭的门，那就在自己身体里另开一条路。</p>
+          <p style="margin-bottom:12px">· 用「<b>天河神藏</b>」替换原版的神桥神藏（御天尊则开辟了「星河神藏」）</p>
+          <p style="margin-bottom:12px">· 一口气推演出「<b>二十六种第七神藏</b>」，把单一终点变成多条路</p>
+          <p>· 祖庭一路写到：祖庭灵胎 → 玄都大陆 → 周天星斗神圣 → 大轮回，目标是<b>自我宇宙圆满</b>，彻底跳脱天宫束缚</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2 rv" style="margin-top:26px">
+      <div class="card">
+        <span class="k">核心功法</span>
+        <h3>霸体三丹功</h3>
+        <p>残老村村长传授，本质是一套<b>「肉身成道」</b>的导引功——与传统「炼气化神」的金丹路线相反，把肉身穿成丹炉，弱化对灵气的依赖，可以在奔跑、战斗中同步修炼。</p>
+        <p style="margin-top:12px">「三丹」= 灵胎丹（眉心祖窍）→ 五曜丹（五脏承接星辰之力）→ 六合丹（四肢百骸共鸣）。功法初期是残缺的，靠秦牧自己补全推演，最后兼容了《大育天魔经》《雷音八式》《九龙帝王功》《祖龙太玄功》等多家体系，成为大一统功法。</p>
+      </div>
+      <div class="card">
+        <span class="k">为什么这功法重要</span>
+        <h3>「霸体不是体质，是一种心性」</h3>
+        <p>秦牧的霸体是村长编的谎。但正因为<b>信了</b>，他才能在凡体资质下撑过三丹功每一步的极致痛苦。发现真相后他没崩，反而悟出这句话。</p>
+        <p style="margin-top:12px">这是全书最重要的一个隐喻：<b>信念本身可以造出真实</b>。霸体谎言最终变成了真的霸体，而「信则有」也正是延康变法能成的底层逻辑——先让人相信凡人可以成神，然后他们真的成了。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 05 残老村九老 ================= -->
+<section id="elders">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">伍 · 群像核心</div>
+      <h2>残老村九老：大墟版「恶人谷」，九个残废的绝顶强者</h2>
+      <p>动画最出彩的群像。九个身体残缺的老人，个个都曾是搅动风云的人物，因为反神权被打残、被逼隐居。他们把自己一生的绝学和遗憾，毫无保留地塞给了捡来的那个孩子。</p>
+    </div>
+
+    <figure class="figure fig-hero rv" style="margin-bottom:26px">
+      <img src="assets/02-nine-elders.webp" alt="残老村九老围坐火塘" loading="lazy" decoding="async">
+      <figcaption>残老村 · 九个残废的老人，围着同一堆火</figcaption>
+    </figure>
+
+    <div class="elders rv">
+      <div class="elder">
+        <div class="elder-top"><span class="no">01</span><h4>苏幕遮</h4></div>
+        <dl>
+          <dt>身份</dt><dd>残老村村长 · 上代人皇 · 剑道巅峰，剑法名「剑图」，残老村第一高手</dd>
+          <dt>残缺</dt><dd>四肢被上苍真神斩断，常年坐在担架上</dd>
+          <dt>教了秦牧什么</dt><dd>「人可胜天」的信念与人皇剑道；后来还指引延康国师入道</dd>
+        </dl>
+      </div>
+      <div class="elder">
+        <div class="elder-top"><span class="no">02</span><h4>司幼幽</h4></div>
+        <dl>
+          <dt>身份</dt><dd>人称司婆婆 · 天圣教（天魔教）前代圣女 · 白虎灵体，美到祸国殃民</dd>
+          <dt>残缺</dt><dd>化身驼背老妪，藏在老婆婆的皮囊里四十年</dd>
+          <dt>教了秦牧什么</dt><dd>《大育天魔经》《大罗天星掌》，秦牧的魔道引路人</dd>
+        </dl>
+      </div>
+      <div class="elder">
+        <div class="elder-top"><span class="no">03</span><h4>瞎子</h4></div>
+        <dl>
+          <dt>身份</dt><dd>一代枪神，一杆枪可挑动满江水</dd>
+          <dt>残缺</dt><dd>神级双目被星犴挖去，道心受创而隐居</dd>
+          <dt>教了秦牧什么</dt><dd>以气御枪、心神眼、天衍推演之术；最疼秦牧的一个</dd>
+        </dl>
+      </div>
+      <div class="elder">
+        <div class="elder-top"><span class="no">04</span><h4>瘸子</h4></div>
+        <dl>
+          <dt>身份</dt><dd>天下第一神偷，偷道始祖</dd>
+          <dt>残缺</dt><dd>偷了延康国镇国玉碟，被国师斩断一条腿</dd>
+          <dt>教了秦牧什么</dt><dd>偷天腿法、破解封印与极速遁术；是他带秦牧走出了大墟</dd>
+        </dl>
+      </div>
+      <div class="elder">
+        <div class="elder-top"><span class="no">05</span><h4>药师</h4></div>
+        <dl>
+          <dt>身份</dt><dd>人称「玉面毒王」，医毒双绝，毒术可弑神</dd>
+          <dt>残缺</dt><dd>因弟子背叛（一说躲避情债）自毁容貌隐居</dd>
+          <dt>教了秦牧什么</dt><dd>丹道、毒道、肉身秘藏；以药入道，代表用「诡道」对抗强权</dd>
+        </dl>
+      </div>
+      <div class="elder">
+        <div class="elder-top"><span class="no">06</span><h4>马爷</h4></div>
+        <dl>
+          <dt>身份</dt><dd>大雷音寺如来座下弟子</dd>
+          <dt>残缺</dt><dd>因破戒成家遭师门追杀，自断一臂</dd>
+          <dt>教了秦牧什么</dt><dd>佛门功法与肉身搏杀，佛魔一体</dd>
+        </dl>
+      </div>
+      <div class="elder">
+        <div class="elder-top"><span class="no">07</span><h4>聋子</h4></div>
+        <dl>
+          <dt>身份</dt><dd>天图国太子，画道入圣</dd>
+          <dt>残缺</dt><dd>沉迷作画致母国覆灭，自割双耳</dd>
+          <dt>教了秦牧什么</dt><dd>画道。曾以百姓血绘《十八层地狱图》葬敌百万，画作可化虚为实</dd>
+        </dl>
+      </div>
+      <div class="elder">
+        <div class="elder-top"><span class="no">08</span><h4>哑巴</h4></div>
+        <dl>
+          <dt>身份</dt><dd>开皇时代天工造物一脉最后传人，朱雀灵体，实力仅次于村长</dd>
+          <dt>残缺</dt><dd>因泄露天工机密致族人被害，自割舌头赎罪</dd>
+          <dt>教了秦牧什么</dt><dd>炼器、机关、傀儡、城防阵法；延康军械与大阵的源头</dd>
+        </dl>
+      </div>
+      <div class="elder">
+        <div class="elder-top"><span class="no">09</span><h4>屠夫</h4></div>
+        <dl>
+          <dt>身份</dt><dd>「天刀」大宗师，曾向诸神挥刀</dd>
+          <dt>残缺</dt><dd>因弑神被腰斩，只剩上半身（后由秦牧寻回残躯）</dd>
+          <dt>教了秦牧什么</dt><dd>杀猪刀法，刀意霸道，能切出火焰</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="note warn rv">
+      <b>⚠️ 九老结局存在说法冲突。</b>一种说法是：宇宙战争中九老为守护秦牧与众生先后牺牲，其「道」化为「大罗天」（成道者精神的显化），呼应「肉身可朽、道心不灭」；另一种说法是：瘸子被复活、几位老人最终恢复健全，穿梭时空。本页不做裁决，按原著正文为准。
+    </div>
+
+    <div class="note rv">
+      <b>为什么这九个人好：</b>他们不是「传功工具人」。每个人都是<b>残缺的身体 + 完整的道心</b>——剑神没了四肢、枪神没了眼睛、画圣没了耳朵、天工没了舌头。宅猪用最极端的方式写「凡人可以弑神」这件事：<b>神不需要完美，只需要不肯认输</b>。而他们最爱说的那句话是「打不过就跑，记得回家过年」。
+    </div>
+  </div>
+</section>
+
+<!-- ================= 06 秦牧是谁 ================= -->
+<section id="qinmu" style="background:linear-gradient(180deg,transparent,rgba(12,17,32,.55),transparent)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">陆 · 主角</div>
+      <h2>秦牧是谁：一具身体里塞了四重身世</h2>
+      <p>这是全书最大的悬念工程。秦牧的身份是一层层剥开的，每一层都重新解释了前面的剧情——所以看他「原来是这样」，是读这本书的主要乐趣之一。</p>
+    </div>
+
+    <div class="grid g2 rv" style="margin-bottom:26px">
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <span class="k">第一层</span>
+          <h3>凡体孤儿 · 残老村的「霸体」</h3>
+          <p>从江边捡回的孩子，本无修行资质。村长的谎言给了他信念，也给了他全村的绝学。</p>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <span class="k">第二层</span>
+          <h3>幽都神子的「第二意识」</h3>
+          <p>幽都神子秦凤青因作恶多端被土伯封印，其体内孕育出了第二个意识——就是秦牧。两人原本共用一具身体、一个元神。</p>
+        </div>
+        <div class="card" style="margin-bottom:16px">
+          <span class="k">第三层</span>
+          <h3>开皇血脉 · 第三十七代人皇</h3>
+          <p>机缘巧合遇见生父，揭开帝族遗孤身份——他是开皇第一百零七世孙。身份到手的同时，也拿到了成神法门。</p>
+        </div>
+        <div class="card">
+          <span class="k">第四层</span>
+          <h3>弥罗宫七公子<span class="flag">说法不一</span></h3>
+          <p>最深的一层，与「为什么是他」直接相关。百度百科的表述是：秦凤青同时也是弥罗宫主人的黑暗面分身「弥罗宫七公子」；另有资料称秦牧是弥罗宫七公子转世。两说并不完全一致，此处如实并列。</p>
+        </div>
+      </div>
+
+      <div>
+        <figure class="figure" style="height:300px;margin-bottom:20px">
+          <img src="assets/04-qinmu-out.webp" alt="少年秦牧牵着牛走出大墟" loading="lazy" decoding="async">
+          <figcaption>「坏蛋出村」· 少年与老牛，走向天光刚亮的地平线</figcaption>
+        </figure>
+        <div class="card">
+          <h3>其他关键称呼与关系</h3>
+          <p style="margin-bottom:10px">· 别称：<b>牧天尊</b>、万古不灭大法师、天魔教（天圣教）教主、延康国师、人皇</p>
+          <p style="margin-bottom:10px">· 神器：劫剑（断剑）、杀生鼎、太帝印</p>
+          <p style="margin-bottom:10px">· 妻子：<b>灵毓秀</b>，延康七公主，女扮男装进大墟时被秦牧戏称「肥七公子」。延丰帝入狱后她登基为<b>延秀帝</b>，幽都之战后退位成婚，育有一女秦灵筠</p>
+          <p style="margin-bottom:10px">· 轮回知己：白璩儿（龙族，跨纪元的旧缘，无世俗名分）</p>
+          <p>· 半身兄弟：<b>秦凤青</b>——一个大头娃娃，幽都神子，实力恐怖但只有孩童心性，看世界只有「能吃的」和「不能吃的」两类。后期继承土伯的生死簿与幽都大道</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 07 剧情六幕 ================= -->
+<section id="plot">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">柒 · 主线六幕</div>
+      <h2>剧情骨架</h2>
+      <p>把 1931 章压成六幕。看动画追到哪一幕，心里就有数了。</p>
+    </div>
+
+    <figure class="figure rv" style="height:320px;margin-bottom:34px">
+      <img src="assets/05-yankang-bianfa.webp" alt="延康京城朝堂与万民" loading="lazy" decoding="async" style="object-position:50% 55%">
+      <figcaption>延康变法 · 神桥断，凡人立——朝堂之上是官，台阶之下是民</figcaption>
+    </figure>
+
+      <div class="tl-item">
+        <h4><em>第一幕</em>大墟 · 谎言中的霸体</h4>
+        <p>残老村九老捡回秦牧，村长骗他是霸体。他练霸体三丹功，肉身强到不像话。黑暗笼罩大墟的那一夜，他走出家门——故事从这里开始。走出大墟后才知道自己是凡体，但战力早已逆天。</p>
+      </div>
+      <div class="tl-item">
+        <h4><em>第二幕</em>延康 · 变法三杰</h4>
+        <p>秦牧成为天魔教教主，打遍黄金圣宫无敌手，又被封为延康第一任太学博士。他与国师江白圭、延丰帝并称「延康变法三杰」，核心纲领是<b>神为人用</b>，要修通被斩断的神桥，让凡人也能成神。他助国师平叛、造射日神炮，得人皇传承成为新一代人皇。</p>
+      </div>
+      <div class="tl-item">
+        <h4><em>第三幕</em>延康劫 · 天庭的镇压</h4>
+        <p>天庭判定延康是叛逆，发动延康劫。第一次延康劫，国师与延丰帝双双入狱，只有秦牧借「牧天尊」的身份保下了延康国——延康转为明面上听天庭的、暗地里继续变法。第二次延康劫后，天庭反被延康所灭，延丰帝建立新天庭。</p>
+      </div>
+      <div class="tl-item">
+        <h4><em>第四幕</em>身世 · 三重谜底</h4>
+        <p>幽都神子、开皇血脉、弥罗宫七公子——身份一层层揭开，同时把前三幕的「偶然」全部改写成「必然」。秦牧由此得到成神法门，正式开启道法神通改革的大世。</p>
+      </div>
+      <div class="tl-item">
+        <h4><em>第五幕</em>祖庭 · 十天尊博弈</h4>
+        <p>进入宇宙中心的祖庭，占下十万大黑山为领地，与各大天尊斗智斗勇。天庭诸神并非单纯邪恶，而是既得利益者的复杂化身。秦牧在此集齐大道、创立完整新法，联合土伯、天公、开皇、造物主及各族反抗者，与十天尊全面开战。</p>
+      </div>
+      <div class="tl-item">
+        <h4><em>第六幕</em>混沌长河 · 终结轮回</h4>
+        <p>真正的对手浮出水面：弥罗宫。它要的不是统治，而是让宇宙彻底寂灭、不再轮回。秦牧跨越多个宇宙纪元，在混沌中悟道，面见元始大天尊江子川获得破局关键。最终他牺牲一切回到宇宙起点，重开天地，开创<b>非轮回式宇宙</b>——众生平等，再无高高在上的神。</p>
+      </div>
+    </div>
+
+    <div class="note rv">
+      <b>结局交代：</b>宇宙不再轮回；凡人亦可成道。一部分故人「化身大罗天」，化作宇宙光芒守护残存生灵。秦牧封印祖庭镇守三十五亿年，在第十七纪的八千亿年后，终于找到解决「终极冷寂」（参考宇宙学的热寂／大撕裂假说）的方法，回到第十七纪。完成使命后隐退成传说。
+    </div>
+  </div>
+</section>
+
+<!-- ================= 08 主题 ================= -->
+<section id="theme" style="background:linear-gradient(180deg,transparent,rgba(12,17,32,.55),transparent)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">捌 · 这本书的「里子」</div>
+      <h2>它为什么比普通玄幻高一档</h2>
+      <p>打怪升级的书满地都是。牧神记真正立住的地方，是它把一整套政治哲学塞进了玄幻壳子里。</p>
+    </div>
+
+    <div class="themes rv">
+      <div class="theme">
+        <h4>神为人用，人命大于天</h4>
+        <p>全书纲领。上皇时代南上皇天庭最先提出，延康变法把它付诸实践。神不是主人，神应该为人所用——反过来就是：人不需要跪着活。</p>
+      </div>
+      <div class="theme">
+        <h4>变革才是永恒</h4>
+        <p>批判古神与天庭代表的「永恒统治」。通过龙汉九天尊的兴衰，揭示权力更迭的必然与悲剧性：任何宣称永恒的秩序，最后都会变成压迫。</p>
+      </div>
+      <div class="theme">
+        <h4>凡人弑神</h4>
+        <p>神灵被赋予贪婪、恐惧、私欲这些人性弱点；凡人反倒通过抗争彰显出神性。这直接颠覆了传统玄幻「神魔对立」的框架。</p>
+      </div>
+      <div class="theme">
+        <h4>被牧者 → 牧神者</h4>
+        <p>书名最狠的一层反转。秦牧一生都在被安排、被牧养；他最后的成就是成为「牧神的人」。被牧者翻身去牧神，这是全书的人物弧光。</p>
+      </div>
+      <div class="theme">
+        <h4>信念造出真实</h4>
+        <p>霸体是谎，但信了就成真。延康变法也是一样——先让人相信凡人可以成神，然后他们真的成了。这是宅猪对「信念」最浪漫的表态。</p>
+      </div>
+      <div class="theme">
+        <h4>时空闭环与宿命</h4>
+        <p>「物质不易」神通（凌天尊开创，可冻结时空因果链）让秦牧能回溯历史，并尝试解构外祖母悖论。全书用非线性的 LOOP 结构，把百万年历史压缩进一个人的成长线里。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 09 评价 ================= -->
+<section id="review">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">玖 · 客观评价</div>
+      <h2>好在哪，坑在哪</h2>
+      <p>这本书口碑很高，但不是没有毛病。老书虫骂的点也很具体。</p>
+    </div>
+
+    <div class="vs rv">
+      <div class="vs-col good">
+        <h4>优点</h4>
+        <ul>
+          <li>群像塑造极其出色，残老村九老、延康朝堂、历代天尊都立得住</li>
+          <li>思想性高于同类，把变法改革、阶级固化、技术革命这些议题写进了玄幻</li>
+          <li>时空闭环的叙事结构，百万年历史与个人成长线互相嵌套，草蛇灰线伏笔密集</li>
+          <li>文风融合金庸的江湖气与古龙的悬疑感，战斗场面有画面感</li>
+          <li>豆瓣动画评分长期稳在 9 分上下，原著作者宅猪公开认可改编</li>
+        </ul>
+      </div>
+      <div class="vs-col bad">
+        <h4>争议</h4>
+        <ul>
+          <li>后期力量体系膨胀严重，「境界」越写越多，数值感变弱</li>
+          <li>部分关键角色的成长依赖「机械降神」，运气成分偏多</li>
+          <li>结局收束偏仓促——作者自述受身体与精力限制，未能按原计划扩展到千章</li>
+          <li>世界观名词密集，前中期阅读门槛不低，容易劝退</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid g3 rv" style="margin-top:26px">
+      <div class="card">
+        <span class="k">荣誉</span>
+        <h3>获奖记录</h3>
+        <p>2018 年入选全国网络文学重点园地工作联席会议年度重点作品扶持选题；2019 年入选第四届橙瓜网络文学奖百强作品、最具潜力十大动漫 IP；2020 年获第二届泛华文网络文学「金键盘」奖玄幻仙侠类奖项。</p>
+      </div>
+      <div class="card">
+        <span class="k">衍生</span>
+        <h3>改编版图</h3>
+        <p>2019 年改编为同名漫画；2022 年 2 月由安徽文艺出版社出版实体书；2023 年宣布动画化，2024 年 10 月正式播出。另有消息称实体书首版曾因出版社要求修改「瞎子」「聋子」等称呼、删改关键情节，宅猪不满而终止合作另寻出版社。</p>
+      </div>
+      <div class="card">
+        <span class="k">定位</span>
+        <h3>在宅猪作品里的位置</h3>
+        <p>普遍被认为是宅猪的巅峰之作。它把网文的「爽感」和严肃文学的思辨性做了结合——虽然节奏和设定严谨性上有瑕疵，但完成度与野心在同期作品里少见。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 10 动画进度 ================= -->
+<section id="anime" style="background:linear-gradient(180deg,transparent,rgba(12,17,32,.55),transparent)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">拾 · 你追的那个动画</div>
+      <h2>动画现在演到哪了</h2>
+      <p>先给你一句实话：<b>你追的这个坑，按目前速度还得追好几年。</b>全 1931 章的原著，现在动画才走到延康变法这一段——作者本人在书里也才把这个当开胃菜。</p>
+    </div>
+
+    <div class="anime rv">
+      <div class="anime-top">
+        <h3>截至 2026 年 9 月 · 更新至第 97 集</h3>
+        <p>B 站独播 · 玄机科技 + bilibili 联合出品 · 3D 年番 · 每周一集，全年不断更</p>
+        <div class="prog">
+          <div class="prog-bar"><i style="width:11%"></i></div>
+          <div class="prog-lbl">
+            <span>动画进度 · 延康变法（原著前段）</span>
+            <span>原著体量 1931 章</span>
+          </div>
+        </div>
+      </div>
+      <div class="anime-body">
+        <div><b>700万+</b><span>追番人数</span></div>
+        <div><b>20亿+</b><span>总播放量</span></div>
+        <div><b>≈9.0</b><span>豆瓣评分</span></div>
+      </div>
+      <div class="anime-note">
+        <b>当前剧情节点：</b>延康京城大变局——太子灵玉夏发动篡位阴谋，延续两百年的延康变法危在旦夕，秦牧提前布下的天圣教暗线在登基大典上破局反击，朝堂与神魔势力的矛盾彻底爆发。<br><br>
+        <b>关于催更：</b>粉丝一直在喊「一周两集」或「加长单集」，官方目前没有松口，仍保持每周一集。此前有过临时加长单集的先例，播出后口碑很好。理性看，3D 年番的建模、渲染、动捕、剧本都要时间，提速最容易翻车的是打戏质量。
+      </div>
+    </div>
+
+    <div class="grid g2 rv" style="margin-top:24px">
+      <div class="card">
+        <span class="k">动画 vs 小说</span>
+        <h3>要不要提前看原著？</h3>
+        <p>如果你最想知道的是「后面到底怎么打上天庭的」，那动画确实太慢——延康变法在原著的比重约等于序章。想不被剧透又不想等，建议从原著<b>延康劫</b>那一段开始补，这段是全书公认的高光，也是动画即将进入的区域。</p>
+      </div>
+      <div class="card">
+        <span class="k">追更建议</span>
+        <h3>也可以攒着看</h3>
+        <p>年番模式一周一集的节奏，攒三到五集一次看，体感和周更完全不同。另外动画有「年番」分季结构（年番 1 于 2024 年 10 月开播），季与季之间会有间隔，提前有心理准备比较好。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 11 存疑说明 ================= -->
+<section id="truth">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="sec-num">拾壹 · 信息可靠性</div>
+      <h2>哪些地方说法不一致</h2>
+      <p>这份梳理是从公开资料交叉整理出来的。<b>网上的《牧神记》设定整理里混了大量 AI 生成内容，错误率不低</b>，所以我把自己识别出的冲突点全部列出来，供你判断。</p>
+    </div>
+
+    <div class="grid g2 rv">
+      <div class="card">
+        <span class="k">已核实 · 多源一致</span>
+        <h3>这些可以放心</h3>
+        <p>作者宅猪、2017 年 6 月开更、1931 章、约 591 万字、残老村九老名单与各自身份、七大神藏＋天宫七境的境界名目、五劫纪元的名称与对应关系、延康变法三杰、动画更新至第 97 集与 700 万追番／20 亿播放的数据。</p>
+      </div>
+      <div class="card" style="border-color:rgba(168,58,58,.28)">
+        <span class="k" style="color:#d98b8b">⚠️ 存在冲突</span>
+        <h3>这些别当定论</h3>
+        <p>① 完结时间：正文标注 2019 年 8 月完结，但书站显示 2022 年 11 月仍有新番外更新；<br>
+        ② 动画集数与首播时间：有资料称 2024 年 10 月 27 日首播、第一季共 104 集，另有资料称 2023 年宣布播出，实际集数以 B 站页面为准；<br>
+        ③ 九老结局的两种说法（牺牲化为大罗天／被复活恢复正常）；<br>
+        ④ 弥罗宫七公子的身份表述（秦凤青分身说 vs 秦牧转世说）；<br>
+        ⑤ 司婆婆所属教派，有写天魔教、有写天圣教。</p>
+      </div>
+    </div>
+
+    <div class="note warn rv">
+      <b>另外提醒：</b>网上流传的一份境界表把凡俗境界写成「醒神境 → 通玄境 → 神桥境 → 天人境」，再往上是「凌霄天宫 / 瑶池天宫 / 紫微天宫」——这套与原著体系对不上，出处不可考，基本可以判定为 AI 幻觉产物。<b>本页已剔除</b>，只保留多个可靠来源互相印证的那一套。
+    </div>
+
+    <div class="sec-head rv" style="margin-top:64px;margin-bottom:22px">
+      <h2 style="font-size:24px">主要参考来源</h2>
+    </div>
+    <div class="srcs rv">
+      <div class="src"><em>起点书站</em><span>mushenji.bookresource.qq.com · 作品页、章节目录、字数与推荐数</span></div>
+      <div class="src"><em>百度百科</em><span>baike.baidu.com/item/牧神记 · 人物条目（秦牧、秦凤青、灵毓秀、苏幕遮、司婆婆）、凌天尊</span></div>
+      <div class="src"><em>快懂百科</em><span>baike.com · 《牧神记》词条、霸体三丹功词条（创作时间、获奖记录、功法机制）</span></div>
+      <div class="src"><em>搜狗 / 360 百科</em><span>境界体系（七大神藏、神境各阶）、五劫纪元与各界域设定</span></div>
+      <div class="src"><em>腾讯动漫问答</em><span>ac.qq.com · 两套境界体系（天宫天庭 / 祖庭道境）的对照说明</span></div>
+      <div class="src"><em>今日头条</em><span>《牧神记》介绍（主题思想、艺术特色、争议）、动画进度的行业报道</span></div>
+      <div class="src"><em>其他</em><span>微信读书简介、bilibili 专栏《牧神世界编年史》、腾讯搜一搜动画剧情介绍等</span></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fmark">牧神记</div>
+    <p>本页为读者向的内容梳理，非官方资料。<br>
+    文字信息整理自公开网络资料来源，与原著的细节出入以原著正文为准。<br>
+    页面配图为 AI 生成的原创意境图，非动画截图，不代表任何官方视觉设定。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // 导航滚动出现
+  var nav = document.getElementById('nav');
+  var lastY = 0;
+  function onScroll(){
+    var y = window.scrollY || 0;
+    if (y > 200) { nav.classList.add('show'); }
+    else { nav.classList.remove('show'); }
+    lastY = y;
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // 入场上浮
+  var els = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, {threshold:0.08, rootMargin:'0px 0px -60px 0px'});
+    els.forEach(function(el, i){
+      el.style.transitionDelay = Math.min(i % 4, 3) * 70 + 'ms';
+      io.observe(el);
+    });
+  } else {
+    els.forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

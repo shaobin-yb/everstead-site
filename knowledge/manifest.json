@@ -28,6 +28,12 @@
       "desc": "投资与宏观经济研读（stay hungry/stay foolish 文件夹）",
       "order": 4,
       "collapsed": true
+    },
+    {
+      "slug": "insurance-alm",
+      "name": "保险资产负债管理",
+      "desc": "资产负债管理办法与监管指标相关材料",
+      "order": 5
     }
   ],
   "items": [

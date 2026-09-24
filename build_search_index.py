@@ -49,6 +49,7 @@ PRIVATE_PREFIXES = (
     "knowledge/union-card-handbook-2026/",
     "radar-site/",
     "tools/mushenji/",     # 牧神记内容梳理(私人专区, 2026-09-24)
+    "knowledge/alm-interpretation/",  # 《办法》深度解读(内部材料, 含产品策略, 密码门, 2026-09-24)
 )
 SKIP_FILES = {"index.html", "index-template.html", "kb.html", "search.json"}
 

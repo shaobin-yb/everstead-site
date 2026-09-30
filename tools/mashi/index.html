@@ -184,6 +184,9 @@ footer a:hover{color:#E8703A;border-bottom-color:#E8703A}
 .tip b{color:#E8703A}
 
 /* ---------- 烩麻食 / 淋蛋液 ---------- */
+/* 备好的菜上方的箭头: 提示"点它放锅里" */
+.vegHint{animation:hintUp 1.2s ease-in-out infinite}
+@keyframes hintUp{0%,100%{opacity:.35;transform:translateY(3px)}50%{opacity:1;transform:translateY(-4px)}}
 .hintPulse{animation:pulseRing 1.6s ease-in-out infinite}
 @keyframes pulseRing{0%,100%{opacity:.4}50%{opacity:1}}
 .pourNudge{animation:pourNudge 1.3s ease-in-out infinite}
@@ -373,14 +376,34 @@ footer a:hover{color:#E8703A;border-bottom-color:#E8703A}
               stroke="#FFF3C4" stroke-width="4.5" fill="none" stroke-linecap="round"/>
       </g>
 
+      <!-- ===== 备菜托盘(第8步: 切好的菜摆这儿, 点一下下锅) ===== -->
+      <g id="tray" style="display:none">
+        <rect x="196" y="322" width="248" height="40" rx="14" fill="#F3E2C0" stroke="#DBC08C" stroke-width="5"/>
+        <rect x="204" y="328" width="232" height="28" rx="10" fill="#FFF6E3"/>
+      </g>
+
+      <!-- ===== 开饭的碗身(在麻食下层, 麻食才能"落进碗里") ===== -->
+      <g id="serveBowl" style="display:none">
+        <path d="M186 252 q114 38 228 0 q-16 78 -114 78 q-98 0 -114 -78 z"
+              fill="#FFFDF4" stroke="#DBC08C" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M186 252 q114 38 228 0" fill="none" stroke="#E8D6AE" stroke-width="4"/>
+      </g>
+
       <!-- ===== 小段 / 麻食(全程复用) ===== -->
       <g id="bitsLayer"></g>
 
-      <!-- ===== 锅里的配菜(画在麻食上面, 像浮在汤面上的菜叶) ===== -->
+      <!-- ===== 锅里的配菜(在麻食之上, 像浮在汤面的菜叶) ===== -->
       <g id="vegLayer"></g>
 
       <!-- ===== 蛋花(盖在最上层) ===== -->
       <g id="flowerLayer"></g>
+
+      <!-- ===== 碗的前壁: 盖住碗里的麻食下缘, 做出"盛"的贴合感 ===== -->
+      <g id="serveBowlFront" style="display:none">
+        <path d="M194 288 q106 40 212 0 q-14 42 -106 42 q-92 0 -106 -42 z"
+              fill="#FFFDF4" stroke="#DBC08C" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M232 318 q68 18 136 0" fill="none" stroke="#F0E2C4" stroke-width="5" stroke-linecap="round"/>
+      </g>
 
       <!-- ===== 拇指(压在麻食上) ===== -->
       <g id="thumb" opacity="0" class="squash">
@@ -477,8 +500,8 @@ var STEPS = [
   {key:'pour',  lb:'淋蛋液', no:'第 9 步', instr:'按住蛋液碗，拖到锅上面，慢慢淋下去',
    rhyme:'蛋液慢慢淋，锅里开花花', total:0, unit:'',
    emph:1, tip:'蛋液要慢慢、细细地淋下去，蛋花才漂亮'},
-  {key:'done',  lb:'开吃',   no:'完成', instr:'烩麻食做好啦 —— 香喷喷，开吃！',
-   rhyme:'自己搓的麻食，最香啦！', total:0, unit:''}
+  {key:'done',  lb:'开吃',   no:'完成', instr:'盛到大碗里，端上桌 —— 开饭咯！',
+   rhyme:'一碗热腾腾的烩麻食，快尝尝吧！', total:0, unit:''}
 ];
 var S = {i:0, taps:0, pinches:0, roll:0, cut:0, rubIdx:0, rub:0, rubLocked:false, counted:0,
          veg:0, pour:0, pourLocked:false, gen:0};
@@ -697,10 +720,11 @@ function goto(i){
   } else if(st.key === 'stir'){
     $('pot').style.display = '';
     $('plate').style.display = 'none';
+    $('tray').style.display = '';
     $('potSoup').setAttribute('fill', SOUP_BROTH);
     var vl = $('vegLayer');
     vl.innerHTML = '';
-    vl.style.opacity = '0';   // 菜在"下锅前"先不显示
+    vl.style.opacity = '1';   // 菜从一开始就摆在托盘上, 看得见才点得着
     vl.style.pointerEvents = 'auto';
     for(var v = 0; v < VEGS.length; v++) buildVeg(VEGS[v], v);
     S.veg = 0;
@@ -726,15 +750,59 @@ function goto(i){
     setMeter(0, 0);
     boil(true);
   } else if(st.key === 'done'){
-    // 成品保持"卷"的样子摆盘
+    // 盛出来: 麻食从锅里飞进碗里, 连汤带菜
     S.pourLocked = false;   // 收尾, 免得状态残留卡住后续操作
     $('eggBowl').style.pointerEvents = 'none';
     fade($('eggBowl'), 0, 300);
     $('pourStream').style.display = 'none';
+    $('pot').style.display = 'none';
+    $('tray').style.display = 'none';
+    $('plate').style.display = 'none';
     for(var q = 0; q < bits.length; q++){ bitMode(bits[q], 'c'); }
+    serveUp();
     confetti(true);
     setMeter(0, 0);
   }
+}
+
+/* ---------------- ⑩ 开饭: 盛碗里 ---------------- */
+// 碗口 186~414 / 碗沿在 y=252 上下, 麻食落点码在碗口里
+var SERVE_SLOTS = [
+  {x:244, y:282}, {x:300, y:272}, {x:356, y:282},
+  {x:272, y:302}, {x:328, y:302}, {x:300, y:292}
+];
+
+function serveUp(){
+  $('serveBowl').style.display = '';
+  setTimeout(function(){ $('serveBowlFront').style.display = ''; }, 900);
+  // 菜跟着一起盛进碗里(像浮在汤面上)
+  var vegs = document.querySelectorAll('#vegLayer .vegItem');
+  for(var k = 0; k < vegs.length; k++){
+    (function(el, i){
+      var dst = SERVE_SLOTS[(i + 1) % SERVE_SLOTS.length];
+      glide(el, dst.x + 10, dst.y - 26, 620 + i * 90);
+    })(vegs[k], k);
+  }
+  // 麻食一颗一颗跳进碗
+  for(var i = 0; i < bits.length; i++){
+    (function(idx){
+      var b = bits[idx], dst = SERVE_SLOTS[idx];
+      setTimeout(function(){
+        b.wob.classList.remove('bob');   // 起伏动画挂在内层, 先停下再飞
+        glide(b.g, dst.x, dst.y - 52, 380, function(){
+          glide(b.g, dst.x, dst.y, 240, function(){
+            b.sq.style.transition = 'transform .3s ease';
+            b.sq.style.transform = 'scale(1.12,.9)';
+            setTimeout(function(){ b.sq.style.transform = 'none'; }, 300);
+          });
+        });
+      }, idx * 160);
+    })(i);
+  }
+  setTimeout(function(){
+    $('instr').textContent = '盛到大碗里，端上桌 —— 开饭咯！';
+    $('rhyme').textContent = '一碗热腾腾的烩麻食，快尝尝吧！';
+  }, 1100);
 }
 
 /* ---------------- ③ 长条 ---------------- */
@@ -815,11 +883,16 @@ function finishRub(){
 }
 
 /* ---------------- ⑧ 加菜烩 ---------------- */
+// 备好的菜一开始就摆在托盘上、看得见, 点一下才下锅
+var TRAY_SLOTS = [
+  {x:240, y:344}, {x:284, y:344}, {x:328, y:344}, {x:372, y:344}
+];
+
 function buildVeg(v, idx){
   var layer = $('vegLayer');
   if(layer.querySelector('[data-veg="' + v.k + '"]')) return;
-  var g = mk('g', {'class':'vegItem', 'data-veg':v.k, opacity:'0'}, layer);
-  var start = {x: 300 + (idx - 1.5) * 62, y: 352};
+  var g = mk('g', {'class':'vegItem', 'data-veg':v.k}, layer);
+  var start = TRAY_SLOTS[idx] || {x:240 + idx * 44, y:344};
   var sq = mk('g', {'class':'squash'}, g);
   if(v.k === 'tomato'){
     mk('circle', {r:v.r, fill:v.fill, stroke:v.stroke, 'stroke-width':4}, sq);
@@ -834,16 +907,21 @@ function buildVeg(v, idx){
     mk('rect', {x:-12, y:-10, width:24, height:20, rx:5, fill:v.fill, stroke:v.stroke, 'stroke-width':4}, sq);
     mk('path', {d:'M-12 -2 h24', stroke:v.stroke, 'stroke-width':3, opacity:'.7'}, sq);
   }
-  var hit = mk('circle', {r:v.r + 16, fill:'#000', opacity:'0', 'pointer-events':'all'}, g);
+  // 提示箭头: 告诉小朋友"点它, 放进锅里"
+  var hint = mk('path', {
+    'class':'vegHint', d:'M0 -6 v-12 m0 0 l-6 6 m6 -6 l6 6',
+    stroke:'#FF9D4D', 'stroke-width':3.5, fill:'none',
+    'stroke-linecap':'round', 'stroke-linejoin':'round'
+  }, g);
+  hint.setAttribute('transform', 'translate(0,' + (-(v.r + 14)) + ')');
+  var hit = mk('circle', {r:v.r + 18, fill:'#000', opacity:'0', 'pointer-events':'all'}, g);
   place(g, start.x, start.y);
   g.style.pointerEvents = 'auto';
 
   function drop(){
     if(g._dropped) return;
     g._dropped = true;
-    $('vegLayer').style.opacity = '1';   // 有菜下锅了, 这层才显形
-    g.style.transition = 'opacity .25s linear';
-    g.style.opacity = '1';               // 菜本身也要显形
+    if(hint) hint.remove();
     var sqEl = sq;
     sqEl.style.transition = 'transform .3s ease';
     sqEl.style.transform = 'scale(1.2,.8)';
@@ -870,7 +948,10 @@ function buildVeg(v, idx){
     S.veg += 1;
     setMeter(S.veg, VEGS.length);
     if(S.veg >= VEGS.length){
-      setTimeout(function(){ goto(8); }, 700);
+      setTimeout(function(){
+        $('tray').style.display = 'none';   // 菜都下锅了, 收起托盘
+        goto(8);
+      }, 700);
     }
   });
   g.dropVeg = drop;
@@ -1323,7 +1404,8 @@ function skip(){
     goto(7);
 
   } else if(st === 'stir'){
-    // 跳过加菜 → 菜全部下锅
+    // 跳过加菜 → 菜全部下锅(托盘收起, 提示箭头去掉)
+    $('tray').style.display = 'none';
     for(i = 0; i < VEGS.length; i++){ buildVeg(VEGS[i], i); }
     var vg = $('vegLayer');
     vg.style.opacity = '1';
@@ -1331,7 +1413,8 @@ function skip(){
     for(i = 0; i < items.length; i++){
       var it = items[i];
       it._dropped = true;
-      it.style.opacity = '1';
+      var h = it.querySelector('.vegHint');
+      if(h) h.remove();
       place(it, VEGS[i].x, VEGS[i].y);
     }
     S.veg = VEGS.length; S.pour = 0; S.pourLocked = false;
@@ -1378,6 +1461,9 @@ function reset(){
   $('pot').style.display = 'none';
   $('plate').style.display = 'none';
   $('bowl').style.display = 'none';
+  $('tray').style.display = 'none';
+  $('serveBowl').style.display = 'none';
+  $('serveBowlFront').style.display = 'none';
   $('thumb').style.opacity = '0';
   rope(0); cutRope(0);
   goto(0);

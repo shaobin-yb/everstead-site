@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>小手搓麻食 · 互动版</title>
+<style>
+:root{
+  --ink:#5B4636; --ink-soft:#8A6F55;
+  --dough:#F7DC9A; --dough-line:#C9923C;
+  --cream:#FFF3DC; --card:#FFFFFF;
+  --orange:#FF9D4D; --red:#F4645F; --green:#77C97B; --blue:#5FB8F0; --purple:#9B8BE8; --yellow:#F2C75C;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"YouYuan","幼圆","Microsoft YaHei","PingFang SC",sans-serif;
+  color:var(--ink);
+  background-color:var(--cream);
+  background-image:radial-gradient(circle, rgba(223,176,92,.20) 1.6px, transparent 1.6px);
+  background-size:26px 26px;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  padding:22px 14px 40px;
+}
+.wrap{max-width:880px;margin:0 auto}
+
+/* ---------- 标题 ---------- */
+.hero{text-align:center;margin-bottom:16px}
+h1{
+  font-size:42px;letter-spacing:5px;color:#E8703A;line-height:1.2;
+  text-shadow:2px 2px 0 #fff, 4px 4px 0 rgba(232,112,58,.16);
+  text-wrap:balance;
+}
+.hero .sub{margin-top:8px;font-size:15px;color:var(--ink-soft);letter-spacing:1px}
+
+/* ---------- 步骤条 ---------- */
+.track{
+  display:flex;justify-content:center;gap:6px;list-style:none;
+  margin:18px 0 14px;flex-wrap:wrap;
+}
+.track li{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:42px}
+.track .dot{
+  width:26px;height:26px;border-radius:50%;
+  background:#FFF6E3;border:3px solid #E8D6AE;
+  font-size:13px;line-height:20px;text-align:center;color:#B08D5E;
+  transition:background-color .25s, border-color .25s, color .25s, transform .25s;
+  font-variant-numeric:tabular-nums;
+}
+.track .lb{font-size:11px;color:#B08D5E;letter-spacing:1px}
+.track li.on .dot{background:var(--orange);border-color:#E8703A;color:#fff;transform:scale(1.12)}
+.track li.on .lb{color:#E8703A}
+.track li.done .dot{background:var(--green);border-color:#5EA85E;color:#fff}
+.track li.done .lb{color:#5EA85E}
+
+/* ---------- 工作台 ---------- */
+.board{
+  position:relative;
+  background:linear-gradient(180deg,#FFFBEF,#FFF4D8);
+  border:5px solid #F0D9A8;border-radius:30px;
+  box-shadow:0 6px 0 rgba(223,176,92,.25);
+  overflow:hidden;
+  touch-action:manipulation;
+}
+.board.drag{touch-action:none;cursor:grab}
+.board.drag:active{cursor:grabbing}
+#scene{display:block;width:100%;height:auto;user-select:none}
+#scene .L{transition:opacity .28s linear}
+
+.hintArrow{animation:nudge 1.1s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+.handIdle{animation:handwig 1.8s ease-in-out infinite}
+@keyframes handwig{0%,100%{transform:translateX(-3px)}50%{transform:translateX(3px)}}
+.bubUp{animation:bubfloat 2.2s ease-in infinite}
+@keyframes bubfloat{
+  0%{transform:translateY(0) scale(.6);opacity:0}
+  25%{opacity:.95}
+  100%{transform:translateY(-56px) scale(1);opacity:0}
+}
+.boil{animation:boilup 2.4s ease-in infinite}
+@keyframes boilup{
+  0%{transform:translateY(0);opacity:0}
+  20%{opacity:.9}
+  100%{transform:translateY(-70px);opacity:0}
+}
+.steamAni{animation:steamup 3s ease-in-out infinite;transform-origin:center bottom}
+@keyframes steamup{0%,100%{opacity:.3;transform:translateY(4px)}50%{opacity:.8;transform:translateY(-6px)}}
+.steamAni.s2{animation-delay:1s}
+.steamAni.s3{animation-delay:2s}
+.bob{animation:bobfloat 2.6s ease-in-out infinite}
+@keyframes bobfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.squash{transform-box:fill-box;transform-origin:center}
+.fadeable{transition:opacity .18s linear}
+.curlg{transform-box:fill-box;transform-origin:center;transition:transform .3s ease-out, opacity .18s linear}
+.tickG{transform-box:fill-box;transform-origin:center}
+.tickG.pop{animation:tpop .5s ease}
+@keyframes tpop{0%{transform:scale(.2)}55%{transform:scale(1.35)}100%{transform:scale(1)}}
+
+/* ---------- 操作面板 ---------- */
+.panel{
+  margin-top:16px;background:var(--card);
+  border:4px solid #F0D9A8;border-radius:26px;
+  padding:16px 20px 14px;
+  box-shadow:0 5px 0 rgba(223,176,92,.20);
+}
+.panel-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.stepno{
+  flex:0 0 auto;font-size:13px;letter-spacing:2px;color:#fff;
+  background:var(--orange);border-radius:999px;padding:3px 14px;
+  font-variant-numeric:tabular-nums;
+}
+.instr{font-size:21px;letter-spacing:1.5px;color:var(--ink);text-wrap:balance;text-align:left}
+.meter-wrap{display:flex;align-items:center;gap:10px;margin-top:12px}
+.meter{
+  flex:1;height:14px;border-radius:999px;background:#FFF3DC;
+  border:2px solid #E8D6AE;overflow:hidden;
+}
+.meter span{
+  display:block;height:100%;width:100%;border-radius:999px;
+  background:linear-gradient(90deg,var(--yellow),var(--orange));
+  transform:scaleX(0);transform-origin:left center;
+  transition:transform .25s ease-out;
+}
+.meter-txt{
+  flex:0 0 auto;font-size:14px;color:var(--ink-soft);letter-spacing:1px;
+  font-variant-numeric:tabular-nums;min-width:52px;text-align:right;
+}
+.rhyme{
+  margin-top:12px;font-family:"KaiTi","STKaiti","楷体",serif;
+  font-size:20px;line-height:1.6;color:#6B5138;letter-spacing:1px;
+  background:#FFF9E6;border:2px dashed #E8C87E;border-radius:14px;
+  padding:8px 14px;
+}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.btn{
+  font-family:inherit;font-size:16px;letter-spacing:2px;
+  border-radius:999px;padding:10px 22px;cursor:pointer;
+  border:2px solid transparent;
+  transition:transform .18s ease-out, background-color .2s, border-color .2s, color .2s;
+}
+.btn:active{transform:scale(.97)}
+.btn:focus-visible{outline:3px solid #7EC8F5;outline-offset:2px}
+.btn-main{background:var(--orange);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.16)}
+.btn-main:hover{background:#D45F2B}
+.btn-ghost{background:#FFF6E3;color:var(--ink-soft);border-color:#E0C08A;text-decoration:none;display:inline-block}
+.btn-ghost:hover{border-color:var(--orange);color:#E8703A}
+.btn[hidden]{display:none}
+
+/* ---------- 结束页撒花 ---------- */
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+#confetti i{
+  position:absolute;top:-24px;width:12px;height:12px;border-radius:3px;
+  animation:fall linear infinite;
+}
+@keyframes fall{
+  0%{transform:translateY(-10vh) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:.85}
+}
+
+footer{
+  margin-top:20px;text-align:center;font-size:13px;color:#B08D5E;letter-spacing:2px;
+}
+footer a{color:#B08D5E;text-decoration:none;border-bottom:1px dashed #B08D5E}
+footer a:hover{color:#E8703A;border-bottom-color:#E8703A}
+
+/* ---------- 重点步骤强调 ---------- */
+.keychip{
+  flex:0 0 auto;font-size:13px;letter-spacing:2px;color:#fff;
+  background:var(--red);border-radius:999px;padding:3px 13px;
+  animation:chipPulse 1.3s ease-in-out infinite;
+}
+.keychip[hidden]{display:none}
+@keyframes chipPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.09)}}
+.panel.emph{
+  border-color:#F7B267;
+  box-shadow:0 5px 0 rgba(247,178,103,.35),0 0 0 5px rgba(247,178,103,.16);
+}
+.tip{
+  margin-top:10px;background:#FFF3E0;border:2px solid #F7C58A;border-radius:14px;
+  padding:9px 14px;font-size:15px;line-height:1.75;color:#9A5B1F;
+}
+.tip[hidden]{display:none}
+.tip b{color:#E8703A}
+
+/* ---------- 烩麻食 / 淋蛋液 ---------- */
+.hintPulse{animation:pulseRing 1.6s ease-in-out infinite}
+@keyframes pulseRing{0%,100%{opacity:.4}50%{opacity:1}}
+.pourNudge{animation:pourNudge 1.3s ease-in-out infinite}
+@keyframes pourNudge{0%,100%{transform:translate(0,0);opacity:.5}50%{transform:translate(-16px,10px);opacity:1}}
+.streamSway{animation:streamSway .55s ease-in-out infinite}
+@keyframes streamSway{0%,100%{transform:translateX(-4px)}50%{transform:translateX(4px)}}
+.spark,.ribbon{transform-box:fill-box;transform-origin:center}
+.vegItem{cursor:pointer}
+#eggBowlRot{transform-box:fill-box;transform-origin:50% 8%;transition:transform .35s ease-out}
+#potSoup{transition:fill .7s ease-out}
+#scene text{font-family:"YouYuan","幼圆","Microsoft YaHei",sans-serif}
+
+/* ---------- 减动效 ---------- */
+@media (prefers-reduced-motion: reduce){
+  .hintArrow,.handIdle,.bubUp,.boil,.steamAni,.bob,#confetti i,
+  .keychip,.hintPulse,.pourNudge,.streamSway,.tickG.pop{animation:none}
+  .track .dot,.btn,.meter span{transition:none}
+}
+
+/* ---------- 小屏 ---------- */
+@media (max-width:680px){
+  h1{font-size:32px;letter-spacing:3px}
+  .instr{font-size:18px}
+  .rhyme{font-size:17px}
+  .panel{padding:14px 14px 12px}
+  .track{gap:2px}
+  .track li{min-width:36px}
+  .track .lb{font-size:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hero">
+    <h1>小手搓麻食</h1>
+    <p class="sub">陕西娃娃的暖冬味道 · 搓出来，再烩一锅</p>
+  </header>
+
+  <ol class="track" id="track" aria-label="制作步骤"></ol>
+
+  <div class="board" id="board">
+    <svg id="scene" viewBox="0 0 600 360" role="img"
+         aria-label="搓麻食工作台：跟着下面的话，一步一步做出麻食">
+      <defs>
+        <!-- 一只小手 -->
+        <g id="hand">
+          <rect x="22" y="60" width="58" height="58" rx="24" fill="#FFD9B8" stroke="#E5A97E" stroke-width="6"/>
+          <rect x="28" y="40" width="11" height="34" rx="5.5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5"/>
+          <rect x="42" y="34" width="11" height="40" rx="5.5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5"/>
+          <rect x="56" y="38" width="11" height="36" rx="5.5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5"/>
+          <rect x="70" y="46" width="10" height="28" rx="5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5"/>
+          <rect x="4" y="76" width="28" height="13" rx="6.5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5" transform="rotate(-40 24 82)"/>
+        </g>
+        <!-- 麻食笑脸(原点为圆心) -->
+        <g id="mashi-face">
+          <circle cx="-6.5" cy="-2" r="2.6" fill="#5B4636"/>
+          <circle cx="6.5" cy="-2" r="2.6" fill="#5B4636"/>
+          <ellipse cx="-13" cy="6" rx="4.2" ry="2.8" fill="#FFB3A0" opacity=".75"/>
+          <ellipse cx="13" cy="6" rx="4.2" ry="2.8" fill="#FFB3A0" opacity=".75"/>
+          <path d="M-5.5 6 q5.5 4.5 11 0" stroke="#5B4636" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+        </g>
+        <!-- 一颗小麻食 -->
+        <g id="mashi">
+          <circle r="16" fill="#F7DC9A" stroke="#C9923C" stroke-width="5"/>
+          <path d="M0 -16 q9 1.5 10.5 10" stroke="#C9923C" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+          <use href="#mashi-face"/>
+        </g>
+        <!-- 搓好的大麻食(和面团一样大, 用来做变身) -->
+        <g id="mashi-big">
+          <circle r="42" fill="#F7DC9A" stroke="#C9923C" stroke-width="7.5"/>
+          <path d="M0 -42 q23 4 27 27" stroke="#C9923C" stroke-width="8.5" fill="none" stroke-linecap="round"/>
+          <use href="#mashi-face" transform="scale(2.6)"/>
+        </g>
+      </defs>
+
+      <!-- ===== 背景: 光晕 + 桌子 ===== -->
+      <circle cx="300" cy="170" r="205" fill="#FFF6DC" opacity=".65"/>
+      <rect x="0" y="300" width="600" height="60" fill="#EFD3A3"/>
+      <rect x="0" y="300" width="600" height="9" fill="#E2C08A"/>
+
+      <!-- ===== ① 洗手 ===== -->
+      <g class="L" data-l="wash">
+        <g>
+          <rect x="266" y="20" width="68" height="20" rx="10" fill="#A8BECD" stroke="#6E8CA6" stroke-width="5"/>
+          <rect x="284" y="38" width="32" height="18" rx="7" fill="#A8BECD" stroke="#6E8CA6" stroke-width="5"/>
+          <rect x="290" y="52" width="20" height="12" rx="6" fill="#93AFC6" stroke="#6E8CA6" stroke-width="4"/>
+        </g>
+        <rect x="292" y="62" width="16" height="74" rx="8" fill="#BFE6FF" opacity=".8"/>
+        <rect x="296" y="64" width="8" height="70" rx="4" fill="#E8F7FF" opacity=".9"/>
+        <g class="handIdle">
+          <g transform="translate(200,104)">
+            <use href="#hand"/>
+            <use href="#hand" transform="translate(200,0) scale(-1,1)"/>
+          </g>
+        </g>
+      </g>
+
+      <!-- ===== ② 揪面团 ===== -->
+      <g class="L" data-l="pinch" style="display:none">
+        <g id="bigDough" class="squash">
+          <circle cx="300" cy="240" r="62" fill="#F7DC9A" stroke="#C9923C" stroke-width="7"/>
+          <ellipse cx="278" cy="212" rx="20" ry="12" fill="#FFF6DC" opacity=".9"/>
+          <use href="#mashi-face" transform="translate(300,244) scale(1.7)"/>
+        </g>
+        <g id="pinchHint" class="hintArrow" style="opacity:.9">
+          <circle cx="300" cy="240" r="82" fill="none" stroke="#FF9D4D" stroke-width="3.5"
+                  stroke-dasharray="8 10" stroke-linecap="round" opacity=".85"/>
+        </g>
+      </g>
+
+      <!-- ===== ③ 搓长条 ===== -->
+      <g class="L" data-l="roll" style="display:none">
+        <line id="ropeA" x1="300" y1="282" x2="300" y2="282" stroke="#C9923C" stroke-width="40" stroke-linecap="round"/>
+        <line id="ropeB" x1="300" y1="282" x2="300" y2="282" stroke="#F7DC9A" stroke-width="26" stroke-linecap="round"/>
+        <g id="rollHint" class="hintArrow" opacity=".9">
+          <path d="M262 218 h20 m0 0 l-9 -8 m9 8 l-9 8" stroke="#FF9D4D" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M338 218 h-20 m0 0 l9 -8 m-9 8 l9 8" stroke="#FF9D4D" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <g id="rollHand" opacity="0" class="squash">
+          <rect x="-38" y="-26" width="76" height="36" rx="18" fill="#FFD9B8" stroke="#E5A97E" stroke-width="6"/>
+        </g>
+      </g>
+
+      <!-- ===== ④ 揪小段 ===== -->
+      <g class="L" data-l="cut" style="display:none">
+        <line id="cutA" x1="150" y1="282" x2="450" y2="282" stroke="#C9923C" stroke-width="40" stroke-linecap="round"/>
+        <line id="cutB" x1="150" y1="282" x2="450" y2="282" stroke="#F7DC9A" stroke-width="26" stroke-linecap="round"/>
+        <g id="cutMarks" stroke="#8A6F55" stroke-width="4" stroke-dasharray="6 8" stroke-linecap="round" opacity=".75">
+          <path d="M200 266 V298"/><path d="M250 266 V298"/><path d="M300 266 V298"/>
+          <path d="M350 266 V298"/><path d="M400 266 V298"/>
+        </g>
+        <rect id="cutHit" x="120" y="248" width="360" height="68" fill="#000" opacity="0"/>
+      </g>
+
+      <!-- ===== ⑤ 按一按搓一搓 ===== -->
+      <g class="L" data-l="rub" style="display:none">
+        <circle cx="300" cy="258" r="62" fill="#FFF6DC" opacity=".7"/>
+        <g id="rubHint" class="hintArrow" opacity=".9">
+          <path d="M258 202 h18 m0 0 l-9 -8 m9 8 l-9 8" stroke="#FF9D4D" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M342 202 h-18 m0 0 l9 -8 m-9 8 l9 8" stroke="#FF9D4D" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+
+      <!-- ===== 盆(装小段) ===== -->
+      <g id="bowl" style="display:none">
+        <ellipse cx="100" cy="302" rx="94" ry="28" fill="#FFF6E3" stroke="#DBC08C" stroke-width="6"/>
+        <ellipse cx="100" cy="302" rx="78" ry="20" fill="#FFFDF4" stroke="#E8D6AE" stroke-width="3"/>
+      </g>
+
+      <!-- ===== 盘子(装成品) ===== -->
+      <g id="plate" style="display:none">
+        <ellipse cx="484" cy="306" rx="104" ry="24" fill="#FFF6E3" stroke="#DBC08C" stroke-width="6"/>
+        <ellipse cx="484" cy="306" rx="87" ry="17" fill="#FFFDF4" stroke="#E8D6AE" stroke-width="3"/>
+      </g>
+
+      <!-- ===== 锅 ===== -->
+      <g id="pot" style="display:none">
+        <rect x="92" y="196" width="32" height="18" rx="9" fill="#5C86AD"/>
+        <rect x="376" y="196" width="32" height="18" rx="9" fill="#5C86AD"/>
+        <rect x="110" y="148" width="280" height="156" rx="30" fill="#8FB8DC" stroke="#5C86AD" stroke-width="8"/>
+        <rect id="potSoup" x="132" y="168" width="236" height="104" rx="18" fill="#CFE8FF"/>
+        <g id="potFx">
+          <path class="steamAni" d="M196 134 q-11 -16 0 -32 q11 -16 0 -32" stroke="#BFD9EA" stroke-width="8" fill="none" stroke-linecap="round" opacity=".55"/>
+          <path class="steamAni s2" d="M250 142 q-11 -16 0 -32 q11 -16 0 -30" stroke="#BFD9EA" stroke-width="8" fill="none" stroke-linecap="round" opacity=".55"/>
+          <path class="steamAni s3" d="M304 134 q-11 -16 0 -32 q11 -16 0 -32" stroke="#BFD9EA" stroke-width="8" fill="none" stroke-linecap="round" opacity=".55"/>
+        </g>
+      </g>
+
+      <!-- ===== 蛋液碗(淋蛋液环节) ===== -->
+      <g id="eggBowl" opacity="0" style="pointer-events:none">
+        <path class="hintPulse" d="M0 -44 L-16 -6" stroke="#FF9D4D" stroke-width="4" stroke-linecap="round" stroke-dasharray="7 7"/>
+        <path d="M-40 0 h80 q6 0 4 10 q-8 30 -44 30 q-36 0 -44 -30 q-2 -10 4 -10 z"
+              fill="#FFFFFF" stroke="#C9D4DE" stroke-width="5"/>
+        <g id="eggBowlRot">
+          <ellipse cx="0" cy="-4" rx="34" ry="11" fill="#FFE9B8" stroke="#E8B75C" stroke-width="4"/>
+          <ellipse cx="-8" cy="-6" rx="11" ry="4.5" fill="#FFC24D"/>
+          <path d="M14 -8 q7 2 4 7" stroke="#E8B75C" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        </g>
+      </g>
+
+      <!-- ===== 蛋液细流(长度以落到汤面为准, 别淌出锅外) ===== -->
+      <g id="pourStream" opacity="0" style="pointer-events:none">
+        <path class="streamSway" d="M0 0 q3 22 -1 40 q-2 14 2 26"
+              stroke="#FFD873" stroke-width="10" fill="none" stroke-linecap="round"/>
+        <path class="streamSway" d="M0 3 q2 20 -1 37 q-2 12 1 23"
+              stroke="#FFF3C4" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+      </g>
+
+      <!-- ===== 小段 / 麻食(全程复用) ===== -->
+      <g id="bitsLayer"></g>
+
+      <!-- ===== 锅里的配菜(画在麻食上面, 像浮在汤面上的菜叶) ===== -->
+      <g id="vegLayer"></g>
+
+      <!-- ===== 蛋花(盖在最上层) ===== -->
+      <g id="flowerLayer"></g>
+
+      <!-- ===== 拇指(压在麻食上) ===== -->
+      <g id="thumb" opacity="0" class="squash">
+        <rect x="-24" y="-34" width="48" height="50" rx="24" fill="#FFD9B8" stroke="#E5A97E" stroke-width="6"/>
+      </g>
+
+      <!-- ===== 点击特效层 ===== -->
+      <g id="fx"></g>
+    </svg>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <span class="stepno" id="stepNo">第 1 步</span>
+      <span class="keychip" id="keyChip" hidden>重点</span>
+      <h2 class="instr" id="instr">点一点小手，搓出白泡泡</h2>
+    </div>
+    <div class="meter-wrap" id="meterWrap">
+      <div class="meter"><span id="meterFill"></span></div>
+      <span class="meter-txt" id="meterTxt">0 / 5</span>
+    </div>
+    <p class="rhyme" id="rhyme">小手洗得白又白，面团见了笑开怀</p>
+    <div class="tip" id="tipBox" hidden>
+      <b>要慢慢倒</b>：蛋液细细地、慢慢地淋下去，蛋花才漂亮<br>
+      <b>安全记</b>：对鸡蛋过敏的小朋友，这一步可以不放蛋液
+    </div>
+    <div class="acts">
+      <button class="btn btn-main" id="mainBtn" type="button" hidden>下锅煮！</button>
+      <button class="btn btn-ghost" id="againBtn" type="button" hidden>再玩一遍</button>
+      <button class="btn btn-ghost" id="skipBtn" type="button">跳过这一步</button>
+    </div>
+  </section>
+
+  <footer>
+    陕西娃娃的家乡味道 · 小手搓麻食　|　<a href="poster.html">打印版讲解图</a>　|　<a href="../../private.html">返回私人专区</a>
+  </footer>
+</div>
+
+<div id="confetti" aria-hidden="true"></div>
+
+<script>
+(function(){
+'use strict';
+var NS = 'http://www.w3.org/2000/svg';
+var scene     = document.getElementById('scene');
+var board     = document.getElementById('board');
+var fxLayer   = document.getElementById('fx');
+var bitsLayer = document.getElementById('bitsLayer');
+
+var BOWL_SLOTS  = [[60,292],[140,292],[100,290],[60,316],[140,316],[100,316]];
+var PLATE_SLOTS = [[426,290],[484,278],[542,290],[426,316],[484,326],[542,316]];
+var CURL_SCALE  = 0.58;              // 搓好的小卷卷 = 大面团的 58% 大
+// 锅内 6 颗: 摆成两排, 四周留出空隙给配菜(锅口 132~368, 汤面 168~272)
+var POT_SLOTS   = [[196,212],[250,204],[304,212],[204,254],[274,258],[332,248]];
+var RUB_SPOT    = {x:300, y:258};
+var ROPE_Y      = 282, ROPE_X1 = 150, ROPE_X2 = 450;
+var N           = 6;                 // 一共揪 6 段
+var ROLL_NEED   = 520;               // 搓长条需要的搓动距离
+var RUB_NEED    = 380;               // 每颗麻食需要的搓动距离
+
+var POT_CX = 250, POT_TOP = 162;     // 锅口中心 / 锅口高度(锅体 110~390)
+var POT_L = 140, POT_R = 360;        // 锅口可落菜的水平范围
+var BOWL_HOME  = {x:500, y:270};     // 蛋液碗的初始位置
+var BOWL_POUR  = {x:520, y:196};     // 蛋液碗的倾倒位置
+var POUR_NEED  = 200;                // 淋蛋液需要拖动的距离(别让小朋友一直拖)
+var SOUP_PLAIN = '#CFE8FF';          // 清汤色
+var SOUP_BROTH = '#F3D79E';          // 烩麻食的汤色
+
+// 配菜落在汤面上、麻食的间隙里(锅口 132~368 / 汤面 168~272)
+var VEGS = [
+  {k:'tomato', x:152, y:190, r:13, it:'番茄', fill:'#F2705F', stroke:'#C9503F'},
+  {k:'green',  x:286, y:172, r:12, it:'青菜', fill:'#77C97B', stroke:'#4E9C55'},
+  {k:'mush',   x:156, y:258, r:11, it:'木耳', fill:'#9A8B7E', stroke:'#6E6157'},
+  {k:'tofu',   x:344, y:198, r:12, it:'豆腐', fill:'#FFF6E0', stroke:'#D8C9A6'}
+];
+
+var STEPS = [
+  {key:'wash',  lb:'洗手',   no:'第 1 步', instr:'点一点小手，搓出白泡泡',
+   rhyme:'小手洗得白又白，面团见了笑开怀', total:5, unit:'泡泡'},
+  {key:'pinch', lb:'揪面',   no:'第 2 步', instr:'点一点面团，捏一捏，把面团揪下来',
+   rhyme:'揪块面团圆溜溜，像个小乒乓球', total:3, unit:'下'},
+  {key:'roll',  lb:'搓条',   no:'第 3 步', instr:'按住面团，来回搓一搓 —— 搓成小长条',
+   rhyme:'手心转一转，搓成小长条，像条小蛇扭呀扭', total:0, unit:''},
+  {key:'cut',   lb:'分小段', no:'第 4 步', instr:'点一下长条，揪下一小段',
+   rhyme:'揪一揪，分小段，一颗一颗排排站', total:N, unit:'段'},
+  {key:'rub',   lb:'搓卷卷', no:'第 5 步', instr:'按住小面团，来回搓一搓 —— 搓成小卷卷',
+   rhyme:'拇指按一按，往前搓一搓，一个圆球球，卷成小卷卷', total:N, unit:'颗'},
+  {key:'count', lb:'数一数', no:'第 6 步', instr:'点一点盘子里的麻食，数一数有几颗',
+   rhyme:'小卷卷，排排坐，等着跳进大锅锅', total:N, unit:'颗'},
+  {key:'cook',  lb:'下锅煮', no:'第 7 步', instr:'点下面的按钮，把麻食下锅煮',
+   rhyme:'咕嘟咕嘟翻个身，浮起来就熟啦', total:0, unit:''},
+  {key:'stir',  lb:'加菜烩', no:'第 8 步', instr:'把番茄、青菜、木耳、豆腐放进锅里烩一烩',
+   rhyme:'番茄红，青菜绿，木耳豆腐锅里聚', total:VEGS.length, unit:'样'},
+  {key:'pour',  lb:'淋蛋液', no:'第 9 步', instr:'按住蛋液碗，拖到锅上面，慢慢淋下去',
+   rhyme:'蛋液慢慢淋，锅里开花花', total:0, unit:'',
+   emph:1, tip:'蛋液要慢慢、细细地淋下去，蛋花才漂亮'},
+  {key:'done',  lb:'开吃',   no:'完成', instr:'烩麻食做好啦 —— 香喷喷，开吃！',
+   rhyme:'自己搓的麻食，最香啦！', total:0, unit:''}
+];
+var S = {i:0, taps:0, pinches:0, roll:0, cut:0, rubIdx:0, rub:0, rubLocked:false, counted:0,
+         veg:0, pour:0, pourLocked:false, gen:0};
+var bits = [];        // 6 个"小段 → 麻食"的复用元素
+var drag = null;      // 拖拽状态
+var boiling = null;   // 锅内气泡定时器
+var pourTimer = null; // 蛋液细流的定时器
+
+/* ---------------- 基础工具 ---------------- */
+function $(id){ return document.getElementById(id); }
+function mk(tag, attrs, parent){
+  var e = document.createElementNS(NS, tag);
+  if(attrs) for(var k in attrs) e.setAttribute(k, attrs[k]);
+  if(parent) parent.appendChild(e);
+  return e;
+}
+function toLocal(ev){
+  var pt = scene.createSVGPoint();
+  pt.x = ev.clientX; pt.y = ev.clientY;
+  var m = scene.getScreenCTM();
+  if(!m) return {x:0, y:0};
+  var p = pt.matrixTransform(m.inverse());
+  return {x:p.x, y:p.y};
+}
+function dist(a, b, c, d){ return Math.sqrt((a-c)*(a-c) + (b-d)*(b-d)); }
+
+/* 绝对定位(不动画) */
+function place(el, x, y){
+  el._x = x; el._y = y;
+  el.style.transition = 'none';
+  el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+}
+/* 滑动到某处(带动画) */
+function glide(el, x, y, ms, cb){
+  el.style.transition = 'none';
+  el.style.transform = 'translate(' + el._x + 'px,' + el._y + 'px)';
+  void el.getBoundingClientRect();
+  el._x = x; el._y = y;
+  el.style.transition = 'transform ' + ms + 'ms ease-out';
+  el.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+  if(cb) setTimeout(cb, ms + 30);
+}
+function fade(el, v, ms){
+  el.style.transition = 'opacity ' + (ms || 200) + 'ms linear';
+  el.style.opacity = v;
+}
+
+/* 点一下的水花/音效替代: 小涟漪 */
+function ripple(x, y, color){
+  var g = mk('g', {'pointer-events':'none'}, fxLayer);
+  var c = mk('circle', {cx:x, cy:y, r:10, fill:'none', stroke:color || '#FF9D4D', 'stroke-width':5, opacity:'.9'}, g);
+  c.style.transition = 'r .5s ease-out, opacity .5s ease-out';
+  void c.getBoundingClientRect();
+  c.setAttribute('r', 42);
+  c.style.opacity = '0';
+  setTimeout(function(){ g.remove(); }, 560);
+}
+/* 泡泡 */
+function bubble(x, y){
+  var c = mk('circle', {
+    cx:x, cy:y, r:7 + Math.random()*6,
+    fill:'#E4F5FF', stroke:'#7EC8F5', 'stroke-width':3.5,
+    opacity:'.95', 'pointer-events':'none'
+  }, fxLayer);
+  var dx = Math.random()*36 - 18, dy = -46 - Math.random()*34;
+  c.style.transition = 'none';
+  c.style.transform = 'translate(0,0) scale(.5)';
+  void c.getBoundingClientRect();
+  c.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
+  c.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(1)';
+  c.style.opacity = '0';
+  setTimeout(function(){ c.remove(); }, 1080);
+  var hl = mk('circle', {cx:x-3, cy:y-3, r:2, fill:'#fff', 'pointer-events':'none'}, fxLayer);
+  hl.style.transition = 'transform 1s ease-out, opacity 1s ease-out';
+  hl.style.transform = c.style.transform;
+  hl.style.opacity = '0';
+  setTimeout(function(){ hl.remove(); }, 1080);
+}
+
+/* ---------------- 一颗「小段 → 麻食」 ---------------- */
+function makeBit(){
+  var g  = mk('g', {'class':'bit'}, bitsLayer);
+  // 定位靠外层 g 的 transform, 起伏动画只能挂在内层 ——
+  // 动画里的 transform 会盖掉定位用的内联 transform, 挤在一层上会弹回原点
+  var wob = mk('g', {'class':'bobwrap'}, g);
+  var sq = mk('g', {'class':'squash'}, wob);
+  var plain = mk('circle', {
+    'class':'fadeable', r:16, fill:'#F7DC9A', stroke:'#C9923C', 'stroke-width':5
+  }, sq);
+  var big = mk('g', {'class':'fadeable', opacity:0}, sq);
+  mk('circle', {r:42, fill:'#F7DC9A', stroke:'#C9923C', 'stroke-width':7.5}, big);
+  mk('ellipse', {cx:-22, cy:-30, rx:15, ry:9, fill:'#FFF6DC', opacity:'.85'}, big);
+  var cur = mk('g', {'class':'curlg', opacity:0}, sq);
+  mk('use', {'href':'#mashi-big'}, cur);
+  var o = {g:g, wob:wob, sq:sq, plain:plain, big:big, curl:cur, tick:null, counted:false};
+  place(g, 0, -200);
+  g.style.opacity = '0';
+  return o;
+}
+function bitMode(b, m){          // 三种样子: 小 / 大 / 卷
+  b.plain.style.opacity = (m === 's' ? 1 : 0);
+  b.big.style.opacity   = (m === 'b' ? 1 : 0);
+  b.curl.style.opacity  = (m === 'c' ? 1 : 0);
+  b.curl.style.transform = (m === 'c' ? 'scale(' + CURL_SCALE + ')' : 'none');
+}
+function bitShow(b, x, y){
+  place(b.g, x, y);
+  b.g.style.transition = 'opacity .2s linear';
+  b.g.style.opacity = '1';
+}
+
+/* ---------------- 步骤驱动 ---------------- */
+function step(){ return STEPS[S.i]; }
+
+function setMeter(cur, total){
+  var fill = $('meterFill'), txt = $('meterTxt');
+  var p = total ? Math.min(1, cur / total) : 0;
+  fill.style.transform = 'scaleX(' + p + ')';
+  // 拖动累积的是浮点距离, 显示时取整, 免得进度条里冒一长串小数
+  txt.textContent = total ? (Math.round(cur) + ' / ' + total) : '—';
+  $('meterWrap').style.display = total ? '' : 'none';
+}
+
+function renderTrack(){
+  var ol = $('track'), h = '';
+  for(var i = 0; i < STEPS.length; i++){
+    h += '<li data-i="' + i + '"><span class="dot">' + (i + 1) + '</span><span class="lb">' + STEPS[i].lb + '</span></li>';
+  }
+  ol.innerHTML = h;
+}
+function markTrack(){
+  var lis = $('track').children;
+  for(var i = 0; i < lis.length; i++){
+    lis[i].className = (i < S.i ? 'done' : (i === S.i ? 'on' : ''));
+  }
+}
+
+function showLayer(key){
+  var ls = scene.querySelectorAll('.L');
+  for(var i = 0; i < ls.length; i++){
+    var on = ls[i].getAttribute('data-l') === key;
+    ls[i].style.display = on ? '' : 'none';
+    ls[i].style.opacity = on ? '1' : '0';
+    ls[i].style.pointerEvents = on ? '' : 'none';
+  }
+}
+
+function goto(i){
+  if(boiling){ clearInterval(boiling); boiling = null; }
+  if(pourTimer){ clearInterval(pourTimer); pourTimer = null; }
+  S.gen += 1;   // 换一步就换代: 上一步排队中的动画回调全部作废
+  S.i = i;
+  var st = step();
+  $('stepNo').textContent = st.no;
+  $('instr').textContent  = st.instr;
+  $('rhyme').textContent  = st.rhyme;
+  $('mainBtn').hidden = st.key !== 'cook';
+  $('againBtn').hidden = st.key !== 'done';
+  $('skipBtn').hidden = st.key === 'done';
+  $('skipBtn').textContent = (st.key === 'count' ? '我数好啦'
+                            : st.key === 'pour'  ? '我淋好啦'
+                            : '跳过这一步');
+  if($('keyChip')) $('keyChip').hidden = !st.emph;
+  if($('tipBox'))  $('tipBox').hidden  = !st.tip;
+  document.querySelector('.panel').classList.toggle('emph', !!st.emph);
+  board.classList.toggle('drag', st.key === 'roll' || st.key === 'rub' || st.key === 'pour');
+  showLayer(st.key === 'done' ? '' : st.key);
+  markTrack();
+
+  if(st.key === 'wash'){
+    $('thumb').style.opacity = '0';
+    setMeter(S.taps, st.total);
+  } else if(st.key === 'pinch'){
+    $('bigDough').style.display = '';
+    place($('bigDough'), 0, 0);
+    $('bigDough').style.transform = 'none';
+    $('bigDough').style.opacity = '1';
+    setMeter(S.pinches, st.total);
+  } else if(st.key === 'roll'){
+    S.roll = 0; rope(0);
+    place($('rollHand'), 300, 262);
+    $('rollHand').style.opacity = '0';
+    setMeter(0, 0);
+  } else if(st.key === 'cut'){
+    $('bowl').style.display = '';
+    cutRope(0);
+    for(var j = 0; j < bits.length; j++){
+      bits[j].g.style.opacity = '1';
+      place(bits[j].g, BOWL_SLOTS[j][0], BOWL_SLOTS[j][1]);
+      bitMode(bits[j], 's');
+    }
+    setMeter(S.cut, st.total);
+  } else if(st.key === 'rub'){
+    $('plate').style.display = '';
+    $('bowl').style.display = S.rubIdx < N ? '' : 'none';
+    nextRub();
+  } else if(st.key === 'count'){
+    $('bowl').style.display = 'none';
+    $('plate').style.display = '';
+    $('thumb').style.opacity = '0';
+    S.counted = 0;
+    S.rubLocked = false;
+    for(var k = 0; k < bits.length; k++){
+      // 走到这一步的都应该已经是搓好的小卷卷了, 统一刷一遍状态
+      bits[k].counted = false;
+      bitMode(bits[k], 'c');
+      if(bits[k].tick){ bits[k].tick.remove(); bits[k].tick = null; }
+    }
+    S.rubIdx = N;
+    setMeter(0, st.total);
+  } else if(st.key === 'cook'){
+    $('pot').style.display = '';
+    $('plate').style.display = '';
+    $('thumb').style.opacity = '0';
+    setMeter(0, 0);
+  } else if(st.key === 'stir'){
+    $('pot').style.display = '';
+    $('plate').style.display = 'none';
+    $('potSoup').setAttribute('fill', SOUP_BROTH);
+    var vl = $('vegLayer');
+    vl.innerHTML = '';
+    vl.style.opacity = '0';   // 菜在"下锅前"先不显示
+    vl.style.pointerEvents = 'auto';
+    for(var v = 0; v < VEGS.length; v++) buildVeg(VEGS[v], v);
+    S.veg = 0;
+    setMeter(0, VEGS.length);
+    boil(true);
+  } else if(st.key === 'pour'){
+    $('pot').style.display = '';
+    $('plate').style.display = 'none';
+    $('potSoup').setAttribute('fill', SOUP_BROTH);
+    var vl2 = $('vegLayer');
+    vl2.style.opacity = '1';
+    vl2.style.pointerEvents = 'none';
+    for(var v2 = 0; v2 < VEGS.length; v2++){ buildVeg(VEGS[v2], v2); }
+    var eb = $('eggBowl');
+    eb.style.display = '';
+    eb.style.pointerEvents = 'auto';
+    place(eb, BOWL_HOME.x, BOWL_HOME.y);
+    fade(eb, 1, 300);
+    $('eggBowlRot').style.transform = 'none';
+    $('pourStream').setAttribute('opacity', '0');
+    $('pourStream').style.display = 'none';
+    S.pour = 0; S.pourLocked = false;
+    setMeter(0, 0);
+    boil(true);
+  } else if(st.key === 'done'){
+    // 成品保持"卷"的样子摆盘
+    S.pourLocked = false;   // 收尾, 免得状态残留卡住后续操作
+    $('eggBowl').style.pointerEvents = 'none';
+    fade($('eggBowl'), 0, 300);
+    $('pourStream').style.display = 'none';
+    for(var q = 0; q < bits.length; q++){ bitMode(bits[q], 'c'); }
+    confetti(true);
+    setMeter(0, 0);
+  }
+}
+
+/* ---------------- ③ 长条 ---------------- */
+function rope(p){
+  var half = p * (ROPE_X2 - ROPE_X1) / 2;
+  var a = $('ropeA'), b = $('ropeB');
+  a.setAttribute('x1', 300 - half); a.setAttribute('x2', 300 + half);
+  b.setAttribute('x1', 300 - half); b.setAttribute('x2', 300 + half);
+  var hint = $('rollHint');
+  if(hint) hint.style.opacity = (p > 0.02 ? '0' : '.9');
+}
+function cutRope(n){
+  var x2 = ROPE_X2 - n * ((ROPE_X2 - ROPE_X1) / N);
+  $('cutA').setAttribute('x2', x2);
+  $('cutB').setAttribute('x2', x2);
+  var marks = $('cutMarks').children;
+  for(var i = 0; i < marks.length; i++){
+    marks[i].style.opacity = (i < N - 1 - n) ? '.75' : '0';
+  }
+}
+
+/* ---------------- ⑤ 搓卷卷 ---------------- */
+function nextRub(){
+  if(S.rubIdx >= N){
+    // 全部搓完 → 数一数
+    setTimeout(function(){ goto(5); }, 420);
+    return;
+  }
+  var b = bits[S.rubIdx], gen = S.gen;
+  b._done = false;
+  S.rubLocked = false;
+  $('bowl').style.display = S.rubIdx < N ? '' : 'none';
+  bitMode(b, 's');
+  bitShow(b, BOWL_SLOTS[S.rubIdx][0], BOWL_SLOTS[S.rubIdx][1]);
+  glide(b.g, RUB_SPOT.x, RUB_SPOT.y, 380, function(){
+    if(S.gen !== gen) return;   // 已经跳到别的步骤了, 别再改样子
+    bitMode(b, 'b');
+  });
+  S.rub = 0;
+  place($('thumb'), RUB_SPOT.x, 190);
+  $('thumb').style.opacity = '1';
+  var h = $('rubHint');
+  if(h) h.style.opacity = '.9';
+  setMeter(S.rubIdx, N);
+}
+function rubUpdate(){
+  var b = bits[S.rubIdx];
+  if(!b) return;
+  var p = Math.min(1, S.rub / RUB_NEED);
+  b.plain.style.opacity = (1 - p) * 0;   // 大球由 big 承担
+  b.big.style.opacity   = 1 - p;
+  b.curl.style.opacity  = p;
+  setMeter(S.rubIdx + p, N);
+  if(p >= 1){
+    finishRub();
+  }
+}
+function finishRub(){
+  var b = bits[S.rubIdx];
+  if(!b || b._done || S.rubLocked) return;
+  b._done = true;
+  S.rubLocked = true;
+  drag = null;
+  S.rubIdx += 1;
+  $('thumb').style.opacity = '0';
+  if($('rubHint')) $('rubHint').style.opacity = '0';
+  bitMode(b, 'c');   // 保持小卷卷的样子摆盘
+  var slot = PLATE_SLOTS[S.rubIdx - 1];
+  ripple(slot[0], slot[1], '#77C97B');
+  var gen = S.gen;
+  glide(b.g, slot[0], slot[1] - 26, 420, function(){
+    glide(b.g, slot[0], slot[1], 160, function(){
+      if(S.gen !== gen) return;
+      if(S.rubIdx < N){ nextRub(); }
+      else { setTimeout(function(){ if(S.gen === gen) goto(5); }, 360); }
+    });
+  });
+}
+
+/* ---------------- ⑧ 加菜烩 ---------------- */
+function buildVeg(v, idx){
+  var layer = $('vegLayer');
+  if(layer.querySelector('[data-veg="' + v.k + '"]')) return;
+  var g = mk('g', {'class':'vegItem', 'data-veg':v.k, opacity:'0'}, layer);
+  var start = {x: 300 + (idx - 1.5) * 62, y: 352};
+  var sq = mk('g', {'class':'squash'}, g);
+  if(v.k === 'tomato'){
+    mk('circle', {r:v.r, fill:v.fill, stroke:v.stroke, 'stroke-width':4}, sq);
+    mk('path', {d:'M-5 -3 q5 -4 10 0 q5 4 10 0', stroke:v.stroke, 'stroke-width':3, fill:'none', 'stroke-linecap':'round'}, sq);
+  } else if(v.k === 'green'){
+    mk('path', {d:'M-12 6 q6 -18 24 -14 q-4 16 -24 14 z', fill:v.fill, stroke:v.stroke, 'stroke-width':4, 'stroke-linejoin':'round'}, sq);
+    mk('path', {d:'M-8 4 q6 -8 16 -8', stroke:'#FFFFFF', 'stroke-width':2.4, fill:'none', 'stroke-linecap':'round', opacity:'.6'}, sq);
+  } else if(v.k === 'mush'){
+    mk('path', {d:'M-11 -1 q0 -11 11 -11 q11 0 11 11 q-11 5 -22 0 z', fill:v.fill, stroke:v.stroke, 'stroke-width':4, 'stroke-linejoin':'round'}, sq);
+    mk('rect', {x:-7, y:-1, width:14, height:6, rx:3, fill:'#B9AA9C', stroke:v.stroke, 'stroke-width':3}, sq);
+  } else {
+    mk('rect', {x:-12, y:-10, width:24, height:20, rx:5, fill:v.fill, stroke:v.stroke, 'stroke-width':4}, sq);
+    mk('path', {d:'M-12 -2 h24', stroke:v.stroke, 'stroke-width':3, opacity:'.7'}, sq);
+  }
+  var hit = mk('circle', {r:v.r + 16, fill:'#000', opacity:'0', 'pointer-events':'all'}, g);
+  place(g, start.x, start.y);
+  g.style.pointerEvents = 'auto';
+
+  function drop(){
+    if(g._dropped) return;
+    g._dropped = true;
+    $('vegLayer').style.opacity = '1';   // 有菜下锅了, 这层才显形
+    g.style.transition = 'opacity .25s linear';
+    g.style.opacity = '1';               // 菜本身也要显形
+    var sqEl = sq;
+    sqEl.style.transition = 'transform .3s ease';
+    sqEl.style.transform = 'scale(1.2,.8)';
+    setTimeout(function(){ sqEl.style.transform = 'none'; }, 300);
+    ripple(start.x, start.y - 20, v.fill);
+    glide(g, v.x, v.y, 520, function(){
+      pool(xToPool(v), 226);
+      bubble(v.x, v.y + 6);
+      setTimeout(function(){ bubble(v.x + 10, v.y + 4); }, 180);
+    });
+  }
+  function pool(x, y){   // 入锅溅起的小水花
+    var c = mk('circle', {cx:x, cy:y, r:4, fill:'#FFF6E0', stroke:'#E8C87E', 'stroke-width':2,
+                          'pointer-events':'none'}, $('potFx'));
+    c.style.transition = 'r .5s ease-out, opacity .5s ease-out';
+    void c.getBoundingClientRect();
+    c.setAttribute('r', 22); c.style.opacity = '0';
+    setTimeout(function(){ c.remove(); }, 560);
+  }
+  g.addEventListener('pointerdown', function(ev){
+    ev.stopPropagation();
+    if(step().key !== 'stir' || S.veg >= VEGS.length || g._dropped) return;
+    drop();
+    S.veg += 1;
+    setMeter(S.veg, VEGS.length);
+    if(S.veg >= VEGS.length){
+      setTimeout(function(){ goto(8); }, 700);
+    }
+  });
+  g.dropVeg = drop;
+}
+function xToPool(v){ return v.x + (POT_CX - v.x) * 0.35; }
+
+/* ---------------- ⑨ 淋蛋液(重点) ---------------- */
+function pourStart(){
+  if(step().key !== 'pour' || S.pourLocked) return;
+  var st = $('pourStream');
+  if(st.style.display === 'none'){ showStream(); }
+}
+function startStream(){
+  var st = $('pourStream');
+  st.style.display = '';
+  st.setAttribute('opacity', '1');
+  if(pourTimer) clearInterval(pourTimer);
+  pourTimer = setInterval(function(){
+    if(step().key !== 'pour') return;
+    dropEgg();
+  }, 130);
+}
+/* 蛋液从碗沿往下流, 所以细流要跟着碗走 */
+function moveStream(){
+  var eb = $('eggBowl'), st = $('pourStream');
+  if(!eb || !st) return;
+  var t = 'translate(' + (eb._x + 12) + 'px,' + (eb._y + 10) + 'px)';
+  st.style.transition = 'none';
+  st.style.transform = t;
+}
+function showStream(){ startStream(); }
+function dropEgg(){
+  var x = POT_CX + (Math.random() * 70 - 35);
+  var y = POT_TOP + 34 + Math.random() * 40;
+  var c = mk('circle', {cx:x, cy:y, r:5 + Math.random() * 4,
+                        fill:'#FFE38A', stroke:'#E8B75C', 'stroke-width':3,
+                        'pointer-events':'none'}, $('potFx'));
+  c.style.transition = 'none';
+  c.style.transform = 'translateY(-16px) scale(.5)';
+  void c.getBoundingClientRect();
+  c.style.transition = 'transform .75s ease-in, opacity .75s ease-in';
+  c.style.transform = 'translateY(0) scale(1)';
+  setTimeout(function(){
+    flower(x);
+    c.style.transition = 'transform .5s ease-out, opacity .5s ease-out';
+    c.style.transform = 'translateY(14px) scale(1.5)';
+    c.style.opacity = '0';
+    setTimeout(function(){ c.remove(); }, 520);
+  }, 720);
+}
+function flower(x){
+  var g = mk('g', {'pointer-events':'none'}, $('flowerLayer'));
+  var y = POT_TOP + 46 + Math.random() * 30;
+  mk('ellipse', {cx:x, cy:y, rx:16 + Math.random() * 10, ry:9 + Math.random() * 4,
+                 fill:'#FFEBAE', stroke:'#F0C666', 'stroke-width':3, opacity:'.95'}, g);
+  mk('ellipse', {cx:x - 5, cy:y - 2, rx:6, ry:3.5, fill:'#FFF9E0', opacity:'.9'}, g);
+  g.style.transition = 'opacity .4s ease-out';
+  void g.getBoundingClientRect();
+  g.style.opacity = '0';
+  setTimeout(function(){ g.remove(); }, 460);
+}
+function finishPour(){
+  var eb = $('eggBowl');
+  $('pourStream').style.display = 'none';
+  $('eggBowlRot').style.transform = 'none';
+  glide(eb, BOWL_HOME.x, BOWL_HOME.y, 560);
+  // 蛋花争先恐后地开
+  var i, gen = S.gen;
+  for(i = 0; i < 22; i++){
+    (function(k){
+      setTimeout(function(){
+        if(S.gen !== gen) return;
+        flower(POT_CX + (Math.random() * 150 - 75));
+      }, k * 90);
+    })(i);
+  }
+  setTimeout(function(){ if(S.gen === gen) goto(9); }, 2000);
+}
+
+/* ---------------- ⑦ 下锅煮 ---------------- */
+function cook(){
+  var i, gen = S.gen;
+  for(i = 0; i < N; i++){
+    (function(idx){
+      var b = bits[idx], slot = POT_SLOTS[idx];
+      setTimeout(function(){
+        // 先抬起来, 再落进锅里
+        glide(b.g, 250, 96, 460, function(){
+          glide(b.g, slot[0], slot[1], 380, function(){
+            b.wob.classList.add('bob');
+          });
+        });
+      }, idx * 150);
+    })(i);
+  }
+  setTimeout(function(){
+    boil(true);
+    $('instr').textContent = '咕嘟咕嘟…麻食在锅里翻跟头';
+    $('rhyme').textContent = '浮起来就熟啦，香喷喷！';
+  }, 1200);
+  setTimeout(function(){
+    if(S.gen !== gen) return;   // 中途跳步了, 别再推进
+    $('instr').textContent = '麻食熟啦，在锅里等着配菜！';
+    $('rhyme').textContent = '接下来加点菜，烩一烩更香～';
+    // 麻食留在锅里继续咕嘟, 转去「加菜烩」
+    goto(7);
+  }, 5200);
+}
+function boil(on){
+  if(!on){ if(boiling){ clearInterval(boiling); boiling = null; } return; }
+  var g = $('potFx');
+  if(boiling) clearInterval(boiling);
+  boiling = setInterval(function(){
+    var c = mk('circle', {
+      cx: 165 + Math.random()*170, cy: 258,
+      r: 5 + Math.random()*5,
+      fill:'#EAF6FF', stroke:'#9CCDF0', 'stroke-width':3, opacity:'.9',
+      'pointer-events':'none'
+    }, g);
+    c.classList.add('boil');
+    setTimeout(function(){ c.remove(); }, 2500);
+  }, 260);
+}
+
+/* ---------------- 撒花 ---------------- */
+function confetti(on){
+  var box = $('confetti');
+  box.innerHTML = '';
+  if(!on) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cols = ['#FF9D4D','#F4645F','#77C97B','#5FB8F0','#9B8BE8','#F2C75C'];
+  for(var i = 0; i < 34; i++){
+    var s = document.createElement('i');
+    s.style.left = (Math.random()*100) + '%';
+    s.style.background = cols[i % cols.length];
+    s.style.animationDuration = (2.6 + Math.random()*2.2) + 's';
+    s.style.animationDelay = (Math.random()*2.4) + 's';
+    if(i % 3 === 0) s.style.borderRadius = '50%';
+    box.appendChild(s);
+  }
+}
+
+/* ---------------- 交互分发 ---------------- */
+scene.addEventListener('pointerdown', function(ev){
+  if(ev.button !== undefined && ev.button !== 0) return;
+  var st = step().key;
+  var p  = toLocal(ev);
+
+  if(st === 'wash'){
+    bubble(p.x, p.y);
+    if(S.taps < 5){
+      S.taps += 1;
+      setMeter(S.taps, 5);
+      if(S.taps >= 5){
+        setTimeout(function(){ goto(1); }, 480);
+      }
+    }
+    return;
+  }
+
+  if(st === 'pinch'){
+    if(dist(p.x, p.y, 300, 240) > 96) return;
+    var d = $('bigDough');
+    d.style.transform = 'scale(1.14,.86)';
+    setTimeout(function(){ d.style.transform = 'scale(1,1)'; }, 150);
+    ripple(300, 240, '#FF9D4D');
+    S.pinches += 1;
+    setMeter(S.pinches, 3);
+    if(S.pinches >= 3){
+      setTimeout(function(){
+        d.style.transition = 'opacity .35s linear';
+        d.style.opacity = '0';
+        $('pinchHint').style.opacity = '0';
+        var piece = bits[0];
+        bitShow(piece, 300, 282);
+        place(piece.g, 300, 282);
+        piece.g.style.opacity = '0';
+        setTimeout(function(){ fade(piece.g, 1, 220); }, 40);
+        setTimeout(function(){ goto(2); }, 420);
+      }, 200);
+    }
+    return;
+  }
+
+  if(st === 'roll'){
+    if(dist(p.x, p.y, 300, ROPE_Y) < 130 && p.x > 90 && p.x < 510){
+      drag = {k:'roll', lp:p, id:ev.pointerId};
+      try{ if(scene.setPointerCapture) scene.setPointerCapture(ev.pointerId); }catch(e){}
+      if($('rollHand')){
+        place($('rollHand'), Math.max(160, Math.min(440, p.x)), 262);
+        $('rollHand').style.opacity = '1';
+      }
+    }
+    return;
+  }
+
+  if(st === 'cut'){
+    if(p.x < 120 || p.x > 480 || p.y < 244 || p.y > 320) return;
+    if(S.cut >= N) return;
+    S.cut += 1;
+    var idx = S.cut - 1;
+    var xCut = ROPE_X2 - idx * ((ROPE_X2 - ROPE_X1) / N) - 25;
+    var b = bits[idx];
+    bitMode(b, 's');
+    place(b.g, xCut, ROPE_Y);
+    b.g.style.transition = 'opacity .18s linear';
+    b.g.style.opacity = '1';
+    ripple(xCut, ROPE_Y, '#9B8BE8');
+    glide(b.g, BOWL_SLOTS[idx][0], BOWL_SLOTS[idx][1], 420);
+    setTimeout(function(){ cutRope(S.cut); }, 180);
+    setMeter(S.cut, N);
+    if(S.cut >= N){
+      setTimeout(function(){ goto(4); }, 620);
+    }
+    return;
+  }
+
+  if(st === 'rub'){
+    if(dist(p.x, p.y, RUB_SPOT.x, RUB_SPOT.y) < 120){
+      drag = {k:'rub', lp:p, id:ev.pointerId};
+      try{ if(scene.setPointerCapture) scene.setPointerCapture(ev.pointerId); }catch(e){}
+      if($('rubHint')) $('rubHint').style.opacity = '0';
+    }
+    return;
+  }
+
+  if(st === 'count'){
+    for(var i = 0; i < bits.length; i++){
+      var b = bits[i], s = PLATE_SLOTS[i];
+      if(b.counted) continue;
+      if(dist(p.x, p.y, s[0], s[1]) > 34) continue;
+      b.counted = true;
+      S.counted += 1;
+      addTick(b);
+      ripple(s[0], s[1], '#77C97B');
+      setMeter(S.counted, N);
+      if(S.counted >= N){
+        $('instr').textContent = '一共 ' + N + ' 颗麻食，全数出来啦，你真棒！';
+        setTimeout(function(){ goto(6); }, 700);
+      }
+      break;
+    }
+    return;
+  }
+
+  // ⑧ 加菜烩: 点锅里的菜(各菜有自己的监听, 这里只兜底提示)
+  if(st === 'stir'){
+    if(dist(p.x, p.y, POT_CX, 200) < 190){
+      ripple(p.x, p.y, '#FFD873');
+    }
+    return;
+  }
+
+  // ⑨ 淋蛋液: 按住蛋液碗拖到锅上方, 慢慢淋
+  if(st === 'pour'){
+    if(S.pourLocked) return;
+    var eb = $('eggBowl');
+    if(dist(p.x, p.y, eb._x, eb._y) < 100){
+      drag = {k:'pour', lp:p, id:ev.pointerId};
+      try{ if(scene.setPointerCapture) scene.setPointerCapture(ev.pointerId); }catch(e){}
+    }
+    return;
+  }
+});
+
+scene.addEventListener('pointermove', function(ev){
+  if(!drag) return;
+  var p = toLocal(ev);
+  var dx = p.x - drag.lp.x, dy = p.y - drag.lp.y;
+  var d = Math.sqrt(dx*dx + dy*dy);
+  drag.lp = p;
+
+  if(drag.k === 'roll'){
+    S.roll = Math.min(ROLL_NEED, S.roll + d);
+    rope(S.roll / ROLL_NEED);
+    if($('rollHand')) place($('rollHand'), Math.max(150, Math.min(450, p.x)), 262);
+    if(S.roll >= ROLL_NEED){
+      drag = null;
+      if($('rollHand')) fade($('rollHand'), 0, 220);
+      ripple(300, ROPE_Y, '#FF9D4D');
+      setTimeout(function(){ goto(3); }, 460);
+    }
+    return;
+  }
+
+  if(drag.k === 'pour'){
+    var eb = $('eggBowl');
+    place(eb, Math.max(300, Math.min(566, p.x)), Math.max(150, Math.min(300, p.y)));
+    moveStream();
+    var overPot = Math.abs(eb._x - POT_CX) < 66 && eb._y < 250;
+    if(overPot && !S.pourLocked){
+      // 碗一倾, 蛋液就慢慢淋下去
+      $('eggBowlRot').style.transform = 'rotate(-58deg)';
+      S.pour += d;
+      setMeter(Math.min(S.pour, POUR_NEED), POUR_NEED);
+      if(!pourTimer){ startStream(); }
+      moveStream();
+      if(S.pour >= POUR_NEED && !S.pourLocked){
+        S.pourLocked = true;
+        if(pourTimer){ clearInterval(pourTimer); pourTimer = null; }
+        finishPour();
+      }
+    } else if(!S.pourLocked){
+      if($('eggBowlRot').style.transform !== 'none'){
+        $('eggBowlRot').style.transform = 'none';
+      }
+      if(pourTimer){ clearInterval(pourTimer); pourTimer = null; }
+      $('pourStream').style.display = 'none';
+    }
+    return;
+  }
+
+  if(drag.k === 'rub'){
+    if(S.rubLocked) return;
+    S.rub = Math.min(RUB_NEED, S.rub + d);
+    var pr = S.rub / RUB_NEED;
+    var b = bits[S.rubIdx];
+    if(b){
+      // 搓的动作: 一压一松的晃动
+      var w = Math.sin(S.rub / 26) * (1 - pr * .55);
+      b.sq.style.transform = 'scale(' + (1 + w * .12) + ',' + (1 - w * .12) + ') rotate(' + (w * 3) + 'deg)';
+      $('thumb').style.transform = 'translate(' + RUB_SPOT.x + 'px,' + 190 + 'px) translate(' + (w * 16) + 'px,' + (Math.abs(w) * -4) + 'px)';
+    }
+    rubUpdate();
+    return;
+  }
+});
+
+function endDrag(){
+  if(drag && drag.k === 'rub'){
+    var b = bits[S.rubIdx];
+    if(b) b.sq.style.transform = 'none';
+  }
+  if(drag && drag.k === 'pour' && !S.pourLocked){
+    // 手一松, 碗立回去, 蛋液停
+    $('eggBowlRot').style.transform = 'none';
+    if(pourTimer){ clearInterval(pourTimer); pourTimer = null; }
+    $('pourStream').style.display = 'none';
+  }
+  drag = null;
+}
+scene.addEventListener('pointerup', endDrag);
+scene.addEventListener('pointercancel', endDrag);
+
+/* 数数打勾 */
+function addTick(b){
+  if(b.tick) return;
+  var g = mk('g', {'class':'tickG'}, b.g);
+  mk('circle', {cx:0, cy:-28, r:9, fill:'#77C97B'}, g);
+  mk('path', {d:'M-4 -28 l3 3.5 l5.5 -6.5', stroke:'#fff', 'stroke-width':3.4,
+              fill:'none', 'stroke-linecap':'round', 'stroke-linejoin':'round'}, g);
+  b.tick = g;
+  void g.getBoundingClientRect();
+  g.classList.add('pop');
+}
+
+/* ---------------- 按钮 ---------------- */
+$('mainBtn').addEventListener('click', function(){ cook(); });
+$('againBtn').addEventListener('click', function(){ reset(); });
+$('skipBtn').addEventListener('click', function(){ skip(); });
+
+function skip(){
+  var st = step().key, i;
+  if(st === 'done') return;
+
+  if(st === 'wash'){
+    S.taps = 0; S.pinches = 0; S.roll = 0; S.cut = 0;
+    S.rubIdx = 0; S.rub = 0; S.rubLocked = false; S.counted = 0;
+    $('bigDough').style.transition = 'none';
+    $('bigDough').style.opacity = '1';
+    $('bigDough').style.transform = 'none';
+    $('pinchHint').style.opacity = '.9';
+    for(i = 0; i < N; i++){
+      var bi = bits[i];
+      bi._done = false; bi.counted = false;
+      bi.wob.classList.remove('bob');
+      bi.g.style.opacity = '0';
+      place(bi.g, 0, -200);
+      if(bi.tick){ bi.tick.remove(); bi.tick = null; }
+    }
+    rope(0); cutRope(0);
+    goto(1);
+
+  } else if(st === 'pinch'){
+    S.pinches = 0; S.roll = 0; S.cut = 0;
+    S.rubIdx = 0; S.rub = 0; S.rubLocked = false; S.counted = 0;
+    $('bigDough').style.opacity = '0';
+    $('pinchHint').style.opacity = '0';
+    var b0 = bits[0];
+    bitMode(b0, 's');
+    place(b0.g, 300, ROPE_Y);
+    b0.g.style.transition = 'opacity .2s linear';
+    b0.g.style.opacity = '1';
+    goto(2);
+
+  } else if(st === 'roll'){
+    S.roll = 0; S.cut = 0; S.rubIdx = 0; S.rub = 0;
+    S.rubLocked = false; S.counted = 0;
+    for(i = 1; i < N; i++){
+      bits[i].g.style.opacity = '0';
+      place(bits[i].g, 0, -200);
+    }
+    rope(0);
+    goto(3);
+
+  } else if(st === 'cut'){
+    for(i = 0; i < N; i++){
+      var bc = bits[i];
+      bc._done = false; bc.counted = false;
+      if(bc.tick){ bc.tick.remove(); bc.tick = null; }
+      bitMode(bc, 's');
+      bitShow(bc, BOWL_SLOTS[i][0], BOWL_SLOTS[i][1]);
+    }
+    S.cut = N; S.rubIdx = 0; S.rub = 0; S.rubLocked = false; S.counted = 0;
+    cutRope(N);
+    goto(4);
+
+  } else if(st === 'rub'){
+    // 跳过搓卷 → 直接变成搓好的小卷卷
+    for(i = 0; i < N; i++){
+      bitMode(bits[i], 'c');
+      bitShow(bits[i], PLATE_SLOTS[i][0], PLATE_SLOTS[i][1]);
+    }
+    $('thumb').style.opacity = '0';
+    S.rubIdx = N; S.rub = 0; S.rubLocked = false; S.counted = 0;
+    goto(5);
+
+  } else if(st === 'count'){
+    for(i = 0; i < N; i++){
+      bitMode(bits[i], 'c');
+      var pslot = PLATE_SLOTS[i];
+      place(bits[i].g, pslot[0], pslot[1]);
+      bits[i].counted = true;
+      addTick(bits[i]);
+    }
+    S.counted = N;
+    goto(6);
+
+  } else if(st === 'cook'){
+    // 跳过煮 → 麻食直接在锅里待命
+    if(boiling){ clearInterval(boiling); boiling = null; }
+    for(i = 0; i < N; i++){
+      bits[i].wob.classList.remove('bob');
+      bitMode(bits[i], 'c');
+      place(bits[i].g, POT_SLOTS[i][0], POT_SLOTS[i][1]);
+    }
+    $('pot').style.display = '';
+    $('plate').style.display = 'none';
+    S.veg = 0; S.pour = 0; S.pourLocked = false;
+    goto(7);
+
+  } else if(st === 'stir'){
+    // 跳过加菜 → 菜全部下锅
+    for(i = 0; i < VEGS.length; i++){ buildVeg(VEGS[i], i); }
+    var vg = $('vegLayer');
+    vg.style.opacity = '1';
+    var items = vg.querySelectorAll('.vegItem');
+    for(i = 0; i < items.length; i++){
+      var it = items[i];
+      it._dropped = true;
+      it.style.opacity = '1';
+      place(it, VEGS[i].x, VEGS[i].y);
+    }
+    S.veg = VEGS.length; S.pour = 0; S.pourLocked = false;
+    $('potSoup').setAttribute('fill', SOUP_BROTH);
+    goto(8);
+
+  } else if(st === 'pour'){
+    // 跳过淋蛋液 → 直接开花
+    S.pour = POUR_NEED; S.pourLocked = true;
+    if(pourTimer){ clearInterval(pourTimer); pourTimer = null; }
+    $('pourStream').style.display = 'none';
+    var eb2 = $('eggBowl');
+    eb2.style.pointerEvents = 'none';
+    place(eb2, BOWL_HOME.x, BOWL_HOME.y);
+    fade(eb2, 0, 300);
+    for(i = 0; i < 18; i++){
+      (function(k){ setTimeout(function(){ flower(POT_CX + (Math.random() * 150 - 75)); }, k * 70); })(i);
+    }
+    setTimeout(function(){ goto(9); }, 1200);
+  }
+}
+
+function reset(){
+  confetti(false);
+  if(boiling){ clearInterval(boiling); boiling = null; }
+  if(pourTimer){ clearInterval(pourTimer); pourTimer = null; }
+  S = {i:0, taps:0, pinches:0, roll:0, cut:0, rubIdx:0, rub:0, rubLocked:false, counted:0,
+       veg:0, pour:0, pourLocked:false, gen:S.gen + 1};
+  drag = null;
+  bitsLayer.innerHTML = '';
+  $('vegLayer').innerHTML = '';
+  $('flowerLayer').innerHTML = '';
+  $('potFx').querySelectorAll('circle').forEach(function(c){ c.remove(); });
+  $('potSoup').setAttribute('fill', SOUP_PLAIN);
+  var ebR = $('eggBowl');
+  ebR.style.pointerEvents = 'none';
+  fade(ebR, 0, 120);
+  $('eggBowlRot').style.transform = 'none';
+  $('pourStream').style.display = 'none';
+  bits = [];
+  for(var i = 0; i < N; i++) bits.push(makeBit());
+  $('bigDough').style.opacity = '1';
+  $('bigDough').style.transition = 'none';
+  $('pot').style.display = 'none';
+  $('plate').style.display = 'none';
+  $('bowl').style.display = 'none';
+  $('thumb').style.opacity = '0';
+  rope(0); cutRope(0);
+  goto(0);
+}
+
+/* ---------------- 开场 ---------------- */
+renderTrack();
+reset();
+})();
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

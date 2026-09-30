@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小手搓麻食 · 幼儿园食育讲解图</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --ink:#5B4636; --ink-soft:#8A6F55;
+    --dough:#F7DC9A; --dough-line:#C9923C;
+    --cream:#FFF3DC; --card:#FFFFFF;
+    --orange:#FF9D4D; --red:#F4645F; --green:#77C97B; --blue:#5FB8F0; --purple:#9B8BE8; --yellow:#F2C75C;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:"YouYuan","幼圆","Microsoft YaHei","PingFang SC",sans-serif;
+    color:var(--ink);
+    background-color:var(--cream);
+    background-image:radial-gradient(circle, rgba(223,176,92,.20) 1.6px, transparent 1.6px);
+    background-size:26px 26px;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    padding:26px 14px 46px;
+  }
+  .poster{max-width:840px; margin:0 auto;}
+
+  /* ---------- 顶部标题 ---------- */
+  .hero{
+    display:flex; align-items:center; gap:18px;
+    background:linear-gradient(180deg,#FFFBEF,#FFF4D8);
+    border:5px solid #F0D9A8; border-radius:30px;
+    padding:20px 26px 18px;
+    box-shadow:0 6px 0 rgba(223,176,92,.25);
+  }
+  .hero-text{flex:1; min-width:0;}
+  h1{
+    font-size:46px; letter-spacing:4px; line-height:1.15;
+    color:#E8703A;
+    text-shadow:2px 2px 0 #fff, 4px 4px 0 rgba(232,112,58,.18);
+  }
+  .sub{margin-top:8px; font-size:16px; color:var(--ink-soft); letter-spacing:1px;}
+  .lead{
+    margin-top:12px; font-size:19px; line-height:1.6; color:var(--ink);
+    background:#FFF9E6; border:2px dashed #E8C87E; border-radius:14px;
+    padding:8px 14px; display:inline-block;
+  }
+  .chips{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; list-style:none;}
+  .chips li{
+    font-size:15px; color:#fff; padding:4px 16px; border-radius:999px;
+    letter-spacing:2px;
+  }
+  .chips li:nth-child(1){background:var(--red);}
+  .chips li:nth-child(2){background:var(--orange);}
+  .chips li:nth-child(3){background:var(--green);}
+  .chips li:nth-child(4){background:var(--blue);}
+  .hero-art{flex:0 0 150px; text-align:center;}
+  .hero-art svg.mascot{width:128px; height:auto;}
+
+  /* ---------- 步骤卡 ---------- */
+  .steps{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:22px;}
+  .step{
+    position:relative;
+    background:var(--card);
+    border:4px solid #F0D9A8; border-radius:26px;
+    padding:20px 18px 16px;
+    box-shadow:0 5px 0 rgba(223,176,92,.20);
+  }
+  .step .num{
+    position:absolute; top:-16px; left:16px;
+    width:44px; height:44px; border-radius:50%;
+    background:var(--c,#F4645F); color:#fff;
+    font-size:24px; line-height:44px; text-align:center;
+    border:4px solid #fff; box-shadow:0 3px 0 rgba(0,0,0,.12);
+  }
+  .step h3{font-size:21px; letter-spacing:2px; margin:4px 0 10px 34px; color:var(--ink);}
+  .art{text-align:center;}
+  .art svg{width:100%; max-width:230px; height:auto;}
+  .rhyme{
+    margin-top:10px; text-align:center;
+    font-family:"KaiTi","STKaiti","楷体",serif;
+    font-size:21px; line-height:1.65; color:#6B5138; letter-spacing:1px;
+  }
+  .step.wide{grid-column:1 / -1;}
+  .step.wide .art svg{max-width:460px;}
+  .step.key{border-color:#F7B267; background:#FFFBF0;}
+
+  /* ---------- 动画 ---------- */
+  .thumb{animation:rub 1.5s ease-in-out infinite;}
+  @keyframes rub{0%,100%{transform:translateX(0)} 50%{transform:translateX(16px)}}
+  .motion{animation:mrub 1.5s ease-in-out infinite;}
+  @keyframes mrub{0%,100%{opacity:.35; transform:translateX(-5px)} 50%{opacity:1; transform:translateX(8px)}}
+  .bub{animation:bubble 2.2s ease-in infinite;}
+  @keyframes bubble{
+    0%{transform:translateY(0); opacity:0;}
+    30%{opacity:.95;}
+    100%{transform:translateY(-28px); opacity:0;}
+  }
+  .bub.d2{animation-delay:.8s;} .bub.d3{animation-delay:1.5s;}
+  .steam{animation:steamup 2.6s ease-in-out infinite; transform-origin:center bottom;}
+  @keyframes steamup{0%,100%{opacity:.35; transform:translateY(3px)} 50%{opacity:.85; transform:translateY(-4px)}}
+  .steam.s2{animation-delay:1.2s;}
+
+  /* ---------- 数一数互动 ---------- */
+  .count-out{
+    margin-top:10px; text-align:center; font-size:17px; color:#E8703A;
+    letter-spacing:1px; min-height:24px;
+  }
+  .count-reset{
+    display:block; margin:6px auto 0;
+    font-family:inherit; font-size:14px; color:var(--ink-soft);
+    background:#FFF6E3; border:2px dashed #E0C08A; border-radius:999px;
+    padding:3px 16px; cursor:pointer;
+  }
+  .mashi-p{cursor:pointer; transform-box:fill-box; transform-origin:center;}
+  .mashi-p .tick{opacity:0; transition:opacity .15s;}
+  .mashi-p.done .tick{opacity:1;}
+  .mashi-p.done{animation:pop .45s ease;}
+  @keyframes pop{0%{transform:scale(1)} 45%{transform:scale(1.3)} 100%{transform:scale(1)}}
+
+  /* ---------- 小档案 ---------- */
+  .facts{
+    margin-top:26px; background:#FFFDF4;
+    border:4px solid #EFD9A4; border-radius:26px; padding:18px 22px 14px;
+  }
+  .facts h2, .tips h2{
+    font-size:21px; letter-spacing:3px; color:#C97B2D;
+    display:flex; align-items:center; gap:10px; margin-bottom:12px;
+  }
+  .facts-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px 18px;}
+  .fact{display:flex; gap:12px; align-items:center;}
+  .fact svg{flex:0 0 52px; width:52px; height:52px;}
+  .fact p{font-size:16px; line-height:1.6; color:#6B5138;}
+
+  /* ---------- 给老师的话 ---------- */
+  .tips{
+    margin-top:22px; background:#F1F9FF;
+    border:4px solid #BFE0F5; border-radius:26px; padding:18px 22px 14px;
+  }
+  .tips h2{color:#3E88C7;}
+  .tips ol{margin-left:22px;}
+  .tips li{
+    font-size:16px; line-height:1.75; color:#4A637A; margin-bottom:8px;
+    font-family:"KaiTi","STKaiti","楷体","Microsoft YaHei",serif;
+  }
+  .tips li b{color:#2E6DA4;}
+
+  .safe-note{
+    margin-top:10px; font-size:15px; line-height:1.7; color:#9A5B1F;
+    background:#FFF3E0; border:2px solid #F7C58A; border-radius:12px;
+    padding:8px 14px; text-align:left;
+  }
+  .safe-note b{color:#E8703A;}
+
+  footer{
+    margin-top:24px; text-align:center; font-size:14px; color:#B08D5E; letter-spacing:2px;
+  }
+  footer a{color:#B08D5E; text-decoration:none; border-bottom:1px dashed #B08D5E;}
+  footer a:hover{color:#E8703A; border-bottom-color:#E8703A;}
+
+  /* ---------- 打印按钮 ---------- */
+  .toolbar{
+    position:fixed; right:20px; bottom:20px; z-index:9;
+    display:flex; gap:10px;
+  }
+  .toolbar button{
+    font-family:inherit; font-size:16px; letter-spacing:2px;
+    color:#fff; background:#E8703A; border:none; border-radius:999px;
+    padding:12px 24px; cursor:pointer;
+    box-shadow:0 4px 0 rgba(0,0,0,.18);
+  }
+  .toolbar button:hover{background:#D45F2B;}
+
+  /* ---------- 小屏 ---------- */
+  @media (max-width:680px){
+    h1{font-size:34px;}
+    .hero{flex-direction:column-reverse; text-align:center;}
+    .chips{justify-content:center;}
+    .steps{grid-template-columns:1fr;}
+    .facts-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- 打印 ---------- */
+  @page{size:A4; margin:8mm;}
+  @media print{
+    body{background:#FFFDF6; padding:0 4px;}
+    .no-print{display:none !important;}
+    .poster{max-width:100%;}
+    .step,.facts,.tips,.hero{box-shadow:none;}
+    .step,.fact,.tips li{break-inside:avoid;}
+    .steps{gap:12px;}
+    .art svg{max-width:190px;}
+    .step.wide .art svg{max-width:420px;}
+    .step .rhyme{font-size:18px;}
+    h1{font-size:40px;}
+    .rhyme{font-size:19px;}
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- ============ 标题 ============ -->
+  <header class="hero">
+    <div class="hero-text">
+      <h1>小手搓麻食</h1>
+      <p class="sub">陕西娃娃的暖冬味道 · 幼儿园食育活动</p>
+      <p class="lead">今天，我们用小手搓出小卷卷，再烩成一锅香喷喷的烩麻食！</p>
+      <ul class="chips">
+        <li>练小手</li><li>学数数</li><li>认传统</li><li>爱劳动</li>
+      </ul>
+    </div>
+    <div class="hero-art">
+      <svg class="mascot" viewBox="0 0 140 158" aria-hidden="true">
+        <path d="M70 34 q0 -13 11 -19" stroke="#77C97B" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <ellipse cx="87" cy="11" rx="12" ry="7" fill="#8FD494" transform="rotate(18 87 11)"/>
+        <circle cx="70" cy="86" r="52" fill="#F7DC9A" stroke="#C9923C" stroke-width="7"/>
+        <ellipse cx="50" cy="62" rx="16" ry="10" fill="#FFF6DC" opacity=".85"/>
+        <circle cx="21" cy="104" r="12" fill="#F7DC9A" stroke="#C9923C" stroke-width="6"/>
+        <circle cx="119" cy="104" r="12" fill="#F7DC9A" stroke="#C9923C" stroke-width="6"/>
+        <circle cx="52" cy="84" r="6" fill="#5B4636"/>
+        <circle cx="88" cy="84" r="6" fill="#5B4636"/>
+        <circle cx="54" cy="82" r="2" fill="#fff"/>
+        <circle cx="90" cy="82" r="2" fill="#fff"/>
+        <ellipse cx="37" cy="99" rx="9" ry="6" fill="#FFB3A0" opacity=".8"/>
+        <ellipse cx="103" cy="99" rx="9" ry="6" fill="#FFB3A0" opacity=".8"/>
+        <path d="M58 101 q12 12 24 0" stroke="#5B4636" stroke-width="5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ============ 七个步骤 ============ -->
+  <section class="steps">
+
+    <!-- ① 洗手 -->
+    <article class="step" style="--c:#F4645F">
+      <div class="num">1</div>
+      <h3>洗洗小手</h3>
+      <div class="art">
+        <svg viewBox="0 0 200 155" aria-hidden="true">
+          <defs>
+            <g id="hand">
+              <rect x="22" y="60" width="58" height="58" rx="24" fill="#FFD9B8" stroke="#E5A97E" stroke-width="6"/>
+              <rect x="28" y="40" width="11" height="34" rx="5.5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5"/>
+              <rect x="42" y="34" width="11" height="40" rx="5.5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5"/>
+              <rect x="56" y="38" width="11" height="36" rx="5.5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5"/>
+              <rect x="70" y="46" width="10" height="28" rx="5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5"/>
+              <rect x="4" y="76" width="28" height="13" rx="6.5" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5" transform="rotate(-40 24 82)"/>
+            </g>
+          </defs>
+          <use href="#hand" transform="translate(200,0) scale(-1,1)"/>
+          <path d="M100 100 v14" stroke="#8ED4F5" stroke-width="5" stroke-linecap="round"/>
+          <path d="M52 108 v12" stroke="#8ED4F5" stroke-width="5" stroke-linecap="round"/>
+          <path d="M148 108 v12" stroke="#8ED4F5" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="100" cy="46" r="10" fill="#E4F5FF" stroke="#7EC8F5" stroke-width="4" opacity=".95"/>
+          <circle cx="122" cy="22" r="7" fill="#E4F5FF" stroke="#7EC8F5" stroke-width="3.5" opacity=".95"/>
+          <circle cx="78" cy="28" r="6" fill="#E4F5FF" stroke="#7EC8F5" stroke-width="3.5" opacity=".95"/>
+          <circle cx="106" cy="44" r="2.6" fill="#fff"/>
+          <circle cx="124" cy="19" r="1.8" fill="#fff"/>
+          <path d="M148 34 l2 5 l5 2 l-5 2 l-2 5 l-2 -5 l-5 -2 l5 -2 z" fill="#FFC94D"/>
+          <path d="M34 44 l1.6 4 l4 1.6 l-4 1.6 l-1.6 4 l-1.6 -4 l-4 -1.6 l4 -1.6 z" fill="#FFC94D"/>
+        </svg>
+      </div>
+      <p class="rhyme">小手洗得白又白<br>面团见了笑开怀</p>
+    </article>
+
+    <!-- ② 揪面团 -->
+    <article class="step" style="--c:#FF9D4D">
+      <div class="num">2</div>
+      <h3>揪块面团</h3>
+      <div class="art">
+        <svg viewBox="0 0 200 155" aria-hidden="true">
+          <circle cx="64" cy="88" r="45" fill="#F7DC9A" stroke="#C9923C" stroke-width="7"/>
+          <ellipse cx="47" cy="67" rx="14" ry="9" fill="#FFF6DC" opacity=".9"/>
+          <circle cx="152" cy="92" r="26" fill="#FFFFFF" stroke="#9AA7B4" stroke-width="5"/>
+          <path d="M133 76 q19 18 38 0" fill="none" stroke="#C6D0DA" stroke-width="4" stroke-linecap="round"/>
+          <rect x="103" y="76" width="20" height="6" rx="3" fill="#8A6F55"/>
+          <rect x="103" y="94" width="20" height="6" rx="3" fill="#8A6F55"/>
+          <circle cx="30" cy="142" r="8" fill="#F7DC9A" stroke="#C9923C" stroke-width="5"/>
+          <circle cx="60" cy="150" r="5" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+        </svg>
+      </div>
+      <p class="rhyme">揪块面团圆溜溜<br>像个小乒乓球</p>
+    </article>
+
+    <!-- ③ 搓长条 -->
+    <article class="step" style="--c:#F2C75C">
+      <div class="num">3</div>
+      <h3>搓成小长条</h3>
+      <div class="art">
+        <svg viewBox="0 0 200 155" aria-hidden="true">
+          <path d="M78 12 H96 m0 0 l-8 -8 m8 8 l-8 8" stroke="#FF9D4D" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M122 12 H104 m0 0 l8 -8 m-8 8 l8 8" stroke="#FF9D4D" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="64" y="92" width="72" height="32" rx="16" fill="#FFD9B8" stroke="#E5A97E" stroke-width="6"/>
+          <rect x="64" y="128" width="72" height="26" rx="13" fill="#FFD9B8" stroke="#E5A97E" stroke-width="6"/>
+          <rect x="6" y="62" width="30" height="14" rx="7" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5" transform="rotate(-18 21 69)"/>
+          <rect x="164" y="62" width="30" height="14" rx="7" fill="#FFD9B8" stroke="#E5A97E" stroke-width="5" transform="rotate(18 179 69)"/>
+          <path d="M10 74 q22 -12 44 0 q24 12 46 0 q24 -12 46 0 q22 10 44 0" fill="none" stroke="#C9923C" stroke-width="26" stroke-linecap="round"/>
+          <path d="M10 74 q22 -12 44 0 q24 12 46 0 q24 -12 46 0 q22 10 44 0" fill="none" stroke="#F7DC9A" stroke-width="16" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="rhyme">手心转一转<br>搓成小长条，像条小蛇扭呀扭</p>
+    </article>
+
+    <!-- ④ 揪小段 -->
+    <article class="step" style="--c:#77C97B">
+      <div class="num">4</div>
+      <h3>揪成小段</h3>
+      <div class="art">
+        <svg viewBox="0 0 200 155" aria-hidden="true">
+          <path d="M20 40 H180" stroke="#C9923C" stroke-width="24" stroke-linecap="round"/>
+          <path d="M20 40 H180" stroke="#F7DC9A" stroke-width="14" stroke-linecap="round"/>
+          <path d="M60 20 V58 M100 20 V58 M140 20 V58" stroke="#8A6F55" stroke-width="5" stroke-dasharray="7 8" stroke-linecap="round"/>
+          <path d="M60 66 v14 m0 0 l-7 -8 m7 8 l7 -8" stroke="#FF9D4D" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M100 66 v14 m0 0 l-7 -8 m7 8 l7 -8" stroke="#FF9D4D" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M140 66 v14 m0 0 l-7 -8 m7 8 l7 -8" stroke="#FF9D4D" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="42" cy="114" r="16" fill="#F7DC9A" stroke="#C9923C" stroke-width="6"/>
+          <circle cx="82" cy="114" r="16" fill="#F7DC9A" stroke="#C9923C" stroke-width="6"/>
+          <circle cx="122" cy="114" r="16" fill="#F7DC9A" stroke="#C9923C" stroke-width="6"/>
+          <circle cx="162" cy="114" r="16" fill="#F7DC9A" stroke="#C9923C" stroke-width="6"/>
+          <ellipse cx="37" cy="108" rx="5" ry="3.5" fill="#FFF6DC"/>
+          <ellipse cx="77" cy="108" rx="5" ry="3.5" fill="#FFF6DC"/>
+          <ellipse cx="117" cy="108" rx="5" ry="3.5" fill="#FFF6DC"/>
+          <ellipse cx="157" cy="108" rx="5" ry="3.5" fill="#FFF6DC"/>
+        </svg>
+      </div>
+      <p class="rhyme">揪一揪，分小段<br>一颗一颗排排站</p>
+    </article>
+
+    <!-- ⑤ 按一按 搓一搓(重点) -->
+    <article class="step key wide" style="--c:#5FB8F0">
+      <div class="num">5</div>
+      <h3>按一按，搓一搓 · 变成小卷卷</h3>
+      <div class="art">
+        <svg viewBox="0 0 420 165" aria-hidden="true">
+          <!-- 面团 -->
+          <circle cx="62" cy="96" r="20" fill="#F7DC9A" stroke="#C9923C" stroke-width="6"/>
+          <ellipse cx="55" cy="89" rx="6" ry="4" fill="#FFF6DC"/>
+          <!-- 箭头 -->
+          <path d="M108 96 h28 m0 0 l-9 -9 m9 9 l-9 9" stroke="#8A6F55" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- 按压中 -->
+          <path d="M158 110 q-4 -14 12 -18 q20 -5 32 2 q10 6 6 14 q-6 12 -22 12 q-20 0 -28 -10 z" fill="#F7DC9A" stroke="#C9923C" stroke-width="6" stroke-linejoin="round"/>
+          <g class="thumb">
+            <rect x="170" y="66" width="24" height="32" rx="12" fill="#FFD9B8" stroke="#E5A97E" stroke-width="6"/>
+          </g>
+          <path class="motion" d="M204 78 h30 m0 0 l-10 -9 m10 9 l-10 9" stroke="#FF9D4D" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- 箭头 -->
+          <path d="M292 96 h28 m0 0 l-9 -9 m9 9 l-9 9" stroke="#8A6F55" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- 小卷卷 -->
+          <circle cx="360" cy="96" r="21" fill="#F7DC9A" stroke="#C9923C" stroke-width="6"/>
+          <path d="M360 75 q11 2 13 13" stroke="#C9923C" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <circle cx="353" cy="93" r="2.8" fill="#5B4636"/>
+          <circle cx="367" cy="93" r="2.8" fill="#5B4636"/>
+          <ellipse cx="344" cy="103" rx="4.5" ry="3" fill="#FFB3A0" opacity=".8"/>
+          <ellipse cx="376" cy="103" rx="4.5" ry="3" fill="#FFB3A0" opacity=".8"/>
+          <path d="M354 104 q6 5 12 0" stroke="#5B4636" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="rhyme">拇指按一按，往前搓一搓 —— 一个圆球球，卷成小卷卷</p>
+    </article>
+
+    <!-- ⑥ 排排坐 + 数一数 -->
+    <article class="step wide" style="--c:#9B8BE8">
+      <div class="num">6</div>
+      <h3>小卷卷，排排坐</h3>
+      <div class="art">
+        <svg viewBox="0 62 200 90" aria-hidden="true">
+          <ellipse cx="100" cy="108" rx="90" ry="38" fill="#FFF6E3" stroke="#DBC08C" stroke-width="6"/>
+          <ellipse cx="100" cy="108" rx="73" ry="28" fill="#FFFDF4" stroke="#E8D6AE" stroke-width="3"/>
+          <g class="mashi-p">
+            <circle cx="38" cy="108" r="14" fill="#F7DC9A" stroke="#C9923C" stroke-width="5"/>
+            <path d="M38 95 q8 1 9 9" stroke="#C9923C" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+            <circle cx="34" cy="106" r="2" fill="#5B4636"/><circle cx="42" cy="106" r="2" fill="#5B4636"/>
+            <path d="M35 112 q3 3 6 0" stroke="#5B4636" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="mashi-p">
+            <circle cx="68" cy="108" r="14" fill="#F7DC9A" stroke="#C9923C" stroke-width="5"/>
+            <path d="M68 95 q8 1 9 9" stroke="#C9923C" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+            <circle cx="64" cy="106" r="2" fill="#5B4636"/><circle cx="72" cy="106" r="2" fill="#5B4636"/>
+            <path d="M65 112 q3 3 6 0" stroke="#5B4636" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="mashi-p">
+            <circle cx="98" cy="108" r="14" fill="#F7DC9A" stroke="#C9923C" stroke-width="5"/>
+            <path d="M98 95 q8 1 9 9" stroke="#C9923C" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+            <circle cx="94" cy="106" r="2" fill="#5B4636"/><circle cx="102" cy="106" r="2" fill="#5B4636"/>
+            <path d="M95 112 q3 3 6 0" stroke="#5B4636" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="mashi-p">
+            <circle cx="128" cy="108" r="14" fill="#F7DC9A" stroke="#C9923C" stroke-width="5"/>
+            <path d="M128 95 q8 1 9 9" stroke="#C9923C" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+            <circle cx="124" cy="106" r="2" fill="#5B4636"/><circle cx="132" cy="106" r="2" fill="#5B4636"/>
+            <path d="M125 112 q3 3 6 0" stroke="#5B4636" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="mashi-p">
+            <circle cx="158" cy="108" r="14" fill="#F7DC9A" stroke="#C9923C" stroke-width="5"/>
+            <path d="M158 95 q8 1 9 9" stroke="#C9923C" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+            <circle cx="154" cy="106" r="2" fill="#5B4636"/><circle cx="162" cy="106" r="2" fill="#5B4636"/>
+            <path d="M155 112 q3 3 6 0" stroke="#5B4636" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          </g>
+          <g class="tick"><circle cx="176" cy="93" r="7" fill="#77C97B"/><path d="M172 93 l3 3 l5 -6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+          <g class="tick"><circle cx="86" cy="93" r="7" fill="#77C97B"/><path d="M82 93 l3 3 l5 -6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+          <g class="tick"><circle cx="116" cy="93" r="7" fill="#77C97B"/><path d="M112 93 l3 3 l5 -6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+          <g class="tick"><circle cx="146" cy="93" r="7" fill="#77C97B"/><path d="M142 93 l3 3 l5 -6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+          <g class="tick"><circle cx="56" cy="93" r="7" fill="#77C97B"/><path d="M52 93 l3 3 l5 -6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+        </svg>
+      </div>
+      <p id="countOut" class="count-out">点一点盘子里的麻食，数一数有几颗？</p>
+      <p class="rhyme">小卷卷，排排坐<br>等着跳进大锅锅</p>
+      <button id="countReset" class="count-reset no-print" type="button">再数一遍</button>
+    </article>
+
+    <!-- ⑦ 下锅煮熟 -->
+    <article class="step wide" style="--c:#F4645F">
+      <div class="num">7</div>
+      <h3>下锅煮，开吃咯</h3>
+      <div class="art">
+        <svg viewBox="0 0 420 175" aria-hidden="true">
+          <!-- 火 -->
+          <path d="M118 168 q-16 -20 -2 -34 q0 12 10 14 q2 -14 14 -18 q-6 16 8 24 q8 8 -6 14 q-14 6 -24 0 z" fill="#FFB84D" stroke="#F08A3D" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M126 166 q-8 -10 0 -18 q1 7 8 8 q-2 8 -8 10 z" fill="#FFE08A"/>
+          <!-- 锅 -->
+          <rect x="34" y="90" width="18" height="12" rx="6" fill="#5C86AD"/>
+          <rect x="188" y="90" width="18" height="12" rx="6" fill="#5C86AD"/>
+          <rect x="46" y="60" width="148" height="84" rx="20" fill="#8FB8DC" stroke="#5C86AD" stroke-width="7"/>
+          <rect x="56" y="76" width="128" height="54" rx="12" fill="#CFE8FF"/>
+          <!-- 漂浮的麻食 -->
+          <circle cx="82" cy="94" r="10" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="112" cy="88" r="10" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="142" cy="95" r="10" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="164" cy="88" r="9" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <!-- 气泡 -->
+          <circle class="bub" cx="96" cy="112" r="5" fill="#EAF6FF" stroke="#9CCDF0" stroke-width="3"/>
+          <circle class="bub d2" cx="126" cy="116" r="4" fill="#EAF6FF" stroke="#9CCDF0" stroke-width="3"/>
+          <circle class="bub d3" cx="150" cy="110" r="4.5" fill="#EAF6FF" stroke="#9CCDF0" stroke-width="3"/>
+          <!-- 蒸汽 -->
+          <path class="steam" d="M82 48 q-9 -11 0 -22 q9 -11 0 -22" stroke="#BFD9EA" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path class="steam s2" d="M140 50 q-9 -11 0 -22 q9 -11 0 -20" stroke="#BFD9EA" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- 碗 -->
+          <ellipse cx="312" cy="100" rx="54" ry="12" fill="#FFE3B8" stroke="#E5C38C" stroke-width="4"/>
+          <path d="M300 104 C 288 96, 282 88, 280 82 C 288 82, 296 86, 302 92 Z" fill="#F7DC9A" stroke="#C9923C" stroke-width="3.5"/>
+          <path d="M322 104 C 316 92, 314 84, 315 76 C 323 80, 328 88, 330 96 Z" fill="#F7DC9A" stroke="#C9923C" stroke-width="3.5"/>
+          <path d="M342 102 C 344 92, 350 84, 358 80 C 356 90, 352 98, 348 104 Z" fill="#F7DC9A" stroke="#C9923C" stroke-width="3.5"/>
+          <path d="M256 92 h112 q8 0 6 10 q-10 44 -62 44 q-52 0 -62 -44 q-2 -10 6 -10 z" fill="#FFFFFF" stroke="#C9D4DE" stroke-width="6"/>
+          <path d="M266 86 v-8 M312 84 v-12 M358 86 v-8" stroke="#BFD9EA" stroke-width="5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <p class="rhyme">咕嘟咕嘟翻个身，浮起来就熟啦</p>
+    </article>
+
+    <!-- ⑧ 加菜烩一烩 -->
+    <article class="step wide" style="--c:#77C97B">
+      <div class="num">8</div>
+      <h3>加点菜，烩一烩</h3>
+      <div class="art">
+        <svg viewBox="0 0 420 175" aria-hidden="true">
+          <!-- 锅 -->
+          <rect x="72" y="88" width="18" height="12" rx="6" fill="#5C86AD"/>
+          <rect x="250" y="88" width="18" height="12" rx="6" fill="#5C86AD"/>
+          <rect x="84" y="58" width="172" height="88" rx="22" fill="#8FB8DC" stroke="#5C86AD" stroke-width="7"/>
+          <rect x="94" y="74" width="152" height="58" rx="14" fill="#F3D79E"/>
+          <!-- 锅里的麻食 -->
+          <circle cx="126" cy="102" r="11" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="152" cy="118" r="11" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="182" cy="102" r="11" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="212" cy="118" r="11" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <!-- 漂浮的配菜 -->
+          <circle cx="112" cy="92" r="9" fill="#F2705F" stroke="#C9503F" stroke-width="3.4"/>
+          <path d="M166 88 q4 -12 16 -10 q-2 11 -16 10 z" fill="#77C97B" stroke="#4E9C55" stroke-width="3.4" stroke-linejoin="round"/>
+          <path d="M196 96 q0 -9 9 -9 q9 0 9 9 q-9 4 -18 0 z" fill="#9A8B7E" stroke="#6E6157" stroke-width="3.4" stroke-linejoin="round"/>
+          <rect x="226" y="86" width="20" height="17" rx="4" fill="#FFF6E0" stroke="#D8C9A6" stroke-width="3.4"/>
+          <!-- 蒸汽 -->
+          <path class="steam" d="M124 48 q-8 -10 0 -20 q8 -10 0 -20" stroke="#BFD9EA" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path class="steam s2" d="M188 50 q-8 -10 0 -20 q8 -10 0 -18" stroke="#BFD9EA" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <!-- 箭头 + 四样菜下锅 -->
+          <path d="M282 108 h24 m0 0 l-8 -8 m8 8 l-8 8" stroke="#8A6F55" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="342" cy="80" r="11" fill="#F2705F" stroke="#C9503F" stroke-width="4"/>
+          <path d="M330 108 q5 -15 20 -13 q-3 14 -20 13 z" fill="#77C97B" stroke="#4E9C55" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M356 112 q0 -10 10 -10 q10 0 10 10 q-10 5 -20 0 z" fill="#9A8B7E" stroke="#6E6157" stroke-width="4" stroke-linejoin="round"/>
+          <rect x="330" y="128" width="22" height="18" rx="5" fill="#FFF6E0" stroke="#D8C9A6" stroke-width="4"/>
+        </svg>
+      </div>
+      <p class="rhyme">番茄红，青菜绿，木耳豆腐锅里聚</p>
+    </article>
+
+    <!-- ⑨ 淋蛋液(重点) -->
+    <article class="step wide key" style="--c:#F2C75C">
+      <div class="num">9</div>
+      <h3>淋蛋液 · 慢慢淋，开出蛋花花</h3>
+      <div class="art">
+        <svg viewBox="0 0 420 180" aria-hidden="true">
+          <!-- 锅 -->
+          <rect x="72" y="104" width="18" height="12" rx="6" fill="#5C86AD"/>
+          <rect x="250" y="104" width="18" height="12" rx="6" fill="#5C86AD"/>
+          <rect x="84" y="74" width="172" height="88" rx="22" fill="#8FB8DC" stroke="#5C86AD" stroke-width="7"/>
+          <rect x="94" y="90" width="152" height="58" rx="14" fill="#F3D79E"/>
+          <!-- 锅里的麻食与配菜 -->
+          <circle cx="122" cy="118" r="11" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="158" cy="132" r="11" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="196" cy="118" r="11" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="224" cy="134" r="10" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="110" cy="108" r="8" fill="#F2705F" stroke="#C9503F" stroke-width="3.2"/>
+          <path d="M172 104 q4 -11 15 -9 q-2 10 -15 9 z" fill="#77C97B" stroke="#4E9C55" stroke-width="3.2" stroke-linejoin="round"/>
+          <!-- 蛋花 -->
+          <ellipse cx="146" cy="112" rx="17" ry="10" fill="#FFEBAE" stroke="#F0C666" stroke-width="3.4"/>
+          <ellipse cx="205" cy="108" rx="14" ry="8" fill="#FFEBAE" stroke="#F0C666" stroke-width="3.4"/>
+          <ellipse cx="180" cy="136" rx="15" ry="9" fill="#FFEBAE" stroke="#F0C666" stroke-width="3.4"/>
+          <!-- 倾斜的蛋液碗 -->
+          <g transform="translate(300,44) rotate(-56)">
+            <path d="M-38 0 h76 q6 0 4 10 q-8 28 -42 28 q-34 0 -42 -28 q-2 -10 4 -10 z"
+                  fill="#FFFFFF" stroke="#C9D4DE" stroke-width="5"/>
+            <ellipse cx="0" cy="-4" rx="32" ry="10" fill="#FFE9B8" stroke="#E8B75C" stroke-width="4"/>
+            <ellipse cx="-8" cy="-6" rx="10" ry="4" fill="#FFC24D"/>
+          </g>
+          <!-- 蛋液细流 -->
+          <path d="M292 46 q4 26 -2 46 q-3 16 3 28" stroke="#FFD873" stroke-width="11" fill="none" stroke-linecap="round"/>
+          <path d="M292 50 q3 24 -2 43 q-2 13 2 24" stroke="#FFF3C4" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <!-- 大大的"慢慢"提示 -->
+          <g transform="translate(366,120)">
+            <circle r="30" fill="#FFF3DC" stroke="#F2C75C" stroke-width="4"/>
+            <text x="0" y="-4" text-anchor="middle" font-size="17" fill="#E8703A" font-weight="700">慢慢</text>
+            <text x="0" y="15" text-anchor="middle" font-size="17" fill="#E8703A" font-weight="700">淋</text>
+          </g>
+        </svg>
+      </div>
+      <p class="rhyme">蛋液慢慢淋，锅里开花花</p>
+      <p class="safe-note"><b>安全提醒</b>：对鸡蛋过敏的小朋友，这一步可以不放蛋液，一样好吃。</p>
+    </article>
+
+  </section>
+
+  <!-- ============ 麻食小档案 ============ -->
+  <section class="facts">
+    <h2>麻食小档案</h2>
+    <div class="facts-grid">
+      <div class="fact">
+        <svg viewBox="0 0 60 60" aria-hidden="true">
+          <path d="M14 26 L10 8 L26 18 Z" fill="#F7DC9A" stroke="#C9923C" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M46 26 L50 8 L34 18 Z" fill="#F7DC9A" stroke="#C9923C" stroke-width="4" stroke-linejoin="round"/>
+          <circle cx="30" cy="34" r="19" fill="#F7DC9A" stroke="#C9923C" stroke-width="4"/>
+          <circle cx="24" cy="31" r="2.4" fill="#5B4636"/>
+          <circle cx="36" cy="31" r="2.4" fill="#5B4636"/>
+          <path d="M25 39 q5 4 10 0" stroke="#5B4636" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <path d="M8 36 h-6 M12 42 l-5 3 M52 36 h6 M48 42 l5 3" stroke="#C9923C" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <p>它还有好多小名：<b>猫耳朵</b>、搓搓、捻捻。</p>
+      </div>
+      <div class="fact">
+        <svg viewBox="0 0 60 60" aria-hidden="true">
+          <circle cx="13" cy="24" r="10" fill="#FFD9B8" stroke="#E5A97E" stroke-width="3.5"/>
+          <path d="M0 52 q13 -16 26 0" fill="none" stroke="#E5A97E" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="47" cy="24" r="10" fill="#FFD9B8" stroke="#E5A97E" stroke-width="3.5"/>
+          <path d="M34 52 q13 -16 26 0" fill="none" stroke="#E5A97E" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="30" cy="34" r="8" fill="#FFE3C8" stroke="#E5A97E" stroke-width="3.5"/>
+          <circle cx="27" cy="33" r="1.6" fill="#5B4636"/>
+          <circle cx="33" cy="33" r="1.6" fill="#5B4636"/>
+          <path d="M27.5 37 q2.5 2 5 0" stroke="#5B4636" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+        <p>过去冬天的晚上，全家人围在一起搓麻食，边搓边聊天。</p>
+      </div>
+      <div class="fact">
+        <svg viewBox="0 0 60 60" aria-hidden="true">
+          <path d="M30 52 C 8 46, 4 22, 30 8 C 56 22, 52 46, 30 52 Z" fill="#FFD9B8" stroke="#E5A97E" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M30 12 V50 M20 14 L16 48 M40 14 L44 48" stroke="#E5A97E" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <p>样子像小耳朵，也像小贝壳、小海螺。</p>
+      </div>
+      <div class="fact">
+        <svg viewBox="0 0 60 60" aria-hidden="true">
+          <circle cx="18" cy="34" r="13" fill="#A8DFA8" stroke="#5EA85E" stroke-width="4"/>
+          <circle cx="42" cy="34" r="13" fill="#FFC98A" stroke="#D98F3E" stroke-width="4"/>
+          <circle cx="30" cy="18" r="12" fill="#C9BDF2" stroke="#8F7FD6" stroke-width="4"/>
+        </svg>
+        <p>和面时加菠菜汁、胡萝卜汁，就能搓出绿色、橙色的麻食。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 给老师的话 ============ -->
+  <section class="tips">
+    <h2>给老师 · 给爸爸妈妈的话</h2>
+    <ol>
+      <li><b>和面比例</b>：面粉 : 温水 ≈ 2 : 1（体积），揉到面光、手光、盆光，盖上醒 20 分钟，面团软一点更好搓。</li>
+      <li><b>先示范再动手</b>：老师先完整示范一遍，带小朋友念一遍儿歌，再每人发一小块面团。</li>
+      <li><b>桌面准备</b>：铺硅胶垫或保鲜膜，撒一点干面粉防粘；搓得粗细不匀没关系，多鼓励。</li>
+      <li><b>下锅</b>：水开后下锅，用勺背轻推防粘；浮起来再煮 2~3 分钟，先捞细的，再捞粗的。</li>
+      <li><b>烩麻食配菜</b>：番茄、青菜、木耳、豆腐都切小丁；木耳要提前泡发、切碎，避免整朵。菜先下锅煮软，再下麻食烩。</li>
+      <li><b>淋蛋液是关键一步</b>：鸡蛋打散后，<b>一手端着碗、一手慢慢淋</b>，让蛋液细细流成一条线，落到滚汤里就开出蛋花。千万不要一次倒进去，那样会结成大块。可以请小朋友一起数"慢慢淋，数到十"。</li>
+      <li><b>安全提醒</b>：生面团、生蛋液都不能尝；对小麦（麸质）过敏的孩子可用米粉面团或干净黏土代替；<b>对鸡蛋过敏的孩子，淋蛋液这一步可以不放</b>，味道一样好。</li>
+    </ol>
+  </section>
+
+  <footer>
+    陕西娃娃的家乡味道 · 小手搓麻食 ·
+    <a href="index.html">动手玩互动版</a> ·
+    <a href="../../private.html">返回私人专区</a>
+  </footer>
+</div>
+
+<!-- ============ 打印按钮 ============ -->
+<div class="toolbar no-print">
+  <button type="button" onclick="window.print()">打印 / 存为 PDF</button>
+</div>
+
+<script>
+(function(){
+  // ?shot=1 / ?nobtn=1 → 隐藏右下角按钮，便于导出干净的分享图
+  if(/[?&](shot|nobtn)=1/.test(location.search)){
+    document.querySelector('.toolbar').style.display = 'none';
+  }
+  var pieces = Array.prototype.slice.call(document.querySelectorAll('.mashi-p'));
+  var out = document.getElementById('countOut');
+  var reset = document.getElementById('countReset');
+  var total = pieces.length;
+  var done = 0;
+  pieces.forEach(function(p){
+    p.addEventListener('click', function(){
+      if(p.classList.contains('done')) return;
+      p.classList.add('done');
+      done += 1;
+      if(done === total){
+        out.textContent = '一共 ' + total + ' 颗，全数出来啦，你真棒！';
+      } else {
+        out.textContent = '已经数了 ' + done + ' 颗，继续点一点～';
+      }
+    });
+  });
+  reset.addEventListener('click', function(){
+    done = 0;
+    pieces.forEach(function(p){ p.classList.remove('done'); });
+    out.textContent = '点一点盘子里的麻食，数一数有几颗？';
+  });
+})();
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

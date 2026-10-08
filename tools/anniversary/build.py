@@ -86,26 +86,32 @@ def build_events(today: date) -> list:
     for e in data["events"]:
         y, m, d = (int(x) for x in e["date"].split("-"))
         start = date(y, m, d)
-        nxt, left, passed, nxt_no = next_anniversary(e, today)
         lu = lunar_of(y, m, d)
-        out.append({
+        base = {
             **e,
             "start": start,
             "passed_days": (today - start).days,
-            "next": nxt,
-            "left": left,
-            "anniv": passed,        # 已满周年数
-            "next_anniv": nxt_no,   # 下次是第几周年
             "weekday": WEEK[start.weekday()],
             "lunar": lu,
-            "is_today": left == 0,
-        })
-    out.sort(key=lambda x: x["left"])
+            "is_milestone": bool(e.get("milestone")),
+        }
+        if base["is_milestone"]:
+            # 一次性里程碑: 不循环, 无倒计时/周年
+            base.update({"next": None, "left": None, "anniv": None,
+                         "next_anniv": None, "is_today": False})
+        else:
+            nxt, left, passed, nxt_no = next_anniversary(e, today)
+            base.update({"next": nxt, "left": left, "anniv": passed,
+                         "next_anniv": nxt_no, "is_today": left == 0})
+        out.append(base)
+    # 有序纪念日按临近排; 里程碑永远垫底(它们没有"下一次")
+    out.sort(key=lambda x: (x["left"] is None, x["left"] if x["left"] is not None else 0))
     return out
 
 
 def render(events: list, today: date) -> dict:
-    nxt = events[0]
+    # 倒计时取"最近的循环纪念日"(里程碑没有下一次, 不参与)
+    nxt = next(e for e in events if not e["is_milestone"])
     # "在一起"从【在一起纪念日】起算(2011-10-01), 不是求婚日
     pair = next((e for e in events if e["id"] == "together"), None)
     together = (today - pair["start"]).days if pair else 0
@@ -135,15 +141,32 @@ def render(events: list, today: date) -> dict:
 
     list_html = []
     for e in events:
-        cls = "item today" if e["is_today"] else "item"
-        soon = ' soon' if 0 < e["left"] <= 30 else ''
-        days = "今天" if e["is_today"] else f'{e["left"]}<small>天</small>'
         # 农历事件标注历法, 免得看着"日期每年都在变"以为是 bug
         cal = ('<span class="tag" style="color:#c4b5fd;border-color:rgba(196,181,253,.4)">农历</span>'
                if e.get("calendar") == "lunar" else "")
         # 估算的日期明确标出来, 不冒充准确值
         est = ('<span class="tag" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">估算</span>'
                if e.get("estimated") else "")
+
+        if e["is_milestone"]:
+            # 里程碑: 无倒计时, 右侧显示"已 N 天"
+            list_html.append(f'''    <div class="item milestone">
+      <div class="it-ico">{e["ico"]}</div>
+      <div class="it-body">
+        <div class="it-name">{e["name"]}</div>
+        <div class="it-note"><span class="tag">{e["date"]}</span>
+          {e["note"]} · 已 {e["passed_days"]:,} 天</div>
+      </div>
+      <div class="it-right">
+        <div class="it-days">第 {e["passed_days"] + 1}<small>天</small></div>
+        <div class="it-date">一次性里程碑</div>
+      </div>
+    </div>''')
+            continue
+
+        cls = "item today" if e["is_today"] else "item"
+        soon = ' soon' if 0 < e["left"] <= 30 else ''
+        days = "今天" if e["is_today"] else f'{e["left"]}<small>天</small>'
         list_html.append(f'''    <div class="{cls}">
       <div class="it-ico">{e["ico"]}</div>
       <div class="it-body">
@@ -159,9 +182,10 @@ def render(events: list, today: date) -> dict:
 
     tl = []
     for e in sorted(events, key=lambda x: x["start"]):
+        ms = '（里程碑）' if e["is_milestone"] else ''
         tl.append(f'''    <div class="tl-item">
       <div class="tl-date">{e["date"]}　{e["weekday"]}</div>
-      <div class="tl-name">{e["ico"]} {e["name"]}</div>
+      <div class="tl-name">{e["ico"]} {e["name"]}{ms}</div>
       <div class="tl-note">{e["detail"]}　·　距今 {e["passed_days"]:,} 天</div>
     </div>''')
 
@@ -182,9 +206,13 @@ def main():
     print("纪念日核算 (基准 %s)" % today.isoformat())
     print("=" * 66)
     for e in events:
-        print("  %-12s %s  %-4s  已 %5d 天  已满 %d 周年  下次 %s (还有 %d 天, 届时第 %d 周年)"
-              % (e["name"], e["date"], e["weekday"], e["passed_days"],
-                 e["anniv"], e["next"].isoformat(), e["left"], e["next_anniv"]))
+        if e["is_milestone"]:
+            print("  %-12s %s  %-4s  已 %5d 天  [里程碑, 不循环]"
+                  % (e["name"], e["date"], e["weekday"], e["passed_days"]))
+        else:
+            print("  %-12s %s  %-4s  已 %5d 天  已满 %d 周年  下次 %s (还有 %d 天, 届时第 %d 周年)"
+                  % (e["name"], e["date"], e["weekday"], e["passed_days"],
+                     e["anniv"], e["next"].isoformat(), e["left"], e["next_anniv"]))
         print("              农历 %s · %s" % (e["lunar"]["full"], e["note"]))
     pair = next((e for e in events if e["id"] == "together"), None)
     if pair:

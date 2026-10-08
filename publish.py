@@ -90,12 +90,23 @@ ROOT_ARTIFACTS = [
      "新规学习页 · 12张概念卡 + 人身险4项/财险3项监管指标扫盲 + IFRS9/17 + 产品化映射", "报告"),
 
     # ---- 知识库 ----
+    # 2026-10-08: 原来只有一张"成果站知识库"总卡, 老板要求把里面的主题
+    # 直接展开成小板块平铺。保留总卡作汇总入口, 5 个主题各出一张,
+    # 锚点直达知识库页对应主题(该页已加 #slug 支持)。
     ("保险资管风险责任人知识库", "kb.html", "2026-09-07", "🛡️", "kb",
      "5 大投资管理能力 · 40+ 机构风险责任人档案 · 搜索/折叠/从业经历", "知识库"),
-    # 2026-09-22: 老板分类工具里去掉了"成果站知识库"这层包装(4 个主题直接挂知识库下),
-    # 但这页是 31 条知识库条目的唯一入口, 删了卡会让条目在站上不可达, 故保留
     ("成果站知识库", "knowledge/index.html", "2026-09-07", "📚", "knowledge",
-     "PPT/PDF 翻页预览 + 原文件下载 · 4 主题 31 条", "知识库"),
+     "全部主题汇总 · PPT/PDF 翻页预览 + 原文件下载 · 5 主题 32 条", "知识库"),
+    ("保险债权投资计划", "knowledge/index.html#insurance-debt", "2026-09-07", "🏛️", "knowledge",
+     "登记规则 / 材料标准 / 监管原文 / 数据检索 · 17 条", "知识库"),
+    ("stay hungry 学习库", "knowledge/index.html#stay-hungry", "2026-09-07", "🎓", "knowledge",
+     "文档模板类 · 1 条", "知识库"),
+    ("AI 学习", "knowledge/index.html#ai", "2026-09-07", "🤖", "knowledge",
+     "AI 前沿报告与学习资料 · 5 条", "知识库"),
+    ("stay foolish 投资研读", "knowledge/index.html#stay-foolish", "2026-09-07", "💡", "knowledge",
+     "宏观 / 投资 / 阅读 · 8 条", "知识库"),
+    ("保险资产负债管理", "knowledge/index.html#insurance-alm", "2026-09-24", "⚖️", "knowledge",
+     "《保险公司资产负债管理办法》深度解读 · 1 条", "知识库"),
 
     # ---- 工具 ----
     ("2026年贷款利率自律底线", "lending-rate-floor.html", "2026-09-10", "💹", "tool",
@@ -504,8 +515,11 @@ def build_index(reports: list) -> None:
                 f'<span class="lt-arrow">→</span></a>')
 
     def exists(path: str) -> bool:
-        """外链(局域网 CRM 等)直接视为存在; 本地路径查文件。"""
-        return path.startswith(("http://", "https://")) or (SITE / path).exists()
+        """外链(局域网 CRM 等)直接视为存在; 本地路径查文件。
+        带 #锚点 的路径按锚点前的文件部分判断(知识库主题卡走这条)。"""
+        if path.startswith(("http://", "https://")):
+            return True
+        return (SITE / path.split("#", 1)[0]).exists()
 
     def radar_company_count() -> int:
         """雷达分级站点的公司页数(卡片描述动态取值, 避免写死后过期)。"""
@@ -593,6 +607,14 @@ def inject_nav() -> None:
     subprocess.run([sys.executable, str(SITE / "inject_nav.py")], check=True)
 
 
+def inject_baidu() -> None:
+    """百度统计注入(2026-10-08 补进流水线)。
+    之前 publish 流程漏了这一步: kb_ingest.py build 重建知识库条目页时
+    会把注入的统计脚本冲掉, 而 publish 又不补, 导致统计静默丢失。
+    这里显式补上, 增量幂等(已有 hm.baidu.com 的页面会跳过)。"""
+    subprocess.run([sys.executable, str(SITE / "inject_baidu.py")], check=True)
+
+
 def main():
     args = [a for a in sys.argv[1:] if a != "--no-push"]
     push = "--no-push" not in sys.argv[1:]
@@ -617,6 +639,7 @@ def main():
     import build_search_index
     build_search_index.main()
     inject_nav()  # 全站悬浮导航(返回上一步+返回首页), 增量幂等
+    inject_baidu()  # 百度统计, 增量幂等(重建页面后补回)
     if push:
         subprocess.run(["git", "-C", str(SITE), "add", "-A"], check=True)
         subprocess.run(["git", "-C", str(SITE), "commit", "-m", "发布: 稳稳回报更新"], check=True)

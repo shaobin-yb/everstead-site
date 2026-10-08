@@ -730,6 +730,26 @@ def build_index(m: dict) -> None:
 function toggleTopic(head){{
   head.parentElement.classList.toggle('closed');
 }}
+/* 锚点直达: 支持 #insurance-debt / #stay-hungry / #ai / #stay-foolish / #insurance-alm
+   从首页「知识库」下的主题板块跳进来, 自动展开该主题并滚过去。 */
+(function(){{
+  function gotoTopic(){{
+    var slug = (location.hash || '').replace(/^#/, '').trim();
+    if(!slug) return;
+    var topics = document.querySelectorAll('.kb-topic');
+    for(var i = 0; i < topics.length; i++){{
+      var s = topics[i].querySelector('.kb-topic-slug');
+      if(s && s.textContent.trim() === slug){{
+        topics[i].classList.remove('closed');
+        var head = topics[i].querySelector('.kb-topic-head');
+        if(head) head.scrollIntoView({{behavior:'smooth', block:'start'}});
+        return;
+      }}
+    }}
+  }}
+  gotoTopic();
+  window.addEventListener('hashchange', gotoTopic);
+}})();
 </script>
 </body>
 </html>"""

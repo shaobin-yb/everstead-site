@@ -33,7 +33,8 @@
       "slug": "insurance-alm",
       "name": "保险资产负债管理",
       "desc": "资产负债管理办法与监管指标相关材料",
-      "order": 5
+      "order": 5,
+      "collapsed": true
     }
   ],
   "items": [
@@ -595,6 +596,24 @@
       "original": "debt-plan-monthly-trend.html",
       "file": "debt-plan-monthly-trend.html",
       "size": 26274,
+      "pages": 0,
+      "url": null
+    },
+    {
+      "slug": "alm-interpretation",
+      "topic": "insurance-alm",
+      "title": "《保险公司资产负债管理办法》深度解读",
+      "type": "html",
+      "date": "2026-09-24",
+      "desc": "新规逐条解读 + 监管指标扫盲 + IFRS9/17 + 市场观点 + 产品化路径 + 概念速查卡",
+      "tags": [
+        "资产负债",
+        "新规",
+        "深度解读"
+      ],
+      "original": "index.html",
+      "file": "index.html",
+      "size": 48241,
       "pages": 0,
       "url": null
     }

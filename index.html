@@ -210,6 +210,33 @@ a{text-decoration:none;color:inherit}
 .radar .blip.b3{animation-delay:2.4s}
 @keyframes sweep{to{transform:rotate(360deg)}}
 @keyframes blip{0%,100%{opacity:.15}45%,55%{opacity:1}}
+
+/* ---- 雷达中心: 北京实时天气读数盘 (2026-10-08) ----
+   把天气嵌进雷达圆心, 不动布局、不加新元素。
+   半径 61px, 与 r2 环(半径 95px)留 34px 呼吸; 覆盖掉最小的 r3 环(半径 20px)。
+   底色径向渐变让它像一块"屏幕", 扫描线转到中心时从它后面走。 */
+.radar-wx{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:122px;height:122px;border-radius:50%;z-index:3;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;text-align:center;
+  /* 2026-10-08: 透明度大幅调低(.96→.34), 让雷达网格与环线透出来, 更像一块叠加的读数层 */
+  background:radial-gradient(circle, rgba(3,6,12,.34) 40%, rgba(8,20,40,.18) 72%, transparent 100%);
+  border:1px solid rgba(56,189,248,.1);
+  box-shadow:0 0 22px rgba(34,211,238,.07);
+}
+.rw-main{display:flex;align-items:baseline;gap:5px}
+.rw-ico{font-size:15px;line-height:1}
+/* 盘底变透明后, 文字加轻投影保证可读 */
+.rw-temp{font-family:var(--mono);font-size:25px;font-weight:700;color:var(--text);
+  line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;
+  text-shadow:0 1px 5px rgba(0,0,0,.75)}
+.rw-desc{font-size:11px;color:var(--muted);letter-spacing:.04em;line-height:1.35;
+  text-shadow:0 1px 4px rgba(0,0,0,.7)}
+.rw-sun{font-size:8.5px;color:var(--muted);opacity:.85;text-shadow:0 1px 4px rgba(0,0,0,.7);
+  letter-spacing:.01em;margin-top:4px;font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;gap:2px;white-space:nowrap}
+.rw-sun i{font-style:normal;font-size:7.5px;opacity:.7}
 @media (max-width:900px){.radar{display:none}}
 
 /* ---- 全局搜索: 输入框 + 搜索按钮, 点按钮/回车直达结果 ---- */
@@ -634,13 +661,23 @@ var _hmt=_hmt||[];
       客户情报雷达、行业调研报告、数据工具与专题研究。
       每一项成果都是真实数据驱动的产出，持续更新中。
     </p>
-    <div class="radar" aria-hidden="true">
-      <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+    <div class="radar">
+      <div class="ring"></div><div class="ring r2"></div>
       <div class="cross-h"></div><div class="cross-v"></div>
       <div class="sweep"></div>
       <div class="blip" style="left:68%;top:30%"></div>
       <div class="blip b2" style="left:24%;top:62%"></div>
       <div class="blip b3" style="left:52%;top:76%"></div>
+
+      <!-- 雷达中心读数: 北京实时天气(Open-Meteo) -->
+      <div class="radar-wx" id="radarWx" aria-label="北京实时天气">
+        <div class="rw-main">
+          <span class="rw-ico" id="rwIco">🌡️</span>
+          <span class="rw-temp" id="rwTemp">—</span>
+        </div>
+        <div class="rw-desc" id="rwDesc">北京 · 加载中</div>
+        <div class="rw-sun" id="rwSun">—</div>
+      </div>
     </div>
   </section>
 
@@ -1388,6 +1425,79 @@ var _hmt=_hmt||[];
   resize();addEventListener('resize',resize);
   addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
   tick();
+})();
+
+/* ---- 雷达中心天气读数 (2026-10-08)
+   数据源 Open-Meteo(免 key, CORS 全开, 浏览器直连)。整点刷新。
+   只读不写, 不改主题、不动布局。 */
+(function(){
+  var el=document.getElementById('radarWx');
+  if(!el)return;
+  var URL='https://api.open-meteo.com/v1/forecast'
+    +'?latitude=39.9042&longitude=116.4074'
+    +'&current=temperature_2m,weather_code'
+    +'&daily=sunrise,sunset&timezone=Asia%2FShanghai&forecast_days=1';
+  var KEY='everstead_wx_v2';
+
+  /* WMO 天气代码 → 图标 + 中文 */
+  var WMO={
+    0:['☀️','晴'],1:['🌤️','晴间多云'],2:['⛅','多云'],3:['☁️','阴'],
+    45:['🌫️','雾'],48:['🌫️','雾凇'],
+    51:['🌦️','毛毛雨'],53:['🌦️','小雨'],55:['🌧️','中雨'],
+    56:['🌧️','冻雨'],57:['🌧️','冻雨'],
+    61:['🌦️','小雨'],63:['🌧️','中雨'],65:['🌧️','大雨'],
+    66:['🌧️','冻雨'],67:['🌧️','强冻雨'],
+    71:['🌨️','小雪'],73:['🌨️','中雪'],75:['❄️','大雪'],77:['🌨️','米雪'],
+    80:['🌦️','阵雨'],81:['🌧️','强阵雨'],82:['⛈️','暴雨'],
+    85:['🌨️','阵雪'],86:['❄️','强阵雪'],
+    95:['⛈️','雷阵雨'],96:['⛈️','雷暴冰雹'],99:['⛈️','强雷暴']
+  };
+  var $=function(id){return document.getElementById(id)};
+
+  function paint(d){
+    var c=d.current,day=d.daily||{};
+    var w=WMO[c.weather_code]||['🌡️','—'];
+    $('rwIco').textContent=w[0];
+    $('rwTemp').textContent=Math.round(c.temperature_2m)+'°';
+    $('rwDesc').textContent='北京 · '+w[1];
+    var sr=((day.sunrise||[])[0]||'').slice(11,16);
+    var ss=((day.sunset||[])[0]||'').slice(11,16);
+    if(sr&&ss)$('rwSun').innerHTML='<i>日出</i>'+sr+'<i>日落</i>'+ss;
+    try{
+      localStorage.setItem(KEY,JSON.stringify({
+        ts:Date.now(),temp:c.temperature_2m,code:c.weather_code,
+        sunrise:(day.sunrise||[])[0]||'',sunset:(day.sunset||[])[0]||''
+      }));
+    }catch(e){}
+  }
+
+  /* 先用缓存立刻显示(30 分钟内有效), 再后台刷新 */
+  function fromCache(){
+    try{
+      var c=JSON.parse(localStorage.getItem(KEY)||'null');
+      if(!c||Date.now()-c.ts>1800000)return false;
+      var w=WMO[c.code]||['🌡️','—'];
+      $('rwIco').textContent=w[0];
+      $('rwTemp').textContent=Math.round(c.temp)+'°';
+      $('rwDesc').textContent='北京 · '+w[1];
+      var sr=(c.sunrise||'').slice(11,16),ss=(c.sunset||'').slice(11,16);
+      if(sr&&ss)$('rwSun').innerHTML='<i>日出</i>'+sr+'<i>日落</i>'+ss;
+      return true;
+    }catch(e){return false}
+  }
+
+  function load(){
+    fetch(URL,{cache:'no-store'})
+      .then(function(r){if(!r.ok)throw 0;return r.json()})
+      .then(paint)
+      .catch(function(){
+        if(!fromCache())$('rwDesc').textContent='北京 · 数据暂不可用';
+      });
+  }
+  fromCache();
+  load();
+  /* 整点后刷新一次(天气数据本身每小时更新) */
+  setInterval(load,3600000);
 })();
 
 /* ---- 成果展厅: 分类分组 + 折叠 + 筛选 + 全局搜索联动 ---- */

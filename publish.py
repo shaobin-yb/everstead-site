@@ -381,6 +381,97 @@ def build_briefing_archive() -> None:
     print(f"[build] market-briefings/index.html ({len(entries)} 篇归档)")
 
 
+def build_hero_spark() -> str:
+    """hero 右侧的产品净值走势 SVG (2026-10-08)。
+    原来这里是雷达扫描动画装饰, 换成真实净值曲线 —— 首屏就"用数据说话"。
+    数据源: product-panel/nav-data.json(iFinD 真实净值, 每日更新)。
+    构建期生成, 页面无需 JS 即可见；数据缺失返回空串(模板那边留了兜底)。"""
+    try:
+        nav = json.loads((SITE / "product-panel" / "nav-data.json").read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+    prods = nav.get("products", {})
+    series = []
+    for code in ("ZY0049", "ZY0053"):
+        p = prods.get(code)
+        if not p:
+            continue
+        ns = p.get("nav_series") or []
+        if not ns:
+            continue
+        series.append({
+            "name": {"ZY0049": "价值策略1号", "ZY0053": "红利质量量化"}.get(code, code),
+            "pts": [(x["d"], x["v"]) for x in ns],
+            "cum": p.get("cum_return", 0), "ann": p.get("annualized", 0),
+        })
+    if not series:
+        return ""
+
+    W, H = 380, 190
+    # 右边留 44px 给终点数值标签(否则 +2.26% 会被裁), 上边留够给峰值标签
+    PL, PR, PT, PB = 34, 46, 20, 24
+    dates = sorted({d for s in series for d, _ in s["pts"]})
+    di = {d: i for i, d in enumerate(dates)}
+    n = len(dates)
+    allv = [v for s in series for _, v in s["pts"]]
+    lo, hi = min(allv), max(allv)
+    pad = (hi - lo) * 0.14 or 0.01
+    lo -= pad; hi += pad
+    X = lambda i: PL + (W - PL - PR) * (i / max(1, n - 1))
+    Y = lambda v: PT + (H - PT - PB) * (1 - (v - lo) / (hi - lo))
+
+    colors = ["#C9A45C", "#2E6BE6"]   # 金 = 主推, 蓝 = 次
+    parts, legend = [], []
+    y1 = Y(1.0)
+
+    # 基准线（首日 = 1.0000）
+    parts.append(f'<line x1="{PL}" y1="{y1:.1f}" x2="{W-PR}" y2="{y1:.1f}" '
+                 f'stroke="rgba(255,255,255,.13)" stroke-width="1" stroke-dasharray="3 3"/>')
+    parts.append(f'<text x="{PL-4}" y="{y1+3:.1f}" text-anchor="end" font-size="9" '
+                 f'fill="var(--t4)" font-family="SF Mono,Consolas,monospace">1.0000</text>')
+
+    for idx, s in enumerate(series):
+        pts = [(di[d], v) for d, v in s["pts"]]
+        col = colors[idx % len(colors)]
+        parts.append('<path d="M' + " L".join(f"{X(i):.1f},{Y(v):.1f}" for i, v in pts) +
+                     f'" fill="none" stroke="{col}" stroke-width="1.8" '
+                     'stroke-linejoin="round" stroke-linecap="round"/>')
+        # 起点圆点（产品成立日不同, 标出来才不显得"线断了"）
+        si, sv = pts[0]
+        parts.append(f'<circle cx="{X(si):.1f}" cy="{Y(sv):.1f}" r="2.4" fill="{col}" '
+                     f'opacity=".55"/>')
+        # 终点圆点 + 数值（放右侧留白区, 不和曲线叠）
+        li, lv = pts[-1]
+        cx, cy = X(li), Y(lv)
+        parts.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="3.2" fill="{col}"/>')
+        parts.append(f'<text x="{cx+7:.1f}" y="{cy+3.5:.1f}" text-anchor="start" font-size="11" '
+                     f'font-weight="700" fill="{col}" '
+                     f'font-family="SF Mono,Consolas,monospace">{s["cum"]:+.2f}%</text>')
+        legend.append(
+            f'<span style="display:inline-flex;align-items:center;gap:5px">'
+            f'<i style="width:14px;height:2px;background:{col};display:inline-block"></i>'
+            f'<b style="color:{col};font-weight:700">{s["name"]}</b>'
+            f'<span style="color:var(--t3)">年化 {s["ann"]:+.2f}%</span></span>')
+
+    # Y 轴上下刻度
+    for v in (hi - pad, lo + pad):
+        parts.append(f'<text x="{PL-4}" y="{Y(v)+3:.1f}" text-anchor="end" font-size="9" '
+                     f'fill="var(--t4)" font-family="SF Mono,Consolas,monospace">{v:.4f}</text>')
+
+    svg = (f'<svg viewBox="0 0 {W} {H}" width="100%" height="{H}" '
+           f'preserveAspectRatio="xMidYMid meet" role="img" aria-label="产品净值走势对比">'
+           + "".join(parts) + "</svg>")
+
+    # 起点日期标注(两只产品成立日不同, 说清楚免得看着像"线断了")
+    starts = " ".join(f'{s["name"]} 自 {s["pts"][0][0][5:]}' for s in series)
+    return (f'<div class="navspark">'
+            f'<div class="ns-head"><span class="ns-title">产品净值走势</span>'
+            f'<span class="ns-sub">{dates[0]} ~ {dates[-1]}</span></div>'
+            f'{svg}'
+            f'<div class="ns-legend">{" ".join(legend)}</div>'
+            f'<div class="ns-foot">{starts} · 归一化首日 = 1.0000</div></div>')
+
+
 def fill_nav_tokens(panel: str) -> str:
     """nav-panel.html 里的 __NAV_*__ token → nav-data.json 实时值(构建期注入)。
     无数据/文件缺失 → 替换为 '—'(JS 拿到数据会再覆盖)。
@@ -582,6 +673,7 @@ def build_index(reports: list) -> None:
                 .replace("<!--PRODUCTS-->", products_html)
                 .replace("<!--BRIEFING-->", briefing_html)
                 .replace("<!--LOCALTOOLS-->", local_html)
+                .replace("<!--HEROSPARK-->", build_hero_spark())
                 .replace("{{TOTAL}}", str(total))
                 .replace("{{RADAR_COUNT}}", str(radar_n))
                 .replace("{{REPORT_COUNT}}", str(report_n))
@@ -594,6 +686,8 @@ def build_index(reports: list) -> None:
                 .replace("{{AI_COMP}}", str(ai['comp']))
                 .replace("{{AI_HOURS}}", str(ai['hours']))
                 .replace("{{AI_DAYS}}", str(ai['days']))
+                # 等效工时占全年工时的比例(一年按 1840 工时 = 230 工作日 × 8h)
+                .replace("{{AI_HOURS_PCT}}", "%.1f" % min(100.0, ai['hours'] / 1840.0 * 100))
                 .replace("{{AI_TASKS}}", str(ai["tasks"]))
                 .replace("{{AI_RANGE}}", ai["range"]))
     (SITE / "index.html").write_text(html, encoding="utf-8")

@@ -16,41 +16,25 @@
 <meta name="twitter:card" content="summary">
 <style>
 /* ============================================================
-   EVERSTEAD 展示平台 · v2.0 (2026-10-08 机构级配色改造)
-   深海军底 + 金融蓝主色 + 金铜强调 + 涨红跌绿语义色
-   配色参考: 彭博终端(数据密度/深底) + 中金官网(深蓝信任) + 克制的金点缀
+   EVERSTEAD 科技感展示平台 · v1.0
+   深空底 + 粒子星座 + 雷达扫描 + 玻璃拟态卡片
    零外部依赖(无 CDN)，GitHub Pages 国内直连友好
    卡片区由 publish.py 注入(占位符见 body 内 [CARDS] 标记)
    ============================================================ */
 :root{
-  /* 背景层次：深炭蓝，非纯黑（机构感来源之一） */
-  --bg:#0A0E14;
-  --bg2:#0E1420;
-  --panel:rgba(17,24,38,.72);
-  --panel-hover:rgba(22,31,48,.85);
-  /* 分割线：中性冷灰，不再用带色描边 */
-  --line:rgba(255,255,255,.07);
-  --line-strong:rgba(46,107,230,.35);
-  /* 主色：金融蓝（沿用 --cyan 变量名，值已换；41 处引用自动生效） */
-  --cyan:#2E6BE6;
-  --blue:#1E4FA8;
-  /* 强调色：金铜色，专给"钱"（收益/净值/关键数据） */
-  --violet:#C9A45C;
-  --gold:#C9A45C;
-  --gold-dim:rgba(201,164,92,.15);
-  /* 涨跌语义色（A股：红涨绿跌） */
-  --up:#E14B4B;
-  --down:#2FA36B;
-  /* 文字 4 级层次 */
-  --text:#F0F4F9;
-  --t2:#B7C2D4;
-  --t3:#6B7A90;
-  --t4:#46505F;
-  --muted:#6B7A90;
-  /* 发光大幅收敛（原来是青光辉光，现在几乎不用） */
-  --glow:0 0 24px rgba(46,107,230,.18);
+  --bg:#03060c;
+  --bg2:#071021;
+  --panel:rgba(10,20,38,.55);
+  --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --violet:#8b5cf6;
+  --text:#e2ecf7;
+  --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
   --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
-  --num:'SF Mono','JetBrains Mono','Cascadia Mono','Consolas',ui-monospace,monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px}
@@ -64,23 +48,27 @@ body{
 }
 a{text-decoration:none;color:inherit}
 
-/* ---- 背景层: 深炭蓝 + 细网格 (2026-10-08 去掉紫光晕, 网格淡化) ---- */
+/* ---- 背景层: 深空渐变 + 网格 ---- */
 .bg-grid{
   position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(1100px 600px at 78% -12%, rgba(46,107,230,.10), transparent 62%),
-    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px),
+    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
     var(--bg);
-  background-size:auto,48px 48px,48px 48px,auto;
+  background-size:auto,auto,44px 44px,44px 44px,auto;
   mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
   -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
 }
-/* 2026-10-08 机构级改造: 删除粒子星座画布与扫描线纹理
-   理由 —— 粒子/扫描线是电竞与加密站的语言, 投屏汇报时显廉价且耗 CPU;
-   腾出的视觉权重让给真实数据(指标墙/净值曲线)。变量保留空占位以防旧引用报错。 */
-#particles{display:none}
-.scanline{display:none}
+/* 粒子星座画布 */
+#particles{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+/* ---- 扫描线纹理 ---- */
+.scanline{
+  position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg, transparent 0 2px, rgba(255,255,255,.008) 2px 3px);
+}
 
 /* ---- 页面主体 ---- */
 .wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 56px}
@@ -91,10 +79,11 @@ a{text-decoration:none;color:inherit}
   padding:22px 0 0;
 }
 .topbar .logo{
-  width:40px;height:40px;border-radius:8px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
   display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:19px;color:#fff;
+  font-weight:800;font-size:19px;color:#03101f;
+  box-shadow:var(--glow);
   font-family:var(--mono);
 }
 .topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.28em;font-size:15px}
@@ -106,8 +95,8 @@ a{text-decoration:none;color:inherit}
   background:rgba(10,20,38,.4);
 }
 .status .dot{
-  width:7px;height:7px;border-radius:50%;background:#2FA36B;
-  box-shadow:0 0 8px #2FA36B;
+  width:7px;height:7px;border-radius:50%;background:#34d399;
+  box-shadow:0 0 8px #34d399;
   animation:blink 2.2s ease-in-out infinite;
 }
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
@@ -139,7 +128,7 @@ a{text-decoration:none;color:inherit}
   border:1px solid var(--line);background:rgba(7,16,33,.6);color:var(--muted);
   font-size:13px;transition:color .18s ease-out,border-color .18s ease-out,background-color .18s ease-out,transform .15s ease-out;
 }
-.fb-kind.on{color:var(--cyan);border-color:var(--line-strong);background:rgba(46,107,230,.1)}
+.fb-kind.on{color:var(--cyan);border-color:var(--line-strong);background:rgba(34,211,238,.1)}
 .fb-panel textarea{
   width:100%;height:130px;resize:vertical;background:rgba(7,16,33,.95);
   border:1px solid var(--line);border-radius:10px;color:var(--text);
@@ -151,7 +140,7 @@ a{text-decoration:none;color:inherit}
   padding:9px 22px;border:none;border-radius:9px;cursor:pointer;
   font-size:13.5px;font-weight:700;letter-spacing:.12em;transition:filter .18s,transform .15s ease-out;
 }
-.fb-actions .fb-submit{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#0A0E14}
+.fb-actions .fb-submit{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#03101f}
 .fb-actions .fb-cancel{background:rgba(7,16,33,.8);color:var(--muted);border:1px solid var(--line)}
 .fb-actions .fb-btn:hover{filter:brightness(1.2)}
 .fb-status{font-size:12px;color:var(--muted)}
@@ -161,12 +150,13 @@ a{text-decoration:none;color:inherit}
 .topnav{margin-left:26px;display:flex;gap:22px}
 .topnav a{
   font-family:'Microsoft YaHei','PingFang SC',sans-serif;font-weight:700;
-  font-size:15.5px;letter-spacing:.08em;color:var(--t2);
-  padding:7px 10px;border-radius:6px;border-bottom:none;
-  transition:color .2s,background .2s;
+  font-size:15.5px;letter-spacing:.08em;color:#a8d8f0;
+  padding:7px 10px;border-radius:8px;border-bottom:none;
+  transition:color .2s,background .2s,box-shadow .2s,transform .2s;
 }
 .topnav a:hover{
-  color:var(--text);background:rgba(46,107,230,.14);
+  color:#e8f6ff;background:rgba(34,211,238,.12);
+  box-shadow:0 0 14px rgba(34,211,238,.25);transform:translateY(-1px);
 }
 
 /* ---- Hero ---- */
@@ -180,9 +170,9 @@ a{text-decoration:none;color:inherit}
 .hero h1{
   font-size:clamp(38px,7vw,64px);line-height:1.12;font-weight:800;
   letter-spacing:.02em;
-  background:linear-gradient(92deg,#F0F4F9 12%,#C7D6EC 46%,var(--cyan) 78%,var(--gold) 100%);
+  background:linear-gradient(92deg,#e8f6ff 8%,var(--cyan) 38%,var(--blue) 62%,var(--violet) 92%);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 26px rgba(46,107,230,.2));
+  filter:drop-shadow(0 0 26px rgba(34,211,238,.22));
   animation:fadeUp .7s .08s ease-out both;
 }
 .hero .desc{
@@ -192,22 +182,34 @@ a{text-decoration:none;color:inherit}
 .hero .desc b{color:var(--text);font-weight:600}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
-/* ---- 首屏右侧: 产品净值走势(2026-10-08 替换雷达装饰) ----
-   原来是无意义的雷达扫描动画, 换成 iFinD 真实净值曲线 —— 首屏即数据。
-   曲线由 publish.py 构建期生成 SVG, 无 JS 依赖。 */
-.navspark{
-  position:absolute;right:-30px;top:26px;width:390px;
-  border:1px solid var(--line);border-radius:10px;
-  background:var(--panel);padding:14px 16px 10px;
+/* ---- 雷达扫描(hero 右侧装饰) ---- */
+.radar{
+  position:absolute;right:-40px;top:34px;
+  width:340px;height:340px;pointer-events:none;
   animation:fadeUp .7s .24s ease-out both;
 }
-.ns-head{display:flex;align-items:baseline;gap:9px;margin-bottom:6px;flex-wrap:wrap}
-.ns-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:.04em}
-.ns-sub{font-family:var(--num);font-size:10.5px;color:var(--t4)}
-.ns-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;margin-top:7px}
-.ns-foot{margin-top:6px;font-family:var(--num);font-size:10px;color:var(--t4);letter-spacing:.02em;line-height:1.5}
-  font-family:var(--num);font-size:10px;color:var(--t4);letter-spacing:.03em}
-@media (max-width:900px){.navspark{position:static;width:100%;right:auto;top:auto;margin-top:26px}}
+.radar .ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:1px solid rgba(56,189,248,.14);
+}
+.radar .ring.r2{inset:22%;border-color:rgba(56,189,248,.2)}
+.radar .ring.r3{inset:44%;border-color:rgba(139,92,246,.22)}
+.radar .cross-h{position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(56,189,248,.1)}
+.radar .cross-v{position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(56,189,248,.1)}
+.radar .sweep{
+  position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg, rgba(34,211,238,.4), rgba(34,211,238,.05) 14%, transparent 34%);
+  animation:sweep 4.2s linear infinite;
+}
+.radar .blip{
+  position:absolute;width:5px;height:5px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 10px var(--cyan);
+  animation:blip 3.6s ease-in-out infinite;
+}
+.radar .blip.b2{animation-delay:1.2s}
+.radar .blip.b3{animation-delay:2.4s}
+@keyframes sweep{to{transform:rotate(360deg)}}
+@keyframes blip{0%,100%{opacity:.15}45%,55%{opacity:1}}
 @media (max-width:900px){.radar{display:none}}
 
 /* ---- 全局搜索: 输入框 + 搜索按钮, 点按钮/回车直达结果 ---- */
@@ -231,7 +233,7 @@ a{text-decoration:none;color:inherit}
 .search-box button{
   flex-shrink:0;border:none;border-radius:8px;cursor:pointer;
   background:linear-gradient(135deg,var(--cyan),var(--blue));
-  color:#0A0E14;font-size:13.5px;font-weight:700;letter-spacing:.12em;
+  color:#03101f;font-size:13.5px;font-weight:700;letter-spacing:.12em;
   padding:9px 20px;transition:filter .18s, transform .18s;
 }
 .search-box button:hover{filter:brightness(1.2)}
@@ -251,17 +253,17 @@ a{text-decoration:none;color:inherit}
 .search-item{display:flex;gap:12px;padding:10px 12px;border-radius:10px;
   cursor:pointer;border-bottom:1px solid var(--line)}
 .search-item:last-child{border-bottom:none}
-.search-item:hover,.search-item.active{background:rgba(46,107,230,.08)}
+.search-item:hover,.search-item.active{background:rgba(34,211,238,.08)}
 .search-item .s-ico{font-size:18px;flex-shrink:0;margin-top:2px}
 .search-item .s-main{min-width:0;flex:1}
 .search-item .s-t{font-size:14px;font-weight:700;color:var(--text);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.search-item .s-t mark{background:rgba(46,107,230,.22);color:#B7C2D4;
+.search-item .s-t mark{background:rgba(34,211,238,.25);color:#a5f3fc;
   border-radius:3px;padding:0 2px}
 .search-item .s-snip{font-size:12px;color:var(--muted);line-height:1.6;
   margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
   overflow:hidden}
-.search-item .s-snip mark{background:rgba(46,107,230,.22);color:#B7C2D4}
+.search-item .s-snip mark{background:rgba(34,211,238,.25);color:#a5f3fc}
 .search-item .s-meta{display:flex;align-items:center;gap:8px;margin-top:5px;
   font-family:var(--mono);font-size:10.5px;letter-spacing:.06em}
 .search-item .s-tag{color:var(--cyan);border:1px solid var(--line-strong);
@@ -291,8 +293,8 @@ a{text-decoration:none;color:inherit}
    被压成一列竖排(高 144px)把整行撑到 182px —— 2026-09-22 改 */
 .stat{display:block}
 .stat .stat-ico{font-size:15px;opacity:.85;margin-right:6px;display:inline}
-.stat .v{font-family:var(--num);font-size:26px;font-weight:700;color:var(--text);
-  display:inline;font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+.stat .v{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--cyan);
+  display:inline;font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(34,211,238,.4)}
 .stat .k{margin-top:4px;font-size:12px;color:var(--muted);letter-spacing:.08em}
 /* 日期卡是 2026-09-15 这种长文本, 26px 折行、21px 仍溢出 160px 卡宽 —— 收到 17px */
 #stat-update .v{font-size:17px;letter-spacing:-.03em;white-space:nowrap}
@@ -302,53 +304,43 @@ a{text-decoration:none;color:inherit}
    用紫色调 + AI 徽章, 视觉上明显区分于青色系的数据条。 */
 .aiband{
   margin-top:16px;padding:18px 22px 20px;
-  border:1px solid var(--line);border-radius:10px;
-  background:var(--panel);
+  border:1px solid rgba(139,92,246,.28);border-radius:14px;
+  background:linear-gradient(135deg,rgba(139,92,246,.09),rgba(10,20,38,.5) 60%);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   position:relative;overflow:hidden;
   animation:fadeUp .75s .36s ease-out both;
 }
 .aiband::before{
   content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
-  background:linear-gradient(var(--gold),rgba(201,164,92,.1));
+  background:linear-gradient(var(--violet),transparent);
 }
 .aiband-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
 .aiband-badge{
   font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;
-  color:var(--gold);border:1px solid rgba(201,164,92,.4);border-radius:4px;
-  padding:2px 7px;background:var(--gold-dim);
+  color:var(--violet);border:1px solid rgba(139,92,246,.5);border-radius:5px;
+  padding:2px 7px;background:rgba(139,92,246,.12);
 }
 .aiband-title{font-size:15px;font-weight:600;color:var(--text);letter-spacing:.04em}
-.aiband-sub{font-size:12px;color:var(--t3);letter-spacing:.06em;margin-left:auto}
+.aiband-sub{font-size:12px;color:var(--muted);letter-spacing:.06em;margin-left:auto}
 .aiband-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .aic{position:relative;padding-left:14px}
 .aic::before{
-  content:'';position:absolute;left:0;top:6px;width:3px;height:30px;
-  background:rgba(255,255,255,.12);border-radius:2px;
+  content:'';position:absolute;left:0;top:6px;width:3px;height:26px;
+  background:rgba(139,92,246,.45);border-radius:2px;
 }
-/* 关键指标(钱/效率)用金色竖条区分 */
-.aic.hi::before{background:linear-gradient(var(--gold),rgba(201,164,92,.25))}
+.aic.hi::before{background:linear-gradient(var(--cyan),var(--violet))}
 .aic-v{
-  font-family:var(--num);font-size:30px;font-weight:700;color:var(--text);
-  font-variant-numeric:tabular-nums;line-height:1.12;letter-spacing:-.015em;
+  font-family:var(--mono);font-size:28px;font-weight:700;color:var(--text);
+  font-variant-numeric:tabular-nums;line-height:1.15;letter-spacing:-.01em;
 }
-.aic.hi .aic-v{color:var(--gold)}
-.aic-k{margin-top:4px;font-size:12.5px;color:var(--t2);letter-spacing:.04em}
-.aic-n{margin-top:2px;font-size:11px;color:var(--t3);letter-spacing:.03em}
-/* 等效工时进度条: 654h / 一年 1840 工时基准, 带刻度的数字才可信 */
-.aic-bar{
-  margin-top:7px;height:4px;border-radius:2px;background:rgba(255,255,255,.08);
-  position:relative;overflow:hidden;
-}
-.aic-bar i{
-  position:absolute;left:0;top:0;bottom:0;border-radius:2px;
-  background:linear-gradient(90deg,var(--gold),rgba(201,164,92,.55));
-}
+.aic.hi .aic-v{color:var(--cyan);text-shadow:0 0 16px rgba(34,211,238,.45)}
+.aic-k{margin-top:3px;font-size:12.5px;color:var(--text);opacity:.9;letter-spacing:.04em}
+.aic-n{margin-top:2px;font-size:11px;color:var(--muted);letter-spacing:.03em}
 @media(max-width:820px){
   .aiband{padding:15px 16px 17px}
   .aiband-grid{grid-template-columns:repeat(2,1fr);gap:14px 10px}
   .aiband-sub{margin-left:0;width:100%}
-  .aic-v{font-size:24px}
+  .aic-v{font-size:23px}
 }
 /* 可点击统计卡: 点击=切筛选; 日期卡点击=触发更新 */
 .stat[data-jump]{cursor:pointer;transition:border-color .18s, transform .18s}
@@ -363,7 +355,7 @@ a{text-decoration:none;color:inherit}
 @keyframes blink{50%{opacity:.2}}
 
 /* ---- 成果卡片区 ---- */
-.section{margin-top:96px}
+.section{margin-top:64px}
 .section-head{
   display:flex;align-items:center;gap:12px;margin-bottom:26px;
   animation:fadeUp .7s .34s ease-out both;
@@ -387,7 +379,7 @@ a{text-decoration:none;color:inherit}
 }
 .filter-bar button:hover{color:var(--cyan);border-color:var(--line-strong)}
 .filter-bar button.active{
-  color:#0A0E14;background:linear-gradient(90deg,var(--cyan),var(--violet));
+  color:#03101f;background:linear-gradient(90deg,var(--cyan),var(--violet));
   border-color:transparent;font-weight:600;
 }
 .grid{
@@ -411,7 +403,7 @@ a{text-decoration:none;color:inherit}
 .lt-arrow{font-family:var(--mono);font-size:12px;color:var(--muted);flex-shrink:0;transition:color .18s, transform .18s}
 .lt-item:hover .lt-arrow{color:var(--cyan);transform:translateX(2px)}
 .lt-note{margin-top:12px;font-size:11px;color:var(--muted);letter-spacing:.02em}
-.lt-note code{font-family:var(--mono);background:rgba(255,255,255,.07);padding:1px 5px;
+.lt-note code{font-family:var(--mono);background:rgba(56,189,248,.1);padding:1px 5px;
   border-radius:3px;color:var(--cyan);font-size:10.5px}
 .lt-note .sep2{opacity:.45;margin:0 5px}
 #svc-status{font-family:var(--mono)}
@@ -434,84 +426,88 @@ a{text-decoration:none;color:inherit}
 .cat-group.collapsed .grid{display:none}
 .cat-group.filtered-out{display:none}
 .cat-group.search-empty{display:none}
-/* 2026-10-08 机构级改造: 去掉四角科技括号 + 辉光扫描线, 圆角 14→8px。
-   金融产品的圆角都偏小(8px 以内显精密, 大圆角显消费 App)。
-   悬停改为克制的边框提亮 + 轻位移, 不再发光。 */
 .card{
   position:relative;display:block;
-  border:1px solid var(--line);border-radius:8px;
-  background:var(--panel);
-  padding:18px 20px 16px;
-  transition:transform .18s ease-out, border-color .18s ease-out, box-shadow .18s ease-out, background-color .18s ease-out;
+  border:1px solid var(--line);border-radius:14px;
+  background:var(--panel);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:22px 22px 18px;
+  transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease, background .22s ease;
   animation:fadeUp .6s ease-out both;
   overflow:hidden;
 }
-/* 左上角类别色条(替代四角括号): 2px 宽 24px 长的短线 */
+/* 顶部辉光扫描线(悬停) */
 .card::before{
-  content:'';position:absolute;left:0;top:14px;width:2px;height:22px;
-  background:var(--line-strong);border-radius:0 2px 2px 0;
-  transition:height .18s ease-out;
+  content:'';position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--cyan),transparent);
+  opacity:0;transition:opacity .25s;
+}
+.card::after{
+  content:'';position:absolute;left:20%;right:20%;top:0;height:1px;
+  background:rgba(255,255,255,.5);
+  transform:translateX(-160%);
+  transition:transform .5s ease;
 }
 .card:hover{
-  transform:translateY(-2px);
-  border-color:rgba(255,255,255,.14);
+  transform:translateY(-5px);
+  border-color:var(--line-strong);
   background:var(--panel-hover);
-  box-shadow:0 8px 24px rgba(0,0,0,.4);
+  box-shadow:0 10px 40px rgba(0,0,0,.5), var(--glow);
 }
-.card:hover::before{height:34px}
-/* 类别色条按类型区分(色条 = 类别识别, 替代 emoji 堆叠) */
-.card[data-type="report"]::before,
-.card[data-type="kb"]::before,
-.card[data-type="knowledge"]::before{background:var(--cyan)}
-.card[data-type="radar"]::before,
-.card[data-type="cockpit"]::before{background:var(--gold)}
-.card[data-type="briefing"]::before{background:var(--t3)}
-.card[data-type="lan"]::before,
-.card[data-type="vault"]::before{background:rgba(255,255,255,.22)}
-.card .corner{display:none}
+.card:hover::before{opacity:1}
+.card:hover::after{transform:translateX(160%)}
+/* 四角科技括号 */
+.card .corner{position:absolute;width:12px;height:12px;border:1px solid var(--cyan);
+  opacity:0;transition:opacity .25s;pointer-events:none}
+.card .corner.c1{top:6px;left:6px;border-right:none;border-bottom:none}
+.card .corner.c2{top:6px;right:6px;border-left:none;border-bottom:none}
+.card .corner.c3{bottom:6px;left:6px;border-right:none;border-top:none}
+.card .corner.c4{bottom:6px;right:6px;border-left:none;border-top:none}
+.card:hover .corner{opacity:.9}
 
-.card-top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.card-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .card-ico{
-  width:34px;height:34px;border-radius:7px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:16px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.04);
+  width:42px;height:42px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  border:1px solid var(--line-strong);
+  background:linear-gradient(160deg, rgba(34,211,238,.14), rgba(139,92,246,.14));
 }
 .card-tag{
-  margin-left:auto;font-family:var(--num);font-size:10px;letter-spacing:.1em;
-  border:1px solid var(--line);color:var(--t3);border-radius:4px;padding:2px 8px;
+  margin-left:auto;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  border:1px solid var(--line);color:var(--cyan);border-radius:999px;padding:3px 10px;
 }
-.card .t{font-size:14.5px;font-weight:600;line-height:1.5;color:var(--text)}
-.card .m{font-size:12px;color:var(--t3);line-height:1.6;margin-top:6px}
-.card .d{font-family:var(--num);font-size:11.5px;color:var(--t4);margin-top:11px;
-  display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums}
+.card .t{font-size:15.5px;font-weight:700;line-height:1.55}
+.card .m{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:7px}
+.card .d{font-family:var(--mono);font-size:12px;color:var(--cyan);margin-top:13px;
+  display:flex;align-items:center;gap:8px;opacity:.85}
 /* 卡片编号: 老板按编号给指令(如"改3号卡") */
 .card .card-no{
-  font-family:var(--num);font-size:10.5px;font-weight:700;color:var(--t3);
-  border:1px solid var(--line);border-radius:4px;padding:1px 6px;
-  letter-spacing:.04em;
+  font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan);
+  border:1px solid var(--line-strong);border-radius:6px;padding:1px 7px;
+  background:rgba(34,211,238,.08);letter-spacing:.06em;
 }
-.card .d::before{content:'';width:10px;height:1px;background:rgba(255,255,255,.14)}
+.card .d::before{content:'';width:14px;height:1px;background:linear-gradient(90deg,var(--cyan),transparent)}
 .card .arrow{
-  position:absolute;right:18px;bottom:14px;color:var(--cyan);font-size:14px;
+  position:absolute;right:20px;bottom:16px;color:var(--cyan);font-size:15px;
   opacity:0;transform:translateX(-6px);transition:opacity .25s ease-out,transform .25s ease-out;
 }
 .card:hover .arrow{opacity:1;transform:none}
 
-/* 卡片类型配色变体 (2026-10-08 收敛: 原来 6 种撞色/粉/薄荷/紫, 现在只分两族)
-   数据类(雷达/驾驶舱)= 金色, 其余 = 蓝/灰, 全站色相收敛到 3 个以内。 */
-.card[data-type="radar"] .card-ico,
-.card[data-type="cockpit"] .card-ico{background:var(--gold-dim);border-color:rgba(201,164,92,.3)}
-.card[data-type="radar"] .card-tag,
-.card[data-type="cockpit"] .card-tag{color:var(--gold);border-color:rgba(201,164,92,.3)}
-.card[data-type="briefing"] .card-ico{background:rgba(255,255,255,.05)}
-.card[data-type="lan"] .card-ico,
-.card[data-type="vault"] .card-ico{background:rgba(255,255,255,.05)}
-.card[data-type="external"] .card-ico{background:rgba(46,107,230,.1);border-color:var(--line-strong)}
-.card[data-type="external"] .card-tag{color:#9CB8E8}
-.card[data-type="lan"] .card-ico{background:linear-gradient(160deg, rgba(96,165,250,.2), rgba(201,164,92,.12))}
-.card[data-type="lan"] .card-tag{color:#9CB8E8}
-.card[data-type="briefing"] .card-ico{background:linear-gradient(160deg, rgba(251,191,36,.2), rgba(46,107,230,.12))}
+/* 卡片类型配色变体 */
+.card[data-type="radar"] .card-ico{background:linear-gradient(160deg, rgba(34,211,238,.2), rgba(59,130,246,.14))}
+.card[data-type="report"] .card-ico{background:linear-gradient(160deg, rgba(139,92,246,.2), rgba(59,130,246,.12))}
+.card[data-type="tool"] .card-ico{background:linear-gradient(160deg, rgba(52,211,153,.2), rgba(34,211,238,.12))}
+.card[data-type="kb"] .card-ico{background:linear-gradient(160deg, rgba(244,114,182,.2), rgba(139,92,246,.14))}
+.card[data-type="radar"] .card-tag{color:#7dd3fc}
+.card[data-type="report"] .card-tag{color:#c4b5fd}
+.card[data-type="tool"] .card-tag{color:#6ee7b7}
+.card[data-type="kb"] .card-tag{color:#f9a8d4}
+.card[data-type="knowledge"] .card-ico{background:linear-gradient(160deg, rgba(245,158,11,.2), rgba(139,92,246,.14))}
+.card[data-type="knowledge"] .card-tag{color:#fbbf24}
+.card[data-type="external"] .card-ico{background:linear-gradient(160deg, rgba(96,165,250,.2), rgba(34,211,238,.12))}
+.card[data-type="external"] .card-tag{color:#93c5fd}
+.card[data-type="lan"] .card-ico{background:linear-gradient(160deg, rgba(96,165,250,.2), rgba(139,92,246,.12))}
+.card[data-type="lan"] .card-tag{color:#93c5fd}
+.card[data-type="briefing"] .card-ico{background:linear-gradient(160deg, rgba(251,191,36,.2), rgba(34,211,238,.12))}
 .card[data-type="briefing"] .card-tag{color:#fcd34d}
 
 /* ---- 每日收盘点评 ---- */
@@ -522,7 +518,7 @@ a{text-decoration:none;color:inherit}
   background:transparent;border:1px solid var(--line);border-radius:999px;cursor:pointer;
   transition:border-color .2s,background .2s,color .2s;
 }
-.briefing-toggle:hover{border-color:var(--cyan);background:rgba(46,107,230,.1);color:#B7C2D4}
+.briefing-toggle:hover{border-color:var(--cyan);background:rgba(34,211,238,.1);color:#a5f3fc}
 .briefing-wrap{animation:fadeUp .5s .3s ease-out both}
 .briefing-body{
   border:1px solid var(--line);border-radius:14px;
@@ -532,23 +528,23 @@ a{text-decoration:none;color:inherit}
   line-height:1.8;font-size:14px;color:var(--text);
 }
 
-.briefing-body h1{font-size:1.25em;line-height:1.5;margin:0 0 14px;color:#2E6BE6;border-bottom:1px solid var(--line);padding-bottom:10px}
-.briefing-body h2{font-size:1.05em;color:#8FB3F0;margin:18px 0 8px}
+.briefing-body h1{font-size:1.25em;line-height:1.5;margin:0 0 14px;color:#22d3ee;border-bottom:1px solid var(--line);padding-bottom:10px}
+.briefing-body h2{font-size:1.05em;color:#7dd3fc;margin:18px 0 8px}
 .briefing-body h3{font-size:1em;color:#a5b4fc;margin:14px 0 6px}
 .briefing-body p{margin:8px 0}
 .briefing-body ul,.briefing-body ol{margin:8px 0 8px 22px}
 .briefing-body li{margin:4px 0}
-.briefing-body strong{color:#F0F4F9}
+.briefing-body strong{color:#e8f6ff}
 .briefing-body table{border-collapse:collapse;width:100%;margin:10px 0}
-.briefing-body th,.briefing-body td{border:1px solid rgba(255,255,255,.1);padding:5px 9px;font-size:13px;text-align:left}
-.briefing-body th{background:rgba(46,107,230,.1)}
-.briefing-body code{background:rgba(13,26,48,.9);padding:1px 5px;border-radius:3px;font-size:13px;color:#8FB3F0}
-.briefing-body blockquote{border-left:3px solid #2E6BE6;margin:10px 0;padding:4px 14px;color:#a9bed6;background:rgba(46,107,230,.06)}
+.briefing-body th,.briefing-body td{border:1px solid rgba(56,189,248,.16);padding:5px 9px;font-size:13px;text-align:left}
+.briefing-body th{background:rgba(34,211,238,.1)}
+.briefing-body code{background:rgba(13,26,48,.9);padding:1px 5px;border-radius:3px;font-size:13px;color:#7dd3fc}
+.briefing-body blockquote{border-left:3px solid #22d3ee;margin:10px 0;padding:4px 14px;color:#a9bed6;background:rgba(34,211,238,.06)}
 .briefing-body a{color:#67e8f9}
 .briefing-body hr{border:none;border-top:1px solid var(--line);margin:14px 0}
 .briefing-more{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--cyan);
   border:1px solid var(--line);padding:4px 12px;border-radius:999px;transition:border-color .2s,color .2s}
-.briefing-more:hover{border-color:var(--cyan);color:#B7C2D4}
+.briefing-more:hover{border-color:var(--cyan);color:#a5f3fc}
 
 /* ---- 页脚 ---- */
 .footer{
@@ -634,9 +630,14 @@ a{text-decoration:none;color:inherit}
       客户情报雷达、行业调研报告、数据工具与专题研究。
       每一项成果都是真实数据驱动的产出，持续更新中。
     </p>
-    <!-- 首屏右侧: 产品净值真实走势(2026-10-08 替换雷达装饰)
-         由 publish.py build_hero_spark() 用 iFinD 真实净值生成, 构建期注入 -->
-    <!--HEROSPARK-->
+    <div class="radar" aria-hidden="true">
+      <div class="ring"></div><div class="ring r2"></div><div class="ring r3"></div>
+      <div class="cross-h"></div><div class="cross-v"></div>
+      <div class="sweep"></div>
+      <div class="blip" style="left:68%;top:30%"></div>
+      <div class="blip b2" style="left:24%;top:62%"></div>
+      <div class="blip b3" style="left:52%;top:76%"></div>
+    </div>
   </section>
 
   <!-- 全局搜索 -->
@@ -682,11 +683,10 @@ a{text-decoration:none;color:inherit}
         <div class="aic-k">覆盖上市公司</div>
         <div class="aic-n">家 · 全市场</div>
       </div>
-      <div class="aic hi" title="口径: 每条公告人工 3 分钟, 一年按 1840 工时计">
+      <div class="aic hi" title="口径: 每条公告人工 3 分钟">
         <div class="aic-v" data-count="{{AI_HOURS}}">0</div>
         <div class="aic-k">等效人工工时</div>
-        <div class="aic-bar"><i style="width:{{AI_HOURS_PCT}}%"></i></div>
-        <div class="aic-n">小时 ≈ {{AI_DAYS}} 个工作日 · 占全年工时 {{AI_HOURS_PCT}}%</div>
+        <div class="aic-n">小时 ≈ {{AI_DAYS}} 个工作日</div>
       </div>
       <div class="aic" title="来源: .claude/scheduled-tasks">
         <div class="aic-v" data-count="{{AI_TASKS}}">0</div>
@@ -759,10 +759,47 @@ a{text-decoration:none;color:inherit}
 </div>
 
 <script>
-/* ---- 背景: 静态刻度网格 (2026-10-08 替换粒子星座)
-   原粒子星座每帧重绘 + 鼠标连线, 耗 CPU 且在投屏上像游戏。
-   改为纯 CSS 静态网格: 零 JS、零重绘, 保留"数据平台"的空间感。 */
-
+/* ---- 粒子星座背景 ---- */
+(function(){
+  var cv=document.getElementById('particles'),ctx=cv.getContext('2d');
+  var W,H,pts=[],N=0,mouse={x:-9999,y:-9999};
+  function resize(){
+    W=cv.width=innerWidth;H=cv.height=innerHeight;
+    N=Math.min(90,Math.max(40,Math.round(W*H/22000)));
+    pts=[];
+    for(var i=0;i<N;i++)pts.push({x:Math.random()*W,y:Math.random()*H,
+      vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+.6});
+  }
+  var reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function tick(){
+    if(W!==innerWidth||H!==innerHeight)resize();  /* 自愈: 隐藏标签页等首屏 0 尺寸场景 */
+    ctx.clearRect(0,0,W,H);
+    var LINK=130;
+    for(var i=0;i<N;i++){
+      var p=pts[i];
+      if(!reduced){p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0||p.x>W)p.vx*=-1;
+        if(p.y<0||p.y>H)p.vy*=-1;}
+      var md=p.r*1.2;
+      var dm=Math.hypot(p.x-mouse.x,p.y-mouse.y);
+      if(dm<160){ctx.strokeStyle='rgba(34,211,238,'+(0.5*(1-dm/160)).toFixed(3)+')';
+        ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke();}
+      ctx.beginPath();ctx.arc(p.x,p.y,md,0,6.2832);
+      ctx.fillStyle='rgba(148,205,255,.8)';ctx.fill();
+    }
+    for(var a=0;a<N;a++)for(var b=a+1;b<N;b++){
+      var dx=pts[a].x-pts[b].x,dy=pts[a].y-pts[b].y,d=dx*dx+dy*dy;
+      if(d<LINK*LINK){
+        ctx.strokeStyle='rgba(56,189,248,'+(0.13*(1-d/(LINK*LINK))).toFixed(3)+')';
+        ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(pts[a].x,pts[a].y);ctx.lineTo(pts[b].x,pts[b].y);ctx.stroke();
+      }
+    }
+    if(!reduced)requestAnimationFrame(tick);
+  }
+  resize();addEventListener('resize',resize);
+  addEventListener('mousemove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
+  tick();
+})();
 
 /* ---- 成果展厅: 分类分组 + 折叠 + 筛选 + 全局搜索联动 ---- */
 (function(){
@@ -1336,7 +1373,7 @@ a{text-decoration:none;color:inherit}
   /* 状态灯 */
   fetch(LAUNCH_SERVICE + '/health', {cache:'no-store'})
     .then(function(r){ setSvc(r.ok ? '调度在线' : '调度离线 — 点击会提示手动路径',
-                                 r.ok ? '#2FA36B' : '#fb923c'); })
+                                 r.ok ? '#34d399' : '#fb923c'); })
     .catch(function(){ setSvc('调度离线 — 点击会提示手动路径', '#fb923c'); });
 
   function showTip(text){
@@ -1349,8 +1386,8 @@ a{text-decoration:none;color:inherit}
       'position:fixed','left:50%','top:18px','transform:translateX(-50%)',
       'z-index:99','max-width:86%','padding:10px 18px',
       'font-size:13px','color:#e2ecf7',
-      'background:rgba(10,20,38,.92)','border:1px solid rgba(46,107,230,.42)',
-      'border-radius:10px','box-shadow:0 0 24px rgba(46,107,230,.22)',
+      'background:rgba(10,20,38,.92)','border:1px solid rgba(56,189,248,.45)',
+      'border-radius:10px','box-shadow:0 0 24px rgba(34,211,238,.25)',
       'transition:opacity .4s','text-align:center'
     ].join(';');
     document.body.appendChild(tip);

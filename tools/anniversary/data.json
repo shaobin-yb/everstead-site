@@ -1,0 +1,77 @@
+{
+  "_说明": "纪念日数据。改这里后跑 build.py 重生成 index.html。",
+  "_更新于": "2026-10-08",
+
+  "events": [
+    {
+      "id": "meeting",
+      "name": "相识纪念日",
+      "ico": "🌱",
+      "calendar": "gregorian",
+      "date": "2011-06-25",
+      "estimated": true,
+      "note": "2011 高考后不久",
+      "detail": "2011 年高考（6/7-6/8）后不久相识 · 日期为估算，待校正",
+      "highlight": false
+    },
+    {
+      "id": "together",
+      "name": "在一起纪念日",
+      "ico": "💕",
+      "calendar": "gregorian",
+      "date": "2011-10-01",
+      "note": "大学后第一个国庆节 · 周六",
+      "detail": "2011 年上大学后第一个国庆节 · 确认恋爱关系",
+      "highlight": true
+    },
+    {
+      "id": "proposal",
+      "name": "求婚纪念日",
+      "ico": "💍",
+      "calendar": "lunar",
+      "date": "2018-08-17",
+      "lunar": { "month": 7, "day": 7 },
+      "note": "七夕 · 农历七月初七",
+      "detail": "戊戌狗年，农历七月初七 · 选在七夕这天求婚",
+      "highlight": false
+    },
+    {
+      "id": "marriage-license",
+      "name": "领证纪念日",
+      "ico": "📜",
+      "calendar": "gregorian",
+      "date": "2018-10-06",
+      "note": "农历八月廿七",
+      "detail": "戊戌狗年，农历八月廿七",
+      "highlight": false
+    },
+    {
+      "id": "wedding",
+      "name": "婚礼纪念日",
+      "ico": "💒",
+      "calendar": "gregorian",
+      "date": "2019-10-01",
+      "note": "建国 70 周年 · 农历九月初三",
+      "detail": "己亥猪年，农历九月初三 · 建国 70 周年国庆日",
+      "highlight": false
+    },
+    {
+      "id": "birthday-1",
+      "name": "小月饼生日",
+      "ico": "🎂",
+      "calendar": "gregorian",
+      "date": "2023-02-23",
+      "note": "农历二月初四 · 属兔",
+      "detail": "癸卯兔年，农历二月初四 · 王斯卯",
+      "highlight": false
+    }
+  ],
+
+  "_约定": {
+    "在一起起算": "2011-10-01（在一起纪念日）—— 不是求婚日",
+    "历法规则": "求婚(七夕)按农历七月初七；其余按公历。老板 2026-10-08 确认",
+    "提示阈值天数": 30,
+    "估算项": "相识日期为估算值（老板 2026-10-08 说'高考完没多久'，未给具体日）",
+    "待补": "老二(王元一)出生后补入"
+  }
+}

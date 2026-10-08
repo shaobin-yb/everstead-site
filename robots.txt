@@ -19,3 +19,5 @@ Disallow: /knowledge/iflyink-notes/
 Disallow: /knowledge/union-card-handbook-2026/
 Disallow: /radar-site/
 Disallow: /tools/mushenji/
+Disallow: /tools/anniversary/
+Disallow: /tools/mashi/

@@ -43,6 +43,9 @@ SKIP = {
     "tools/yuebing-travels/",
     "tools/work-report/",
     "tools/combo-report/",
+    "tools/anniversary/",
+    "tools/mushenji/",
+    "tools/mashi/",
 }
 
 

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>纪念日 · 稳稳回报</title>
+<style>
+/* ============================================================
+   纪念日 ANNIVERSARY · 2026-10-08
+   风格对齐私人专区: 深空底 + 玻璃拟态卡片, 零外部依赖
+   三个纪念日全部按公历过(老板 2026-10-08 确认)
+   ============================================================ */
+:root{
+  --bg:#03060c;
+  --panel:rgba(10,20,38,.55);
+  --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --violet:#8b5cf6;
+  --rose:#f43f5e;
+  --gold:#fcd34d;
+  --text:#e2ecf7;
+  --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
+    var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+}
+.wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 64px}
+
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0;flex-wrap:wrap}
+.topbar .logo{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:19px;color:#03101f;box-shadow:var(--glow);
+  font-family:var(--mono);
+}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.24em;font-size:15px}
+.topbar .back{
+  margin-left:auto;font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+  color:var(--muted);border:1px solid var(--line);border-radius:999px;
+  padding:6px 14px;transition:border-color .2s,color .2s;
+}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+
+.hero{padding:44px 0 8px}
+.hero .kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.34em;color:var(--cyan);
+  text-transform:uppercase;margin-bottom:14px;
+}
+.hero .kicker::before{content:'// ';opacity:.6}
+.hero h1{
+  font-size:clamp(30px,5vw,44px);line-height:1.15;font-weight:800;letter-spacing:.02em;
+  background:linear-gradient(92deg,#e8f6ff 8%,var(--cyan) 42%,var(--violet) 92%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero .sub{margin-top:14px;font-size:14px;color:var(--muted);line-height:1.9}
+
+/* ---- 下一个: 主视觉倒计时 ---- */
+.next-card{
+  position:relative;margin-top:30px;padding:26px 30px 24px;
+  border:1px solid var(--line-strong);border-radius:16px;
+  background:linear-gradient(135deg, rgba(34,211,238,.10), rgba(139,92,246,.07) 55%, var(--panel));
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:var(--glow);overflow:hidden;
+}
+.next-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+}
+.next-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.next-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--cyan);
+  border:1px solid var(--line-strong);border-radius:999px;padding:3px 12px;
+}
+.next-title{font-size:20px;font-weight:700;letter-spacing:.02em}
+.next-body{display:flex;align-items:flex-end;gap:18px;margin-top:18px;flex-wrap:wrap}
+.next-num{
+  font-family:var(--mono);font-size:clamp(54px,10vw,86px);font-weight:800;
+  line-height:.92;color:var(--cyan);font-variant-numeric:tabular-nums;
+  text-shadow:0 0 34px rgba(34,211,238,.4);
+}
+.next-unit{font-family:var(--mono);font-size:15px;color:var(--muted);letter-spacing:.14em;
+  padding-bottom:12px}
+.next-info{margin-left:auto;text-align:right;font-size:12.5px;color:var(--muted);
+  line-height:2;font-family:var(--mono);padding-bottom:8px}
+.next-info b{color:var(--text);font-weight:600}
+
+/* ---- 全部纪念日列表 ---- */
+.sec-head{display:flex;align-items:center;gap:12px;margin:52px 0 20px}
+.sec-head .bar{width:3px;height:22px;border-radius:2px;
+  background:linear-gradient(var(--cyan),var(--violet))}
+.sec-head h2{font-size:17px;font-weight:700;letter-spacing:.06em}
+.sec-head .en{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.18em}
+
+.list{display:flex;flex-direction:column;gap:12px}
+.item{
+  display:flex;align-items:center;gap:18px;padding:16px 20px;
+  border:1px solid var(--line);border-radius:12px;background:var(--panel);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  transition:border-color .2s, background .2s, transform .2s;
+}
+.item:hover{border-color:var(--line-strong);background:var(--panel-hover);transform:translateY(-2px)}
+.item.today{border-color:var(--gold);box-shadow:0 0 26px rgba(252,211,77,.24)}
+.item.today::after{
+  content:'今天';font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  color:#03101f;background:var(--gold);border-radius:999px;padding:2px 9px;
+  margin-left:2px;flex-shrink:0;
+}
+.it-ico{
+  width:42px;height:42px;flex-shrink:0;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;font-size:19px;
+  border:1px solid var(--line);background:rgba(56,189,248,.07);
+}
+.it-body{flex:1;min-width:0}
+.it-name{font-size:15px;font-weight:600;letter-spacing:.02em}
+.it-note{margin-top:4px;font-size:11.5px;color:var(--muted);line-height:1.65}
+.it-note .tag{
+  font-family:var(--mono);font-size:10px;color:var(--cyan);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px;margin-right:6px;
+}
+.it-right{text-align:right;flex-shrink:0;font-family:var(--mono)}
+.it-days{font-size:26px;font-weight:700;color:var(--cyan);
+  font-variant-numeric:tabular-nums;line-height:1.1}
+.it-days.soon{color:var(--gold)}
+.it-days small{font-size:11px;color:var(--muted);font-weight:400;margin-left:3px}
+.it-date{font-size:11px;color:var(--muted);margin-top:3px;letter-spacing:.04em}
+
+/* ---- 年表 ---- */
+.timeline{margin-top:16px;padding-left:6px}
+.tl-item{position:relative;padding:0 0 22px 26px;border-left:1px solid var(--line)}
+.tl-item:last-child{border-left-color:transparent;padding-bottom:0}
+.tl-item::before{
+  content:'';position:absolute;left:-4.5px;top:4px;width:8px;height:8px;
+  border-radius:50%;background:var(--bg);border:1.5px solid var(--cyan);
+}
+.tl-item:first-child::before{background:var(--cyan);box-shadow:0 0 9px var(--cyan)}
+.tl-date{font-family:var(--mono);font-size:11.5px;color:var(--cyan);letter-spacing:.06em}
+.tl-name{font-size:14px;font-weight:600;margin-top:4px}
+.tl-note{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.7}
+
+.footnote{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:11.5px;color:var(--muted);line-height:1.95}
+.footnote b{color:var(--text);font-weight:600}
+.footnote code{
+  font-family:var(--mono);background:rgba(13,26,48,.9);padding:1px 5px;
+  border-radius:3px;font-size:11px;color:#7dd3fc;
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px 48px}
+  .next-card{padding:20px 20px 18px}
+  .next-info{margin-left:0;text-align:left;width:100%}
+  .item{flex-wrap:wrap;gap:12px}
+  .it-right{text-align:left;margin-left:60px}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">E</div>
+    <div class="brand">EVERSTEAD</div>
+    <a class="back" href="../../private.html">← 返回私人专区</a>
+  </div>
+
+  <div class="hero">
+    <div class="kicker">ANNIVERSARY</div>
+    <h1>纪念日</h1>
+    <div class="sub">从 2011 年那个国庆节算起 —— 七夕按农历，其余按公历。</div>
+  </div>
+
+  <div class="next-card">
+    <div class="next-head">
+      <span class="next-label">下一个</span>
+      <span class="next-title">🎂 小月饼生日</span>
+    </div>
+    <div class="next-body">
+      <div class="next-num">138</div>
+      <div class="next-unit">天后</div>
+      <div class="next-info">
+        下次 <b>2027-02-23</b>（周二）<br>
+        届时<b>第 4 周年</b> · 已走过 <b>1,323</b> 天<br>
+        <span style="opacity:.72">在一起 <b>5,486</b> 天 · 15.0 年 · 自 2011-10-01</span>
+      </div>
+    </div>
+  </div>
+  <div class="sec-head">
+    <div class="bar"></div>
+    <div>
+      <h2>全部纪念日</h2>
+      <div class="en">ALL DATES</div>
+    </div>
+  </div>
+  <div class="list">
+        <div class="item">
+      <div class="it-ico">🎂</div>
+      <div class="it-body">
+        <div class="it-name">小月饼生日 </div>
+        <div class="it-note"><span class="tag">2023-02-23</span>
+          农历二月初四 · 属兔 · 已满 3 周年 · 已 1,323 天</div>
+      </div>
+      <div class="it-right">
+        <div class="it-days">138<small>天</small></div>
+        <div class="it-date">2027-02-23</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="it-ico">🌱</div>
+      <div class="it-body">
+        <div class="it-name">相识纪念日 <span class="tag" style="color:#fbbf24;border-color:rgba(251,191,36,.4)">估算</span></div>
+        <div class="it-note"><span class="tag">2011-06-25</span>
+          2011 高考后不久 · 已满 15 周年 · 已 5,584 天</div>
+      </div>
+      <div class="it-right">
+        <div class="it-days">260<small>天</small></div>
+        <div class="it-date">2027-06-25</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="it-ico">💍</div>
+      <div class="it-body">
+        <div class="it-name">求婚纪念日 </div>
+        <div class="it-note"><span class="tag" style="color:#c4b5fd;border-color:rgba(196,181,253,.4)">农历</span><span class="tag">2018-08-17</span>
+          七夕 · 农历七月初七 · 已满 8 周年 · 已 2,974 天</div>
+      </div>
+      <div class="it-right">
+        <div class="it-days">304<small>天</small></div>
+        <div class="it-date">2027-08-08</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="it-ico">💕</div>
+      <div class="it-body">
+        <div class="it-name">在一起纪念日 </div>
+        <div class="it-note"><span class="tag">2011-10-01</span>
+          大学后第一个国庆节 · 周六 · 已满 15 周年 · 已 5,486 天</div>
+      </div>
+      <div class="it-right">
+        <div class="it-days">358<small>天</small></div>
+        <div class="it-date">2027-10-01</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="it-ico">💒</div>
+      <div class="it-body">
+        <div class="it-name">婚礼纪念日 </div>
+        <div class="it-note"><span class="tag">2019-10-01</span>
+          建国 70 周年 · 农历九月初三 · 已满 7 周年 · 已 2,564 天</div>
+      </div>
+      <div class="it-right">
+        <div class="it-days">358<small>天</small></div>
+        <div class="it-date">2027-10-01</div>
+      </div>
+    </div>
+    <div class="item">
+      <div class="it-ico">📜</div>
+      <div class="it-body">
+        <div class="it-name">领证纪念日 </div>
+        <div class="it-note"><span class="tag">2018-10-06</span>
+          农历八月廿七 · 已满 8 周年 · 已 2,924 天</div>
+      </div>
+      <div class="it-right">
+        <div class="it-days">363<small>天</small></div>
+        <div class="it-date">2027-10-06</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-head">
+    <div class="bar"></div>
+    <div>
+      <h2>年表</h2>
+      <div class="en">TIMELINE</div>
+    </div>
+  </div>
+  <div class="timeline">
+        <div class="tl-item">
+      <div class="tl-date">2011-06-25　周六</div>
+      <div class="tl-name">🌱 相识纪念日</div>
+      <div class="tl-note">2011 年高考（6/7-6/8）后不久相识 · 日期为估算，待校正　·　距今 5,584 天</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2011-10-01　周六</div>
+      <div class="tl-name">💕 在一起纪念日</div>
+      <div class="tl-note">2011 年上大学后第一个国庆节 · 确认恋爱关系　·　距今 5,486 天</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2018-08-17　周五</div>
+      <div class="tl-name">💍 求婚纪念日</div>
+      <div class="tl-note">戊戌狗年，农历七月初七 · 选在七夕这天求婚　·　距今 2,974 天</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2018-10-06　周六</div>
+      <div class="tl-name">📜 领证纪念日</div>
+      <div class="tl-note">戊戌狗年，农历八月廿七　·　距今 2,924 天</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2019-10-01　周二</div>
+      <div class="tl-name">💒 婚礼纪念日</div>
+      <div class="tl-note">己亥猪年，农历九月初三 · 建国 70 周年国庆日　·　距今 2,564 天</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2023-02-23　周四</div>
+      <div class="tl-name">🎂 小月饼生日</div>
+      <div class="tl-note">癸卯兔年，农历二月初四 · 王斯卯　·　距今 1,323 天</div>
+    </div>
+  </div>
+
+  <div class="footnote">
+    <b>口径说明</b><br>
+    · 求婚（七夕）<b>按农历七月初七</b>过，每年公历日期不同；领证 / 婚礼 / 小月饼生日<b>按公历</b>过（老板 2026-10-08 确认）。<br>
+    · 「在一起」从 <b>2011-10-01</b>（大学后第一个国庆节，确认恋爱关系）起算。<br>
+    · 农历换算用 <code>lunar-python</code>，节气分界、北京时间。<br>
+    · 标「估算」的日期是区间推算，待校正。<br>
+    · 倒数天数＝距下一次周年（当年或次年同月同日）的自然日数，每日 0 点自动刷新。<br>
+    · 数据维护：改 <code>tools/anniversary/data.json</code> 后跑 <code>py tools/anniversary/build.py</code>。
+  </div>
+</div>
+</body>
+</html>

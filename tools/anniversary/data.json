@@ -75,6 +75,26 @@
       "milestone": true,
       "note": "原定 9/1 因感冒推迟 · 周五",
       "detail": "芽三班 · 原定 2026-09-01(周二) 入园，因感冒推迟到 9/4(周五)"
+    },
+    {
+      "id": "house-buy",
+      "name": "买房",
+      "ico": "🏠",
+      "calendar": "gregorian",
+      "date": "2022-02-28",
+      "milestone": true,
+      "note": "周一",
+      "detail": "2022-02-28(周一) 买房"
+    },
+    {
+      "id": "house-move",
+      "name": "搬进新家",
+      "ico": "📦",
+      "calendar": "gregorian",
+      "date": "2022-10-29",
+      "milestone": true,
+      "note": "周六 · 距买房 243 天",
+      "detail": "2022-10-29(周六) 搬进新家 · 距买房 8 个月"
     }
   ],
   "_约定": {

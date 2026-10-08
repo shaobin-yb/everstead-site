@@ -187,12 +187,18 @@
     .poster{max-width:100%;}
     .step,.facts,.tips,.hero{box-shadow:none;}
     .step,.fact,.tips li{break-inside:avoid;}
+    /* 「给老师 · 给爸爸妈妈的话」整段单独另起一页 */
+    .tips{break-before:page; page-break-before:always; break-inside:avoid;}
     .steps{gap:12px;}
     .art svg{max-width:190px;}
     .step.wide .art svg{max-width:420px;}
     .step .rhyme{font-size:18px;}
     h1{font-size:40px;}
     .rhyme{font-size:19px;}
+    /* 纸面上链接点不动, 且「返回私人专区」印出来等于泄露私人入口 → 打印时只留作品名 */
+    .footer-links{display:none;}
+    footer{margin-top:18px;}
+    .tips{min-height:auto;}
   }
 </style>
 </head>
@@ -589,9 +595,11 @@
   </section>
 
   <footer>
-    陕西娃娃的家乡味道 · 小手搓麻食 ·
-    <a href="index.html">动手玩互动版</a> ·
-    <a href="../../private.html">返回私人专区</a>
+    陕西娃娃的家乡味道 · 小手搓麻食
+    <span class="footer-links"> ·
+      <a href="index.html">动手玩互动版</a> ·
+      <a href="../../private.html">返回私人专区</a>
+    </span>
   </footer>
 </div>
 

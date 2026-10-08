@@ -26,7 +26,8 @@
     '#fab-nav button:hover{border-color:#22d3ee;color:#22d3ee;box-shadow:0 4px 20px rgba(0,0,0,.5),0 0 16px rgba(34,211,238,.3)}' +
     '#fab-nav button:active{transform:scale(.96)}' +
     '#fab-nav .i{font-size:14px;font-weight:700;font-family:"JetBrains Mono","Cascadia Mono","Consolas",monospace}' +
-    '#fab-nav .t{letter-spacing:.06em}';
+    '#fab-nav .t{letter-spacing:.06em}' +
+    '@media print{#fab-nav{display:none!important}}';
   document.head.appendChild(css);
 
   var el = document.createElement('div');

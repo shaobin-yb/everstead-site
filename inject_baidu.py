@@ -76,10 +76,10 @@ def main() -> None:
         sys.exit(1)
     force = "--all" in sys.argv[1:]
     today = date.today().isoformat()
-    done_today = (MARKS / f"inject_{today}.txt").exists()
-    if done_today and not force:
-        print("[skip] 今日已注入过, 如需强制重扫加 --all")
-        return
+    # 2026-10-08: 原来「今日已注入」就整体 skip, 但 kb_ingest.py build 之类
+    # 的重建会把统计脚本冲掉 —— 那时标记还在, 补注入就被挡住了, 统计静默消失。
+    # 改为: 每次都全量扫, 逐页判断「这页到底有没有 hm.baidu.com」, 缺了就补。
+    # 标记文件只作日志留痕, 不再决定是否跳过。
     injected = 0
     for p in all_html():
         text = p.read_text(encoding="utf-8", errors="replace")

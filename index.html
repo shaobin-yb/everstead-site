@@ -405,6 +405,8 @@ a{text-decoration:none;color:inherit}
 .lt-note{margin-top:12px;font-size:11px;color:var(--muted);letter-spacing:.02em}
 .lt-note code{font-family:var(--mono);background:rgba(56,189,248,.1);padding:1px 5px;
   border-radius:3px;color:var(--cyan);font-size:10.5px}
+.lt-note .sep2{opacity:.45;margin:0 5px}
+#svc-status{font-family:var(--mono)}
 
 /* ---- 分类分组 + 折叠 ---- */
 .cat-group{margin-bottom:26px}
@@ -1311,9 +1313,13 @@ a{text-decoration:none;color:inherit}
       </div>
     </div>
     <div class="lt-grid">
-      <a class="lt-item" href="launch://mimo" title="多模态 AI：API 聊天/看图 + 本地 7B"><span class="lt-ico">🤖</span><span class="lt-body"><span class="lt-n">小米 MiMo 玩票站</span><span class="lt-d">多模态 AI：API 聊天/看图 + 本地 7B</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://ledger" title="拜访记录 / 客户画像 / 跟进提醒"><span class="lt-ico">🗂️</span><span class="lt-body"><span class="lt-n">客户拜访台账</span><span class="lt-d">拜访记录 / 客户画像 / 跟进提醒</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://codex" title="OpenAI Codex CLI 编程助手"><span class="lt-ico">🔨</span><span class="lt-body"><span class="lt-n">Codex 铁锤</span><span class="lt-d">OpenAI Codex CLI 编程助手</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://harness" title="DeepSeek 编程助手 CLI"><span class="lt-ico">🐋</span><span class="lt-body"><span class="lt-n">DeepSeek Harness</span><span class="lt-d">DeepSeek 编程助手 CLI</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://obsidian" title="笔记 / 日记 / 知识库 vault"><span class="lt-ico">📓</span><span class="lt-body"><span class="lt-n">Obsidian 个人操作系统</span><span class="lt-d">笔记 / 日记 / 知识库 vault</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://sdkdns" title="网络代理客户端"><span class="lt-ico">🛰️</span><span class="lt-body"><span class="lt-n">SDKDNS</span><span class="lt-d">网络代理客户端</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://feishu" title="即时通讯 / 办公协作"><span class="lt-ico">💬</span><span class="lt-body"><span class="lt-n">飞书</span><span class="lt-d">即时通讯 / 办公协作</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://dashboard" title="启动后访问 localhost:18930"><span class="lt-ico">🎛️</span><span class="lt-body"><span class="lt-n">铁蛋控制面板</span><span class="lt-d">启动后访问 localhost:18930</span></span><span class="lt-arrow">→</span></a>
+      <a class="lt-item" href="launch://mimo" data-app="mimo" title="多模态 AI：API 聊天/看图 + 本地 7B"><span class="lt-ico">🤖</span><span class="lt-body"><span class="lt-n">小米 MiMo 玩票站</span><span class="lt-d">多模态 AI：API 聊天/看图 + 本地 7B</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://ledger" data-app="ledger" title="拜访记录 / 客户画像 / 跟进提醒"><span class="lt-ico">🗂️</span><span class="lt-body"><span class="lt-n">客户拜访台账</span><span class="lt-d">拜访记录 / 客户画像 / 跟进提醒</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://codex" data-app="codex" title="OpenAI Codex CLI 编程助手"><span class="lt-ico">🔨</span><span class="lt-body"><span class="lt-n">Codex 铁锤</span><span class="lt-d">OpenAI Codex CLI 编程助手</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://harness" data-app="harness" title="DeepSeek 编程助手桌面端"><span class="lt-ico">🐋</span><span class="lt-body"><span class="lt-n">DeepSeek Harness</span><span class="lt-d">DeepSeek 编程助手桌面端</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://obsidian" data-app="obsidian" title="笔记 / 日记 / 知识库 vault"><span class="lt-ico">📓</span><span class="lt-body"><span class="lt-n">Obsidian 个人操作系统</span><span class="lt-d">笔记 / 日记 / 知识库 vault</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://sdkdns" data-app="sdkdns" title="网络代理客户端"><span class="lt-ico">🛰️</span><span class="lt-body"><span class="lt-n">SDKDNS</span><span class="lt-d">网络代理客户端</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://feishu" data-app="feishu" title="即时通讯 / 办公协作"><span class="lt-ico">💬</span><span class="lt-body"><span class="lt-n">飞书</span><span class="lt-d">即时通讯 / 办公协作</span></span><span class="lt-arrow">→</span></a><a class="lt-item" href="launch://dashboard" data-app="dashboard" title="启动后访问 localhost:18930"><span class="lt-ico">🎛️</span><span class="lt-body"><span class="lt-n">铁蛋控制面板</span><span class="lt-d">启动后访问 localhost:18930</span></span><span class="lt-arrow">→</span></a>
     </div>
-    <div class="lt-note">↑ 需本机已注册 <code>launch://</code> 协议处理器 · 手机/外网打开点不动</div>
+    <div class="lt-note">
+      <span id="svc-status">调度服务检测中…</span>
+      <span class="sep2">·</span>
+      仅本机可唤起（走 localhost:18999 调度服务）· 手机/外网点不动属正常
+    </div>
   </section>
 
   <!-- 页脚 -->
@@ -1927,6 +1933,71 @@ a{text-decoration:none;color:inherit}
     .finally(function(){ btn.disabled = false; });
   }
   document.getElementById('fbSubmit').addEventListener('click', sendFeedback);
+})();
+
+/* ---- 本地工具唤起 (2026-10-08)
+   Chrome 会静默拦截网页对 launch:// 自定义协议的导航(顶级和 iframe 都拦),
+   直接写 href="launch://xxx" 点了没反应。改走本机调度服务:
+   请求 localhost:18999/launch?id=xxx(图片信标), 由服务端启动, 不碰协议机制。
+   服务离线时回退: 提示 Win+R 手动输入 launch:// 路径。 */
+(function(){
+  var LAUNCH_SERVICE = 'http://127.0.0.1:18999';
+  var statusEl = document.getElementById('svc-status');
+
+  function setSvc(txt, color){
+    if(!statusEl) return;
+    statusEl.textContent = txt;
+    statusEl.style.color = color || '';
+  }
+
+  /* 状态灯 */
+  fetch(LAUNCH_SERVICE + '/health', {cache:'no-store'})
+    .then(function(r){ setSvc(r.ok ? '调度在线' : '调度离线 — 点击会提示手动路径',
+                                 r.ok ? '#34d399' : '#fb923c'); })
+    .catch(function(){ setSvc('调度离线 — 点击会提示手动路径', '#fb923c'); });
+
+  function showTip(text){
+    var old = document.getElementById('launch-tip');
+    if(old && old.parentNode) old.parentNode.removeChild(old);
+    var tip = document.createElement('div');
+    tip.id = 'launch-tip';
+    tip.textContent = text;
+    tip.style.cssText = [
+      'position:fixed','left:50%','top:18px','transform:translateX(-50%)',
+      'z-index:99','max-width:86%','padding:10px 18px',
+      'font-size:13px','color:#e2ecf7',
+      'background:rgba(10,20,38,.92)','border:1px solid rgba(56,189,248,.45)',
+      'border-radius:10px','box-shadow:0 0 24px rgba(34,211,238,.25)',
+      'transition:opacity .4s','text-align:center'
+    ].join(';');
+    document.body.appendChild(tip);
+    setTimeout(function(){
+      tip.style.opacity = '0';
+      setTimeout(function(){ if(tip.parentNode) tip.parentNode.removeChild(tip); }, 500);
+    }, 6000);
+  }
+
+  var items = document.querySelectorAll('.lt-item');
+  for(var i = 0; i < items.length; i++){
+    (function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        var appId = a.getAttribute('data-app');
+        if(!appId) return;
+        var nm = a.querySelector('.lt-n');
+        nm = nm ? nm.textContent : appId;
+        fetch(LAUNCH_SERVICE + '/launch?id=' + encodeURIComponent(appId), {cache:'no-store'})
+          .then(function(r){
+            showTip(r.ok ? '正在启动「' + nm + '」…'
+                         : '调度服务拒绝启动「' + nm + '」，让铁蛋查 launch_log.txt');
+          })
+          .catch(function(){
+            showTip('调度服务离线。「' + nm + '」启动方法：Win+R 输入 launch://'
+                    + appId + ' 回车（首次允许一次）');
+          });
+      });
+    })(items[i]);
+  }
 })();
 </script>
 </body>

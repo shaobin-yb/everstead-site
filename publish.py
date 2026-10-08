@@ -145,7 +145,7 @@ LOCAL_TOOLS = [
     ("小米 MiMo 玩票站", "launch://mimo", "🤖", "多模态 AI：API 聊天/看图 + 本地 7B"),
     ("客户拜访台账", "launch://ledger", "🗂️", "拜访记录 / 客户画像 / 跟进提醒"),
     ("Codex 铁锤", "launch://codex", "🔨", "OpenAI Codex CLI 编程助手"),
-    ("DeepSeek Harness", "launch://harness", "🐋", "DeepSeek 编程助手 CLI"),
+    ("DeepSeek Harness", "launch://harness", "🐋", "DeepSeek 编程助手桌面端"),
     ("Obsidian 个人操作系统", "launch://obsidian", "📓", "笔记 / 日记 / 知识库 vault"),
     ("SDKDNS", "launch://sdkdns", "🛰️", "网络代理客户端"),
     ("飞书", "launch://feishu", "💬", "即时通讯 / 办公协作"),
@@ -494,8 +494,13 @@ def build_index(reports: list) -> None:
                 f'<span class="arrow">→</span></a>')
 
     def local_link(name, href, icon, desc):
-        """底部本地工具：launch:// 协议，点击由本机 launch_handler 接管。"""
-        return (f'<a class="lt-item" href="{href}" title="{desc}">'
+        """底部本地工具。
+        2026-10-08: 原来直接给 href="launch://xxx", Chrome 会静默拦截自定义协议
+        导航(顶级和 iframe 都拦), 点了没反应。改走本机调度服务
+        localhost:18999/launch?id=xxx(fetch 图片信标, 不碰协议机制)。
+        href 保留 launch:// 作为调度服务离线时的 Win+R 手动回退。"""
+        app_id = href.replace("launch://", "").rstrip("/")
+        return (f'<a class="lt-item" href="{href}" data-app="{app_id}" title="{desc}">'
                 f'<span class="lt-ico">{icon}</span>'
                 f'<span class="lt-body"><span class="lt-n">{name}</span>'
                 f'<span class="lt-d">{desc}</span></span>'

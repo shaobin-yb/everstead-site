@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>给月饼妈妈的待产手账 · 美中宜和三元桥</title>
+<style>
+:root{
+  --bg:#fdf6f1; --bg2:#fbece4; --card:#fffdfb; --ink:#463c36; --sub:#96867b; --line:#f3e6dc;
+  --rose:#d17f68; --rose-soft:#fae8e0; --rose-deep:#b55f47;
+  --cream:#fdf3e3; --sage:#7d9d84; --sage-soft:#eaf2ec;
+  --star:#c98a4b; --star-soft:#fbf0dd;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  line-height:1.75;padding:0 0 90px;
+  background-image:radial-gradient(circle at 12% 6%, #fbe4d8 0%, transparent 34%),
+                   radial-gradient(circle at 88% 14%, #fdeeda 0%, transparent 30%),
+                   radial-gradient(circle at 50% 96%, #f6e7ee 0%, transparent 36%);
+  background-attachment:fixed;
+}
+.wrap{max-width:780px;margin:0 auto;padding:0 18px}
+
+header{padding:52px 18px 34px;text-align:center}
+header .hearts{font-size:20px;letter-spacing:12px;margin-bottom:14px;opacity:.75}
+h1{font-size:27px;letter-spacing:1px;font-weight:700;color:var(--rose-deep)}
+header .sub{color:var(--sub);font-size:14px;margin-top:10px}
+header .letter{
+  max-width:560px;margin:22px auto 0;text-align:left;font-size:15px;color:#5f534a;
+  background:rgba(255,253,251,.85);border:1px solid var(--line);border-radius:18px;
+  padding:20px 24px;box-shadow:0 2px 10px rgba(120,80,60,.05);
+}
+header .letter p{margin:7px 0}
+header .letter .hi{font-size:16px;color:var(--rose-deep);font-weight:600}
+.countdown{display:inline-block;margin-top:22px;background:#fff;border:1.5px solid #f3d9cc;border-radius:999px;padding:10px 26px;font-size:15px;box-shadow:0 2px 8px rgba(180,120,90,.08)}
+.countdown b{color:var(--rose);font-size:22px;font-family:Georgia,serif}
+
+.progressbar{position:sticky;top:0;z-index:20;background:rgba(253,246,241,.94);backdrop-filter:blur(8px);padding:11px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;font-size:13px;color:var(--sub)}
+.progressbar .bar{flex:1;height:9px;background:#f2e4d9;border-radius:99px;overflow:hidden}
+.progressbar .bar i{display:block;height:100%;width:0%;background:linear-gradient(90deg,#e8a992,#d17f68);border-radius:99px;transition:width .3s;min-width:0}
+.progressbar button{font-size:12px;color:var(--sub);background:#fff;border:1px solid var(--line);border-radius:8px;padding:4px 12px;cursor:pointer}
+#done-num{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+section{margin-top:34px}
+h2{font-size:19px;display:flex;align-items:center;gap:9px;margin-bottom:6px;color:var(--ink)}
+h2 .tag{font-size:11px;font-weight:normal;background:var(--rose-soft);color:var(--rose-deep);border-radius:20px;padding:3px 11px;white-space:nowrap}
+h2 .tag.green{background:var(--sage-soft);color:var(--sage)}
+h2 .tag.amber{background:var(--star-soft);color:var(--star)}
+.lead{font-size:14px;color:var(--sub);margin:0 0 14px 3px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px 22px 14px;box-shadow:0 3px 14px rgba(150,100,80,.06)}
+.card + .card{margin-top:14px}
+.card.soft{background:linear-gradient(160deg,#fffdfb,#fdf3ec)}
+
+ul.check{list-style:none}
+ul.check li{display:flex;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+ul.check li:last-child{border-bottom:none}
+ul.check input[type=checkbox]{width:20px;height:20px;margin-top:4px;accent-color:var(--rose);flex:none;cursor:pointer}
+ul.check label{flex:1;cursor:pointer;font-size:15px}
+ul.check label .why{display:block;font-size:12.8px;color:var(--sub);margin-top:2px;line-height:1.6}
+.star{color:var(--rose-deep);font-weight:600}
+ul.check li.done label{color:#c5b8ab;text-decoration:line-through;text-decoration-color:#e0d4c6}
+ul.check li.done label .why{color:#d5cabd}
+ul.check li.done label .star{color:#d5cabd}
+
+.sig{display:grid;grid-template-columns:1fr;gap:12px}
+.sig .item{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:17px 20px;box-shadow:0 3px 14px rgba(150,100,80,.05)}
+.sig .item h3{font-size:15.5px;margin-bottom:5px}
+.sig .item p{font-size:13.8px;color:#6b5e54}
+.sig .item.warn{background:linear-gradient(160deg,#fdf3e3,#fbf0dd);border-color:#f0dfc0}
+.sig .item.warn h3{color:var(--star)}
+
+.provide{background:linear-gradient(165deg,#f2f8f3,#eaf2ec);border-color:#dceadf}
+.provide h3{color:var(--sage);font-size:15.5px;margin-bottom:8px}
+.provide{font-size:13.8px;color:#54695a}
+.provide .row{display:flex;gap:9px;align-items:baseline;margin:5px 0}
+.provide .row b{flex:none;color:var(--sage)}
+
+details{border-top:1px solid var(--line);padding:11px 0}
+details summary{cursor:pointer;font-size:14px;color:var(--rose-deep);list-style:none;display:flex;justify-content:space-between;align-items:center;font-weight:500}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:"›";transition:transform .2s;font-size:18px;color:var(--sub)}
+details[open] summary::after{transform:rotate(90deg)}
+details .body{padding:8px 2px 4px;font-size:14px;color:#5f534a}
+details .body p{margin:7px 0}
+details .body .src{font-size:12px;color:#bfb1a5}
+
+.care{background:linear-gradient(160deg,#fdf4f6,#fbe9e4);border-color:#f3d9d2}
+.care p{font-size:14.5px;color:#6d554e;margin:8px 0}
+.care .big{font-size:15px;color:var(--rose-deep);font-weight:600}
+
+.table{width:100%;border-collapse:collapse;font-size:13.8px;margin-top:6px}
+.table td{padding:8px 6px;border-bottom:1px dashed var(--line);color:#5f534a}
+.table td:last-child{text-align:right;color:var(--rose-deep);font-weight:500;white-space:nowrap}
+.table tr:last-child td{border-bottom:none}
+.price-note{font-size:12.5px;color:#bfb1a5;margin-top:10px}
+
+footer{text-align:center;color:#c3b4a7;font-size:12.5px;margin-top:44px;line-height:2}
+footer .bye{font-size:15px;color:var(--rose);margin-bottom:6px}
+#allDone{display:none;text-align:center;background:linear-gradient(135deg,#fbe8e0,#fdf3e3);border:1.5px solid #f3d9cc;border-radius:20px;padding:22px;margin-top:26px;font-size:16px;color:var(--rose-deep)}
+#allDone .em{font-size:26px;display:block;margin-bottom:8px}
+@media print{.progressbar{display:none}details>summary{display:none}details{display:block}}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hearts">♡ ♡ ♡</div>
+  <h1>给月饼妈妈的待产手账</h1>
+  <div class="sub">预产期 10 月 13 日 · 美中宜和三元桥院区</div>
+
+  <div class="letter">
+    <p class="hi">亲爱的月饼妈妈：</p>
+    <p>第二次走这条路，少了慌张，多了笃定。</p>
+    <p>这份手账是从二十多位在美中宜和生过的姐妹笔记里挑出来的——只留下她们实测"用上了"和"千万别忘"的。翻这一页，胜过翻一百篇。</p>
+    <p>需要准备的都在里面，勾一勾就好。剩下的交给医院、交给我们。<b>你只负责安安心心地等小宝宝。</b></p>
+  </div>
+
+  <div class="countdown">距预产期还有 <b id="days">—</b> 天<br><span style="font-size:12px;color:var(--sub)">二胎产程不一定快，随时可以出发</span></div>
+</header>
+
+<div class="progressbar">
+  <span>已备好</span><span id="done-num">0/0</span>
+  <div class="bar"><i id="bar"></i></div>
+  <button onclick="resetAll()">重置</button>
+</div>
+
+<div class="wrap">
+
+<!-- 发动信号 -->
+<section>
+  <h2>🌷 那天的信号 <span class="tag">到时候别慌，对照着来</span></h2>
+  <p class="lead">那一天到来的时刻，希望这份速查能让全家人心里有数。</p>
+  <div class="sig">
+    <div class="item">
+      <h3>① 见红 — 先观察，不着急</h3>
+      <p>红褐色分泌物、果冻状黏液、少量红色，都属于先兆临产，<b>不等于马上要生</b>。联系医生说明情况，听听安排，在家收拾收拾东西。</p>
+    </div>
+    <div class="item">
+      <h3>② 规律宫缩 — 记好三个数再走</h3>
+      <p>真的宫缩会越来越规律、间隔越来越短、疼痛越来越明显（假性宫缩换个姿势就能缓解）。<b>记下：几点开始 / 每次多久 / 间隔多长</b>。5-6 分钟一次规律宫缩，就可以出发了。</p>
+    </div>
+    <div class="item warn">
+      <h3>③ 破水 — 这一条优先级最高</h3>
+      <p>突然或持续流出温热液体：<b>① 立即躺下 ② 联系医院或 120 ③ 说明"孕妇破水" ④ 听医生指导体位和转运 ⑤ 尽快到院。</b>不要走动、不要在家再观察。自驾记得躺后排。</p>
+    </div>
+    <div class="item">
+      <h3>💌 一个小提醒，免得白跑</h3>
+      <p>第一次到医院如果宫口没开、宫缩不规律，医生会让你回家再等等——<b>这是正常流程，不是白跑</b>。有位姐妹 0:00 去被劝返，8:00 再去时已经开一指收入院了。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 妈妈 -->
+<section>
+  <h2>🌷 给月饼妈妈自己的 <span class="tag">值得对自己好一点</span></h2>
+  <p class="lead">医院把大部分东西都备齐了，但下面这些是自己备了会舒服很多的小物件。</p>
+  <div class="card soft">
+    <ul class="check" data-group="mom">
+      <li><input type="checkbox" id="m1"><label for="m1"><span class="star">冷敷贴 ×15 个</span> <span class="why">顺产的救星。有姐妹备 7 个不够又点外卖补货；用完及时换。记得别敷太久、千万别敷着过夜</span></label></li>
+      <li><input type="checkbox" id="m2"><label for="m2"><span class="star">会阴冲洗器</span> <span class="why">每次上完厕所冲洗一下，清清爽爽。几乎每篇笔记都提到了它</span></label></li>
+      <li><input type="checkbox" id="m3"><label for="m3"><span class="star">纯棉高腰一次性内裤</span> <span class="why">医院提供的不透气、不够高腰，自己备的穿着舒服得多</span></label></li>
+      <li><input type="checkbox" id="m4"><label for="m4"><span class="star">乳头膏 / 羊脂膏</span> <span class="why">刚开始亲喂会疼甚至会破，勤涂会好很多——护士都会主动提醒带</span></label></li>
+      <li><input type="checkbox" id="m5"><label for="m5">月子袜 + 包跟月子鞋 + 月子帽 <span class="why">医院的是凉拖，产后怕风，三件套备齐安心</span></label></li>
+      <li><input type="checkbox" id="m6"><label for="m6">保温吸管杯 <span class="why">躺着喝水方便，接一次能喝半天，比纸杯舒心</span></label></li>
+      <li><input type="checkbox" id="m7"><label for="m7">蜂蜜露 <span class="why">产前排一次，比开塞露温和（医院也有开塞露可以要）</span></label></li>
+      <li><input type="checkbox" id="m8"><label for="m8">洗手液 <span class="why">医院只有消毒液，抱宝宝前想洗手的话，自己带一瓶</span></label></li>
+      <li><input type="checkbox" id="m9"><label for="m9">一次性马桶垫（多备几片）<span class="why">冲洗完容易打湿，换得勤</span></label></li>
+      <li><input type="checkbox" id="m10"><label for="m10">护肤品 + 化妆品 <span class="why">出院有庆生仪式，拍照要美美的</span></label></li>
+      <li><input type="checkbox" id="m11"><label for="m11">出院衣服 + 帽子 <span class="why">天凉了，挑件拍照好看的</span></label></li>
+      <li><input type="checkbox" id="m12"><label for="m12">纯棉睡衣 1-2 套（可选）<span class="why">医院哺乳服管够，但面料偏闷；怕麻烦穿医院的也完全可以</span></label></li>
+      <li><input type="checkbox" id="m13"><label for="m13">唇膏 + 木梳 + 耳机 <span class="why">产后容易口干；医院木梳扯头发；待产时听点白噪音，休息好最重要</span></label></li>
+      <li><input type="checkbox" id="m14"><label for="m14">钙片 / 铁剂等补剂 <span class="why">产后医生会嘱咐接着补</span></label></li>
+    </ul>
+    <details>
+      <summary>难受了怎么办？——关于止痛这件事</summary>
+      <div class="body">
+        <p>· 一位二胎妈妈的原话：<b>"疼了就告诉医生，适当用药，不要自己折磨自己。"</b></p>
+        <p>· 双氯芬酸钠栓（"屁股神药"）医院可以开；实在疼别硬扛。</p>
+        <p>· 无痛分娩有姐妹形容"人类之光，打上瞬间不疼了"。打之前医生可能让吃点清淡的，打之后一般不能吃固体食物、喝点电解质水。</p>
+        <p class="src">来源：金融街二级狗庄庄《一胎顺二胎剖对比》、Nikita《三元桥生产啦》</p>
+      </div>
+    </details>
+    <details>
+      <summary>二胎和第一次不一样的地方</summary>
+      <div class="body">
+        <p>· <b>二胎产程不一定快</b>——有姐妹二胎用力次数跟一胎差不多，别被"二胎快"的说法框住。</p>
+        <p>· 过了预产期不发动很常见，产科大夫说催产成功率大约 70-80%：一般是<span style="color:var(--rose-deep)">水囊挂一夜 → 人工破水 → 滴催产素 → 打无痛</span>这个流程走下来，每一步都有人陪着。</p>
+        <p class="src">来源：小心不要吃到青椒《二胎41w+1催产记录》</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- 宝宝 -->
+<section>
+  <h2>🌷 给小宝宝的行李 <span class="tag">轻装就好</span></h2>
+  <p class="lead">医院把宝宝的东西备得很全，这几样带自己的更顺手。</p>
+  <div class="card">
+    <ul class="check" data-group="baby">
+      <li><input type="checkbox" id="b1"><label for="b1"><span class="star">安全座椅 / 提篮</span> <span class="why">出院那天要用！提前在爸爸车上装好、调试好</span></label></li>
+      <li><input type="checkbox" id="b2"><label for="b2"><span class="star">出院包被（天凉了，备厚一点的）</span> <span class="why">医院包被出片效果一般，自己挑一条软软的</span></label></li>
+      <li><input type="checkbox" id="b3"><label for="b3"><span class="star">52 码半背衣 / 连体衣 ×2-5 件</span> <span class="why">医院的宝宝衣服偏厚，新生儿穿少点不容易起疹子（有姐妹带 5 件全用上）</span></label></li>
+      <li><input type="checkbox" id="b4"><label for="b4">云柔巾 + 棉柔巾（可心柔 / 全棉时代）<span class="why">用惯的品牌自己带几包，医院不一定有</span></label></li>
+      <li><input type="checkbox" id="b5"><label for="b5">护臀膏 + 面霜 <span class="why">医院有护臀膏；面霜自带惯用的</span></label></li>
+      <li><input type="checkbox" id="b6"><label for="b6">NB 码纸尿裤（少量）<span class="why">医院第一包好奇、后面露安适，够用；备点自己的品牌应急</span></label></li>
+      <li><input type="checkbox" id="b7"><label for="b7">小方巾 3-4 条 + 口水巾 <span class="why">小方巾月嫂天天用，换洗方便</span></label></li>
+      <li><input type="checkbox" id="b8"><label for="b8">奶瓶 + 奶瓶刷 + 清洗剂 + 奶粉 <span class="why">纯母乳可以不带（医院有水奶和一次性奶瓶）；奶粉喂养建议带惯用品牌"不要来回换"</span></label></li>
+      <li><input type="checkbox" id="b9"><label for="b9">宝宝洗衣液（旅行装）+ 一次性隔尿垫</label></li>
+      <li><input type="checkbox" id="b10"><label for="b10">安抚奶嘴 <span class="why">看是否打算用；医院第一天会给一瓶水奶</span></label></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 爸爸 -->
+<section>
+  <h2>🌷 爸爸的任务清单 <span class="tag">这些交给他</span></h2>
+  <p class="lead">月饼妈妈可以把这一栏直接转给爸爸——他做到位，你就安心一半。</p>
+  <div class="card">
+    <ul class="check" data-group="dad">
+      <li><input type="checkbox" id="p1"><label for="p1">陪产衣物：轻薄短袖短裤（产房要套隔离衣）+ 换洗衣物 <span class="why">产程可能很久，产房通常固定一位家属陪</span></label></li>
+      <li><input type="checkbox" id="p2"><label for="p2">一次性内裤 + 袜子 + 毛巾 + 拖鞋</label></li>
+      <li><input type="checkbox" id="p3"><label for="p3">手机 + 长线充电器 + 充电宝</label></li>
+      <li><input type="checkbox" id="p4"><label for="p4">水 + 巧克力 + 小零食 <span class="why">妈妈无痛前还能吃点清淡的，爸爸也要撑住体力</span></label></li>
+      <li><input type="checkbox" id="p5"><label for="p5">提前存好医院急诊电话 + 产科电话 <span class="why">发动那一刻第一个要打的</span></label></li>
+      <li><input type="checkbox" id="p6"><label for="p6">规划路线：夜里开车的走法 + 破水时妈妈躺后排的准备</label></li>
+      <li><input type="checkbox" id="p7"><label for="p7">进产房后坐妈妈<b>右手边</b> <span class="why">这是看得到她、宝宝出来也能第一眼看到的位置</span></label></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 月饼 -->
+<section>
+  <h2>🌷 哥哥月饼的安置 <span class="tag amber">住院那几天</span></h2>
+  <p class="lead">妈妈安心住院，前提是哥哥在家也有人稳稳接着。</p>
+  <div class="card">
+    <ul class="check" data-group="sibling">
+      <li><input type="checkbox" id="s1"><label for="s1">定好住院几天谁带月饼（爷爷奶奶 / 姥姥姥爷值班表排一排）</label></li>
+      <li><input type="checkbox" id="s2"><label for="s2">如果月饼去医院陪住：阿贝贝、餐具、零食、玩具、家居服、防滑袜 <span class="why">有姐妹带娃住院的经验：可铺开就玩的小地毯最实用</span></label></li>
+      <li><input type="checkbox" id="s3"><label for="s3">提前和月饼聊"弟弟要来了"（绘本 / 看B超照片）</label></li>
+      <li><input type="checkbox" id="s4"><label for="s4">想好回家头几天谁主要陪月饼（3 岁半正粘人的时候）</label></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 月子 -->
+<section>
+  <h2>🌷 月子这件小事</h2>
+  <div class="card">
+    <ul class="check" data-group="yuezi">
+      <li><input type="checkbox" id="y1"><label for="y1">月嫂 / 月子中心定案 + 到岗时间确认</label></li>
+      <li><input type="checkbox" id="y2"><label for="y2">家里布置：宝宝的床位、月饼作息不受影响的分区</label></li>
+      <li><input type="checkbox" id="y3"><label for="y3">家里人分工：谁做饭、谁带娃、谁接送月饼</label></li>
+    </ul>
+    <details>
+      <summary>姐妹们的两条经验谈</summary>
+      <div class="body">
+        <p>· 一位二胎妈妈住过 8 万的月子中心后总结：<b>"好的住家月嫂比月子中心值太多"</b>——月子中心卖氛围感，住家月嫂是落到实处的帮手。</p>
+        <p>· 另一条路：美中院内可以安排月嫂陪住，有姐妹说"随后的两个晚上给了非常大的帮助"。</p>
+        <p class="src">来源：屁股好痛《一胎花八万坐月子》、小心不要吃到青椒《二胎催产记录》</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- 三元桥小抄 -->
+<section>
+  <h2>🌷 三元桥小抄 <span class="tag green">这家的实况</span></h2>
+  <p class="lead">写给要陪她跑医院的爸爸看的——有个底，不慌张。</p>
+  <div class="card provide">
+    <h3>医院会把哪些备好（不用买）</h3>
+    <div class="row"><b>妈妈：</b><span>月子服、安宜儿护理垫、一次性内裤、面巾纸；一日三餐+夜宵（饭量不大够两人吃）</span></div>
+    <div class="row"><b>宝宝：</b><span>衣服、包被、胎帽、好奇纸尿裤、湿巾；护士站可领一次性奶瓶 + 超启能恩奶粉</span></div>
+    <div class="row"><b>服务：</b><span>分娩预演可预约（36 周左右，跟护士约）；出院有庆生仪式；宝宝和妈妈一起出产房，爸爸全程陪</span></div>
+    <p style="margin-top:12px;font-size:12.5px;color:#7d9d84">各院区配置偶有差异，入院前再跟护士确认一遍最踏实。</p>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <details open>
+      <summary>费用参考（姐妹实测账单，2025年）</summary>
+      <div class="body">
+        <table class="table">
+          <tr><td>产检安新型（20-40周，12次）</td><td>¥23,608</td></tr>
+          <tr><td>自然分娩（3晚）</td><td>¥45,800</td></tr>
+          <tr><td>无痛分娩</td><td>+¥9,000</td></tr>
+          <tr><td>指定医生点名费</td><td>+¥6,800</td></tr>
+          <tr><td>儿保套餐（3年，折后）</td><td>¥40,354</td></tr>
+          <tr><td>催产加项（球囊+放置）</td><td>¥2,431</td></tr>
+          <tr><td>临时护工（按天）</td><td>¥700/天</td></tr>
+        </table>
+        <p class="price-note">两位姐妹账单：一位全含 10.6w（含产后康复）；另一位不含儿保 6.9w 多。折扣通常来自企业大客户 / 老带新 / 组合套餐，问销售要齐。医保可实时报销（有姐妹报回 6k+），生育津贴另算。</p>
+      </div>
+    </details>
+    <details>
+      <summary>姐妹们聊到过的人和细节</summary>
+      <div class="body">
+        <p>· 郭欣主任：三元桥被点名推荐（专家，也做剖后顺评估）</p>
+        <p>· 助产士是顺产关键角色：会阴按摩、手转胎位都是她们做的——无侧切无撕裂的案例里都有她们的身影</p>
+        <p>· "无痛打上瞬间不疼了"、"医生护士响应很快、酒店级感受"——三元桥产后妈妈的评价</p>
+        <p class="src">来源：小毛驴ViVi、Nikita、知乎丽都产经</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- 给妈妈的话 -->
+<section>
+  <h2>🌷 最后</h2>
+  <div class="card care">
+    <p class="big">生产不是只能被动等待的事。</p>
+    <p>提前知道会发生什么、什么时候该去医院、家人该做什么——这些准备本身，就是给自己和宝宝的底气。</p>
+    <p>月饼妈妈，你已经把第一个孩子平平安安带到这么大，第二次，你比谁都清楚路怎么走。<b>疼了就说，累了就歇，剩下的交给医生和爸爸。</b></p>
+    <p>等那天到来，我们一起去见这个小小的新家人。♡</p>
+  </div>
+  <div id="allDone"><span class="em">🎉</span>全部备齐啦！<br><span style="font-size:13.5px;color:var(--sub)">月饼妈妈辛苦了，剩下的都是小事——安心等发动就好。</span></div>
+</section>
+
+<footer>
+  <div class="bye">♡ 爸爸 & 家人一起准备的功课 ♡</div>
+  整理自小红书 20+ 篇真实生产笔记 · 知乎 · 微博 · 大众点评（2026-10-11）<br>
+  个体差异大，一切以医院和医生的指导为准
+</footer>
+</div>
+
+<script>
+var KEY='tiedan_maternity_checklist_v2';
+function allBoxes(){return document.querySelectorAll('ul.check input[type=checkbox]')}
+function load(){
+  var saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+  allBoxes().forEach(function(b){if(saved[b.id])b.checked=true});
+  paint();
+}
+function save(){
+  var o={};allBoxes().forEach(function(b){if(b.checked)o[b.id]=1});
+  localStorage.setItem(KEY,JSON.stringify(o))
+}
+function paint(){
+  var boxes=allBoxes(),done=0;
+  boxes.forEach(function(b){var li=b.closest('li');if(li)li.classList.toggle('done',b.checked);if(b.checked)done++});
+  document.getElementById('done-num').textContent=done+'/'+boxes.length;
+  document.getElementById('bar').style.width=(boxes.length?Math.round(done/boxes.length*100):0)+'%';
+  document.getElementById('allDone').style.display=(boxes.length&&done===boxes.length)?'block':'none';
+}
+function resetAll(){if(confirm('清空所有勾选？')){allBoxes().forEach(function(b){b.checked=false});save();paint()}}
+document.addEventListener('change',function(e){if(e.target.matches('ul.check input[type=checkbox]')){save();paint()}});
+(function(){
+  var d=new Date(2026,9,13)-new Date();var days=Math.ceil(d/86400000);
+  document.getElementById('days').textContent=days>0?days:(days===0?'0':'已过 '+(-days));
+  load();
+})();
+</script>
+</body>
+</html>

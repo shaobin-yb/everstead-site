@@ -50,6 +50,7 @@ PRIVATE_PREFIXES = (
     "radar-site/",
     "tools/mushenji/",     # 牧神记内容梳理(私人专区, 2026-09-24)
     "tools/mashi/",        # 小手搓麻食·烩麻食(私人专区, 2026-09-30)
+    "tools/maternity/",    # 给月饼妈妈的待产手账(私人专区, 2026-10-11)
     "knowledge/alm-interpretation/",  # 《办法》深度解读(内部材料, 含产品策略, 密码门, 2026-09-24)
 )
 SKIP_FILES = {"index.html", "index-template.html", "kb.html", "search.json"}

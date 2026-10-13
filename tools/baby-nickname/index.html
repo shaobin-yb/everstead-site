@@ -1,197 +1,277 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<!-- v2-rainbow: 炫彩动态版（2026-10-13） -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="theme-color" content="#0b0620">
 <title>老二小名参考 · 全家投票</title>
 <style>
-/* ── 色板（与起名档案页/名字榜单同族：朱砂/鎏金/青瓷/黛紫）── */
+/* ── 炫彩夜底 · 大胆用色版（v2）── */
 :root {
-  color-scheme: light;
-  --surf: #fcfcfb;
-  --page: #f9f9f7;
-  --ink: #0b0b0b;
-  --ink2: #52514e;
-  --muted: #898781;
-  --line: #e1e0d9;
-  --wang: #C23B2E;   /* 朱砂 */
-  --gold: #C79A2B;   /* 鎏金 */
-  --purple: #6F5EA8; /* 黛紫 */
-  --ren: #0F9678;    /* 青瓷绿 */
-  --blue: #2a78d6;
+  --bg: #0b0620;
+  --ink: #f5f3ff;
+  --ink2: #c9c3ee;
+  --muted: #8f88b8;
+  --line: rgba(255,255,255,.14);
+  --glass: rgba(255,255,255,.065);
+  --pink: #ff3d8b;
+  --orange: #ff8a00;
+  --gold: #ffd23f;
+  --green: #35e08a;
+  --cyan: #00d4ff;
+  --violet: #8b5cf6;
+  --rainbow: linear-gradient(90deg,#ff3d8b,#ff8a00,#ffd23f,#35e08a,#00d4ff,#8b5cf6,#ff3d8b);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  background: var(--page);
+  background: var(--bg);
   color: var(--ink);
   font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
   line-height: 1.65;
-  padding: 0 0 100px;
+  padding: 0 0 104px;
+  overflow-x: hidden;
 }
-.wrap { max-width: 1040px; margin: 0 auto; padding: 0 18px; }
+.wrap { position: relative; z-index: 2; max-width: 1040px; margin: 0 auto; padding: 0 18px; }
 h1, h2, h3 { text-wrap: balance; }
 .num { font-variant-numeric: tabular-nums; }
 
+/* ── 极光背景 ── */
+.aurora { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.aurora i { position: absolute; display: block; border-radius: 50%; filter: blur(64px); opacity: .5; }
+.aurora .b1 { width: 46vw; height: 46vw; left: -12vw; top: -10vh; background: radial-gradient(circle,#ff3d8b 0%,transparent 70%); animation: drift1 26s ease-in-out infinite alternate; }
+.aurora .b2 { width: 42vw; height: 42vw; right: -14vw; top: 8vh; background: radial-gradient(circle,#00d4ff 0%,transparent 70%); animation: drift2 22s ease-in-out infinite alternate; }
+.aurora .b3 { width: 38vw; height: 38vw; left: 8vw; top: 46vh; background: radial-gradient(circle,#8b5cf6 0%,transparent 70%); animation: drift3 30s ease-in-out infinite alternate; }
+.aurora .b4 { width: 34vw; height: 34vw; right: 2vw; bottom: -12vh; background: radial-gradient(circle,#ff8a00 0%,transparent 70%); animation: drift1 24s ease-in-out infinite alternate-reverse; }
+.aurora .b5 { width: 26vw; height: 26vw; left: 38vw; top: 16vh; background: radial-gradient(circle,#35e08a 0%,transparent 70%); animation: drift2 34s ease-in-out infinite alternate-reverse; }
+@keyframes drift1 { from { transform: translate(0,0) scale(1); } to { transform: translate(6vw,5vh) scale(1.15); } }
+@keyframes drift2 { from { transform: translate(0,0) scale(1.1); } to { transform: translate(-5vw,7vh) scale(.95); } }
+@keyframes drift3 { from { transform: translate(0,0) scale(1); } to { transform: translate(4vw,-6vh) scale(1.2); } }
+
 /* ── 头部 ── */
-header { padding: 44px 0 6px; }
+header { padding: 46px 0 6px; }
 .title-row { display: flex; align-items: center; gap: 14px; }
 .seal {
-  width: 54px; height: 54px; flex: none;
-  background: var(--wang); color: #fff;
-  display: grid; place-items: center;
-  font-size: 20px; font-weight: 700; line-height: 1.15;
-  border-radius: 8px; text-align: center;
+  width: 56px; height: 56px; flex: none;
+  background: var(--rainbow); background-size: 400% 100%;
+  color: #fff; display: grid; place-items: center;
+  font-size: 20px; font-weight: 800; line-height: 1.15;
+  border-radius: 14px; text-align: center;
+  box-shadow: 0 6px 24px rgba(255,61,139,.35);
+  animation: slide-bg 6s linear infinite;
+  text-shadow: 0 1px 4px rgba(0,0,0,.25);
 }
-h1 { font-size: 26px; font-weight: 700; }
+@keyframes slide-bg { from { background-position: 0% 50%; } to { background-position: 400% 50%; } }
+h1 {
+  font-size: 27px; font-weight: 800;
+  background: var(--rainbow); background-size: 300% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: slide-bg 8s linear infinite;
+}
 .sub { color: var(--ink2); margin-top: 6px; font-size: 14px; }
+.horse { display: inline-block; animation: bob 2.2s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
 
 /* ── 导语 ── */
 .intro {
-  margin-top: 22px; background: var(--surf); border: 1px solid var(--line);
-  border-radius: 12px; padding: 18px 20px; font-size: 14.5px; color: var(--ink2);
+  margin-top: 24px; border-radius: 14px; padding: 18px 20px; font-size: 14.5px; color: var(--ink2);
+  background: linear-gradient(160deg, rgba(255,61,139,.14), rgba(0,212,255,.10) 55%, rgba(139,92,246,.14));
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 30px rgba(6,2,20,.45);
 }
 .intro b { color: var(--ink); }
 .steps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.step { font-size: 13px; background: #f3f2ee; border-radius: 999px; padding: 4px 12px; color: var(--ink2); }
+.step {
+  font-size: 13px; border-radius: 999px; padding: 4px 12px; color: var(--ink);
+  background: rgba(255,255,255,.08); border: 1px solid var(--line);
+}
+.step b { color: var(--cyan); }
 
 /* ── 卡片网格 ── */
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; margin-top: 22px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; margin-top: 24px; }
 .card {
-  position: relative; background: var(--surf); border: 1px solid var(--line);
-  border-radius: 12px; padding: 16px 16px 58px;
+  position: relative;
+  background: var(--glass); border: 1px solid var(--line); border-radius: 16px;
+  padding: 16px 16px 58px;
   overflow: hidden;
-  transition: border-color .2s, box-shadow .2s;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .5s ease-out, transform .5s ease-out, border-color .2s, box-shadow .25s;
 }
-.card.sel { border-color: var(--wang); box-shadow: 0 0 0 2px rgba(194,59,46,.12); }
-.accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gold); }
-.card.top3 .accent { background: var(--wang); }
-.card-top { display: flex; justify-content: space-between; align-items: baseline; margin: 4px 0 0; }
-.rank { font-family: Georgia, "Times New Roman", serif; font-size: 15px; color: var(--muted); }
-.card.top3 .rank { color: var(--wang); font-weight: 700; }
+.card.in { opacity: 1; transform: none; }
+.card.sel { box-shadow: 0 0 0 2px hsl(var(--h),92%,62%), 0 10px 34px hsla(var(--h),90%,55%,.30); border-color: transparent; }
+.accent { position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, hsl(var(--h),95%,60%), hsl(calc(var(--h) + 60),95%,62%)); }
+.card.top3 .accent { background-size: 200% 100%; animation: sheen 3s linear infinite; }
+@keyframes sheen { from { background-position: 0% 50%; } to { background-position: 200% 50%; } }
+.card-top { display: flex; justify-content: space-between; align-items: baseline; margin: 6px 0 0; }
+.rank { font-family: Georgia, "Times New Roman", serif; font-size: 16px; color: hsl(var(--h),85%,72%); font-weight: 700; }
+.card.top3 .rank { color: var(--gold); }
 .score { font-size: 14px; font-weight: 700; color: var(--ink2); }
-.card.top3 .score { color: var(--wang); }
-.name { font-size: 26px; font-weight: 700; letter-spacing: .04em; margin-top: 2px; }
+.name {
+  font-size: 27px; font-weight: 800; letter-spacing: .04em; margin-top: 2px;
+  background: linear-gradient(120deg, #fff 20%, hsl(var(--h),95%,78%) 80%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
 .mean { list-style: none; margin-top: 10px; }
 .mean li { font-size: 13.5px; color: var(--ink2); margin: 6px 0; padding-left: 14px; position: relative; }
 .mean li::before {
   content: ''; position: absolute; left: 2px; top: .62em;
-  width: 5px; height: 5px; border-radius: 50%; background: var(--gold);
+  width: 5px; height: 5px; border-radius: 50%; background: hsl(var(--h),92%,62%);
 }
-.card.top3 .mean li::before { background: var(--wang); }
 .mean li b { color: var(--ink); }
 .warn {
-  margin-top: 10px; font-size: 12.5px; color: #9c2f24;
-  background: #fdf4f2; border: 1px solid #eccfc9; border-radius: 8px; padding: 6px 10px;
+  margin-top: 10px; font-size: 12.5px; color: #ffb3c4;
+  background: rgba(255,86,120,.10); border: 1px solid rgba(255,86,120,.35);
+  border-radius: 9px; padding: 6px 10px;
   text-wrap: pretty;
 }
 .pick {
   position: absolute; left: 16px; right: 16px; bottom: 14px;
   padding: 11px 0; min-height: 44px;
-  border-radius: 10px; border: 1px solid var(--line);
-  background: #fff; color: var(--ink); font-size: 15px; font-weight: 600;
+  border-radius: 12px; border: 1px solid var(--line);
+  background: rgba(255,255,255,.08); color: var(--ink); font-size: 15px; font-weight: 700;
   cursor: pointer;
-  transition: background-color .2s, border-color .2s, color .2s, transform .12s;
+  transition: background-color .2s, border-color .2s, color .2s, transform .12s, box-shadow .25s;
 }
-.pick:active { transform: scale(.98); }
-.pick.on { background: var(--wang); border-color: var(--wang); color: #fff; }
+.pick:active { transform: scale(.97); }
+.pick.on {
+  background: linear-gradient(135deg, hsl(var(--h),92%,58%), hsl(calc(var(--h) + 50),92%,60%));
+  border-color: transparent; color: #fff;
+  box-shadow: 0 6px 22px hsla(var(--h),90%,55%,.45);
+}
 
 /* ── 投票区 ── */
-.vote { margin-top: 46px; background: var(--surf); border: 1px solid var(--line); border-radius: 14px; padding: 22px 20px; }
-.vote h2 { font-size: 20px; }
+.vote {
+  margin-top: 48px; border-radius: 18px; padding: 24px 20px;
+  background: var(--glass); border: 1px solid var(--line);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 10px 40px rgba(6,2,20,.5);
+}
+.vote h2 {
+  font-size: 21px;
+  background: linear-gradient(90deg,#00d4ff,#8b5cf6,#ff3d8b);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  display: inline-block;
+}
 .vote .sub2 { color: var(--ink2); font-size: 13.5px; margin-top: 6px; text-wrap: pretty; }
 .vrow { margin-top: 16px; }
-.vrow label { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
+.vrow label { display: block; font-size: 13.5px; font-weight: 700; margin-bottom: 8px; color: var(--ink); }
 .quick { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
 .qbtn {
-  border: 1px solid var(--line); background: #fff; border-radius: 999px;
+  border: 1px solid var(--line); background: rgba(255,255,255,.07); border-radius: 999px;
   padding: 8px 16px; min-height: 40px; font-size: 14px; color: var(--ink); cursor: pointer;
   transition: background-color .2s, border-color .2s, color .2s, transform .12s;
 }
-.qbtn:active { transform: scale(.97); }
-.qbtn.on { background: var(--ink); color: #fff; border-color: var(--ink); }
-input[type=text] {
-  width: 100%; border: 1px solid var(--line); border-radius: 10px;
-  padding: 11px 14px; font-size: 15px; background: #fff; color: var(--ink);
+.qbtn:active { transform: scale(.96); }
+.qbtn.on {
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+  border-color: transparent; color: #fff; font-weight: 700;
 }
-input[type=text]:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+input[type=text] {
+  width: 100%; border: 1px solid var(--line); border-radius: 11px;
+  padding: 12px 14px; font-size: 15px; background: rgba(255,255,255,.07); color: var(--ink);
+}
+input[type=text]::placeholder { color: var(--muted); }
+input[type=text]:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
 .selchips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 34px; align-items: center; }
-.schip { background: #fbeae6; border: 1px solid #e0b8b0; color: #9c2f24; border-radius: 999px; padding: 5px 12px; font-size: 14px; }
+.schip {
+  border-radius: 999px; padding: 5px 13px; font-size: 14px; font-weight: 700;
+  background: hsla(var(--h),90%,60%,.16);
+  border: 1px solid hsla(var(--h),90%,65%,.55);
+  color: hsl(var(--h),95%,78%);
+}
 .selchips .none { color: var(--muted); font-size: 13.5px; }
 .gen {
-  margin-top: 20px; width: 100%; padding: 14px; min-height: 48px;
-  border: none; border-radius: 12px; background: var(--wang); color: #fff;
-  font-size: 16px; font-weight: 700; cursor: pointer;
+  margin-top: 22px; width: 100%; padding: 15px; min-height: 50px;
+  border: none; border-radius: 14px; color: #fff;
+  background: var(--rainbow); background-size: 300% 100%;
+  font-size: 17px; font-weight: 800; letter-spacing: .06em; cursor: pointer;
+  box-shadow: 0 8px 28px rgba(255,61,139,.35);
+  animation: slide-bg 7s linear infinite;
   transition: filter .2s, transform .12s, opacity .2s;
+  text-shadow: 0 1px 4px rgba(0,0,0,.25);
 }
 .gen:active { transform: scale(.98); }
-.gen:disabled { filter: grayscale(.55); opacity: .55; cursor: not-allowed; }
-.result { margin-top: 18px; border-top: 1px dashed var(--line); padding-top: 16px; }
+.gen:disabled { filter: grayscale(.6) brightness(.7); opacity: .55; cursor: not-allowed; animation: none; }
+.result { margin-top: 20px; border-top: 1px dashed var(--line); padding-top: 16px; }
 .result p { font-size: 13.5px; color: var(--ink2); margin-bottom: 8px; }
 textarea {
-  width: 100%; border: 1px solid var(--line); border-radius: 10px;
+  width: 100%; border: 1px solid var(--line); border-radius: 12px;
   padding: 12px; font-size: 14.5px; line-height: 1.7;
-  background: #fff; color: var(--ink); resize: vertical; min-height: 96px;
+  background: rgba(255,255,255,.07); color: var(--ink); resize: vertical; min-height: 96px;
   font-family: inherit;
 }
 .copy, .reset {
   margin-top: 10px; padding: 11px 22px; min-height: 44px;
-  border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
-  border: 1px solid var(--line); background: #fff; color: var(--ink);
+  border-radius: 11px; font-size: 15px; font-weight: 700; cursor: pointer;
+  border: 1px solid var(--line); background: rgba(255,255,255,.08); color: var(--ink);
   transition: background-color .2s, border-color .2s, color .2s, transform .12s;
 }
-.copy { background: var(--ink); color: #fff; border-color: var(--ink); margin-right: 10px; }
-.copy:active, .reset:active { transform: scale(.98); }
-.copy.done { background: var(--ren); border-color: var(--ren); }
+.copy { background: linear-gradient(135deg, var(--cyan), var(--violet)); border-color: transparent; color: #fff; margin-right: 10px; }
+.copy:active, .reset:active { transform: scale(.97); }
+.copy.done { background: linear-gradient(135deg, var(--green), #0f9678); }
 
-/* ── 悬浮投票按钮 / 提示 ── */
+/* ── 悬浮投票按钮 / 提示 / 彩屑画布 ── */
 #votefab {
   position: fixed; left: 14px; bottom: 16px; z-index: 99998;
-  border: 1px solid var(--line); background: #fff; color: var(--ink);
-  border-radius: 999px; padding: 12px 18px; min-height: 44px;
-  font-size: 14px; font-weight: 600; box-shadow: 0 4px 16px rgba(11,11,11,.12);
+  border: none; color: #fff;
+  background: var(--rainbow); background-size: 250% 100%;
+  border-radius: 999px; padding: 13px 20px; min-height: 46px;
+  font-size: 14px; font-weight: 800;
+  box-shadow: 0 6px 24px rgba(0,212,255,.35);
   cursor: pointer;
-  transition: border-color .2s, transform .15s, box-shadow .2s;
+  animation: slide-bg 6s linear infinite;
+  transition: transform .15s, box-shadow .2s;
 }
-#votefab:active { transform: scale(.96); }
-#votefab.ready { border-color: var(--wang); color: var(--wang); }
+#votefab:active { transform: scale(.95); }
+#votefab.ready { animation: slide-bg 6s linear infinite, pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+#fx { position: fixed; inset: 0; z-index: 99997; pointer-events: none; }
 #toast {
   position: fixed; top: 18px; left: 50%; z-index: 100000;
   transform: translateX(-50%) translateY(-10px);
-  background: rgba(11,11,11,.9); color: #fff; font-size: 14px;
-  border-radius: 999px; padding: 9px 18px;
+  background: rgba(22,12,46,.94); color: #fff; font-size: 14px; font-weight: 600;
+  border: 1px solid var(--line); border-radius: 999px; padding: 10px 20px;
   opacity: 0; pointer-events: none;
   transition: opacity .25s, transform .25s;
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ── 页脚 ── */
-footer { margin-top: 44px; color: var(--muted); font-size: 12.5px; line-height: 1.9; text-wrap: pretty; }
+footer { margin-top: 46px; color: var(--muted); font-size: 12.5px; line-height: 1.9; text-wrap: pretty; }
 footer b { color: var(--ink2); }
 
 @media (max-width: 600px) {
   h1 { font-size: 22px; }
   .grid { grid-template-columns: 1fr; }
-  .name { font-size: 24px; }
+  .name { font-size: 25px; }
+  .aurora i { filter: blur(48px); opacity: .45; }
 }
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
+  .aurora i, .seal, h1, .horse, .card.top3 .accent, .gen, #votefab, #votefab.ready { animation: none !important; }
+  * { transition: none !important; }
+  .card { opacity: 1; transform: none; }
 }
 </style>
-<script>
-var _hmt=_hmt||[];
-(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?1d958a32a6588643ee6e67da344c7693";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();
-</script>
 </head>
 <body>
+
+<!-- 极光背景层 -->
+<div class="aurora" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><i class="b5"></i></div>
+
 <div class="wrap">
 
 <header>
   <div class="title-row">
     <div class="seal">小<br>名</div>
     <div>
-      <h1>老二小名参考 · 全家投票</h1>
+      <h1>老二小名参考 · 全家投票 <span class="horse">🐎</span></h1>
       <div class="sub">2026 赤马年 · 15 席候选 · 寓意与来历全解 · 全家一人最多投 3 个</div>
     </div>
   </div>
@@ -201,9 +281,9 @@ var _hmt=_hmt||[];
   <p>2026 年丙午年——<b>赤马年</b>，家里马上要添一匹小马。大名家里慢慢挑，<b>小名先让全家人一起定</b>：下面 15 个候选，每一个的寓意和来历都写清楚了。</p>
   <p style="margin-top:8px">挑出你最中意的（最多 3 个）→ 在下方投票区生成结果 → 复制发到家庭群。最终由爸爸妈妈拍板。</p>
   <div class="steps">
-    <span class="step">① 看寓意</span>
-    <span class="step">② 点卡片上的「投它」，最多 3 个</span>
-    <span class="step">③ 到页面底部填称呼、生成结果、复制发群</span>
+    <span class="step"><b>①</b> 看寓意</span>
+    <span class="step"><b>②</b> 点卡片上的「投它」，最多 3 个</span>
+    <span class="step"><b>③</b> 页面底部填称呼、生成结果、复制发群</span>
   </div>
 </div>
 
@@ -242,11 +322,12 @@ var _hmt=_hmt||[];
 <footer>
   <p><b>排序方法</b>：15 席按五维打分排（寓意彩头 25% / 音韵顺口 20% / 联想风险 20% / 与哥哥「月饼」搭配 20% / 辨识度 15%）。本轮补席：大白兔、团子、酥酥（候选池中分数最高的三个）。</p>
   <p>打分只是参考，全家人的感觉最重要——尤其欢迎爷爷奶奶姥姥姥爷的意见。</p>
-  <p>铁蛋 · 2026-10-13 整理 · 本页不公开、不索引</p>
+  <p>铁蛋 · 2026-10-13 整理 · 炫彩版 · 本页不公开、不索引</p>
 </footer>
 
 </div>
 
+<canvas id="fx" aria-hidden="true"></canvas>
 <div id="toast" role="status" aria-live="polite"></div>
 <button id="votefab" type="button">投票 0/3</button>
 
@@ -335,11 +416,12 @@ const NAMES = [
 
 var CHOICES = ['爷爷', '奶奶', '姥姥', '姥爷', '爸爸', '妈妈'];
 var MAX = 3;
-var picked = [];   /* 已选小名 */
+var picked = [];
 
 var grid = document.getElementById('grid');
 var toastEl = document.getElementById('toast');
 var toastTimer = null;
+var REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function toast(msg) {
   toastEl.textContent = msg;
@@ -348,10 +430,97 @@ function toast(msg) {
   toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
 }
 
-/* ── 渲染候选卡片 ── */
+/* ═══════ 彩屑引擎（canvas，零依赖） ═══════ */
+var fx = document.getElementById('fx');
+var fctx = fx.getContext('2d');
+var particles = [];
+var raf = null;
+
+function sizeFx() {
+  var dpr = window.devicePixelRatio || 1;
+  fx.width = Math.floor(innerWidth * dpr);
+  fx.height = Math.floor(innerHeight * dpr);
+  fx.style.width = innerWidth + 'px';
+  fx.style.height = innerHeight + 'px';
+  fctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+sizeFx();
+addEventListener('resize', sizeFx);
+
+function burst(x, y, n, pow) {
+  if (REDUCE) return;
+  for (var i = 0; i < n; i++) {
+    particles.push({
+      x: x, y: y,
+      vx: (Math.random() - .5) * pow,
+      vy: -Math.random() * pow * .8 - 1.6,
+      g: .12 + Math.random() * .1,
+      r: 3 + Math.random() * 4.5,
+      hue: Math.random() * 360,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - .5) * .35,
+      t: 0,
+      life: 60 + Math.random() * 45,
+      rect: Math.random() < .55
+    });
+  }
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+
+function rain() {
+  if (REDUCE) return;
+  for (var i = 0; i < 90; i++) {
+    particles.push({
+      x: Math.random() * innerWidth,
+      y: -20 - Math.random() * 80,
+      vx: (Math.random() - .5) * 1.4,
+      vy: 1.5 + Math.random() * 2.2,
+      g: .02,
+      r: 3 + Math.random() * 4,
+      hue: Math.random() * 360,
+      rot: Math.random() * Math.PI,
+      vr: (Math.random() - .5) * .3,
+      t: 0,
+      life: 150 + Math.random() * 60,
+      rect: Math.random() < .55
+    });
+  }
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+
+function tick() {
+  fctx.clearRect(0, 0, innerWidth, innerHeight);
+  for (var i = particles.length - 1; i >= 0; i--) {
+    var p = particles[i];
+    p.t++;
+    p.vy += p.g;
+    p.vx *= .995;
+    p.x += p.vx;
+    p.y += p.vy;
+    p.rot += p.vr;
+    if (p.t >= p.life) { particles.splice(i, 1); continue; }
+    fctx.save();
+    fctx.translate(p.x, p.y);
+    fctx.rotate(p.rot);
+    fctx.globalAlpha = Math.max(0, 1 - p.t / p.life);
+    fctx.fillStyle = 'hsl(' + p.hue.toFixed(0) + ',95%,62%)';
+    if (p.rect) { fctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * .62); }
+    else { fctx.beginPath(); fctx.arc(0, 0, p.r / 2, 0, Math.PI * 2); fctx.fill(); }
+    fctx.restore();
+  }
+  if (particles.length) {
+    raf = requestAnimationFrame(tick);
+  } else {
+    raf = null;
+    fctx.clearRect(0, 0, innerWidth, innerHeight);
+  }
+}
+
+/* ═══════ 渲染候选卡片 ═══════ */
 function render() {
   grid.innerHTML = NAMES.map(function (n, i) {
-    return '<article class="card' + (n.top ? ' top3' : '') + '" id="card-' + i + '">' +
+    var hue = (i * 24) % 360;
+    return '<article class="card' + (n.top ? ' top3' : '') + '" id="card-' + i + '" style="--h:' + hue + '">' +
       '<div class="accent"></div>' +
       '<div class="card-top"><span class="rank">#' + (i + 1) + '</span><span class="score num">' + n.s.toFixed(2) + '</span></div>' +
       '<div class="name">' + n.n + '</div>' +
@@ -360,9 +529,21 @@ function render() {
       '<button class="pick" type="button" data-i="' + i + '" aria-pressed="false">投它</button>' +
       '</article>';
   }).join('');
+  revealCards();
 }
 
-/* ── 选择逻辑 ── */
+/* 入场动画：逐张浮现（定时器驱动，不依赖 IntersectionObserver——微信内置浏览器里最稳） */
+function revealCards() {
+  var cards = [].slice.call(document.querySelectorAll('.card'));
+  if (REDUCE) { cards.forEach(function (c) { c.classList.add('in'); }); return; }
+  cards.forEach(function (c, i) {
+    setTimeout(function () { c.classList.add('in'); }, 80 + i * 55);
+    /* 兜底：无论过渡动画是否正常播放，最迟 1 秒后用行内样式强制落定可见 */
+    setTimeout(function () { c.style.opacity = '1'; c.style.transform = 'none'; }, 900 + i * 55);
+  });
+}
+
+/* ═══════ 选择逻辑 ═══════ */
 function updateAll() {
   document.querySelectorAll('.pick').forEach(function (btn) {
     var i = +btn.dataset.i;
@@ -372,14 +553,13 @@ function updateAll() {
     btn.textContent = on ? '✓ 已选' : '投它';
     document.getElementById('card-' + i).classList.toggle('sel', on);
   });
-  var counts = document.getElementById('selCount');
-  counts.textContent = picked.length + '/' + MAX;
+  document.getElementById('selCount').textContent = picked.length + '/' + MAX;
   var fab = document.getElementById('votefab');
   fab.textContent = '投票 ' + picked.length + '/' + MAX;
   fab.classList.toggle('ready', picked.length > 0);
   renderChips();
   document.getElementById('genBtn').disabled = picked.length === 0;
-  if (picked.length === 0) { var r = document.getElementById('result'); r.hidden = true; }
+  if (picked.length === 0) { document.getElementById('result').hidden = true; }
 }
 
 function renderChips() {
@@ -389,7 +569,7 @@ function renderChips() {
     return;
   }
   box.innerHTML = picked.map(function (i) {
-    return '<span class="schip">' + NAMES[i].n + '</span>';
+    return '<span class="schip" style="--h:' + ((i * 24) % 360) + '">' + NAMES[i].n + '</span>';
   }).join('');
 }
 
@@ -403,6 +583,8 @@ grid.addEventListener('click', function (e) {
   } else {
     if (picked.length >= MAX) { toast('最多选 3 个哦，先去一个再选'); return; }
     picked.push(i);
+    var r = btn.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 26, 7);
   }
   updateAll();
 });
@@ -419,20 +601,17 @@ quick.addEventListener('click', function (e) {
   b.classList.add('on');
   document.getElementById('who').value = b.textContent;
 });
-
-/* 手动输入称呼时，取消快捷按钮高亮 */
 document.getElementById('who').addEventListener('input', function () {
   document.querySelectorAll('.qbtn').forEach(function (x) { x.classList.remove('on'); });
 });
 
-/* ── 生成结果 ── */
+/* ── 生成结果（放礼花） ── */
 document.getElementById('genBtn').addEventListener('click', function () {
   var who = document.getElementById('who').value.trim();
   if (!picked.length) { toast('先选几个再生成哦'); return; }
   if (!who) {
     toast('先填一下你是哪位');
-    var w = document.getElementById('who');
-    w.focus();
+    document.getElementById('who').focus();
     return;
   }
   var msg = document.getElementById('msg').value.trim();
@@ -444,9 +623,15 @@ document.getElementById('genBtn').addEventListener('click', function () {
   var r = document.getElementById('result');
   r.hidden = false;
   r.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  /* 庆祝礼花：中央爆发 + 顶部彩屑雨 */
+  burst(innerWidth / 2, innerHeight * .38, 130, 12);
+  setTimeout(function () { burst(innerWidth * .25, innerHeight * .5, 70, 10); }, 160);
+  setTimeout(function () { burst(innerWidth * .75, innerHeight * .5, 70, 10); }, 280);
+  rain();
 });
 
-/* ── 复制（微信里 clipboard API 可能不可用，走 execCommand 兜底） ── */
+/* ── 复制（微信里 clipboard 不可用时走 execCommand 兜底） ── */
 document.getElementById('copyBtn').addEventListener('click', function () {
   var btn = this;
   var ta = document.getElementById('resultTa');
@@ -456,6 +641,7 @@ document.getElementById('copyBtn').addEventListener('click', function () {
       btn.textContent = '已复制，去群里粘贴吧';
       btn.classList.add('done');
       toast('已复制 ✓');
+      burst(innerWidth / 2, 90, 30, 6);
       setTimeout(function () {
         btn.textContent = '复制结果';
         btn.classList.remove('done');
@@ -494,6 +680,23 @@ document.getElementById('resetBtn').addEventListener('click', function () {
 document.getElementById('votefab').addEventListener('click', function () {
   document.getElementById('vote').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
+
+/* ── 桌面端卡面 3D 跟随（触屏设备自动跳过） ── */
+if (!REDUCE && window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+  document.querySelectorAll('.card').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      var dx = (e.clientX - r.left) / r.width - .5;
+      var dy = (e.clientY - r.top) / r.height - .5;
+      card.style.transition = 'transform .12s';
+      card.style.transform = 'perspective(760px) rotateY(' + (dx * 5).toFixed(2) + 'deg) rotateX(' + (-dy * 5).toFixed(2) + 'deg)';
+    });
+    card.addEventListener('mouseleave', function () {
+      card.style.transition = 'transform .3s';
+      card.style.transform = '';
+    });
+  });
+}
 
 render();
 updateAll();

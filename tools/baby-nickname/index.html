@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>老二小名参考 · 全家投票</title>
+<style>
+/* ── 色板（与起名档案页/名字榜单同族：朱砂/鎏金/青瓷/黛紫）── */
+:root {
+  color-scheme: light;
+  --surf: #fcfcfb;
+  --page: #f9f9f7;
+  --ink: #0b0b0b;
+  --ink2: #52514e;
+  --muted: #898781;
+  --line: #e1e0d9;
+  --wang: #C23B2E;   /* 朱砂 */
+  --gold: #C79A2B;   /* 鎏金 */
+  --purple: #6F5EA8; /* 黛紫 */
+  --ren: #0F9678;    /* 青瓷绿 */
+  --blue: #2a78d6;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+  line-height: 1.65;
+  padding: 0 0 100px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 18px; }
+h1, h2, h3 { text-wrap: balance; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ── 头部 ── */
+header { padding: 44px 0 6px; }
+.title-row { display: flex; align-items: center; gap: 14px; }
+.seal {
+  width: 54px; height: 54px; flex: none;
+  background: var(--wang); color: #fff;
+  display: grid; place-items: center;
+  font-size: 20px; font-weight: 700; line-height: 1.15;
+  border-radius: 8px; text-align: center;
+}
+h1 { font-size: 26px; font-weight: 700; }
+.sub { color: var(--ink2); margin-top: 6px; font-size: 14px; }
+
+/* ── 导语 ── */
+.intro {
+  margin-top: 22px; background: var(--surf); border: 1px solid var(--line);
+  border-radius: 12px; padding: 18px 20px; font-size: 14.5px; color: var(--ink2);
+}
+.intro b { color: var(--ink); }
+.steps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.step { font-size: 13px; background: #f3f2ee; border-radius: 999px; padding: 4px 12px; color: var(--ink2); }
+
+/* ── 卡片网格 ── */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; margin-top: 22px; }
+.card {
+  position: relative; background: var(--surf); border: 1px solid var(--line);
+  border-radius: 12px; padding: 16px 16px 58px;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
+}
+.card.sel { border-color: var(--wang); box-shadow: 0 0 0 2px rgba(194,59,46,.12); }
+.accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gold); }
+.card.top3 .accent { background: var(--wang); }
+.card-top { display: flex; justify-content: space-between; align-items: baseline; margin: 4px 0 0; }
+.rank { font-family: Georgia, "Times New Roman", serif; font-size: 15px; color: var(--muted); }
+.card.top3 .rank { color: var(--wang); font-weight: 700; }
+.score { font-size: 14px; font-weight: 700; color: var(--ink2); }
+.card.top3 .score { color: var(--wang); }
+.name { font-size: 26px; font-weight: 700; letter-spacing: .04em; margin-top: 2px; }
+.mean { list-style: none; margin-top: 10px; }
+.mean li { font-size: 13.5px; color: var(--ink2); margin: 6px 0; padding-left: 14px; position: relative; }
+.mean li::before {
+  content: ''; position: absolute; left: 2px; top: .62em;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--gold);
+}
+.card.top3 .mean li::before { background: var(--wang); }
+.mean li b { color: var(--ink); }
+.warn {
+  margin-top: 10px; font-size: 12.5px; color: #9c2f24;
+  background: #fdf4f2; border: 1px solid #eccfc9; border-radius: 8px; padding: 6px 10px;
+  text-wrap: pretty;
+}
+.pick {
+  position: absolute; left: 16px; right: 16px; bottom: 14px;
+  padding: 11px 0; min-height: 44px;
+  border-radius: 10px; border: 1px solid var(--line);
+  background: #fff; color: var(--ink); font-size: 15px; font-weight: 600;
+  cursor: pointer;
+  transition: background-color .2s, border-color .2s, color .2s, transform .12s;
+}
+.pick:active { transform: scale(.98); }
+.pick.on { background: var(--wang); border-color: var(--wang); color: #fff; }
+
+/* ── 投票区 ── */
+.vote { margin-top: 46px; background: var(--surf); border: 1px solid var(--line); border-radius: 14px; padding: 22px 20px; }
+.vote h2 { font-size: 20px; }
+.vote .sub2 { color: var(--ink2); font-size: 13.5px; margin-top: 6px; text-wrap: pretty; }
+.vrow { margin-top: 16px; }
+.vrow label { display: block; font-size: 13.5px; font-weight: 600; margin-bottom: 8px; }
+.quick { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.qbtn {
+  border: 1px solid var(--line); background: #fff; border-radius: 999px;
+  padding: 8px 16px; min-height: 40px; font-size: 14px; color: var(--ink); cursor: pointer;
+  transition: background-color .2s, border-color .2s, color .2s, transform .12s;
+}
+.qbtn:active { transform: scale(.97); }
+.qbtn.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+input[type=text] {
+  width: 100%; border: 1px solid var(--line); border-radius: 10px;
+  padding: 11px 14px; font-size: 15px; background: #fff; color: var(--ink);
+}
+input[type=text]:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+.selchips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 34px; align-items: center; }
+.schip { background: #fbeae6; border: 1px solid #e0b8b0; color: #9c2f24; border-radius: 999px; padding: 5px 12px; font-size: 14px; }
+.selchips .none { color: var(--muted); font-size: 13.5px; }
+.gen {
+  margin-top: 20px; width: 100%; padding: 14px; min-height: 48px;
+  border: none; border-radius: 12px; background: var(--wang); color: #fff;
+  font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: filter .2s, transform .12s, opacity .2s;
+}
+.gen:active { transform: scale(.98); }
+.gen:disabled { filter: grayscale(.55); opacity: .55; cursor: not-allowed; }
+.result { margin-top: 18px; border-top: 1px dashed var(--line); padding-top: 16px; }
+.result p { font-size: 13.5px; color: var(--ink2); margin-bottom: 8px; }
+textarea {
+  width: 100%; border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px; font-size: 14.5px; line-height: 1.7;
+  background: #fff; color: var(--ink); resize: vertical; min-height: 96px;
+  font-family: inherit;
+}
+.copy, .reset {
+  margin-top: 10px; padding: 11px 22px; min-height: 44px;
+  border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--line); background: #fff; color: var(--ink);
+  transition: background-color .2s, border-color .2s, color .2s, transform .12s;
+}
+.copy { background: var(--ink); color: #fff; border-color: var(--ink); margin-right: 10px; }
+.copy:active, .reset:active { transform: scale(.98); }
+.copy.done { background: var(--ren); border-color: var(--ren); }
+
+/* ── 悬浮投票按钮 / 提示 ── */
+#votefab {
+  position: fixed; left: 14px; bottom: 16px; z-index: 99998;
+  border: 1px solid var(--line); background: #fff; color: var(--ink);
+  border-radius: 999px; padding: 12px 18px; min-height: 44px;
+  font-size: 14px; font-weight: 600; box-shadow: 0 4px 16px rgba(11,11,11,.12);
+  cursor: pointer;
+  transition: border-color .2s, transform .15s, box-shadow .2s;
+}
+#votefab:active { transform: scale(.96); }
+#votefab.ready { border-color: var(--wang); color: var(--wang); }
+#toast {
+  position: fixed; top: 18px; left: 50%; z-index: 100000;
+  transform: translateX(-50%) translateY(-10px);
+  background: rgba(11,11,11,.9); color: #fff; font-size: 14px;
+  border-radius: 999px; padding: 9px 18px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s, transform .25s;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── 页脚 ── */
+footer { margin-top: 44px; color: var(--muted); font-size: 12.5px; line-height: 1.9; text-wrap: pretty; }
+footer b { color: var(--ink2); }
+
+@media (max-width: 600px) {
+  h1 { font-size: 22px; }
+  .grid { grid-template-columns: 1fr; }
+  .name { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+<script>
+var _hmt=_hmt||[];
+(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?1d958a32a6588643ee6e67da344c7693";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();
+</script>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="title-row">
+    <div class="seal">小<br>名</div>
+    <div>
+      <h1>老二小名参考 · 全家投票</h1>
+      <div class="sub">2026 赤马年 · 15 席候选 · 寓意与来历全解 · 全家一人最多投 3 个</div>
+    </div>
+  </div>
+</header>
+
+<div class="intro">
+  <p>2026 年丙午年——<b>赤马年</b>，家里马上要添一匹小马。大名家里慢慢挑，<b>小名先让全家人一起定</b>：下面 15 个候选，每一个的寓意和来历都写清楚了。</p>
+  <p style="margin-top:8px">挑出你最中意的（最多 3 个）→ 在下方投票区生成结果 → 复制发到家庭群。最终由爸爸妈妈拍板。</p>
+  <div class="steps">
+    <span class="step">① 看寓意</span>
+    <span class="step">② 点卡片上的「投它」，最多 3 个</span>
+    <span class="step">③ 到页面底部填称呼、生成结果、复制发群</span>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="vote" id="vote">
+  <h2>全家投票</h2>
+  <p class="sub2">每人最多选 3 个。生成结果后，长按复制或点「复制结果」，发到家庭群就行。</p>
+
+  <div class="vrow">
+    <label>你是哪位</label>
+    <div class="quick" id="quick"></div>
+    <input type="text" id="who" placeholder="也可以自己填，如：大姨 / 二舅 / 表姐">
+  </div>
+
+  <div class="vrow">
+    <label>我的选择 <span class="num" id="selCount">0/3</span></label>
+    <div class="selchips" id="selchips"><span class="none">还没选——回到上面点「投它」</span></div>
+  </div>
+
+  <div class="vrow">
+    <label>想说的话（可不填）</label>
+    <input type="text" id="msg" placeholder="比如给娃的祝福，或选它的理由">
+  </div>
+
+  <button class="gen" id="genBtn" type="button">生成投票结果</button>
+
+  <div class="result" id="result" hidden>
+    <p>把下面这段复制下来，发到家庭群（长按文字全选也可以）：</p>
+    <textarea id="resultTa" readonly></textarea>
+    <button class="copy" id="copyBtn" type="button">复制结果</button>
+    <button class="reset" id="resetBtn" type="button">重新选</button>
+  </div>
+</div>
+
+<footer>
+  <p><b>排序方法</b>：15 席按五维打分排（寓意彩头 25% / 音韵顺口 20% / 联想风险 20% / 与哥哥「月饼」搭配 20% / 辨识度 15%）。本轮补席：大白兔、团子、酥酥（候选池中分数最高的三个）。</p>
+  <p>打分只是参考，全家人的感觉最重要——尤其欢迎爷爷奶奶姥姥姥爷的意见。</p>
+  <p>铁蛋 · 2026-10-13 整理 · 本页不公开、不索引</p>
+</footer>
+
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<button id="votefab" type="button">投票 0/3</button>
+
+<script>
+'use strict';
+/* ═══════ 候选数据（15 席，按五维总分排序） ═══════
+   字段: n 小名 | s 总分 | top 前三 | y 寓意（HTML 片段数组）| w 小提醒 */
+const NAMES = [
+{n:'赤兔',s:8.85,top:true,y:[
+  '<b>天时</b>：2026 丙午年——"丙"属火、色为赤，"午"为马，丙午年就是"赤马年"，六十年一遇。"赤"＝今年的年份色',
+  '<b>典故</b>：三国第一名马，"人中吕布，马中赤兔"',
+  '<b>哥哥链</b>：名字里的"兔"＝哥哥的生肖（卯兔）——一匹马的名字里藏着哥哥',
+  '<b>彩蛋</b>：爸爸和哥哥的八字都缺火——丙午火马，这匹是家里第一把火'],
+ w:'跟兔儿爷、大白兔同抢"兔"字，兔系最后只留一个'},
+{n:'小葫芦',s:8.45,top:true,y:[
+  '<b>谐音</b>：葫芦＝福禄——福禄双全、福禄到家',
+  '<b>老图案</b>：葫芦牵藤，"蔓"谐音"万"——福禄万代、子孙绵长，添丁正应景',
+  '<b>家乡味</b>：葫芦头、葫芦鸡、糖葫芦——陕西人的葫芦三件套',
+  '<b>仙气</b>：太上老君、铁拐李的葫芦都装丹药；行医叫"悬壶"，壶也是葫芦',
+  '<b>顺口梗</b>："这娃葫芦里卖的什么药"'],
+ w:'葫芦头是猪大肠，将来熊孩子可能会拿这个喊他'},
+{n:'兔儿爷',s:8.40,top:true,y:[
+  '<b>文化</b>：老北京中秋的泥塑兔神，兔首人身，非遗手艺；老讲究祭月就供兔儿爷',
+  '<b>成套</b>：和月饼同坐中秋桌——月饼＋兔儿爷＝中秋双人组',
+  '<b>哥哥链</b>：名字里的"兔"＝哥哥的生肖',
+  '<b>气势</b>："爷"字自带男孩霸气，喊起来威风又俏皮'],
+ w:'兔系三选一；三个字略长，非北京人可能不熟这个典'},
+{n:'嘚驾',s:7.75,y:[
+  '<b>声音</b>：赶马号子"嘚儿——驾！"——吆喝一声，马就跑起来；喊娃＝喊号子',
+  '<b>拆字</b>：字形上加下马——读成"给家里加了一匹马"，马年添丁正应景',
+  '<b>双身份</b>："驾"的另一重是圣驾——驾到、接驾、起驾回宫、护驾，从马厩通到金銮殿',
+  '<b>联动</b>：配上哒哒就是问答——你喊"嘚驾"，他答"哒哒哒"'],
+ w:'有人会觉得像喊牲口，长辈接受度可以先试试'},
+{n:'雪饼',s:7.50,y:[
+  '<b>零食</b>：旺旺雪饼——国民零食，童年的味道',
+  '<b>成套</b>：月饼＋雪饼＝"饼字辈"双雄，一中秋一日常，念着轻快'],
+ w:'品牌感强，会被问"是不是爱吃雪饼"'},
+{n:'小七',s:7.45,y:[
+  '<b>生肖（最硬一层）</b>：午马是十二生肖第七位——子鼠一、丑牛二……午马七。"小七"＝他在马年的排位，生而有据',
+  '<b>私人</b>：爸爸的幸运数字',
+  '<b>家族彩蛋</b>：哥哥卯兔第 4、爷爷辰龙第 5、奶奶巳蛇第 6、他午马第 7——卯辰巳午，他一出生就把这串数补齐了',
+  '<b>加分</b>：葫芦娃七娃（宝葫芦在手、集万千宠爱）；七巧板——愿他心窍玲珑；"七上八下"取"七上"'],
+ w:'跟"小气"只差声调，将来难免有人玩谐音；全国"小七"重名多'},
+{n:'蟹蟹',s:7.35,y:[
+  '<b>谐音</b>："谢谢"——礼貌感恩的彩头，喊一声全家笑着答应',
+  '<b>应季</b>：十月吃蟹，跟月饼同是中秋桌上的角儿'],
+ w:'"横着走"的联想将来会被拿来说'},
+{n:'小九九',s:7.20,y:[
+  '<b>月份</b>：农历九月出生，月份即名字',
+  '<b>谐音</b>："久久"——长长久久',
+  '<b>功课</b>：九九乘法表——上学第一课，背的就是自己的名字',
+  '<b>机灵</b>："心里有个小九九"——机灵劲儿',
+  '<b>悬线</b>：若生日正逢九月初九（10 月 18 日前后），就是重阳节小寿星——登高、糕糕全套挂上，直接封神'],
+ w:'"打小九九"的市井梗会被亲戚开玩笑'},
+{n:'哒哒',s:7.15,y:[
+  '<b>声音</b>：马蹄声——"驾！哒哒哒哒"，马年的背景音乐',
+  '<b>成长</b>：学步声——以后听见哒哒，就知道他从哪个屋跑来了',
+  '<b>联动</b>：和嘚驾一问一答'],
+ w:'寓意偏薄，长辈可能嫌"没正形"'},
+{n:'大白兔',s:7.15,y:[
+  '<b>国民糖</b>：大白兔奶糖——甜甜的童年记忆',
+  '<b>哥哥链</b>：名字里的"兔"＝哥哥的生肖（兔系三选一）',
+  '<b>成套</b>：跟月饼一样是"国民食品"，凑一柜'],
+ w:'三个字；家里已有猫，动物梗别再叠'},
+{n:'哇塞',s:7.05,y:[
+  '<b>情绪</b>：喊一声小名＝一声惊叹——每次叫他都是一次喝彩',
+  '<b>反差</b>：月饼（甜软）＋哇塞（炸响）——一软一响'],
+ w:'老师点名会笑场；纯语气词没有字面寓意'},
+{n:'团子',s:7.05,y:[
+  '<b>团圆</b>：中秋团圆＋圆滚滚，跟月饼一个形状',
+  '<b>顺口</b>：叠字软糯，好喊'],
+ w:'很多猫猫狗狗也叫团子，重名感强；偏日系'},
+{n:'酥酥',s:7.00,y:[
+  '<b>哥哥链</b>：月饼是酥皮的——"酥酥"直接跟哥哥连上',
+  '<b>顺口</b>：软糯好喊'],
+ w:'偏软，有人觉得女孩感'},
+{n:'嘚瑟',s:6.45,y:[
+  '<b>祝愿</b>：嘴上喊"别嘚瑟"，心里盼的是他一辈子有嘚瑟的底气——愿他永远有得意的事',
+  '<b>字辈</b>：跟"嘚驾"同出一个"嘚"字——嘚驾（口令）、嘚嘚（蹄声）、嘚瑟（得意）'],
+ w:'"嘚瑟"字面是显摆，长辈可能第一个皱眉'},
+{n:'小皮蛋',s:6.35,y:[
+  '<b>双关</b>：皮蛋＝调皮蛋——不皮不闹不是娃，男孩专属的宠溺称谓',
+  '<b>成套</b>：跟月饼同为国民吃食'],
+ w:'"蛋"字有长辈觉得不雅；外人听不出双关，只当是道菜'}
+];
+
+var CHOICES = ['爷爷', '奶奶', '姥姥', '姥爷', '爸爸', '妈妈'];
+var MAX = 3;
+var picked = [];   /* 已选小名 */
+
+var grid = document.getElementById('grid');
+var toastEl = document.getElementById('toast');
+var toastTimer = null;
+
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1800);
+}
+
+/* ── 渲染候选卡片 ── */
+function render() {
+  grid.innerHTML = NAMES.map(function (n, i) {
+    return '<article class="card' + (n.top ? ' top3' : '') + '" id="card-' + i + '">' +
+      '<div class="accent"></div>' +
+      '<div class="card-top"><span class="rank">#' + (i + 1) + '</span><span class="score num">' + n.s.toFixed(2) + '</span></div>' +
+      '<div class="name">' + n.n + '</div>' +
+      '<ul class="mean">' + n.y.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>' +
+      (n.w ? '<div class="warn">小提醒：' + n.w + '</div>' : '') +
+      '<button class="pick" type="button" data-i="' + i + '" aria-pressed="false">投它</button>' +
+      '</article>';
+  }).join('');
+}
+
+/* ── 选择逻辑 ── */
+function updateAll() {
+  document.querySelectorAll('.pick').forEach(function (btn) {
+    var i = +btn.dataset.i;
+    var on = picked.indexOf(i) > -1;
+    btn.classList.toggle('on', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    btn.textContent = on ? '✓ 已选' : '投它';
+    document.getElementById('card-' + i).classList.toggle('sel', on);
+  });
+  var counts = document.getElementById('selCount');
+  counts.textContent = picked.length + '/' + MAX;
+  var fab = document.getElementById('votefab');
+  fab.textContent = '投票 ' + picked.length + '/' + MAX;
+  fab.classList.toggle('ready', picked.length > 0);
+  renderChips();
+  document.getElementById('genBtn').disabled = picked.length === 0;
+  if (picked.length === 0) { var r = document.getElementById('result'); r.hidden = true; }
+}
+
+function renderChips() {
+  var box = document.getElementById('selchips');
+  if (!picked.length) {
+    box.innerHTML = '<span class="none">还没选——回到上面点「投它」</span>';
+    return;
+  }
+  box.innerHTML = picked.map(function (i) {
+    return '<span class="schip">' + NAMES[i].n + '</span>';
+  }).join('');
+}
+
+grid.addEventListener('click', function (e) {
+  var btn = e.target.closest('.pick');
+  if (!btn) return;
+  var i = +btn.dataset.i;
+  var at = picked.indexOf(i);
+  if (at > -1) {
+    picked.splice(at, 1);
+  } else {
+    if (picked.length >= MAX) { toast('最多选 3 个哦，先去一个再选'); return; }
+    picked.push(i);
+  }
+  updateAll();
+});
+
+/* ── 称呼快捷按钮 ── */
+var quick = document.getElementById('quick');
+quick.innerHTML = CHOICES.map(function (c) {
+  return '<button class="qbtn" type="button">' + c + '</button>';
+}).join('');
+quick.addEventListener('click', function (e) {
+  var b = e.target.closest('.qbtn');
+  if (!b) return;
+  document.querySelectorAll('.qbtn').forEach(function (x) { x.classList.remove('on'); });
+  b.classList.add('on');
+  document.getElementById('who').value = b.textContent;
+});
+
+/* 手动输入称呼时，取消快捷按钮高亮 */
+document.getElementById('who').addEventListener('input', function () {
+  document.querySelectorAll('.qbtn').forEach(function (x) { x.classList.remove('on'); });
+});
+
+/* ── 生成结果 ── */
+document.getElementById('genBtn').addEventListener('click', function () {
+  var who = document.getElementById('who').value.trim();
+  if (!picked.length) { toast('先选几个再生成哦'); return; }
+  if (!who) {
+    toast('先填一下你是哪位');
+    var w = document.getElementById('who');
+    w.focus();
+    return;
+  }
+  var msg = document.getElementById('msg').value.trim();
+  var names = picked.map(function (i) { return NAMES[i].n; });
+  var text = '【老二小名投票】我是' + who + '。我投：' + names.join('、') + '。';
+  if (msg) text += ' 想说的话：' + msg;
+  text += ' —— 2026 赤马年 · 全家给小马选小名';
+  document.getElementById('resultTa').value = text;
+  var r = document.getElementById('result');
+  r.hidden = false;
+  r.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+/* ── 复制（微信里 clipboard API 可能不可用，走 execCommand 兜底） ── */
+document.getElementById('copyBtn').addEventListener('click', function () {
+  var btn = this;
+  var ta = document.getElementById('resultTa');
+  var text = ta.value;
+  function done(ok) {
+    if (ok) {
+      btn.textContent = '已复制，去群里粘贴吧';
+      btn.classList.add('done');
+      toast('已复制 ✓');
+      setTimeout(function () {
+        btn.textContent = '复制结果';
+        btn.classList.remove('done');
+      }, 2600);
+    } else {
+      ta.focus();
+      ta.select();
+      toast('长按文字全选复制即可');
+    }
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () { done(true); }, function () {
+      done(execCopy(ta));
+    });
+  } else {
+    done(execCopy(ta));
+  }
+});
+function execCopy(ta) {
+  try {
+    ta.focus();
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    return document.execCommand('copy');
+  } catch (e) { return false; }
+}
+
+/* ── 重新选 ── */
+document.getElementById('resetBtn').addEventListener('click', function () {
+  picked = [];
+  updateAll();
+  toast('已清空，重新选吧');
+});
+
+/* ── 悬浮投票按钮：滚到投票区 ── */
+document.getElementById('votefab').addEventListener('click', function () {
+  document.getElementById('vote').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+
+render();
+updateAll();
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

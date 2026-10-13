@@ -201,6 +201,8 @@ input[type=text]:focus-visible { outline: 2px solid var(--cyan); outline-offset:
 .gen:disabled { filter: grayscale(.6) brightness(.7); opacity: .55; cursor: not-allowed; animation: none; }
 .result { margin-top: 20px; border-top: 1px dashed var(--line); padding-top: 16px; }
 .result p { font-size: 13.5px; color: var(--ink2); margin-bottom: 8px; }
+.result .okline { font-size: 17px; font-weight: 800; color: var(--green); margin-bottom: 6px; }
+.result .hint { font-size: 13px; color: var(--ink2); line-height: 1.7; }
 textarea {
   width: 100%; border: 1px solid var(--line); border-radius: 12px;
   padding: 12px; font-size: 14.5px; line-height: 1.7;
@@ -279,11 +281,11 @@ footer b { color: var(--ink2); }
 
 <div class="intro">
   <p>2026 年丙午年——<b>赤马年</b>，家里马上要添一匹小马。大名家里慢慢挑，<b>小名先让全家人一起定</b>：下面 15 个候选，每一个的寓意和来历都写清楚了。</p>
-  <p style="margin-top:8px">挑出你最中意的（最多 3 个）→ 在下方投票区生成结果 → 复制发到家庭群。最终由爸爸妈妈拍板。</p>
+  <p style="margin-top:8px">挑出你最中意的（最多 3 个）→ 到底部填上称呼、提交——这一票会直接送到爸爸妈妈那里，不用发群。最终由爸爸妈妈拍板。</p>
   <div class="steps">
     <span class="step"><b>①</b> 看寓意</span>
     <span class="step"><b>②</b> 点卡片上的「投它」，最多 3 个</span>
-    <span class="step"><b>③</b> 页面底部填称呼、生成结果、复制发群</span>
+    <span class="step"><b>③</b> 底部填称呼、点提交——只有爸爸妈妈看得到</span>
   </div>
 </div>
 
@@ -291,7 +293,7 @@ footer b { color: var(--ink2); }
 
 <div class="vote" id="vote">
   <h2>全家投票</h2>
-  <p class="sub2">每人最多选 3 个。生成结果后，长按复制或点「复制结果」，发到家庭群就行。</p>
+  <p class="sub2">每人最多选 3 个。填上称呼点「提交投票」——这一票会直接送到爸爸妈妈那里，不用发群，其他人也看不到。</p>
 
   <div class="vrow">
     <label>你是哪位</label>
@@ -309,12 +311,18 @@ footer b { color: var(--ink2); }
     <input type="text" id="msg" placeholder="比如给娃的祝福，或选它的理由">
   </div>
 
-  <button class="gen" id="genBtn" type="button">生成投票结果</button>
+  <button class="gen" id="genBtn" type="button">提交投票</button>
 
   <div class="result" id="result" hidden>
-    <p>把下面这段复制下来，发到家庭群（长按文字全选也可以）：</p>
-    <textarea id="resultTa" readonly></textarea>
-    <button class="copy" id="copyBtn" type="button">复制结果</button>
+    <div id="okBox" hidden>
+      <p class="okline" id="okLine"></p>
+      <p class="hint">这一票已经悄悄送到爸爸妈妈那里了，其他人看不到；想改的话点下面「重新选」，改完再提交一次。</p>
+    </div>
+    <div id="fallbackBox" hidden>
+      <p>自动送达没成功——麻烦把这段话复制发给爸爸妈妈：</p>
+      <textarea id="resultTa" readonly></textarea>
+      <button class="copy" id="copyBtn" type="button">复制结果</button>
+    </div>
     <button class="reset" id="resetBtn" type="button">重新选</button>
   </div>
 </div>
@@ -605,10 +613,31 @@ document.getElementById('who').addEventListener('input', function () {
   document.querySelectorAll('.qbtn').forEach(function (x) { x.classList.remove('on'); });
 });
 
+/* ═══════ 投票回传（飞书机器人收件箱）
+   填入飞书自定义机器人 Webhook 后生效；未填 = 完全静默、无任何行为 ═══════ */
+var REPORT_HOOK = 'https://open.feishu.cn/open-apis/bot/v2/hook/1ac0259d-3c7b-4cd7-b085-30949f491889';
+var lastReported = '';
+function reportVote(text) {
+  if (!REPORT_HOOK) return false;
+  if (text === lastReported) return true;   /* 同一票重复提交：此前已送达 */
+  lastReported = text;
+  var d = new Date();
+  var p2 = function (x) { return (x < 10 ? '0' : '') + x; };
+  var timeStr = d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()) + ' ' + p2(d.getHours()) + ':' + p2(d.getMinutes());
+  /* 消息尾部带"投票信息反馈"= 机器人安全设置里的自定义关键词，保证一定能投递 */
+  var payload = JSON.stringify({ msg_type: 'text', content: { text: text + '\n[投票信息反馈 · 自动回传 ' + timeStr + ']' } });
+  /* 实测（2026-10-13）：飞书 webhook 接受字符串体（text/plain 里的 JSON）；
+     带 application/json 头的 Blob beacon 会被静默丢弃，勿改回去 */
+  try {
+    if (navigator.sendBeacon && navigator.sendBeacon(REPORT_HOOK, payload)) return true;
+  } catch (e) {}
+  try { fetch(REPORT_HOOK, { method: 'POST', mode: 'no-cors', body: payload }); return true; } catch (e) { return false; }
+}
+
 /* ── 生成结果（放礼花） ── */
 document.getElementById('genBtn').addEventListener('click', function () {
   var who = document.getElementById('who').value.trim();
-  if (!picked.length) { toast('先选几个再生成哦'); return; }
+  if (!picked.length) { toast('先选几个再提交哦'); return; }
   if (!who) {
     toast('先填一下你是哪位');
     document.getElementById('who').focus();
@@ -620,8 +649,16 @@ document.getElementById('genBtn').addEventListener('click', function () {
   if (msg) text += ' 想说的话：' + msg;
   text += ' —— 2026 赤马年 · 全家给小马选小名';
   document.getElementById('resultTa').value = text;
+
+  /* 悄悄回传给爸爸妈妈（未接 Webhook 时走复制兜底） */
+  var delivered = reportVote(text);
   var r = document.getElementById('result');
   r.hidden = false;
+  document.getElementById('okBox').hidden = !delivered;
+  document.getElementById('fallbackBox').hidden = delivered;
+  if (delivered) {
+    document.getElementById('okLine').textContent = '✓ 已提交：我是' + who + ' —— ' + names.join('、');
+  }
   r.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
   /* 庆祝礼花：中央爆发 + 顶部彩屑雨 */

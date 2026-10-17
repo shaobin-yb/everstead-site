@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>决选深挖 · 二十一名 · 王姓男孩</title>
+<style>
+:root{
+  --surf:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --line:#e1e0d9; --jiang:#C23B2E; --gold:#C79A2B;
+  --tai:#2d8f5f; --warn:#c07a1a; --bad:#b3543f; --blue:#2d5f8f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
+header{padding:30px 4px 22px;border-bottom:1px solid var(--line);margin-bottom:14px}
+h1{margin:0 0 8px;font-size:clamp(26px,4.6vw,40px);letter-spacing:.14em;
+  font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
+h1 .seal{display:inline-block;background:var(--jiang);color:#fff;font-size:.5em;
+  padding:.28em .5em;border-radius:4px;vertical-align:.62em;letter-spacing:.1em;
+  margin-left:14px;font-family:inherit}
+.sub{color:var(--ink2);font-size:14.5px;margin:2px 0 0}
+.sub b{color:var(--jiang)}
+.sub a{color:var(--blue);text-decoration:none;border-bottom:1px solid var(--blue)}
+.intro{font-size:13.5px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
+  border-left:3px solid var(--gold);border-radius:10px;padding:12px 16px;margin:18px 0;
+  line-height:1.9}
+h2{font-size:19px;letter-spacing:.08em;margin:30px 0 10px;
+  font-family:"Songti SC","STSong","SimSun",serif}
+table.sum{width:100%;border-collapse:collapse;background:var(--surf);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13px}
+table.sum th, table.sum td{padding:7px 12px;border-bottom:1px solid var(--line);text-align:left}
+table.sum th{background:#f3f2ee;font-size:12px;color:var(--ink2);white-space:nowrap}
+table.sum tr:last-child td{border-bottom:none}
+table.sum td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tier-tag{font-size:11px;border-radius:5px;padding:1px 7px}
+.t-good{background:#e7f4ec;color:#217a4a}.t-warn{background:#faf0dd;color:#a3680a}.t-bad{background:#f8e7e2;color:#a33f2a}
+.btns{display:flex;gap:6px;margin:0 0 8px}
+.btns button{border:1px solid var(--line);background:var(--surf);border-radius:999px;
+  padding:5px 12px;font-size:12.5px;cursor:pointer;color:var(--ink2)}
+.btns button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.dives{display:grid;gap:12px;margin-top:8px}
+.dive{background:var(--surf);border:1px solid var(--line);border-radius:13px;padding:16px 18px}
+.dtop{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+.no{font-size:12.5px;color:var(--jiang);font-weight:700;font-variant-numeric:tabular-nums}
+.nm{font-size:24px;font-weight:700;letter-spacing:.08em;
+  font-family:"Songti SC","STSong","SimSun",serif}
+.qx{font-size:12px;color:var(--blue);background:#e8eef5;border-radius:6px;padding:1px 8px}
+.src{margin-left:auto;font-size:12px;color:var(--muted)}
+.stats{display:flex;gap:18px;margin:6px 0 8px;font-size:13px}
+.st i{font-style:normal;color:var(--muted);margin-right:5px;font-size:12px}
+.st b{font-size:16px;font-variant-numeric:tabular-nums}
+.st em{font-style:normal;font-size:11.5px;margin-left:5px;border-radius:5px;padding:1px 6px}
+.b-ok{background:#e7f4ec;color:#217a4a}.b-warn{background:#faf0dd;color:#a3680a}.b-bad{background:#f8e7e2;color:#a33f2a}
+.chu{font-size:12.5px;color:var(--ink2);margin:0 0 8px;padding-left:10px;border-left:2px solid var(--line)}
+.deep{font-size:13.5px;margin:0 0 8px;line-height:1.85}
+.warn{font-size:12.5px;color:var(--warn);margin:0}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--muted);line-height:1.9}
+footer b{color:var(--ink2)}
+@media (max-width:600px){
+  .dtop{flex-direction:column;gap:2px}
+  .src{margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>决选深挖<span class="seal">王</span></h1>
+  <p class="sub">老板初选 <b>21 名</b> · 逐个深挖（字义 / 出处 / 五格 / 四维 / 提醒）· 出生后以真八字收网 &nbsp;|&nbsp; <a href="overview.html">总览</a> · <a href="qiming.html">627 主库</a></p>
+</header>
+
+<p class="intro">这是从全部池子（627 主库 + 百名帖 + 刚骨 + 奔雷 + 轻灵）里初选出的 21 名。9 名在池（五格+四维齐全）；12 名新提名（本次补算五格与四维基础项）。<b>两把尺子都在列——五格看数理，四维看意象与实用；两边打架的地方（比如迁善、见山）正是要坐下来拍板的地方。</b>王元一为拟议大名，按候选列示，不作升格。</p>
+
+<h2>一屏看全</h2>
+<div class="btns">
+  <button data-sort="orig" class="on">初选顺序</button>
+  <button data-sort="w5">按五格 ↓</button>
+  <button data-sort="s4">按四维 ↓</button>
+</div>
+<table class="sum" id="sum">
+  <thead><tr><th>#</th><th>名字</th><th>五格</th><th>档</th><th>四维</th><th>来源</th></tr></thead>
+  <tbody></tbody>
+</table>
+
+<h2>逐个深挖</h2>
+<div class="dives">
+<div class="dive" id="n迁善">
+  <div class="dtop">
+    <span class="no">01</span>
+    <span class="nm">王迁善</span>
+    <span class="qx">德性</span>
+    <span class="src">627池·周易</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>98</b><em class="b-ok">全绿</em></span>
+    <span class="st"><i>四维</i><b>77.5 · #143</b></span>
+  </div>
+  <p class="chu">出处 · 《易·益卦》象辞「君子以见善则迁，有过则改」</p>
+  <p class="deep">「迁善」与「改过」同出一句，取名只取向上的那一半——义正而干净。五格 98 全绿，是整个 627 池并列最高分；四维视角下因意象偏德目、画面感弱，排到 #143——两把尺子的分歧，在这个名字上最典型。两字开口音，念着亮；「迁」的日常联想（搬迁、迁徙）会稀释一点书卷气。</p>
+  <p class="warn">⚠ 格言感偏重；画面感弱（四维 #143）。</p>
+</div>
+<div class="dive" id="n绎如">
+  <div class="dtop">
+    <span class="no">02</span>
+    <span class="nm">王绎如</span>
+    <span class="qx">乐教书卷</span>
+    <span class="src">627池·论语</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>97</b><em class="b-ok">全绿</em></span>
+    <span class="st"><i>四维</i><b>78.5 · #88</b></span>
+  </div>
+  <p class="chu">出处 · 《论语·八佾》「从之，纯如也，皦如也，绎如也，以成」</p>
+  <p class="deep">孔子论乐：「绎如」是乐章的最后一章——连绵不断、从容相续。名字里藏着一整套乐教，懂的人一听有画面。五格 97 全绿，池内次高；四维 #88（意象抽象）。音律 2-4-2，念起来有余音。注意「如」字偏柔，整体安静，和兄弟「斯卯」的破晓感偏冷。</p>
+  <p class="warn">⚠ 意象抽象（乐论）；柔静气质。</p>
+</div>
+<div class="dive" id="n嘉禾">
+  <div class="dtop">
+    <span class="no">03</span>
+    <span class="nm">王嘉禾</span>
+    <span class="qx">草木祥瑞</span>
+    <span class="src">627池·抱朴子</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>92</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>77.5 · #130</b></span>
+  </div>
+  <p class="chu">出处 · 《抱朴子内篇》「景耀高照，嘉禾毕遂，疫疠不流，祸乱不作」</p>
+  <p class="deep">嘉禾=祥瑞之谷，原文是一幅治世图景（五谷丰登、疫疠不侵）。字面全是「好年成」的祝愿，朴素而厚。五格 92（一⚠️，总格分歧）；四维 #130——扣分在「嘉」（2010 年代用字标签）。另外「嘉禾」是嘉兴古称（地名），也有旧商号感——地名/商号联想需自行掂量。</p>
+  <p class="warn">⚠ 嘉=2010s 标签字；嘉禾=嘉兴古称（地名联想）。</p>
+</div>
+<div class="dive" id="n元一">
+  <div class="dtop">
+    <span class="no">04</span>
+    <span class="nm">王元一</span>
+    <span class="qx">本元道家</span>
+    <span class="src">拟议大名（未定）</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>84</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>79.5 · #16</b></span>
+  </div>
+  <p class="chu">出处 · 「抱元守一」——元、一是这四个字的两个宾语，名字本身就是一个完整的道家命题</p>
+  <p class="deep">老板 8 月亲口纠正过：初衷就是抱元守一。四维 #16（意象极完整）；五格 84（一⚠️：总格 9、外格 2 的分歧吃掉数理分）。**口径：拟议大名，未定，出生后拿真八字收网——本页按候选列示，不作升格。**与小名「小九九」（初步意向）的呼应关系同样待定。</p>
+  <p class="warn">⚠ 拟议未定（官方口径）；总格9/外格2 数理分歧。</p>
+</div>
+<div class="dive" id="n鹤如">
+  <div class="dtop">
+    <span class="no">05</span>
+    <span class="nm">王鹤如</span>
+    <span class="qx">清幽</span>
+    <span class="src">大师提名</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>92</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>78.5 · #40</b></span>
+  </div>
+  <p class="chu">出处 · 鲍照《舞鹤赋》「钟浮旷之藻质，抱清迥之明心」</p>
+  <p class="deep">鹤是胎化仙禽，「抱清迥之明心」几乎就是「鹤如」的注脚。字面如画，气质清到极处；四维 D22（意象优）、#40。五格 92（一⚠️：鹤 21 画重、有一处分歧）。与名单里的「鹤鸣」是一对：鹤如取其静，鹤鸣取其声。</p>
+  <p class="warn">⚠ 鹤 21 画（书写偏重）；与鹤鸣二选一（一静一声）。</p>
+</div>
+<div class="dive" id="n斯盛">
+  <div class="dtop">
+    <span class="no">06</span>
+    <span class="nm">王斯盛</span>
+    <span class="qx">家族书卷</span>
+    <span class="src">627池·论语</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>91</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>79.5 · #34</b></span>
+  </div>
+  <p class="chu">出处 · 《论语·泰伯》「唐虞之际，于斯为盛」</p>
+  <p class="deep">孔子说人才之盛，就在此时此地。斯字辈（承斯卯）+盛（鼎盛），是斯系里「意头最向上」的一个：家业之盛、人才之盛。五格 91、四维 #34，两把尺子都稳；音律 2-1-4，收得利落。斯系四案——斯年（祝福）、斯盛（鼎盛）、斯珩（玉德）、斯元（本元）——看家里想要哪口气。</p>
+  <p class="warn">⚠ 斯系四案待定选；「于斯为盛」略直白。</p>
+</div>
+<div class="dive" id="n斯珩">
+  <div class="dtop">
+    <span class="no">07</span>
+    <span class="nm">王斯珩</span>
+    <span class="qx">家族玉德</span>
+    <span class="src">新提名</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>82</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>76.2（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 「珩」= 佩玉上端的横玉（《说文》「珩，佩上玉也」）</p>
+  <p class="deep">古代君子佩玉，「珩」是提领全佩的那一块——斯字辈+珩，结构义是「家里这块佩玉的顶梁」。很美，但这是新组合（未见现成典故）；「珩」认读门槛中等，可能要一辈子向人解释一次读音（héng）。五格 82（一⚠️，土土火吉配）；音律 2-1-2。</p>
+  <p class="warn">⚠ 新组合无成典；珩字认读；五格 82。</p>
+</div>
+<div class="dive" id="n棣浔">
+  <div class="dtop">
+    <span class="no">08</span>
+    <span class="nm">王棣浔</span>
+    <span class="qx">兄弟水意</span>
+    <span class="src">新提名</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>90</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>74（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 棣=棠棣（《诗经·常棣》兄弟象征）；浔=水边深处（浔阳江）</p>
+  <p class="deep">自家组的名：棣（兄弟之谊）+浔（一江清水），与名单里的「常棣」同源而生——是它的「水边版」。五格 90（土土金吉配）、音律 2-4-2 清亮。组合新鲜尚无成典：好处是独一无二，代价是没有现成的诗撑腰。</p>
+  <p class="warn">⚠ 自组名（无成典）；与常棣同源，二选一。</p>
+</div>
+<div class="dive" id="n常棣">
+  <div class="dtop">
+    <span class="no">09</span>
+    <span class="nm">王常棣</span>
+    <span class="qx">兄弟诗意</span>
+    <span class="src">627池·诗经</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>90</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>81.2 · #5</b></span>
+  </div>
+  <p class="chu">出处 · 《诗经·小雅·常棣》「常棣之华，鄂不韡韡。凡今之人，莫如兄弟」</p>
+  <p class="deep">这是《诗经》里写兄弟之情的头一首；「常棣」在古汉语里就是「兄弟」的代称。给老二起这个名字，名字本身就在讲他和斯卯的关系——四维 #5（D23，全场顶格之一）；五格 90（一⚠️）。音律 2-2-4。21 个里「兄弟叙事」完成度最高的一案。</p>
+  <p class="warn">⚠ 棣读 dì；命名叙事极贴老二身份；五格一⚠️。</p>
+</div>
+<div class="dive" id="n鹤鸣">
+  <div class="dtop">
+    <span class="no">10</span>
+    <span class="nm">王鹤鸣</span>
+    <span class="qx">清越</span>
+    <span class="src">新提名</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>96</b><em class="b-ok">全绿</em></span>
+    <span class="st"><i>四维</i><b>76.5（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 《诗经·小雅·鹤鸣》「鹤鸣于九皋，声闻于野／天」</p>
+  <p class="deep">深泽之鹤，一鸣而声闻于天：隐而必显，是《诗经》里最提气的意象之一。与「鹤如」同鹤异趣：鹤如=仙姿（静），鹤鸣=清音（动）。**五格 96 全绿——21 个里五格之最**（土土土吉配、四格全吉）；音律 2-4-2。四维新评 76.5（鹤 21 画扣书写分）。</p>
+  <p class="warn">⚠ 21 个中五格最高（96 全绿）；鹤 21 画；与鹤如二选一。</p>
+</div>
+<div class="dive" id="n悠之">
+  <div class="dtop">
+    <span class="no">11</span>
+    <span class="nm">王悠之</span>
+    <span class="qx">之字系</span>
+    <span class="src">627池·陶渊明</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>90</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>79.5 · #14</b></span>
+  </div>
+  <p class="chu">出处 · 《饮酒》「采菊东篱下，悠然见南山」</p>
+  <p class="deep">「之」字系是琅琊王氏的标志（王羲之、王献之）——王姓+之字辈，最有家学源流感的写法。四维 #14（D22）、五格 90（一⚠️，总格分歧）：数理黑马。与老大斯卯形成一外一内的对仗（斯卯向外，悠之向内）。音律 2-1-1。注意：「悠」有「悠闲」的日常稀释，气质偏散淡。</p>
+  <p class="warn">⚠ 悠=闲散联想；总格分歧；之字系（琅琊王氏）为加分项。</p>
+</div>
+<div class="dive" id="n斯元">
+  <div class="dtop">
+    <span class="no">12</span>
+    <span class="nm">王斯元</span>
+    <span class="qx">双结构</span>
+    <span class="src">627池·家族</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>89</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>78.5 · #71</b></span>
+  </div>
+  <p class="chu">出处 · 斯字辈联名：斯（承斯卯）+ 元（元系）</p>
+  <p class="deep">家族两套命名结构在「斯元」上合流：兄长的斯 + 老二的本元。意义层面同时挂靠两个体系，是结构最「正统」的一案。五格 89、四维 #71。音律 2-1-2。代价：两个结构字各有来处，名字本身的画面感弱于常棣/鹤鸣。</p>
+  <p class="warn">⚠ 双结构（义胜于名）；画面感弱。</p>
+</div>
+<div class="dive" id="n弈舟">
+  <div class="dtop">
+    <span class="no">13</span>
+    <span class="nm">王弈舟</span>
+    <span class="qx">聪慧轻快</span>
+    <span class="src">轻灵30</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>90</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>78.2（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 意象：一局棋、一叶舟（围棋雅称「弈」）</p>
+  <p class="deep">弈（棋）是智，舟是行；动静相生，少年气最足的一个。五格 90（土火土吉配）、音律 2-4-1。「弈」近年入名渐多但还不烂。意象名（无强典故）——清爽不端着，代价是少一句诗撑腰。与「见山」「知还」同属轻盈一档。</p>
+  <p class="warn">⚠ 无成典（意象名）；弈字认读。</p>
+</div>
+<div class="dive" id="n见山">
+  <div class="dtop">
+    <span class="no">14</span>
+    <span class="nm">王见山</span>
+    <span class="qx">禅意</span>
+    <span class="src">轻灵30</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>55</b><em class="b-bad">多⚠️</em></span>
+    <span class="st"><i>四维</i><b>78.5（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 陶渊明「悠然见南山」+ 禅宗「见山是山」</p>
+  <p class="deep">两字极素，素到高级：看见山，就是看见本真。四维新评 78.5 不低（意象清澈），但**五格只有 55（多⚠️，土木水相克）**——家里若看重五格体系，这个名字会明显吃亏。音律 2-4-1。利落、清净、有禅意，是「喜欢的人非常喜欢」的型。</p>
+  <p class="warn">⚠ 五格 55（多⚠️相克）——五格体系下是硬伤。</p>
+</div>
+<div class="dive" id="n知还">
+  <div class="dtop">
+    <span class="no">15</span>
+    <span class="nm">王知还</span>
+    <span class="qx">田园</span>
+    <span class="src">百名帖</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>62</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>77.5（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 《归去来兮辞》「鸟倦飞而知还」</p>
+  <p class="deep">陶渊明写倦鸟知归；知还=知道回头、知道归来——两个字讲一辈子的事（出处是归田，深意是知止）。四维 77.5；五格 62（一⚠️，土木金相克；「还」康熙 20 画拉低书写分）。音律 2-1-2。与「见山」同源陶潜精神，两者可搭一组看。</p>
+  <p class="warn">⚠ 五格 62；还 huán/hái 多音；还 20 画。</p>
+</div>
+<div class="dive" id="n重阳">
+  <div class="dtop">
+    <span class="no">16</span>
+    <span class="nm">王重阳</span>
+    <span class="qx">道家节令</span>
+    <span class="src">新提名（原小名候选）</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>77</b><em class="b-bad">多⚠️</em></span>
+    <span class="st"><i>四维</i><b>74.5（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 重阳=九月九（登高、菊花、重阳糕）</p>
+  <p class="deep">道家色彩浓，但这个名字有一个绕不开的对象：**全真教祖师王重阳（王喆，号重阳子）**。姓王+重阳=与历史人物完全同名，一生都会被第一时间联想到他（正向联想，但「被同名」是既定事实）。音律：王-重-阳=2-2-2 三连同调，念着平；「重」多音（chóng/zhòng）；五格 77（多⚠️）。另：重阳原在小名候选池，这次列入大名初选——升格与否由家里定。</p>
+  <p class="warn">⚠ 与王重阳（全真祖师）完全同名；三连同调；重多音；原为小名候选。</p>
+</div>
+<div class="dive" id="n中孚">
+  <div class="dtop">
+    <span class="no">17</span>
+    <span class="nm">王中孚</span>
+    <span class="qx">信义</span>
+    <span class="src">刚骨30</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>76</b><em class="b-ok">全绿</em></span>
+    <span class="st"><i>四维</i><b>76.2（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 《周易·中孚卦》（中孚=心中诚信）</p>
+  <p class="deep">卦名直用。最妙的一层：**中孚卦九二爻辞就是「鸣鹤在阴，其子和之」**——与名单里的「鹤鸣」同出一卦，一信一和，在易学里是一体。五格 76（全绿但三才相克：土金木）；音律 2-1-1。卦名作名，少见而正，文气最重的一档。</p>
+  <p class="warn">⚠ 三才相克；卦名直用（文气重）。</p>
+</div>
+<div class="dive" id="n自牧">
+  <div class="dtop">
+    <span class="no">18</span>
+    <span class="nm">王自牧</span>
+    <span class="qx">谦德</span>
+    <span class="src">刚骨30</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>53</b><em class="b-bad">多⚠️</em></span>
+    <span class="st"><i>四维</i><b>77.5（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 《周易·谦卦》「谦谦君子，卑以自牧也」</p>
+  <p class="deep">自牧=自己修养自己（牧=放养，把自己放到正道上去）。义极正，但**五格 53（多⚠️，土水火相克）——21 个里最低**；音律 2-4-4（末两字同调）。「自」字入名少见，有人觉得生硬。若家里以五格为主尺，此名会明显吃亏。</p>
+  <p class="warn">⚠ 五格 53（21 个最低）；自字生硬感；末两字同调。</p>
+</div>
+<div class="dive" id="n舒啸">
+  <div class="dtop">
+    <span class="no">19</span>
+    <span class="nm">王舒啸</span>
+    <span class="qx">田园豪</span>
+    <span class="src">百名帖</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>91</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>79.5（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 《归去来兮辞》「登东皋以舒啸，临清流而赋诗」</p>
+  <p class="deep">登高长啸、临流赋诗——陶渊明笔下最舒展的一刻。「舒啸」有文人气也有豪气，比大师批的「啸风」从容（啸风是野，舒啸是旷）。五格 91（土土金吉配）、四维新评 79.5（12 新名里最高之一）、音律 2-1-4 收得漂亮。啸 16 画。</p>
+  <p class="warn">⚠ 啸 16 画；与大师批「啸风」同字族（舒啸更从容）。</p>
+</div>
+<div class="dive" id="n斯年">
+  <div class="dtop">
+    <span class="no">20</span>
+    <span class="nm">王斯年</span>
+    <span class="qx">家族祝福</span>
+    <span class="src">百名帖</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>86</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>79.5（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 《诗经·大雅》「于万斯年，受天之祜」</p>
+  <p class="deep">「万斯年」=万年长，古汉语里最高规格的祝福句式；斯字辈落在祝福句里，结构上最自然。另有一层：傅斯年（史学家），「斯年」有现成的学人联想（正向）。五格 86（土土金吉配）、四维新评 79.5、音律 2-1-2。与「斯盛」并列斯系「意头派」两案。</p>
+  <p class="warn">⚠ 傅斯年联想（正向）；斯系四案之一。</p>
+</div>
+<div class="dive" id="n怀瑾">
+  <div class="dtop">
+    <span class="no">21</span>
+    <span class="nm">王怀瑾</span>
+    <span class="qx">楚辞美玉</span>
+    <span class="src">百名帖</span>
+  </div>
+  <div class="stats">
+    <span class="st"><i>五格</i><b>83</b><em class="b-warn">一⚠️</em></span>
+    <span class="st"><i>四维</i><b>72.2（新评）</b></span>
+  </div>
+  <p class="chu">出处 · 《楚辞·九章·怀沙》「怀瑾握瑜兮，穷不知所示」</p>
+  <p class="deep">怀瑾握瑜=怀里揣着美玉，喻德才内藏。两点要提：①「瑾」现代女名常用度偏高（瑾萱/瑾瑜系），性别感需自家掂量；②怀 20 画、瑾 16 画，五格 83（土火土吉配），但四维 B 维（书写/字频）仅 7.2——书写负担是 21 个里偏高的一档。音律 2-2-3（怀与王同调小瑕）。</p>
+  <p class="warn">⚠ 瑾现代女名常用；怀+瑾共 36 画；四维 B 偏低。</p>
+</div>
+
+</div>
+
+<footer>
+  <b>口径</b>：五格=康熙笔画五格+三才+音形义（与主库同口径）；四维=时代穿透/日常可用/音律/意象气质（新提名为本次补算，"新评"标注）。<br>
+  <b>红线</b>：所有名字均为候选；王元一为拟议大名未定，出生后结合真八字收网；「重阳」原在小名候选池，列入大名初选一事以家里意见为准。<br>
+  <b>生成</b>：2026-10-17 · 铁蛋 · naming/_shortlist_build.py
+</footer>
+</div>
+<script>
+const SUM = [{"no": 1, "name": "王迁善", "w5": 98, "tier": "全绿", "s4": 77.5, "s4txt": "77.5 · #143", "src": "627池·周易", "tier_cls": "t-good"}, {"no": 2, "name": "王绎如", "w5": 97, "tier": "全绿", "s4": 78.5, "s4txt": "78.5 · #88", "src": "627池·论语", "tier_cls": "t-good"}, {"no": 3, "name": "王嘉禾", "w5": 92, "tier": "一⚠️", "s4": 77.5, "s4txt": "77.5 · #130", "src": "627池·抱朴子", "tier_cls": "t-warn"}, {"no": 4, "name": "王元一", "w5": 84, "tier": "一⚠️", "s4": 79.5, "s4txt": "79.5 · #16", "src": "拟议大名（未定）", "tier_cls": "t-warn"}, {"no": 5, "name": "王鹤如", "w5": 92, "tier": "一⚠️", "s4": 78.5, "s4txt": "78.5 · #40", "src": "大师提名", "tier_cls": "t-warn"}, {"no": 6, "name": "王斯盛", "w5": 91, "tier": "一⚠️", "s4": 79.5, "s4txt": "79.5 · #34", "src": "627池·论语", "tier_cls": "t-warn"}, {"no": 7, "name": "王斯珩", "w5": 82, "tier": "一⚠️", "s4": 76.2, "s4txt": "76.2（新评）", "src": "新提名", "tier_cls": "t-warn"}, {"no": 8, "name": "王棣浔", "w5": 90, "tier": "一⚠️", "s4": 74.0, "s4txt": "74（新评）", "src": "新提名", "tier_cls": "t-warn"}, {"no": 9, "name": "王常棣", "w5": 90, "tier": "一⚠️", "s4": 81.2, "s4txt": "81.2 · #5", "src": "627池·诗经", "tier_cls": "t-warn"}, {"no": 10, "name": "王鹤鸣", "w5": 96, "tier": "全绿", "s4": 76.5, "s4txt": "76.5（新评）", "src": "新提名", "tier_cls": "t-good"}, {"no": 11, "name": "王悠之", "w5": 90, "tier": "一⚠️", "s4": 79.5, "s4txt": "79.5 · #14", "src": "627池·陶渊明", "tier_cls": "t-warn"}, {"no": 12, "name": "王斯元", "w5": 89, "tier": "一⚠️", "s4": 78.5, "s4txt": "78.5 · #71", "src": "627池·家族", "tier_cls": "t-warn"}, {"no": 13, "name": "王弈舟", "w5": 90, "tier": "一⚠️", "s4": 78.2, "s4txt": "78.2（新评）", "src": "轻灵30", "tier_cls": "t-warn"}, {"no": 14, "name": "王见山", "w5": 55, "tier": "多⚠️", "s4": 78.5, "s4txt": "78.5（新评）", "src": "轻灵30", "tier_cls": "t-bad"}, {"no": 15, "name": "王知还", "w5": 62, "tier": "一⚠️", "s4": 77.5, "s4txt": "77.5（新评）", "src": "百名帖", "tier_cls": "t-warn"}, {"no": 16, "name": "王重阳", "w5": 77, "tier": "多⚠️", "s4": 74.5, "s4txt": "74.5（新评）", "src": "新提名（原小名候选）", "tier_cls": "t-bad"}, {"no": 17, "name": "王中孚", "w5": 76, "tier": "全绿", "s4": 76.2, "s4txt": "76.2（新评）", "src": "刚骨30", "tier_cls": "t-good"}, {"no": 18, "name": "王自牧", "w5": 53, "tier": "多⚠️", "s4": 77.5, "s4txt": "77.5（新评）", "src": "刚骨30", "tier_cls": "t-bad"}, {"no": 19, "name": "王舒啸", "w5": 91, "tier": "一⚠️", "s4": 79.5, "s4txt": "79.5（新评）", "src": "百名帖", "tier_cls": "t-warn"}, {"no": 20, "name": "王斯年", "w5": 86, "tier": "一⚠️", "s4": 79.5, "s4txt": "79.5（新评）", "src": "百名帖", "tier_cls": "t-warn"}, {"no": 21, "name": "王怀瑾", "w5": 83, "tier": "一⚠️", "s4": 72.2, "s4txt": "72.2（新评）", "src": "百名帖", "tier_cls": "t-warn"}];
+function renderSum(mode){
+  let list = SUM.slice();
+  if (mode === "w5") list.sort((a,b)=> b.w5 - a.w5);
+  else if (mode === "s4") list.sort((a,b)=> b.s4 - a.s4);
+  else list.sort((a,b)=> a.no - b.no);
+  document.querySelector("#sum tbody").innerHTML = list.map(r =>
+    '<tr><td class="num">'+r.no+'</td><td><b>'+r.name+'</b></td><td class="num">'+r.w5+'</td>'
+    + '<td><span class="tier-tag '+r.tier_cls+'">'+r.tier+'</span></td>'
+    + '<td class="num">'+r.s4txt+'</td><td>'+r.src+'</td></tr>').join("");
+}
+document.querySelectorAll(".btns button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".btns button").forEach(x => x.classList.remove("on"));
+  b.classList.add("on");
+  renderSum(b.dataset.sort);
+});
+renderSum("orig");
+</script>
+</body>
+</html>

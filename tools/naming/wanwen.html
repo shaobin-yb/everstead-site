@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>晚 · 稳 · 王姓男孩 100 名（41周纪念版）</title>
+<style>
+:root{
+  --surf:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --line:#e1e0d9; --jiang:#C23B2E; --gold:#C79A2B;
+  --tai:#2d8f5f; --warn:#c07a1a; --blue:#2d5f8f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 80px}
+header{padding:30px 4px 22px;border-bottom:1px solid var(--line);margin-bottom:14px}
+h1{margin:0 0 8px;font-size:clamp(26px,4.6vw,42px);letter-spacing:.14em;
+  font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
+h1 .seal{display:inline-block;background:var(--jiang);color:#fff;font-size:.5em;
+  padding:.28em .5em;border-radius:4px;vertical-align:.62em;letter-spacing:.1em;
+  margin-left:14px;font-family:inherit}
+.sub{color:var(--ink2);font-size:14.5px;margin:2px 0 0}
+.sub b{color:var(--jiang)}
+.intro{font-size:13.5px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
+  border-left:3px solid var(--jiang);border-radius:10px;padding:14px 18px;margin:18px 0;
+  line-height:2}
+.intro b{color:var(--ink)}
+.topbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin:16px 0 22px}
+.topcard{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:14px 16px;border-top:3px solid var(--gold)}
+.topcard .k{font-size:11.5px;color:var(--muted);letter-spacing:.08em}
+.topcard .n{font-size:26px;font-weight:700;letter-spacing:.08em;margin:2px 0 2px;font-family:"Songti SC","STSong","SimSun",serif}
+.topcard .n small{font-size:12px;color:var(--muted);font-weight:400;letter-spacing:0;margin-left:8px;font-family:system-ui,sans-serif}
+.topcard .d{font-size:12.5px;color:var(--ink2);margin:4px 0 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 10px;position:sticky;top:0;background:var(--page);padding:8px 0;z-index:5;border-bottom:1px solid var(--line)}
+.tab{border:1px solid var(--line);background:var(--surf);color:var(--ink2);border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{display:none}.panel.on{display:block}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 6px}
+.chip{border:1px solid var(--line);background:var(--surf);color:var(--ink2);border-radius:999px;padding:4px 12px;font-size:12.5px;cursor:pointer}
+.chip.on{background:#f3ead2;border-color:var(--gold);color:var(--ink)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px;margin-top:10px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:12px 15px}
+.ctop{display:flex;align-items:baseline;gap:9px;margin-bottom:2px;flex-wrap:wrap}
+.num{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.nm{font-size:23px;font-weight:700;letter-spacing:.08em;font-family:"Songti SC","STSong","SimSun",serif}
+.py{font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+.speak{margin-left:auto;border:1px solid var(--line);background:var(--page);color:var(--ink2);border-radius:999px;padding:1px 10px;font-size:12px;cursor:pointer}
+.speak:hover{background:#f3ead2;border-color:var(--gold);color:var(--ink)}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 6px}
+.score{font-size:11.5px;border-radius:6px;padding:1px 8px;font-variant-numeric:tabular-nums}
+.score.full{background:#e6f3ec;color:#1f6d47}
+.score.warn1{background:#fbf0d9;color:#8a5a12}
+.score.warn2{background:#f7e2d3;color:#8a4412}
+.score.bad{background:#f5dede;color:#8a2020}
+.flag{font-size:11.5px;color:var(--warn);background:#fbf4e4;border-radius:6px;padding:1px 8px}
+.note{font-size:13.5px;margin:0 0 4px}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
+.tag{font-size:11.5px;color:var(--blue);background:#e8eef5;border-radius:6px;padding:1px 8px}
+details{margin-top:2px}
+summary{font-size:11.5px;color:var(--muted);cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:before{content:"＋ ";color:var(--gold)}
+details[open] summary:before{content:"－ "}
+details p{font-size:11.5px;color:var(--ink2);margin:4px 0 2px;line-height:1.8}
+.sectitle{font-size:17px;letter-spacing:.1em;margin:30px 0 8px;padding-left:10px;border-left:4px solid var(--gold);font-family:"Songti SC","STSong","SimSun",serif}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.9}
+footer b{color:var(--ink2)}
+@media (max-width:560px){.cards{grid-template-columns:1fr}.tab{padding:6px 12px;font-size:13px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>晚 · 稳<span class="seal">王</span></h1>
+  <p class="sub">2026-10-19 · 明天满 <b>41 周</b> · 二宝还没信号 · 铁蛋叔叔的第三批 · <b>大名 50 / 小名 20 / 王斯X 30</b></p>
+</header>
+
+<p class="intro">明天就是 41 周了，二宝还没信号。老板说往“晚”和“稳”上起——我想了想，这两个字其实是一件事：<b>晚，是等他；稳，是信他。</b>晚来的孩子，不必催。<br>
+这一版共 100 个。全部避开现有 <b>892 个占用名</b>；每个大名、每个王斯X 都过了池子里的五格口径（康熙笔画 + 81 数理 + 三才 + 音形义），分数照旧标注。<b>八字未定，这批只按气质方向收；出生后拿真八字再收网。</b><br>
+引文按通行本录入，定名前铁蛋再逐条核验。<b>☆</b> = 带氵/冫/山/石等字根，按家里既有口径标出，保留待八字，不是禁用。</p>
+
+<div class="topbox">
+  <div class="topcard"><div class="k">综合首选</div><div class="n">王康宁<small>96 · 全绿</small></div><div class="d">《尚书》五福“三曰康宁”——健康安宁，最稳最暖，数理也最顺。</div></div>
+  <div class="topcard"><div class="k">最贴“晚”</div><div class="n">王岁寒<small>95 · 全绿</small></div><div class="d">岁寒知松柏。秋天深了、时候晚了，才见骨气。</div></div>
+  <div class="topcard"><div class="k">最贴“稳”</div><div class="n">王稳舟<small>97 · 全绿</small></div><div class="d">池里最直接的一个“稳”，五格也最顺；但“稳”入名较直白，看家里接不接受。</div></div>
+  <div class="topcard"><div class="k">最贴此刻</div><div class="n">王既安<small>90 · 一⚠️</small></div><div class="d">既来之，则安之。他来了，就安住。</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-tab="formal">大名 50</button>
+  <button class="tab" data-tab="nick">小名 20</button>
+  <button class="tab" data-tab="si">王斯X 30</button>
+</div>
+
+<div class="panel on" id="panel-formal">
+  <div class="chips">
+    <button class="chip on" data-group="all">全部</button>
+    <button class="chip" data-group="晚成时至">晚成时至</button><button class="chip" data-group="静定如磐">静定如磐</button><button class="chip" data-group="康宁长安">康宁长安</button><button class="chip" data-group="从容清欢">从容清欢</button><button class="chip" data-group="松柏秋色">松柏秋色</button><button class="chip" data-group="中和气象">中和气象</button>
+  </div>
+  <div class="cards">
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">01</span><span class="nm">王岁寒</span><span class="py">wáng suì hán</span><button class="speak" data-name="王岁寒">念</button></div>
+  <div class="badges"><span class="score full">95 · 全绿</span><span class="flag">☆ 寒带冫</span></div>
+  <p class="note">《论语·子罕》「岁寒，然后知松柏之后凋也」。秋天深了才见骨气，正合“晚”与“稳”。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 17 刚强 / 地格 25 资性英敏 / 外格 13 春日牡丹 / 总格 29 智谋<br>三才：土金土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">02</span><span class="nm">王既安</span><span class="py">wáng jì ān</span><button class="speak" data-name="王既安">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span></div>
+  <p class="note">《论语·季氏》「既来之，则安之」。他来了，就安住；这是此刻最想说的话。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 15 福寿 / 外格 7 精悍 / 总格 19 多难<br>三才：土火土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">03</span><span class="nm">王秋实</span><span class="py">wáng qiū shí</span><button class="speak" data-name="王秋实">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span></div>
+  <p class="note">成语「春华秋实」。秋天才结的果，晚熟而实。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 23 旭日东升 / 外格 15 福寿 / 总格 27 欲望无止<br>三才：土火火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">04</span><span class="nm">王晚晴</span><span class="py">wáng wǎn qíng</span><button class="speak" data-name="王晚晴">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span></div>
+  <p class="note">李商隐《晚晴》「天意怜幽草，人间重晚晴」。雨后的晚晴，是老天疼惜。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 23 旭日东升 / 外格 13 春日牡丹 / 总格 27 欲望无止<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">05</span><span class="nm">王秋成</span><span class="py">wáng qiū chéng</span><button class="speak" data-name="王秋成">念</button></div>
+  <div class="badges"><span class="score warn1">88 · 一⚠️</span></div>
+  <p class="note">取「秋日收成」之意。秋深才收，收得踏实。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 16 厚德载物 / 外格 8 坚刚 / 总格 20 屋下藏金<br>三才：土火土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">06</span><span class="nm">王晚枫</span><span class="py">wáng wǎn fēng</span><button class="speak" data-name="王晚枫">念</button></div>
+  <div class="badges"><span class="score warn1">83 · 一⚠️</span></div>
+  <p class="note">杜牧《山行》「停车坐爱枫林晚，霜叶红于二月花」。晚秋的枫，比二月花更红。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 24 掘藏得金 / 外格 14 破兆 / 总格 28 阔水浮萍<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">07</span><span class="nm">王晚钟</span><span class="py">wáng wǎn zhōng</span><button class="speak" data-name="王晚钟">念</button></div>
+  <div class="badges"><span class="score full">79 · 全绿</span></div>
+  <p class="note">张继《枫桥夜泊》「姑苏城外寒山寺，夜半钟声到客船」。钟声定时，稳而有序。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 31 春日花开 / 外格 21 明月中天 / 总格 35 高楼望月<br>三才：土土木 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">08</span><span class="nm">王时至</span><span class="py">wáng shí zhì</span><button class="speak" data-name="王时至">念</button></div>
+  <div class="badges"><span class="score warn1">78 · 一⚠️</span></div>
+  <p class="note">取「时至则成」之意。时候到了，自然成。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 14 破兆 / 地格 16 厚德载物 / 外格 7 精悍 / 总格 20 屋下藏金<br>三才：土火土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">09</span><span class="nm">王待时</span><span class="py">wáng dài shí</span><button class="speak" data-name="王待时">念</button></div>
+  <div class="badges"><span class="score warn1">73 · 一⚠️</span></div>
+  <p class="note">《周易·系辞下》「君子藏器于身，待时而动」。不是不动，是等最好的时候。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 19 多难 / 外格 11 旱苗逢雨 / 总格 23 旭日东升<br>三才：土火水 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="晚成时至">
+  <div class="ctop"><span class="num">10</span><span class="nm">王未晚</span><span class="py">wáng wèi wǎn</span><button class="speak" data-name="王未晚">念</button></div>
+  <div class="badges"><span class="score warn1">59 · 一⚠️</span><span class="flag">⚠️ 五格偏弱，取意优先</span></div>
+  <p class="note">王勃《滕王阁序》「东隅已逝，桑榆非晚」。晚一点，不算晚。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 9 破舟入海 / 地格 16 厚德载物 / 外格 12 掘井无泉 / 总格 20 屋下藏金<br>三才：土水土 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="静定如磐">
+  <div class="ctop"><span class="num">11</span><span class="nm">王泰然</span><span class="py">wáng tài rán</span><button class="speak" data-name="王泰然">念</button></div>
+  <div class="badges"><span class="score full">96 · 全绿</span></div>
+  <p class="note">成语「泰然自若」。处变不惊，稳得住。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 21 明月中天 / 外格 13 春日牡丹 / 总格 25 资性英敏<br>三才：土火木 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="静定如磐">
+  <div class="ctop"><span class="num">12</span><span class="nm">王偕行</span><span class="py">wáng xié xíng</span><button class="speak" data-name="王偕行">念</button></div>
+  <div class="badges"><span class="score full">94 · 全绿</span></div>
+  <p class="note">《周易》「与时偕行」。跟着时间走，不抢一拍，也不落一拍。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 17 刚强 / 外格 7 精悍 / 总格 21 明月中天<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="静定如磐">
+  <div class="ctop"><span class="num">13</span><span class="nm">王中道</span><span class="py">wáng zhōng dào</span><button class="speak" data-name="王中道">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span></div>
+  <p class="note">《中庸》「从容中道，圣人也」。不走极端，走中间那条稳路。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 8 坚刚 / 地格 20 屋下藏金 / 外格 17 刚强 / 总格 24 掘藏得金<br>三才：土金水 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="静定如磐">
+  <div class="ctop"><span class="num">14</span><span class="nm">王柱石</span><span class="py">wáng zhù shí</span><button class="speak" data-name="王柱石">念</button></div>
+  <div class="badges"><span class="score warn1">87 · 一⚠️</span><span class="flag">☆ 石；生肖字根待八字</span></div>
+  <p class="note">成语「中流砥柱」/「柱石」。能撑得住的名字。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 14 破兆 / 外格 6 安稳余庆 / 总格 18 铁镜重磨<br>三才：土火火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="静定如磐">
+  <div class="ctop"><span class="num">15</span><span class="nm">王从容</span><span class="py">wáng cóng róng</span><button class="speak" data-name="王从容">念</button></div>
+  <div class="badges"><span class="score full">77 · 全绿</span></div>
+  <p class="note">《中庸》「从容中道」。不慌不忙，是本事。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 21 明月中天 / 外格 11 旱苗逢雨 / 总格 25 资性英敏<br>三才：土土木 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="静定如磐">
+  <div class="ctop"><span class="num">16</span><span class="nm">王静远</span><span class="py">wáng jìng yuǎn</span><button class="speak" data-name="王静远">念</button></div>
+  <div class="badges"><span class="score warn1">73 · 一⚠️</span></div>
+  <p class="note">诸葛亮《诫子书》「非宁静无以致远」。静下来，才走得远。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 20 屋下藏金 / 地格 33 旭日升天 / 外格 18 铁镜重磨 / 总格 37 猛虎出林<br>三才：土水火 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="静定如磐">
+  <div class="ctop"><span class="num">17</span><span class="nm">王与时</span><span class="py">wáng yǔ shí</span><button class="speak" data-name="王与时">念</button></div>
+  <div class="badges"><span class="score warn1">71 · 一⚠️</span></div>
+  <p class="note">《周易》「与时偕行」。与时间同频。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 18 铁镜重磨 / 地格 24 掘藏得金 / 外格 11 旱苗逢雨 / 总格 28 阔水浮萍<br>三才：土金火 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="静定如磐">
+  <div class="ctop"><span class="num">18</span><span class="nm">王静之</span><span class="py">wáng jìng zhī</span><button class="speak" data-name="王静之">念</button></div>
+  <div class="badges"><span class="score warn1">68 · 一⚠️</span></div>
+  <p class="note">《老子》第十五章「孰能浊以静之徐清」。静下来，慢慢就清了。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 20 屋下藏金 / 地格 20 屋下藏金 / 外格 5 种竹成林 / 总格 24 掘藏得金<br>三才：土水水 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="静定如磐">
+  <div class="ctop"><span class="num">19</span><span class="nm">王稳舟</span><span class="py">wáng wěn zhōu</span><button class="speak" data-name="王稳舟">念</button></div>
+  <div class="badges"><span class="score full">97 · 全绿</span><span class="flag">⚠️ “稳”入名较直白，看家里接不接受</span></div>
+  <p class="note">取「稳舟而行」之意。池里最直接的一个“稳”字，五格也最顺。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 23 旭日东升 / 地格 25 资性英敏 / 外格 7 精悍 / 总格 29 智谋<br>三才：土火土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">20</span><span class="nm">王康宁</span><span class="py">wáng kāng níng</span><button class="speak" data-name="王康宁">念</button></div>
+  <div class="badges"><span class="score full">96 · 全绿</span></div>
+  <p class="note">《尚书·洪范》五福「三曰康宁」。健康安宁，最朴素的福。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 25 资性英敏 / 外格 15 福寿 / 总格 29 智谋<br>三才：土土土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">21</span><span class="nm">王常安</span><span class="py">wáng cháng ān</span><button class="speak" data-name="王常安">念</button></div>
+  <div class="badges"><span class="score full">95 · 全绿</span></div>
+  <p class="note">取「长久平安」之意。常安，不是一时安。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 17 刚强 / 外格 7 精悍 / 总格 21 明月中天<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">22</span><span class="nm">王常宁</span><span class="py">wáng cháng níng</span><button class="speak" data-name="王常宁">念</button></div>
+  <div class="badges"><span class="score full">95 · 全绿</span></div>
+  <p class="note">取「长久安宁」之意。宁读 níng。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 25 资性英敏 / 外格 15 福寿 / 总格 29 智谋<br>三才：土土土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">23</span><span class="nm">王久宁</span><span class="py">wáng jiǔ níng</span><button class="speak" data-name="王久宁">念</button></div>
+  <div class="badges"><span class="score full">95 · 全绿</span></div>
+  <p class="note">取「长久安宁」之意。久而不变。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 7 精悍 / 地格 17 刚强 / 外格 15 福寿 / 总格 21 明月中天<br>三才：土金金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">24</span><span class="nm">王久安</span><span class="py">wáng jiǔ ān</span><button class="speak" data-name="王久安">念</button></div>
+  <div class="badges"><span class="score warn1">92 · 一⚠️</span></div>
+  <p class="note">《汉书·贾谊传》「建久安之势，成长治之业」。久安长治。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 7 精悍 / 地格 9 破舟入海 / 外格 7 精悍 / 总格 13 春日牡丹<br>三才：土金水 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">25</span><span class="nm">王岁宁</span><span class="py">wáng suì níng</span><button class="speak" data-name="王岁宁">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span></div>
+  <p class="note">取「岁岁安宁」之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 17 刚强 / 地格 27 欲望无止 / 外格 15 福寿 / 总格 31 春日花开<br>三才：土金金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">26</span><span class="nm">王泰宁</span><span class="py">wáng tài níng</span><button class="speak" data-name="王泰宁">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span></div>
+  <p class="note">取「安泰宁静」之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 23 旭日东升 / 外格 15 福寿 / 总格 27 欲望无止<br>三才：土火火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">27</span><span class="nm">王清晏</span><span class="py">wáng qīng yàn</span><button class="speak" data-name="王清晏">念</button></div>
+  <div class="badges"><span class="score full">79 · 全绿</span><span class="flag">☆ 清带氵</span></div>
+  <p class="note">成语「河清海晏」。清明的世道，安宁的日子。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 21 明月中天 / 外格 11 旱苗逢雨 / 总格 25 资性英敏<br>三才：土土木 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">28</span><span class="nm">王安康</span><span class="py">wáng ān kāng</span><button class="speak" data-name="王安康">念</button></div>
+  <div class="badges"><span class="score warn2">59 · 多⚠️</span><span class="flag">⚠️ 五格偏弱，情怀票</span></div>
+  <p class="note">健康平安；也是陕西安康。母亲籍贯的地名彩蛋。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 10 零暗 / 地格 17 刚强 / 外格 12 掘井无泉 / 总格 21 明月中天<br>三才：土水金 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="康宁长安">
+  <div class="ctop"><span class="num">29</span><span class="nm">王长安</span><span class="py">wáng zhǎng ān</span><button class="speak" data-name="王长安">念</button></div>
+  <div class="badges"><span class="score warn2">58 · 多⚠️</span><span class="flag">⚠️ 五格偏弱，情怀票；长读 cháng</span></div>
+  <p class="note">长治久安；也是陕西长安。母亲籍贯+古都，双重彩蛋。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 12 掘井无泉 / 地格 14 破兆 / 外格 7 精悍 / 总格 18 铁镜重磨<br>三才：土木火 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="从容清欢">
+  <div class="ctop"><span class="num">30</span><span class="nm">王清欢</span><span class="py">wáng qīng huān</span><button class="speak" data-name="王清欢">念</button></div>
+  <div class="badges"><span class="score full">96 · 全绿</span><span class="flag">☆ 清带氵</span></div>
+  <p class="note">苏轼《浣溪沙》「人间有味是清欢」。清淡的欢喜，最长久。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 33 旭日升天 / 外格 23 旭日东升 / 总格 37 猛虎出林<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="从容清欢">
+  <div class="ctop"><span class="num">31</span><span class="nm">王悠然</span><span class="py">wáng yōu rán</span><button class="speak" data-name="王悠然">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span></div>
+  <p class="note">陶渊明《饮酒》「采菊东篱下，悠然见南山」。从容的底色。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 23 旭日东升 / 外格 13 春日牡丹 / 总格 27 欲望无止<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="从容清欢">
+  <div class="ctop"><span class="num">32</span><span class="nm">王泊安</span><span class="py">wáng bó ān</span><button class="speak" data-name="王泊安">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="flag">☆ 泊带氵；泊读 bó</span></div>
+  <p class="note">取「泊舟而安」之意。船靠岸，心安。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 15 福寿 / 外格 7 精悍 / 总格 19 多难<br>三才：土火土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="从容清欢">
+  <div class="ctop"><span class="num">33</span><span class="nm">王泊宁</span><span class="py">wáng bó níng</span><button class="speak" data-name="王泊宁">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="flag">☆ 泊带氵；泊读 bó</span></div>
+  <p class="note">取「泊舟而宁」之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 23 旭日东升 / 外格 15 福寿 / 总格 27 欲望无止<br>三才：土火火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="从容清欢">
+  <div class="ctop"><span class="num">34</span><span class="nm">王清平</span><span class="py">wáng qīng píng</span><button class="speak" data-name="王清平">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="flag">☆ 清带氵</span></div>
+  <p class="note">取「清静平和」之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 16 厚德载物 / 外格 6 安稳余庆 / 总格 20 屋下藏金<br>三才：土土土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="从容清欢">
+  <div class="ctop"><span class="num">35</span><span class="nm">王清川</span><span class="py">wáng qīng chuān</span><button class="speak" data-name="王清川">念</button></div>
+  <div class="badges"><span class="score warn1">82 · 一⚠️</span><span class="flag">☆ 清/川带氵</span></div>
+  <p class="note">王维《青溪》「我心素已闲，清川澹如此」。清川慢流。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 14 破兆 / 外格 4 / 总格 18 铁镜重磨<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="从容清欢">
+  <div class="ctop"><span class="num">36</span><span class="nm">王澹之</span><span class="py">wáng dàn zhī</span><button class="speak" data-name="王澹之">念</button></div>
+  <div class="badges"><span class="score full">78 · 全绿</span><span class="flag">☆ 澹带氵；读 dàn</span></div>
+  <p class="note">王维《青溪》「清川澹如此」；澹，淡泊。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 21 明月中天 / 地格 21 明月中天 / 外格 5 种竹成林 / 总格 25 资性英敏<br>三才：土木木 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="从容清欢">
+  <div class="ctop"><span class="num">37</span><span class="nm">王泊远</span><span class="py">wáng bó yuǎn</span><button class="speak" data-name="王泊远">念</button></div>
+  <div class="badges"><span class="score warn2">78 · 多⚠️</span><span class="flag">☆ 泊带氵；泊读 bó</span></div>
+  <p class="note">诸葛亮《诫子书》「非淡泊无以明志，非宁静无以致远」。淡泊+致远。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 26 变怪 / 外格 18 铁镜重磨 / 总格 30<br>三才：土火土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="从容清欢">
+  <div class="ctop"><span class="num">38</span><span class="nm">王徐行</span><span class="py">wáng xú xíng</span><button class="speak" data-name="王徐行">念</button></div>
+  <div class="badges"><span class="score warn1">77 · 一⚠️</span><span class="flag">行读 xíng</span></div>
+  <p class="note">苏轼《定风波》「莫听穿林打叶声，何妨吟啸且徐行」。慢慢走，稳稳到。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 14 破兆 / 地格 16 厚德载物 / 外格 7 精悍 / 总格 20 屋下藏金<br>三才：土火土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="松柏秋色">
+  <div class="ctop"><span class="num">39</span><span class="nm">王秋安</span><span class="py">wáng qiū ān</span><button class="speak" data-name="王秋安">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span></div>
+  <p class="note">取「秋日安宁」之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 15 福寿 / 外格 7 精悍 / 总格 19 多难<br>三才：土火土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="松柏秋色">
+  <div class="ctop"><span class="num">40</span><span class="nm">王秋宁</span><span class="py">wáng qiū níng</span><button class="speak" data-name="王秋宁">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span></div>
+  <p class="note">取「秋日宁静」之意。宁读 níng。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 23 旭日东升 / 外格 15 福寿 / 总格 27 欲望无止<br>三才：土火火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="松柏秋色">
+  <div class="ctop"><span class="num">41</span><span class="nm">王霜松</span><span class="py">wáng shuāng sōng</span><button class="speak" data-name="王霜松">念</button></div>
+  <div class="badges"><span class="score warn1">73 · 一⚠️</span></div>
+  <p class="note">霜中松，岁寒不凋。取岁寒松柏之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 21 明月中天 / 地格 25 资性英敏 / 外格 9 破舟入海 / 总格 29 智谋<br>三才：土木土 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="松柏秋色">
+  <div class="ctop"><span class="num">42</span><span class="nm">王寒柏</span><span class="py">wáng hán bǎi</span><button class="speak" data-name="王寒柏">念</button></div>
+  <div class="badges"><span class="score warn1">71 · 一⚠️</span><span class="flag">☆ 寒带冫</span></div>
+  <p class="note">《论语》「岁寒，然后知松柏之后凋也」。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 21 明月中天 / 外格 10 零暗 / 总格 25 资性英敏<br>三才：土土木 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="松柏秋色">
+  <div class="ctop"><span class="num">43</span><span class="nm">王秋旻</span><span class="py">wáng qiū mín</span><button class="speak" data-name="王秋旻">念</button></div>
+  <div class="badges"><span class="score warn1">71 · 一⚠️</span><span class="flag">⚠️ 旻较冷字，读 mín</span></div>
+  <p class="note">旻，秋天；秋日高天。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 13 春日牡丹 / 地格 17 刚强 / 外格 9 破舟入海 / 总格 21 明月中天<br>三才：土火金 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="松柏秋色">
+  <div class="ctop"><span class="num">44</span><span class="nm">王舟宁</span><span class="py">wáng zhōu níng</span><button class="speak" data-name="王舟宁">念</button></div>
+  <div class="badges"><span class="score warn1">62 · 一⚠️</span></div>
+  <p class="note">取「舟行安宁」之意。宁读 níng。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 10 零暗 / 地格 20 屋下藏金 / 外格 15 福寿 / 总格 24 掘藏得金<br>三才：土水水 · 有相克（⚠️）</p></details>
+</div>
+<div class="card" data-group="中和气象">
+  <div class="ctop"><span class="num">45</span><span class="nm">王朗安</span><span class="py">wáng lǎng ān</span><button class="speak" data-name="王朗安">念</button></div>
+  <div class="badges"><span class="score full">96 · 全绿</span></div>
+  <p class="note">取「明朗安宁」之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 17 刚强 / 外格 7 精悍 / 总格 21 明月中天<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="中和气象">
+  <div class="ctop"><span class="num">46</span><span class="nm">王朗宁</span><span class="py">wáng lǎng níng</span><button class="speak" data-name="王朗宁">念</button></div>
+  <div class="badges"><span class="score full">96 · 全绿</span></div>
+  <p class="note">取「明朗宁静」之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 25 资性英敏 / 外格 15 福寿 / 总格 29 智谋<br>三才：土土土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="中和气象">
+  <div class="ctop"><span class="num">47</span><span class="nm">王清宁</span><span class="py">wáng qīng níng</span><button class="speak" data-name="王清宁">念</button></div>
+  <div class="badges"><span class="score full">96 · 全绿</span><span class="flag">☆ 清带氵</span></div>
+  <p class="note">取「清静安宁」之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 25 资性英敏 / 外格 15 福寿 / 总格 29 智谋<br>三才：土土土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="中和气象">
+  <div class="ctop"><span class="num">48</span><span class="nm">王清安</span><span class="py">wáng qīng ān</span><button class="speak" data-name="王清安">念</button></div>
+  <div class="badges"><span class="score full">95 · 全绿</span><span class="flag">☆ 清带氵</span></div>
+  <p class="note">取「清静平安」之意。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 15 福寿 / 地格 17 刚强 / 外格 7 精悍 / 总格 21 明月中天<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="中和气象">
+  <div class="ctop"><span class="num">49</span><span class="nm">王雍安</span><span class="py">wáng yōng ān</span><button class="speak" data-name="王雍安">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span></div>
+  <p class="note">取「雍容安宁」之意。雍，从容大方。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 17 刚强 / 地格 19 多难 / 外格 7 精悍 / 总格 23 旭日东升<br>三才：土金水 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="中和气象">
+  <div class="ctop"><span class="num">50</span><span class="nm">王诚之</span><span class="py">wáng chéng zhī</span><button class="speak" data-name="王诚之">念</button></div>
+  <div class="badges"><span class="score warn1">86 · 一⚠️</span></div>
+  <p class="note">《中庸》「诚之者，人之道也」。诚，是一辈子的稳。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 18 铁镜重磨 / 地格 18 铁镜重磨 / 外格 5 种竹成林 / 总格 22 秋草逢霜<br>三才：土金金 · 相生比和（吉配）</p></details>
+</div>
+  </div>
+</div>
+
+<div class="panel" id="panel-nick">
+  <p class="intro" style="margin-top:12px">小名先看这五个：<b>稳稳、晚晚、慢慢、笃笃、落落</b>。已有的小名池（小九九、567、饺子、重阳、九九、登登、汤圆、糕糕）没重复列；老大的月饼/小月饼不占。</p>
+  <div class="cards">
+<div class="card ncard">
+  <div class="ctop"><span class="num">01</span><span class="nm">稳稳</span><span class="py">wěn wěn</span><button class="speak" data-name="稳稳">念</button></div>
+  <p class="note">稳当、笃定；一叫就安心。</p>
+  <div class="tags"><span class="tag">首选</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">02</span><span class="nm">晚晚</span><span class="py">wǎn wǎn</span><button class="speak" data-name="晚晚">念</button></div>
+  <p class="note">晚来的宝贝；叠字温柔。</p>
+  <div class="tags"><span class="tag">晚</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">03</span><span class="nm">慢慢</span><span class="py">màn màn</span><button class="speak" data-name="慢慢">念</button></div>
+  <p class="note">慢慢来，不着急；对应“晚”。</p>
+  <div class="tags"><span class="tag">晚</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">04</span><span class="nm">笃笃</span><span class="py">dǔ dǔ</span><button class="speak" data-name="笃笃">念</button></div>
+  <p class="note">笃定 + 马蹄声“笃笃”，丙午马年彩蛋。</p>
+  <div class="tags"><span class="tag">马年彩蛋</span><span class="tag">首选</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">05</span><span class="nm">落落</span><span class="py">luò luò</span><button class="speak" data-name="落落">念</button></div>
+  <p class="note">落落大方 + 瓜熟蒂落。</p>
+  <div class="tags"><span class="tag">晚</span><span class="tag">首选</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">06</span><span class="nm">迟迟</span><span class="py">chí chí</span><button class="speak" data-name="迟迟">念</button></div>
+  <p class="note">“姗姗来迟”；等他，也疼他。</p>
+  <div class="tags"><span class="tag">晚</span><span class="tag">诗经感</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">07</span><span class="nm">小满</span><span class="py">xiǎo mǎn</span><button class="speak" data-name="小满">念</button></div>
+  <p class="note">小得盈满；不求全，刚刚好。</p>
+  <div class="tags"><span class="tag">节气</span><span class="tag">吉语（非当季）</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">08</span><span class="nm">悠悠</span><span class="py">yōu yōu</span><button class="speak" data-name="悠悠">念</button></div>
+  <p class="note">悠然见南山；从容。</p>
+  <div class="tags"><span class="tag">从容</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">09</span><span class="nm">徐徐</span><span class="py">xú xú</span><button class="speak" data-name="徐徐">念</button></div>
+  <p class="note">清风徐来；一步一步。</p>
+  <div class="tags"><span class="tag">从容</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">10</span><span class="nm">缓缓</span><span class="py">huǎn huǎn</span><button class="speak" data-name="缓缓">念</button></div>
+  <p class="note">缓缓而来；稳。</p>
+  <div class="tags"><span class="tag">稳</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">11</span><span class="nm">安安</span><span class="py">ān ān</span><button class="speak" data-name="安安">念</button></div>
+  <p class="note">平安；最朴素的愿。</p>
+  <div class="tags"><span class="tag">平安</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">12</span><span class="nm">宁宁</span><span class="py">níng níng</span><button class="speak" data-name="宁宁">念</button></div>
+  <p class="note">安宁。</p>
+  <div class="tags"><span class="tag">安宁</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">13</span><span class="nm">定定</span><span class="py">dìng dìng</span><button class="speak" data-name="定定">念</button></div>
+  <p class="note">笃定；像小秤砣。</p>
+  <div class="tags"><span class="tag">稳</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">14</span><span class="nm">泰泰</span><span class="py">tài tài</span><button class="speak" data-name="泰泰">念</button></div>
+  <p class="note">泰然；泰山。</p>
+  <div class="tags"><span class="tag">稳</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">15</span><span class="nm">恒恒</span><span class="py">héng héng</span><button class="speak" data-name="恒恒">念</button></div>
+  <p class="note">恒久。</p>
+  <div class="tags"><span class="tag">长久</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">16</span><span class="nm">厚厚</span><span class="py">hòu hòu</span><button class="speak" data-name="厚厚">念</button></div>
+  <p class="note">厚道、厚实；抱起来有分量。</p>
+  <div class="tags"><span class="tag">厚实</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">17</span><span class="nm">朴朴</span><span class="py">pǔ pǔ</span><button class="speak" data-name="朴朴">念</button></div>
+  <p class="note">朴拙守真。</p>
+  <div class="tags"><span class="tag">朴素</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">18</span><span class="nm">真真</span><span class="py">zhēn zhēn</span><button class="speak" data-name="真真">念</button></div>
+  <p class="note">真率。</p>
+  <div class="tags"><span class="tag">真诚</span><span class="tag">叠字</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">19</span><span class="nm">小果</span><span class="py">xiǎo guǒ</span><button class="speak" data-name="小果">念</button></div>
+  <p class="note">瓜熟蒂落；秋果。</p>
+  <div class="tags"><span class="tag">晚</span><span class="tag">秋</span></div>
+</div>
+<div class="card ncard">
+  <div class="ctop"><span class="num">20</span><span class="nm">顺顺</span><span class="py">shùn shùn</span><button class="speak" data-name="顺顺">念</button></div>
+  <p class="note">顺遂。</p>
+  <div class="tags"><span class="tag">顺遂</span><span class="tag">叠字</span></div>
+</div>
+  </div>
+</div>
+
+<div class="panel" id="panel-si">
+  <p class="intro" style="margin-top:12px">王斯X 这一组，兄弟同字辈。先看这三颗：<b>王斯本</b>（本立而道生）、<b>王斯平</b>（平安平和）、<b>王斯至</b>（晚而至，终于抵达）。<br>
+  另外四个寓意极顺、但五格有硬伤，没放进 30：<b>王斯宁</b>（77 多⚠️）、<b>王斯泰</b>（72 一⚠️）、<b>王斯和</b>（67 一⚠️）、<b>王斯恒</b>（59 多⚠️）——如果家里只看寓意，这四个可以捞回来。</p>
+  <div class="cards">
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">01</span><span class="nm">王斯本</span><span class="py">wáng sī běn</span><button class="speak" data-name="王斯本">念</button></div>
+  <div class="badges"><span class="score full">96 · 全绿</span></div>
+  <p class="note">《论语·学而》「君子务本，本立而道生」。斯本：守住这个根本。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 17 刚强 / 外格 6 安稳余庆 / 总格 21 明月中天<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">02</span><span class="nm">王斯平</span><span class="py">wáng sī píng</span><button class="speak" data-name="王斯平">念</button></div>
+  <div class="badges"><span class="score full">95 · 全绿</span></div>
+  <p class="note">平安、平和；“斯平”读来最顺口。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 17 刚强 / 外格 6 安稳余庆 / 总格 21 明月中天<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">03</span><span class="nm">王斯渐</span><span class="py">wáng sī jiàn</span><button class="speak" data-name="王斯渐">念</button></div>
+  <div class="badges"><span class="score warn1">92 · 一⚠️</span><span class="flag">☆ 渐带氵</span></div>
+  <p class="note">《周易·渐卦》「渐，之进也」；循序渐进，一步一步来。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 27 欲望无止 / 外格 16 厚德载物 / 总格 31 春日花开<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">04</span><span class="nm">王斯静</span><span class="py">wáng sī jìng</span><button class="speak" data-name="王斯静">念</button></div>
+  <div class="badges"><span class="score warn1">91 · 一⚠️</span></div>
+  <p class="note">静定；“斯静”安静而不冷。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 28 阔水浮萍 / 外格 17 刚强 / 总格 32 宝马金鞍<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">05</span><span class="nm">王斯笃</span><span class="py">wáng sī dǔ</span><button class="speak" data-name="王斯笃">念</button></div>
+  <div class="badges"><span class="score warn1">91 · 一⚠️</span></div>
+  <p class="note">《老子》「守静笃」；笃定、厚实。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 28 阔水浮萍 / 外格 17 刚强 / 总格 32 宝马金鞍<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">06</span><span class="nm">王斯朴</span><span class="py">wáng sī pǔ</span><button class="speak" data-name="王斯朴">念</button></div>
+  <div class="badges"><span class="score warn1">91 · 一⚠️</span></div>
+  <p class="note">《老子》「见素抱朴」；朴拙守真。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 28 阔水浮萍 / 外格 17 刚强 / 总格 32 宝马金鞍<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">07</span><span class="nm">王斯默</span><span class="py">wáng sī mò</span><button class="speak" data-name="王斯默">念</button></div>
+  <div class="badges"><span class="score warn1">91 · 一⚠️</span></div>
+  <p class="note">静默、沉住气；不喧哗。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 28 阔水浮萍 / 外格 17 刚强 / 总格 32 宝马金鞍<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">08</span><span class="nm">王斯磐</span><span class="py">wáng sī pán</span><button class="speak" data-name="王斯磐">念</button></div>
+  <div class="badges"><span class="score warn1">91 · 一⚠️</span><span class="flag">☆ 石；生肖字根待八字</span></div>
+  <p class="note">磐石；“斯磐”稳如磐石。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 27 欲望无止 / 外格 16 厚德载物 / 总格 31 春日花开<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">09</span><span class="nm">王斯润</span><span class="py">wáng sī rùn</span><button class="speak" data-name="王斯润">念</button></div>
+  <div class="badges"><span class="score warn1">91 · 一⚠️</span><span class="flag">☆ 润带氵</span></div>
+  <p class="note">温润；润是慢慢浸润，不急。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 28 阔水浮萍 / 外格 17 刚强 / 总格 32 宝马金鞍<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">10</span><span class="nm">王斯潜</span><span class="py">wáng sī qián</span><button class="speak" data-name="王斯潜">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span><span class="flag">☆ 潜带氵</span></div>
+  <p class="note">《周易·乾》「潜龙勿用」；沉潜待时。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 28 阔水浮萍 / 外格 17 刚强 / 总格 32 宝马金鞍<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">11</span><span class="nm">王斯止</span><span class="py">wáng sī zhǐ</span><button class="speak" data-name="王斯止">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span></div>
+  <p class="note">《大学》「知止而后有定」；知止，是稳的第一步。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 16 厚德载物 / 外格 5 种竹成林 / 总格 20 屋下藏金<br>三才：土土土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">12</span><span class="nm">王斯载</span><span class="py">wáng sī zài</span><button class="speak" data-name="王斯载">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span></div>
+  <p class="note">《周易·坤》「厚德载物」；能载得住。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 25 资性英敏 / 外格 14 破兆 / 总格 29 智谋<br>三才：土土土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">13</span><span class="nm">王斯渡</span><span class="py">wáng sī dù</span><button class="speak" data-name="王斯渡">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span><span class="flag">☆ 渡带氵</span></div>
+  <p class="note">渡人渡己；稳稳到岸。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 25 资性英敏 / 外格 14 破兆 / 总格 29 智谋<br>三才：土土土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">14</span><span class="nm">王斯栋</span><span class="py">wáng sī dòng</span><button class="speak" data-name="王斯栋">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span></div>
+  <p class="note">栋梁；“斯栋”是家里的柱子。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 24 掘藏得金 / 外格 13 春日牡丹 / 总格 28 阔水浮萍<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">15</span><span class="nm">王斯衡</span><span class="py">wáng sī héng</span><button class="speak" data-name="王斯衡">念</button></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span></div>
+  <p class="note">平衡、权衡；不偏不倚。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 28 阔水浮萍 / 外格 17 刚强 / 总格 32 宝马金鞍<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">16</span><span class="nm">王斯深</span><span class="py">wáng sī shēn</span><button class="speak" data-name="王斯深">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="flag">☆ 深带氵</span></div>
+  <p class="note">静水深流；藏得住。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 24 掘藏得金 / 外格 13 春日牡丹 / 总格 28 阔水浮萍<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">17</span><span class="nm">王斯然</span><span class="py">wáng sī rán</span><button class="speak" data-name="王斯然">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span></div>
+  <p class="note">安然、自然；收得轻。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 24 掘藏得金 / 外格 13 春日牡丹 / 总格 28 阔水浮萍<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">18</span><span class="nm">王斯澄</span><span class="py">wáng sī chéng</span><button class="speak" data-name="王斯澄">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="flag">☆ 澄带氵；读 chéng</span></div>
+  <p class="note">澄明；水静则明。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 28 阔水浮萍 / 外格 17 刚强 / 总格 32 宝马金鞍<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">19</span><span class="nm">王斯淳</span><span class="py">wáng sī chún</span><button class="speak" data-name="王斯淳">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="flag">☆ 淳带氵</span></div>
+  <p class="note">淳厚；朴素的好。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 24 掘藏得金 / 外格 13 春日牡丹 / 总格 28 阔水浮萍<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">20</span><span class="nm">王斯文</span><span class="py">wáng sī wén</span><button class="speak" data-name="王斯文">念</button></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span></div>
+  <p class="note">《论语·子罕》「天之未丧斯文也」；斯文、温文。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 16 厚德载物 / 外格 5 种竹成林 / 总格 20 屋下藏金<br>三才：土土土 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">21</span><span class="nm">王斯守</span><span class="py">wáng sī shǒu</span><button class="speak" data-name="王斯守">念</button></div>
+  <div class="badges"><span class="score warn1">87 · 一⚠️</span></div>
+  <p class="note">守持；守是稳的核心动作。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 18 铁镜重磨 / 外格 7 精悍 / 总格 22 秋草逢霜<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">22</span><span class="nm">王斯至</span><span class="py">wáng sī zhì</span><button class="speak" data-name="王斯至">念</button></div>
+  <div class="badges"><span class="score warn1">87 · 一⚠️</span><span class="flag">最贴题</span></div>
+  <p class="note">“至”=到了；晚而至，终于抵达。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 18 铁镜重磨 / 外格 7 精悍 / 总格 22 秋草逢霜<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">23</span><span class="nm">王斯安</span><span class="py">wáng sī ān</span><button class="speak" data-name="王斯安">念</button></div>
+  <div class="badges"><span class="score warn1">86 · 一⚠️</span></div>
+  <p class="note">平安；“斯安”简单、稳。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 18 铁镜重磨 / 外格 7 精悍 / 总格 22 秋草逢霜<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">24</span><span class="nm">王斯舟</span><span class="py">wáng sī zhōu</span><button class="speak" data-name="王斯舟">念</button></div>
+  <div class="badges"><span class="score warn1">86 · 一⚠️</span></div>
+  <p class="note">舟行稳；“舟”是承载。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 18 铁镜重磨 / 外格 7 精悍 / 总格 22 秋草逢霜<br>三才：土土金 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">25</span><span class="nm">王斯常</span><span class="py">wáng sī cháng</span><button class="speak" data-name="王斯常">念</button></div>
+  <div class="badges"><span class="score warn1">82 · 一⚠️</span></div>
+  <p class="note">恒常；常是不变。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 23 旭日东升 / 外格 12 掘井无泉 / 总格 27 欲望无止<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">26</span><span class="nm">王斯悠</span><span class="py">wáng sī yōu</span><button class="speak" data-name="王斯悠">念</button></div>
+  <div class="badges"><span class="score warn1">82 · 一⚠️</span></div>
+  <p class="note">悠然；悠是从容的长度。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 23 旭日东升 / 外格 12 掘井无泉 / 总格 27 欲望无止<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">27</span><span class="nm">王斯康</span><span class="py">wáng sī kāng</span><button class="speak" data-name="王斯康">念</button></div>
+  <div class="badges"><span class="score warn1">82 · 一⚠️</span></div>
+  <p class="note">康宁；健康平安。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 23 旭日东升 / 外格 12 掘井无泉 / 总格 27 欲望无止<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">28</span><span class="nm">王斯清</span><span class="py">wáng sī qīng</span><button class="speak" data-name="王斯清">念</button></div>
+  <div class="badges"><span class="score warn1">82 · 一⚠️</span><span class="flag">☆ 清带氵</span></div>
+  <p class="note">清静；清是澄澈。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 23 旭日东升 / 外格 12 掘井无泉 / 总格 27 欲望无止<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">29</span><span class="nm">王斯讷</span><span class="py">wáng sī nè</span><button class="speak" data-name="王斯讷">念</button></div>
+  <div class="badges"><span class="score warn1">82 · 一⚠️</span><span class="flag">⚠️ 讷较冷，读 nè</span></div>
+  <p class="note">《论语·里仁》「君子欲讷于言而敏于行」；讷言，是稳。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 23 旭日东升 / 外格 12 掘井无泉 / 总格 27 欲望无止<br>三才：土土火 · 相生比和（吉配）</p></details>
+</div>
+<div class="card" data-group="王斯X">
+  <div class="ctop"><span class="num">30</span><span class="nm">王斯远</span><span class="py">wáng sī yuǎn</span><button class="speak" data-name="王斯远">念</button></div>
+  <div class="badges"><span class="score full">79 · 全绿</span></div>
+  <p class="note">《诫子书》「非宁静无以致远」；致远。</p>
+  <details><summary>五格明细</summary><p>天格 5 种竹成林 / 人格 16 厚德载物 / 地格 29 智谋 / 外格 18 铁镜重磨 / 总格 33 旭日升天<br>三才：土土水 · 有相克（⚠️）</p></details>
+</div>
+  </div>
+</div>
+
+<footer>
+  <b>口径</b>：大名/王斯X 分数沿用 naming/score_all.py 的五格口径（康熙笔画 + 81 数理 + 三才 + 音形义）；全绿 &gt; 一⚠️ &gt; 多⚠️ &gt; 慎用。<br>
+  <b>查重</b>：现有占用池 892 名（627 池 + 档案 + 百名帖 + 刚骨/奔雷 + 短名单 + 大师提名等）。本轮另有 21 个大名候选因重名剔除，如王晚成、王时行、王知止、王守静、王时中、王允中、王执中、王柏舟、王松柏、王至诚。<br>
+  <b>未做</b>：八字喜用神、出生时辰、真太阳时；这批只按“晚/稳”气质方向，出生后拿真八字再收网。<br>
+  <b>红线</b>：所有名字均为候选；大名、小名均未定。王元一/小九九仍只是拟议，不因本页升格。<br>
+  <b>生成</b>：2026-10-19 · 铁蛋 · naming/_wanwen_build.py 自动生成
+</footer>
+</div>
+<script>
+const tabs=[...document.querySelectorAll('.tab')];
+const panels=[...document.querySelectorAll('.panel')];
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.toggle('on',x===t));
+  panels.forEach(p=>p.classList.toggle('on',p.id==='panel-'+t.dataset.tab));
+}));
+const chips=[...document.querySelectorAll('.chip')];
+chips.forEach(c=>c.addEventListener('click',()=>{
+  chips.forEach(x=>x.classList.toggle('on',x===c));
+  const g=c.dataset.group;
+  document.querySelectorAll('#panel-formal .card').forEach(card=>{
+    card.style.display=(g==='all'||card.dataset.group===g)?'':'none';
+  });
+}));
+document.querySelectorAll('.speak').forEach(b=>b.addEventListener('click',()=>{
+  if(!('speechSynthesis' in window))return;
+  const u=new SpeechSynthesisUtterance(b.dataset.name);
+  u.lang='zh-CN';u.rate=0.82;
+  speechSynthesis.cancel();speechSynthesis.speak(u);
+  b.textContent='念…';setTimeout(()=>b.textContent='念',900);
+}));
+</script>
+</body>
+</html>

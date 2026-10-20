@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>落地 · 收网｜老二真八字与起名短名单</title>
+<style>
+:root{
+  --surf:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --line:#e1e0d9; --jiang:#C23B2E; --gold:#C79A2B;
+  --tai:#2d8f5f; --warn:#c07a1a; --blue:#2d5f8f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.65}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 80px}
+header{padding:30px 4px 22px;border-bottom:1px solid var(--line);margin-bottom:14px}
+h1{margin:0 0 8px;font-size:clamp(26px,4.6vw,42px);letter-spacing:.14em;
+  font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
+h1 .seal{display:inline-block;background:var(--jiang);color:#fff;font-size:.5em;
+  padding:.28em .5em;border-radius:4px;vertical-align:.62em;letter-spacing:.1em;
+  margin-left:14px;font-family:inherit}
+.sub{color:var(--ink2);font-size:14.5px;margin:2px 0 0}
+.sub b{color:var(--jiang)}
+.intro{font-size:13.5px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
+  border-left:3px solid var(--jiang);border-radius:10px;padding:14px 18px;margin:18px 0;
+  line-height:2}
+.intro b{color:var(--ink)}
+.topbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin:16px 0 22px}
+.topcard{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:14px 16px;border-top:3px solid var(--gold)}
+.topcard .k{font-size:11.5px;color:var(--muted);letter-spacing:.08em}
+.topcard .n{font-size:24px;font-weight:700;letter-spacing:.08em;margin:2px 0 2px;font-family:"Songti SC","STSong","SimSun",serif}
+.topcard .n small{display:block;font-size:11.5px;color:var(--muted);font-weight:400;letter-spacing:0;margin-top:2px;font-family:system-ui,sans-serif}
+.topcard .d{font-size:12.5px;color:var(--ink2);margin:6px 0 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 10px;position:sticky;top:0;background:var(--page);padding:8px 0;z-index:5;border-bottom:1px solid var(--line)}
+.tab{border:1px solid var(--line);background:var(--surf);color:var(--ink2);border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{display:none}.panel.on{display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px;margin-top:10px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:12px 15px}
+.ctop{display:flex;align-items:baseline;gap:9px;margin-bottom:2px;flex-wrap:wrap}
+.num{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.nm{font-size:23px;font-weight:700;letter-spacing:.08em;font-family:"Songti SC","STSong","SimSun",serif}
+.el{font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 6px}
+.score{font-size:11.5px;border-radius:6px;padding:1px 8px;font-variant-numeric:tabular-nums;background:#f1f0ec;color:var(--ink2)}
+.score.full{background:#e6f3ec;color:#1f6d47}
+.score.warn1{background:#fbf0d9;color:#8a5a12}
+.score.bad{background:#f5dede;color:#8a2020}
+.flag{font-size:11.5px;color:var(--warn);background:#fbf4e4;border-radius:6px;padding:1px 8px}
+.note{font-size:13.5px;margin:0 0 4px}
+details{margin-top:2px}
+summary{font-size:11.5px;color:var(--muted);cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:before{content:"＋ ";color:var(--gold)}
+details[open] summary:before{content:"－ "}
+details p{font-size:11.5px;color:var(--ink2);margin:4px 0 2px;line-height:1.8}
+.sectitle{font-size:17px;letter-spacing:.1em;margin:34px 0 10px;padding-left:10px;border-left:4px solid var(--gold);font-family:"Songti SC","STSong","SimSun",serif}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.kv div{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:10px 13px}
+.kv .k{font-size:11px;color:var(--muted);letter-spacing:.06em}
+.kv .v{font-size:16px;font-weight:600;margin-top:2px}
+table{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f3f2ee;font-weight:600;font-size:12px;color:var(--ink2)}
+tr:last-child td{border-bottom:0}
+.bz td,.bz th{text-align:center}
+.bars{margin:10px 0 16px}
+.bar{display:flex;align-items:center;gap:10px;margin:5px 0;font-size:12.5px}
+.bar .lab{width:28px;color:var(--ink2)}
+.bar .track{flex:1;height:12px;background:#efeee9;border-radius:6px;overflow:hidden}
+.bar .fill{height:100%;border-radius:6px;background:var(--gold)}
+.bar .val{width:56px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.callout{background:#fbf6ea;border:1px solid #eadfc2;border-left:3px solid var(--gold);border-radius:10px;padding:13px 16px;font-size:13px;color:var(--ink2);line-height:1.9;margin:12px 0}
+.callout b{color:var(--ink)}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.9}
+footer b{color:var(--ink2)}
+@media (max-width:560px){.cards{grid-template-columns:1fr}.tab{padding:6px 12px;font-size:13px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>落地 · 收网<span class="seal">王</span></h1>
+  <p class="sub">2026-10-20 <b>21:46</b>（亥时）· <b>3.225 kg</b> · 农历九月十一 · 丙午马年 · 真八字收网第一版</p>
+</header>
+
+<p class="intro">
+二宝落地了。八字不再按预产期推——真盘是 <b>丙午 / 戊戌 / 丁卯 / 辛亥</b>，丁火日主，五行俱全。<br>
+六路交叉核验后，老板定盘：<b>主流弱判——身弱偏弱，用神木（主）、水（少量辅）、火（次）；忌土（首忌）、金（次忌）、重火</b>。生肖只做筛选器，八字用神定去留。<br>
+这一版把 1075 个池名全部按真八字过了一遍（<b>A 档 146 / B 档 344</b>），再对 89 个终审名做了三源字五行核验。<b>「元一」按老板决定挂起，等大师口径，不升格。</b>
+</p>
+
+<div class="topbox">
+<div class="topcard"><div class="k">老板初选 · 祥瑞</div><div class="n">王嘉禾<small>五行 木+木 · 五格 92</small></div><div class="d">老板 10-17 初选里的「祥瑞田」。嘉禾是双穗瑞谷，《抱朴子》写的是五谷丰登、疫疠不侵的治世图景——最朴素的好年成。木木清透，生肖马又喜禾。</div></div>
+<div class="topcard"><div class="k">老板初选 · 兄弟水意</div><div class="n">王棣浔<small>五行 木+水 · 五格 90</small></div><div class="d">自家组的「兄弟水边版」：棣是棠棣，古汉语里就是兄弟；浔是一江清水。木水相生，正合他。唯一代价是没有现成古诗撑腰。</div></div>
+<div class="topcard"><div class="k">今晚最应景</div><div class="n">王梦熊<small>五行 木+水 · 五格 92</small></div><div class="d">《诗经·小雅·斯干》「维熊维罴，男子之祥」——梦熊之喜，本来就是生男孩的吉兆。木水，92 分，四维 78.5。今晚用这个名字，几乎是为他写的。</div></div>
+<div class="topcard"><div class="k">与兄同行</div><div class="n">王偕行<small>五行 木+水 · 五格 94</small></div><div class="d">《周易·乾·文言》「与时偕行」；也是《诗经·秦风·无衣》「与子偕行」。和哥哥同行，水木相生，五格 94。</div></div>
+<div class="topcard"><div class="k">抱元守一 · 备选</div><div class="n">王抱元<small>五行 水+木 · 五格 94</small></div><div class="d">如果「元一」先挂起，这是最贴原意的一案：抱元守一，取「抱元」二字；水木相生，五格 94、四维 79.5。</div></div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-tab="p-awater">木水相生 · 25</button>
+  <button class="tab" data-tab="p-awood">木木 · 22</button>
+  <button class="tab" data-tab="p-b">次选 B · 23</button>
+  <button class="tab" data-tab="p-master">大师 10 名对照</button>
+  <button class="tab" data-tab="p-strong">并行案 · 强判</button>
+  <button class="tab" data-tab="p-not">暂缓 / 不推荐</button>
+  <button class="tab" data-tab="p-bazi">八字与验证</button>
+</div>
+
+<div class="panel on" id="p-awater">
+<div class="cards">
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">01</span><span class="nm">王偕行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score full">五格 94</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">《周易·乾·文言》「与时偕行」；也是《诗经·秦风·无衣》「与子偕行」。和哥哥同行，水木相生，五格 94。</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">02</span><span class="nm">王棣浔</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">自家组的「兄弟水边版」：棣是棠棣，古汉语里就是兄弟；浔是一江清水。木水相生，正合他。唯一代价是没有现成古诗撑腰。</p>
+  <details><summary>出处 / 提示</summary><p>提示：自组名（无成典）；与常棣同源，二选一。</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">03</span><span class="nm">王厚朴</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score full">五格 97</span><span class="score">四维 77.5</span><span class="score full">五行 水+木 · A</span></div>
+  <p class="note">因「本质朴而成厚」得名——厚为醇厚，朴为质朴。醇厚与质朴是中国人一向赞美的品德。</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「醇厚质朴，朴素即大美」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">04</span><span class="nm">王抱朴</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score full">五格 97</span><span class="score">四维 77.5</span><span class="score full">五行 水+木 · A</span></div>
+  <p class="note">《道德经》「见素抱朴，少私寡欲」，葛洪《抱朴子》。</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「见素抱朴」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">05</span><span class="nm">王义方</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score full">五格 96</span><span class="score">四维 77.5</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">行事合义，端方有则</p>
+  <details><summary>出处 / 提示</summary><p>《古文观止》「臣闻爱子，教之以义方，弗纳於邪。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">06</span><span class="nm">王抱元</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score full">五格 94</span><span class="score">四维 79.5</span><span class="score full">五行 水+木 · A</span></div>
+  <p class="note">如果「元一」先挂起，这是最贴原意的一案：抱元守一，取「抱元」二字；水木相生，五格 94、四维 79.5。</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「名字即抱元」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">07</span><span class="nm">王梦熊</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 92</span><span class="score">四维 78.5</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">《诗经·小雅·斯干》「维熊维罴，男子之祥」——梦熊之喜，本来就是生男孩的吉兆。木水，92 分，四维 78.5。今晚用这个名字，几乎是为他写的。</p>
+  <details><summary>出处 / 提示</summary><p>《诗经》「吉梦维何？维熊维罴，维虺维蛇。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">08</span><span class="nm">王若虚</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 91</span><span class="score">四维 77.5</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">虚怀谦冲</p>
+  <details><summary>出处 / 提示</summary><p>《论语》「有若无，实若虚，犯而不校。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">09</span><span class="nm">王务本</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score warn1">五格 91</span><span class="score">四维 76.5</span><span class="score full">五行 水+木 · A</span></div>
+  <p class="note">致力根本</p>
+  <details><summary>出处 / 提示</summary><p>《尚书》「树德务滋，除恶务本，肆予小子诞以尔众士，殄歼乃仇。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">10</span><span class="nm">王拔萃</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score">四维 75.2</span><span class="score full">五行 水+木 · A</span></div>
+  <p class="note">出类拔萃，卓尔不群</p>
+  <details><summary>出处 / 提示</summary><p>《抱朴子外篇》「三事九列是之自出，必简摽颖拔萃之俊。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">11</span><span class="nm">王景行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 86</span><span class="score">四维 78.5</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">德如大道</p>
+  <details><summary>出处 / 提示</summary><p>《诗经》「高山仰止，景行行止。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">12</span><span class="nm">王元方</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 85</span><span class="score">四维 78.5</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">陈元方（《世说新语》聪慧少年）典故。</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「陈元方典故」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">13</span><span class="nm">王嘉行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 91</span><span class="score">四维 72.5</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">美行嘉德，力行古道</p>
+  <details><summary>出处 / 提示</summary><p>《古文观止》「余嘉其能行古道，作《师说》以贻之。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">14</span><span class="nm">王敬行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score">四维 73.5</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">敬慎而行</p>
+  <details><summary>出处 / 提示</summary><p>《礼记》「爱之以敬，行之以礼，修之以孝，养纪之以义，终之以仁。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">15</span><span class="nm">王挹江</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 86</span><span class="score">四维 77.2</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">南宋·张孝祥《念奴娇·过洞庭》「……应念岭表经年，孤光自照，肝胆皆冰雪。短发萧骚襟袖冷，稳泛沧溟空阔。尽挹西江，细斟北斗</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「尽挹西江，细斟北斗」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">16</span><span class="nm">王勤行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 89</span><span class="score">四维 71.5</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">勤勉笃行，知行合一</p>
+  <details><summary>出处 / 提示</summary><p>《道德经》「上士闻道，勤而行之」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">17</span><span class="nm">王瞰云</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 78</span><span class="score">四维 78.2</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">南宋·白玉蟾（葛长庚）《少年行》「飘然乘云气，俯首视世寰。散发抱素月，天人咸仰观」（《御选四朝诗·宋诗卷九》所录）。「云</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「飘然乘云气，俯首视世寰」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">18</span><span class="nm">王霜松</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score warn1">五格 73</span><span class="score full">五行 水+木 · A</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">19</span><span class="nm">王见微</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 68</span><span class="score">四维 77.5</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">察见细微</p>
+  <details><summary>出处 / 提示</summary><p>《中庸》「莫见乎隐，莫显乎微，故君子慎其独也。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">20</span><span class="nm">王寒柏</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score warn1">五格 71</span><span class="score full">五行 水+木 · A</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">21</span><span class="nm">王寒松</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score warn1">五格 68</span><span class="score full">五行 水+木 · A</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">22</span><span class="nm">王松云</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 62</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">23</span><span class="nm">王松风</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">五格 59</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">24</span><span class="nm">王啸风</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score">五格未评</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">25</span><span class="nm">王枕风</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score">五格未评</span><span class="score full">五行 木+水 · A</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+</div>
+</div>
+<div class="panel " id="p-awood">
+<div class="cards">
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">01</span><span class="nm">王乔木</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score">四维 81.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">乔木参天</p>
+  <details><summary>出处 / 提示</summary><p>《诗经》「南有乔木，不可休息。汉有游女，不可求思。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">02</span><span class="nm">王嘉禾</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 92</span><span class="score">四维 77.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">老板 10-17 初选里的「祥瑞田」。嘉禾是双穗瑞谷，《抱朴子》写的是五谷丰登、疫疠不侵的治世图景——最朴素的好年成。木木清透，生肖马又喜禾。</p>
+  <details><summary>出处 / 提示</summary><p>《抱朴子内篇》「景耀高照，嘉禾毕遂，疫疠不流，祸乱不作」<br>提示：嘉=2010s 标签字；嘉禾=嘉兴古称（地名联想）。</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">03</span><span class="nm">王敬贤</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 91</span><span class="score">四维 77.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">敬贤如宾，礼贤下士</p>
+  <details><summary>出处 / 提示</summary><p>《古文观止》「敬贤如大宾，爱民如赤子」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">04</span><span class="nm">王若朴</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 92</span><span class="score">四维 75.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">《道德经》「敦兮其若朴」「见素抱朴」——与老大斯卯同款三才。</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「敦兮其若朴」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">05</span><span class="nm">王元本</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score">四维 76.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">本元倒装：元者本也。</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「本元倒装」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">06</span><span class="nm">王元凯</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 89</span><span class="score">四维 76.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">贤才之目，才德兼优</p>
+  <details><summary>出处 / 提示</summary><p>《抱朴子外篇》「元凯毕集，以究论道之损益。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">07</span><span class="nm">王建贤</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score">四维 74.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">立贤进德</p>
+  <details><summary>出处 / 提示</summary><p>《尚书》「建官惟贤，位事惟能。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">08</span><span class="nm">王孔嘉</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 87</span><span class="score">四维 74.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">甚美孔嘉</p>
+  <details><summary>出处 / 提示</summary><p>《诗经》「周公东征，四国是遒。哀我人斯，亦孔之嘉。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">09</span><span class="nm">王恭俭</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 87</span><span class="score">四维 74.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">恭谨俭约</p>
+  <details><summary>出处 / 提示</summary><p>《礼记》「恭俭庄敬，礼教也」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">10</span><span class="nm">王若谷</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 87</span><span class="score">四维 74.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">旷达虚怀若谷</p>
+  <details><summary>出处 / 提示</summary><p>《道德经》「旷兮其若谷﹔」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">11</span><span class="nm">王嘉言</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 78</span><span class="score">四维 76.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">美善之言</p>
+  <details><summary>出处 / 提示</summary><p>《尚书》「嘉言罔攸伏，野无遗贤，万邦咸宁。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">12</span><span class="nm">王高义</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 73</span><span class="score">四维 78.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">高义薄云，遗泽后世</p>
+  <details><summary>出处 / 提示</summary><p>《古文观止》「独高其义，因以遗其世云。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">13</span><span class="nm">王甘棠</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 72</span><span class="score">四维 78.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">甘棠遗爱，仁厚泽人</p>
+  <details><summary>出处 / 提示</summary><p>《本草纲目》「【释名】甘棠。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">14</span><span class="nm">王克勤</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 67</span><span class="score">四维 77.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">勤勉不懈</p>
+  <details><summary>出处 / 提示</summary><p>《尚书》「克勤于邦，克俭于家」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">15</span><span class="nm">王居谦</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 68</span><span class="score">四维 75.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">守谦自处，戒盈有庆</p>
+  <details><summary>出处 / 提示</summary><p>《抱朴子外篇》「履信思顺，天人攸赞，畏盈居谦，乃终有庆。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">16</span><span class="nm">王笃敬</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 67</span><span class="score">四维 76.2</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">笃厚恭敬</p>
+  <details><summary>出处 / 提示</summary><p>《左传》「君人执信，臣人执共，忠信笃敬，上下同之，天之道也。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">17</span><span class="nm">王果毅</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 62</span><span class="score">四维 78.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">果决刚毅，临事能断</p>
+  <details><summary>出处 / 提示</summary><p>《抱朴子外篇》「介一人之心致其果毅，谋夫协思进其长算。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">18</span><span class="nm">王经国</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 64</span><span class="score">四维 76.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">经纬国家，社稷之才</p>
+  <details><summary>出处 / 提示</summary><p>《古文观止》「礼，经国家，定社稷，序人民，利后嗣者也。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">19</span><span class="nm">王广业</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 62</span><span class="score">四维 77.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">广开功业，德业并进</p>
+  <details><summary>出处 / 提示</summary><p>《周易》「夫《易》，圣人所以崇德而广业也。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">20</span><span class="nm">王乔松</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 58</span><span class="score">四维 76.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">乔松挺立</p>
+  <details><summary>出处 / 提示</summary><p>《诗经》「山有乔松，隰有游龙，不见子充，乃见狡童。」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">21</span><span class="nm">王康强</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 53</span><span class="score">四维 71.5</span><span class="score full">五行 木+木 · A</span></div>
+  <p class="note">康健强壮</p>
+  <details><summary>出处 / 提示</summary><p>《尚书》「身其康强，子孙其逢吉」</p></details>
+</div>
+<div class="card" data-tier="A">
+  <div class="ctop"><span class="num">22</span><span class="nm">王松月</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">五格 59</span><span class="score full">五行 木+木 · A</span><span class="flag">生肖降权：含心/忄/彳/子/丑/田/月字根</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+</div>
+</div>
+<div class="panel " id="p-b">
+<div class="cards">
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">01</span><span class="nm">王稳舟</span><span class="el">木+金</span></div>
+  <div class="badges"><span class="score warn1">五格 97</span><span class="score warn1">五行 木+金 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">02</span><span class="nm">王康宁</span><span class="el">木+火</span></div>
+  <div class="badges"><span class="score warn1">五格 96</span><span class="score warn1">五行 木+火 · B</span></div>
+  <p class="note">《尚书·洪范》五福「三曰康宁」。木火，五格 96——次选里最稳、最暖的一个。</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">03</span><span class="nm">王鹤鸣</span><span class="el">水+水</span></div>
+  <div class="badges"><span class="score warn1">五格 96</span><span class="score warn1">五行 水+水 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：21 个中五格最高（96 全绿）；鹤 21 画；与鹤如二选一。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">04</span><span class="nm">王清宁</span><span class="el">水+火</span></div>
+  <div class="badges"><span class="score warn1">五格 96</span><span class="score warn1">五行 水+火 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">05</span><span class="nm">王清欢</span><span class="el">水+水</span></div>
+  <div class="badges"><span class="score warn1">五格 96</span><span class="score warn1">五行 水+水 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">06</span><span class="nm">王斯本</span><span class="el">金+木</span></div>
+  <div class="badges"><span class="score warn1">五格 96</span><span class="score warn1">五行 金+木 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">07</span><span class="nm">王舒啸</span><span class="el">金+木</span></div>
+  <div class="badges"><span class="score warn1">五格 91</span><span class="score warn1">五行 金+木 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：啸 16 画；与大师批「啸风」同字族（舒啸更从容）。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">08</span><span class="nm">王弈舟</span><span class="el">木+金</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score warn1">五行 木+金 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：无成典（意象名）；弈字认读。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">09</span><span class="nm">王泊宁</span><span class="el">水+火</span></div>
+  <div class="badges"><span class="score warn1">五格 89</span><span class="score warn1">五行 水+火 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">10</span><span class="nm">王虚白</span><span class="el">水+水</span></div>
+  <div class="badges"><span class="score warn1">五格 96</span><span class="score">四维 80.5</span><span class="score warn1">五行 水+水 · B</span></div>
+  <p class="note">《庄子·人间世》「虚室生白，吉祥止止」。</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「虚室生白」</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">11</span><span class="nm">王常棣</span><span class="el">金+木</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score">四维 81.2</span><span class="score warn1">五行 金+木 · B</span></div>
+  <p class="note">棠棣之华，兄弟情笃</p>
+  <details><summary>出处 / 提示</summary><p>《本草纲目》「郁李（《本经》下品）【释名】李（《诗疏》）、郁李、车下李（《别录》）、爵李（《本经》）、雀梅（《诗疏》）、常棣。」<br>提示：棣读 dì；命名叙事极贴老二身份；五格一⚠️。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">12</span><span class="nm">王敏行</span><span class="el">水+水</span></div>
+  <div class="badges"><span class="score warn1">五格 95</span><span class="score">四维 74.5</span><span class="score warn1">五行 水+水 · B</span></div>
+  <p class="note">讷言敏行</p>
+  <details><summary>出处 / 提示</summary><p>《论语》「君子欲讷于言而敏于行。」</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">13</span><span class="nm">王会文</span><span class="el">水+水</span></div>
+  <div class="badges"><span class="score warn1">五格 95</span><span class="score">四维 74.5</span><span class="score warn1">五行 水+水 · B</span></div>
+  <p class="note">以文会友</p>
+  <details><summary>出处 / 提示</summary><p>《论语》「君子以文会友，以友辅仁。」</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">14</span><span class="nm">王斯元</span><span class="el">金+木</span></div>
+  <div class="badges"><span class="score warn1">五格 89</span><span class="score">四维 78.5</span><span class="score warn1">五行 金+木 · B</span></div>
+  <p class="note">斯字辈联名：斯卯+斯元，兄弟共用「斯」（代价是弃掉「一」字）。</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「斯字辈联名」<br>提示：双结构（义胜于名）；画面感弱。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">15</span><span class="nm">王晚枫</span><span class="el">火+木</span></div>
+  <div class="badges"><span class="score warn1">五格 83</span><span class="score warn1">五行 火+木 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">16</span><span class="nm">王怀瑾</span><span class="el">水+火</span></div>
+  <div class="badges"><span class="score warn1">五格 83</span><span class="score warn1">五行 水+火 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：瑾现代女名常用；怀+瑾共 36 画；四维 B 偏低。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">17</span><span class="nm">王中孚</span><span class="el">火+水</span></div>
+  <div class="badges"><span class="score warn1">五格 76</span><span class="score warn1">五行 火+水 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：三才相克；卦名直用（文气重）。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">18</span><span class="nm">王晚林</span><span class="el">火+木</span></div>
+  <div class="badges"><span class="score warn1">五格 68</span><span class="score warn1">五行 火+木 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">19</span><span class="nm">王知还</span><span class="el">火+水</span></div>
+  <div class="badges"><span class="score warn1">五格 62</span><span class="score warn1">五行 火+水 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：五格 62；还 huán/hái 多音；还 20 画。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">20</span><span class="nm">王未晚</span><span class="el">木+火</span></div>
+  <div class="badges"><span class="score warn1">五格 59</span><span class="score warn1">五行 木+火 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">21</span><span class="nm">王自牧</span><span class="el">火+水</span></div>
+  <div class="badges"><span class="score warn1">五格 53</span><span class="score warn1">五行 火+水 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：五格 53（21 个最低）；自字生硬感；末两字同调。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">22</span><span class="nm">王决云</span><span class="el">水+水</span></div>
+  <div class="badges"><span class="score">五格未评</span><span class="score warn1">五行 水+水 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">23</span><span class="nm">王闻雨</span><span class="el">水+水</span></div>
+  <div class="badges"><span class="score">五格未评</span><span class="score warn1">五行 水+水 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+</div>
+</div>
+
+<div class="panel" id="p-master">
+<p class="intro" style="margin-top:10px">大师提名的 10 个名字，按同一套真八字口径过了一遍。四名合木水，两名可作次选；<b>撼岳、浸阳</b>因「岳/阳」终审为土而落档，<b>鹤如</b>为水金、<b>御纬</b>含土与彳字根——不是名字不好，是与这个盘的用神不合。建议把这张表直接给大师看。</p>
+<table>
+<tr><th>名</th><th>字五行</th><th>档</th><th>判定</th><th>备注</th></tr>
+<tr><td>王瞰云</td><td>木+水</td><td>A</td><td>合（木水/木木）</td><td>南宋·白玉蟾（葛长庚）《少年行》「飘然乘云气，俯首视世寰。散发抱素月，天人咸仰观」（《御选四朝诗·宋诗卷九》所录）。「云</td></tr>
+<tr><td>王御纬</td><td>木+土</td><td>C</td><td>慎（土）</td><td>元·周权（号此山）《沁园春》「笔蘸天河，扪象纬，笑傲风云入壮题」（《永乐大典》卷9766「元周此山词」）；句后接「摩苍壁</td></tr>
+<tr><td>王撼岳</td><td>水+土</td><td>D</td><td>慎（土）</td><td>李白《梦游天姥吟留别》「列缺霹雳，丘峦崩摧。洞天石扉，訇然中开」＋《西岳云台歌送丹丘子》「黄河万里触山动，盘涡毂转秦地雷</td></tr>
+<tr><td>王啸风</td><td>木+水</td><td>A</td><td>合（木水/木木）</td><td>-</td></tr>
+<tr><td>王决云</td><td>水+水</td><td>B</td><td>可（次选）</td><td>-</td></tr>
+<tr><td>王挹江</td><td>木+水</td><td>A</td><td>合（木水/木木）</td><td>南宋·张孝祥《念奴娇·过洞庭》「……应念岭表经年，孤光自照，肝胆皆冰雪。短发萧骚襟袖冷，稳泛沧溟空阔。尽挹西江，细斟北斗</td></tr>
+<tr><td>王枕风</td><td>木+水</td><td>A</td><td>合（木水/木木）</td><td>-</td></tr>
+<tr><td>王浸阳</td><td>水+土</td><td>D</td><td>慎（土）</td><td>北宋·柳永《雪梅香》「楚天阔，浪浸斜阳，千里溶溶」（《词综》卷五；《钦定古今图书集成·文学典》）。「浸阳」即「浪浸斜阳」</td></tr>
+<tr><td>王闻雨</td><td>水+水</td><td>B</td><td>可（次选）</td><td>-</td></tr>
+<tr><td>王鹤如</td><td>水+金</td><td>C</td><td>慎（金）</td><td>南朝宋·鲍照《舞鹤赋》「散幽经以验物，伟胎化之仙禽。钟浮旷之藻质，抱清迥之明心」（《鲍明远集》四库本；《鲍氏集》四部丛刊</td></tr>
+</table>
+</div>
+
+<div class="panel" id="p-strong">
+<p class="intro" style="margin-top:10px">这一栏是给「调候格局派」留的接口。若大师判<b>身强</b>（依据《穷通宝鉴》九月丁火「耑用甲庚」），用神会反转为<b>金 ＞ 木（配金）＞ 水</b>，忌火土。下表这些金木名会整体上位——<b>迁善（五格 98）、斯盛（91）</b>是全池五格最高的两个，但都是双金；<b>常棣、弈舟、舒啸、斯本、斯元</b>是金木搭配。两派结论相反，不是谁算错，是合化假设不同。用哪套，等大师一句话。</p>
+<div class="panel " id="p-strong">
+<div class="cards">
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">01</span><span class="nm">王斯本</span><span class="el">金+木</span></div>
+  <div class="badges"><span class="score warn1">五格 96</span><span class="score warn1">五行 金+木 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="C">
+  <div class="ctop"><span class="num">02</span><span class="nm">王斯平</span><span class="el">金+水</span></div>
+  <div class="badges"><span class="score warn1">五格 95</span><span class="score bad">五行 金+水 · C</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">03</span><span class="nm">王舒啸</span><span class="el">金+木</span></div>
+  <div class="badges"><span class="score warn1">五格 91</span><span class="score warn1">五行 金+木 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：啸 16 画；与大师批「啸风」同字族（舒啸更从容）。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">04</span><span class="nm">王弈舟</span><span class="el">木+金</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score warn1">五行 木+金 · B</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：无成典（意象名）；弈字认读。</p></details>
+</div>
+<div class="card" data-tier="D">
+  <div class="ctop"><span class="num">05</span><span class="nm">王绎如</span><span class="el">火+金</span></div>
+  <div class="badges"><span class="score warn1">五格 97</span><span class="score">四维 78.5</span><span class="score bad">五行 火+金 · D</span></div>
+  <p class="note">从容相续</p>
+  <details><summary>出处 / 提示</summary><p>《论语》「从之，纯如也，皦如也，绎如也，以成。」<br>提示：意象抽象（乐论）；柔静气质。</p></details>
+</div>
+<div class="card" data-tier="D">
+  <div class="ctop"><span class="num">06</span><span class="nm">王迁善</span><span class="el">金+金</span></div>
+  <div class="badges"><span class="score warn1">五格 98</span><span class="score">四维 77.5</span><span class="score bad">五行 金+金 · D</span></div>
+  <p class="note">迁善改过，日臻完善</p>
+  <details><summary>出处 / 提示</summary><p>《周易》「君子以见善则迁，有过则改。」<br>提示：格言感偏重；画面感弱（四维 #143）。</p></details>
+</div>
+<div class="card" data-tier="D">
+  <div class="ctop"><span class="num">07</span><span class="nm">王斯至</span><span class="el">金+火</span></div>
+  <div class="badges"><span class="score warn1">五格 87</span><span class="score bad">五行 金+火 · D</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>（暂无已核验引文）</p></details>
+</div>
+<div class="card" data-tier="D">
+  <div class="ctop"><span class="num">08</span><span class="nm">王斯年</span><span class="el">金+火</span></div>
+  <div class="badges"><span class="score warn1">五格 86</span><span class="score bad">五行 金+火 · D</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：傅斯年联想（正向）；斯系四案之一。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">09</span><span class="nm">王常棣</span><span class="el">金+木</span></div>
+  <div class="badges"><span class="score warn1">五格 90</span><span class="score">四维 81.2</span><span class="score warn1">五行 金+木 · B</span></div>
+  <p class="note">棠棣之华，兄弟情笃</p>
+  <details><summary>出处 / 提示</summary><p>《本草纲目》「郁李（《本经》下品）【释名】李（《诗疏》）、郁李、车下李（《别录》）、爵李（《本经》）、雀梅（《诗疏》）、常棣。」<br>提示：棣读 dì；命名叙事极贴老二身份；五格一⚠️。</p></details>
+</div>
+<div class="card" data-tier="D">
+  <div class="ctop"><span class="num">10</span><span class="nm">王斯盛</span><span class="el">金+金</span></div>
+  <div class="badges"><span class="score warn1">五格 91</span><span class="score">四维 79.5</span><span class="score bad">五行 金+金 · D</span></div>
+  <p class="note">于斯为盛</p>
+  <details><summary>出处 / 提示</summary><p>《论语》「唐虞之际，于斯为盛；有妇人焉，九人而已。」<br>提示：斯系四案待定选；「于斯为盛」略直白。</p></details>
+</div>
+<div class="card" data-tier="B">
+  <div class="ctop"><span class="num">11</span><span class="nm">王斯元</span><span class="el">金+木</span></div>
+  <div class="badges"><span class="score warn1">五格 89</span><span class="score">四维 78.5</span><span class="score warn1">五行 金+木 · B</span></div>
+  <p class="note">斯字辈联名：斯卯+斯元，兄弟共用「斯」（代价是弃掉「一」字）。</p>
+  <details><summary>出处 / 提示</summary><p>《综合榜》「斯字辈联名」<br>提示：双结构（义胜于名）；画面感弱。</p></details>
+</div>
+<div class="card" data-tier="C">
+  <div class="ctop"><span class="num">12</span><span class="nm">王斯珩</span><span class="el">金+水</span></div>
+  <div class="badges"><span class="score warn1">五格 82</span><span class="score bad">五行 金+水 · C</span></div>
+  <p class="note">-</p>
+  <details><summary>出处 / 提示</summary><p>提示：新组合无成典；珩字认读；五格 82。</p></details>
+</div>
+</div>
+</div>
+</div>
+
+<div class="panel" id="p-not">
+<p class="intro" style="margin-top:10px">这些名字不是「不好」，是在<b>主流弱判</b>下不合：土是首忌、金是次忌、重火慎用。<b>元一</b>单列——「一」的土/水两派未决，等大师口径，未决前不升格。</p>
+<table>
+<tr><th>名</th><th>字五行</th><th>档</th><th>原因</th></tr>
+<tr><td><b>王元一</b></td><td>木+?</td><td>挂起</td><td>「一」土/水未决，等大师口径；未决前不升格</td></tr>
+<tr><td>王岁寒</td><td>土+水</td><td>D</td><td>土为首忌</td></tr>
+<tr><td>王既安</td><td>木+土</td><td>C</td><td>土为首忌</td></tr>
+<tr><td>王晚晴</td><td>火+火</td><td>C</td><td>火重</td></tr>
+<tr><td>王九霄</td><td>金+水</td><td>C</td><td>金水，金为次忌</td></tr>
+<tr><td>王浸阳</td><td>水+土</td><td>D</td><td>土为首忌</td></tr>
+<tr><td>王鹤如</td><td>水+金</td><td>C</td><td>金水，金为次忌</td></tr>
+<tr><td>王悠之</td><td>土+火</td><td>D</td><td>土为首忌</td></tr>
+<tr><td>王御纬</td><td>木+土</td><td>C</td><td>土为首忌</td></tr>
+<tr><td>王重阳</td><td>火+土</td><td>D</td><td>土为首忌</td></tr>
+<tr><td>王撼岳</td><td>水+土</td><td>D</td><td>土为首忌</td></tr>
+<tr><td>王见山</td><td>木+土</td><td>C</td><td>土为首忌</td></tr>
+</table>
+</div>
+
+<div class="panel" id="p-bazi">
+<div class="sectitle" style="margin-top:16px">出生的那一刻</div>
+<div class="kv">
+  <div><div class="k">公历</div><div class="v">2026-10-20 21:46</div></div>
+  <div><div class="k">农历</div><div class="v">九月十一 · 亥时</div></div>
+  <div><div class="k">生肖</div><div class="v">马（丙午）</div></div>
+  <div><div class="k">体重</div><div class="v">3.225 kg</div></div>
+</div>
+
+<div class="sectitle">四柱</div>
+<table class="bz">
+<tr><th></th><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱</th></tr>
+<tr><td>天干</td><td>丙</td><td>戊</td><td><b>丁</b>（日主）</td><td>辛</td></tr>
+<tr><td>十神</td><td>劫财</td><td>伤官</td><td>—</td><td>偏财</td></tr>
+<tr><td>地支</td><td>午</td><td>戌</td><td>卯</td><td>亥</td></tr>
+<tr><td>藏干</td><td>丁 己</td><td>戊 辛 丁</td><td>乙</td><td>壬 甲</td></tr>
+</table>
+
+<div class="sectitle">五行</div>
+<div class="bars">
+<div class="bar"><span class="lab">火</span><div class="track"><div class="fill" style="width:21.9%"></div></div><span class="val">21.9%</span></div>
+<div class="bar"><span class="lab">土</span><div class="track"><div class="fill" style="width:37.5%"></div></div><span class="val">37.5%</span></div>
+<div class="bar"><span class="lab">金</span><div class="track"><div class="fill" style="width:23.4%"></div></div><span class="val">23.4%</span></div>
+<div class="bar"><span class="lab">木</span><div class="track"><div class="fill" style="width:10.5%"></div></div><span class="val">10.5%</span></div>
+<div class="bar"><span class="lab">水</span><div class="track"><div class="fill" style="width:6.7%"></div></div><span class="val">6.7%</span></div>
+</div>
+<p class="note">加权口径：李洪成《四柱的干支量化》戌月旺度系数；括号为原始明字计数（火3 土2 木1 金1 水1）。F 路另用 40 分制交叉校验，方向一致。</p>
+
+<div class="sectitle">结论</div>
+<div class="callout">
+<b>身弱偏弱</b>（非极弱、非从弱；置信约 75%）。丁火生戌月，戊土伤官当令；有午禄、戌库、丙劫、卯印，所以「弱而不衰」。<br>
+<b>用神木（甲木优先）＞ 水（少量，水木相生）＞ 火（次，不宜重）</b>；<b>忌土（首忌）、金（次忌）、重火</b>。<br>
+起运 <b>5 年 11 个月 10 天</b>（2032-09-30），阳年男顺排：己亥、庚子、辛丑、壬寅、癸卯……
+</div>
+
+<div class="sectitle">六路验证</div>
+<table>
+<tr><th>路</th><th>负责</th><th>结论</th><th>置信</th></tr>
+<tr><td>A</td><td>排盘事实</td><td>丙午/戊戌/丁卯/辛亥；lunar-python + JDN + 在线黄历三法互证；21:46 确为亥时</td><td>高</td></tr>
+<tr><td>B</td><td>扶抑法</td><td>中和偏弱（48.4:51.6）；用木、喜火、忌土金</td><td>中</td></tr>
+<tr><td>C</td><td>调候 + 格局</td><td>身强；金＞木（配金）＞水；忌火土（少数派异议，依赖双合全化）</td><td>约 75%</td></tr>
+<tr><td>F</td><td>敏感性仲裁</td><td>身弱偏弱（约 75%）；用木＞水少量＞火次；忌土金、重火慎。两套量化模型 + 古籍，代码可复现</td><td>约 75%</td></tr>
+<tr><td>D</td><td>字五行</td><td>35 字三源核验；仅「禾」「一」两字冲突（禾取木、一挂起）</td><td>—</td></tr>
+<tr><td>E</td><td>生肖（21 源）</td><td>喜艹/禾/木；氵为条件性忌，用神为水时用神优先；山/石非铁律；剔除转抄同源</td><td>—</td></tr>
+</table>
+<p class="note">终审另对 89 名、119 个用字做了三源复核，修正 8 个冲突字（禾/一/岳/决/九/晚/岁/稳）。「岳」两源为土，撼岳因此落档；「稳」两源为木，稳舟从 D 回到 B。</p>
+
+<div class="sectitle">给大师的三问</div>
+<div class="callout">
+若大师判身强，请先对齐这三个具体口径——不是争「强弱」，是争合化：<br>
+1. <b>午戌半合</b>：按「缺寅的旺墓半合、不真化」，还是按「全化火」？<br>
+2. <b>卯戌合火</b>：真化，还是假化/合而不化？若真化，如何解释戌月化神火不当令、亥卯半合争合？<br>
+3. <b>丙辛遥合</b>：不化，还是化水？若化水，如何解释戌月非申子辰/亥月、且柱中有丁（妒合）？<br>
+另：<b>「一」字</b>按土（康熙字典/卜易居/d5168/liki）还是按水（河图「天一生水」/瓷都/猎名/起名网）？
+</div>
+</div>
+
+<footer>
+<b>核验档</b>：naming/_verify/A_bazi_chart.md（排盘）、B_yongshen_fuya.md（扶抑）、C_yongshen_tiaohou.md（调候/格局异议）、F_strength_sensitivity.md（敏感性仲裁）、D_char_wuxing.md（字五行）、E_shengxiao_ma.md（生肖）、L_finalists_verify.md（终审三源）。<br>
+<b>数据源</b>：lunar-python（排盘）、JDN 公式与在线黄历（互证）、kangxizidian.org / 瓷都算命网 / 猎名网（字五行）、21 个生肖来源（E 路已剔除转抄同源）。<br>
+<b>口径</b>：本页只上私人专区，不进入公开 naming 站；出生信息与八字属家庭隐私，请勿外传。所有「候选」均未定名；引文按通行本录入，定名前逐条复核。2026-10-21 · 铁蛋。
+</footer>
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});
+    document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    var p=document.getElementById(b.dataset.tab); if(p) p.classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

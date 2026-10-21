@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>我和月饼的五行 · 父子两张盘</title>
+<style>
+:root{
+  --surf:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --line:#e1e0d9; --jiang:#C23B2E; --gold:#C79A2B;
+  --papa:#2a78d6; --moon:#eb6834;
+  --wx-wood:#008300; --wx-fire:#e34948; --wx-earth:#eda100; --wx-metal:#4a3aa7; --wx-water:#2a78d6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.7}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
+header{padding:30px 4px 20px;border-bottom:1px solid var(--line);margin-bottom:10px}
+h1{margin:0 0 8px;font-size:clamp(26px,4.6vw,42px);letter-spacing:.14em;
+  font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
+h1 .seal{display:inline-block;background:var(--jiang);color:#fff;font-size:.5em;
+  padding:.28em .5em;border-radius:4px;vertical-align:.62em;letter-spacing:.1em;margin-left:14px;font-family:inherit}
+.sub{color:var(--ink2);font-size:14.5px;margin:2px 0 0}
+.sub b{color:var(--jiang)}
+nav.anchors{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}
+nav.anchors a{font-size:12.5px;color:var(--ink2);text-decoration:none;border:1px solid var(--line);
+  background:var(--surf);border-radius:999px;padding:3px 11px}
+nav.anchors a:hover{border-color:var(--gold);color:var(--ink)}
+.lede{font-size:15px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
+  border-left:3px solid var(--jiang);border-radius:10px;padding:14px 18px;margin:16px 0 8px;line-height:2}
+.lede b{color:var(--ink)}
+h2{font-size:21px;letter-spacing:.06em;margin:34px 0 8px;padding-left:10px;
+  border-left:4px solid var(--gold);font-family:"Songti SC","STSong","SimSun",serif}
+h3{font-size:16px;margin:16px 0 6px}
+p{font-size:14px;color:var(--ink2);margin:8px 0}
+p b{color:var(--ink)}
+.note{font-size:12.5px;color:var(--muted);line-height:1.9}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px;margin:14px 0}
+.tile{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:13px 15px;border-top:3px solid var(--gold)}
+.tile .k{font-size:11px;color:var(--muted);letter-spacing:.08em}
+.tile .v{font-size:23px;font-weight:700;letter-spacing:.06em;margin:2px 0 0;
+  font-family:"Songti SC","STSong","SimSun",serif}
+.tile .d{font-size:12px;color:var(--ink2);margin-top:2px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+table{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--line);
+  border-radius:10px;overflow:hidden;font-size:13px;margin:8px 0}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f3f2ee;font-weight:600;font-size:12px;color:var(--ink2)}
+tr:last-child td{border-bottom:0}
+.bz td,.bz th{text-align:center}
+details{margin-top:7px}
+summary{font-size:12px;color:var(--muted);cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:before{content:"＋ ";color:var(--gold)}
+details[open] summary:before{content:"－ "}
+details p{font-size:12.5px;color:var(--ink2);margin:4px 0 2px;line-height:1.85}
+/* grouped bars */
+.chart{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:12px 0;position:relative}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.toolbar button{border:1px solid var(--line);background:var(--page);color:var(--ink2);border-radius:999px;
+  padding:6px 14px;font-size:13px;cursor:pointer}
+.toolbar button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);margin-left:auto}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.gbars{display:flex;flex-direction:column;gap:12px}
+.grow{display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:center}
+.glabel{font-size:16px;font-weight:700;font-family:"Songti SC","STSong","SimSun",serif;color:var(--ink2)}
+.gtracks{display:flex;flex-direction:column;gap:3px}
+.gtrack{display:grid;grid-template-columns:34px 1fr 38px;gap:8px;align-items:center}
+.gname{font-size:11px;color:var(--muted)}
+.gtr{height:14px;background:#efeee9;border-radius:0 4px 4px 0;overflow:hidden}
+.gfl{height:100%;border-radius:0 4px 4px 0;transition:width .3s ease}
+.gval{font-size:12px;color:var(--ink2);text-align:right;font-variant-numeric:tabular-nums}
+.chartnote{font-size:12.5px;color:var(--ink2);margin-top:12px;line-height:1.9}
+.tooltip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);
+  border-radius:9px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:8px 11px;font-size:12px;
+  color:var(--ink2);opacity:0;transition:opacity .12s;z-index:20;max-width:260px;line-height:1.7}
+.tooltip b{color:var(--ink)}
+/* chain */
+.chain{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:12px 0;background:var(--surf);
+  border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.chain .node{border-radius:12px;padding:9px 12px;color:#fff;text-align:center;min-width:92px}
+.chain .node .big{font-size:20px;font-weight:700;font-family:"Songti SC","STSong","SimSun",serif;letter-spacing:.1em}
+.chain .node .who{font-size:10.5px;opacity:.9}
+.chain .arrow{color:var(--muted);font-size:18px}
+/* family */
+.fam{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:10px 0}
+.famchip{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:10px 13px}
+.famchip .k{font-size:11px;color:var(--muted)}
+.famchip .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.callout{background:#fbf6ea;border:1px solid #eadfc2;border-left:3px solid var(--gold);
+  border-radius:10px;padding:13px 16px;font-size:13px;color:var(--ink2);line-height:1.95;margin:12px 0}
+.callout b{color:var(--ink)}
+.warnbox{background:#fbf0ec;border:1px solid #efd6cf;border-left:3px solid var(--jiang);
+  border-radius:10px;padding:13px 16px;font-size:13px;color:var(--ink2);line-height:1.95;margin:12px 0}
+.warnbox b{color:var(--ink)}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.9}
+footer b{color:var(--ink2)}
+@media (max-width:760px){
+  .grow{grid-template-columns:34px 1fr}
+  .gtrack{grid-template-columns:30px 1fr 34px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>我和月饼的五行<span class="seal">家</span></h1>
+  <p class="sub">爸爸 <b>1993-03-20 13:25</b> · 月饼（王斯卯）<b>2023-02-23 01:02</b> · 父子两张盘 · 给家里人看的白话版</p>
+</header>
+
+<nav class="anchors">
+  <a href="#summary">一句话</a>
+  <a href="#charts">两张盘</a>
+  <a href="#compare">五行对比</a>
+  <a href="#same">三个共同点</a>
+  <a href="#fatherson">父子</a>
+  <a href="#family">三个人</a>
+  <a href="#caveat">口径说明</a>
+</nav>
+
+<section id="summary">
+<p class="lede">
+一句话：<b>爸爸是庚金，月饼是壬水；金生水。</b>父子俩明面上都<b>缺火</b>——但爸爸的未土里藏了一点丁火，月饼的寅木里藏了一点丙火，不是真的一点火都没有。家里刚出生的老二，偏偏是<b>丁火</b>：他把火带到了明面上。<br>
+这一页做的是<b>家庭五行取象</b>，不是正式用神定盘；跨盘的生合是趣谈，不是标准合盘。看个明白、图个乐，别当成命好命坏的判决。
+</p>
+<div class="hero">
+  <div class="tile"><div class="k">爸爸 · 日主</div><div class="v">庚金</div><div class="d">年柱纳音剑锋金 · 水3金2木2土1火0</div></div>
+  <div class="tile"><div class="k">月饼 · 日主</div><div class="v">壬水</div><div class="d">年柱纳音金箔金 · 水3木3金1土1火0</div></div>
+  <div class="tile"><div class="k">共同点</div><div class="v">水旺</div><div class="d">两人日支都是「子」；明面都缺火</div></div>
+  <div class="tile"><div class="k">藏起来的火</div><div class="v">未丁 · 寅丙</div><div class="d">爸爸未土藏丁，月饼寅木藏丙</div></div>
+</div>
+</section>
+
+<section id="charts">
+<h2>先把两张盘摊开</h2>
+<p>四柱像一张桌子的四条腿：年柱祖辈/少年，月柱父母/青年，日柱自己，时柱晚年/事业。先看字，再看下面的数。</p>
+<div class="grid2">
+  <div class="card">
+    <h3>爸爸 · 癸酉 / 乙卯 / 庚子 / 癸未</h3>
+    <table class="bz">
+      <tr><th></th><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱</th></tr>
+      <tr><td>天干</td><td>癸</td><td>乙</td><td><b>庚</b></td><td>癸</td></tr>
+      <tr><td>十神</td><td>伤官</td><td>正财</td><td>日主</td><td>伤官</td></tr>
+      <tr><td>地支</td><td>酉</td><td>卯</td><td>子</td><td>未</td></tr>
+      <tr><td>藏干</td><td>辛</td><td>乙</td><td>癸</td><td>己 丁 乙</td></tr>
+      <tr><td>纳音</td><td>剑锋金</td><td>大溪水</td><td>壁上土</td><td>杨柳木</td></tr>
+    </table>
+    <p class="note">农历一九九三年二月廿八，属鸡。庚金日主，生卯月（木旺），财星当令、伤官透；有酉金为根，未土为印。</p>
+  </div>
+  <div class="card">
+    <h3>月饼 · 癸卯 / 甲寅 / 壬子 / 辛丑</h3>
+    <table class="bz">
+      <tr><th></th><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱</th></tr>
+      <tr><td>天干</td><td>癸</td><td>甲</td><td><b>壬</b></td><td>辛</td></tr>
+      <tr><td>十神</td><td>劫财</td><td>食神</td><td>日主</td><td>正印</td></tr>
+      <tr><td>地支</td><td>卯</td><td>寅</td><td>子</td><td>丑</td></tr>
+      <tr><td>藏干</td><td>乙</td><td>甲 丙 戊</td><td>癸</td><td>己 癸 辛</td></tr>
+      <tr><td>纳音</td><td>金箔金</td><td>大溪水</td><td>桑柘木</td><td>壁上土</td></tr>
+    </table>
+    <p class="note">农历二〇二三年二月初四，属兔。壬水日主，生寅月（木旺），食神当令、甲木透；有子水为根、辛金为正印。</p>
+  </div>
+</div>
+</section>
+
+<section id="compare">
+<h2>五行对比：两张盘放在一起看</h2>
+<p>横轴是五行，每一格两根条：蓝色是爸爸，橙色是月饼。切到「含藏干」，会把地支里藏的字也算进来——火就从 0 变成 1。</p>
+<div class="chart" id="chart">
+  <div class="toolbar">
+    <button data-mode="ming" class="on">明字</button>
+    <button data-mode="cang">含藏干</button>
+    <div class="legend">
+      <span><i style="background:#2a78d6"></i>爸爸</span>
+      <span><i style="background:#eb6834"></i>月饼</span>
+    </div>
+  </div>
+  <div class="gbars" id="gbars"></div>
+  <div class="chartnote" id="chartNote"></div>
+  <div class="tooltip" id="tip"></div>
+  <details>
+    <summary>数据表（父子两口径 + 老二对照）</summary>
+    <table>
+      <tr><th>五行</th><th>爸爸·明字</th><th>爸爸·含藏干</th><th>月饼·明字</th><th>月饼·含藏干</th><th>老二·明字</th></tr>
+      <tr><td>木</td><td>2</td><td>3</td><td>3</td><td>3</td><td>1</td></tr>
+      <tr><td>火</td><td>0</td><td>1</td><td>0</td><td>1</td><td>3</td></tr>
+      <tr><td>土</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td></tr>
+      <tr><td>金</td><td>2</td><td>2</td><td>1</td><td>2</td><td>1</td></tr>
+      <tr><td>水</td><td>3</td><td>3</td><td>3</td><td>4</td><td>1</td></tr>
+    </table>
+  </details>
+</div>
+<div class="callout">
+<b>看这张图最该记住的两件事：</b>①父子俩的<b>水都最多</b>（各 3 个明字），而且都坐在「子」上；②明面上<b>两个人都没有火</b>，但含藏干一算，爸爸的未土藏丁、月饼的寅木藏丙——各有一点火，只是没摆到明面。
+</div>
+</section>
+
+<section id="same">
+<h2>三个共同点</h2>
+<div class="grid3">
+  <div class="card"><h3>① 都水旺，都坐「子」</h3><p>爸爸水 3（癸、癸、子），月饼水 3（癸、壬、子）；两人的日支都是<b>子</b>——传统取象里，像父子俩都坐在水面上。水多，想法多、朋友多、流动性强。</p></div>
+  <div class="card"><h3>② 明面缺火，但各藏一点</h3><p>爸爸的未土藏<b>丁火</b>（正官），月饼的寅木藏<b>丙火</b>（偏财）。不是没火，是火藏在土里、木里；传统上说，一个把规矩藏在心里，一个把机会藏在木里。</p></div>
+  <div class="card"><h3>③ 都带「卯」</h3><p>爸爸月支卯、月饼年支卯，老二日支卯——<b>一家三口都带卯</b>。卯是木，也是老二起名的用神。这个巧合，放到下一页讲。</p></div>
+</div>
+<div class="card">
+  <h3>连纳音都撞了两处</h3>
+  <p>爸爸的月柱纳音是<b>大溪水</b>，月饼的月柱纳音也是<b>大溪水</b>；爸爸的日柱纳音是<b>壁上土</b>，月饼的时柱纳音也是<b>壁上土</b>；两人的年柱纳音还都是金（剑锋金 / 金箔金）。传统纳音像一层“意象皮肤”，父子俩撞了两处，挺有意思。</p>
+</div>
+</section>
+
+<section id="fatherson">
+<h2>父子：一把剑，一条江</h2>
+<p>爸爸庚金，年柱纳音<b>剑锋金</b>——传统取象像剑锋、斧钺；月饼壬水，月柱纳音<b>大溪水</b>——像一条江。金生水：爸爸这把金，托着月饼这条江。</p>
+<div class="chain">
+  <div class="node" style="background:#4a3aa7"><div class="big">庚金</div><div class="who">爸爸</div></div>
+  <div class="arrow">→ 生 →</div>
+  <div class="node" style="background:#2a78d6"><div class="big">壬水</div><div class="who">月饼</div></div>
+  <div class="arrow">→ 生 →</div>
+  <div class="node" style="background:#008300"><div class="big">卯木</div><div class="who">一家三口都带</div></div>
+  <div class="arrow">→ 生 →</div>
+  <div class="node" style="background:#e34948"><div class="big">丁火</div><div class="who">老二</div></div>
+</div>
+<div class="grid2">
+  <div class="card">
+    <h3>爸爸的庚金</h3>
+    <p>庚金生在卯月，财旺、伤官透——传统上说，这是“想法多、手上有活、财气旺”的盘；有酉金为根、未土为印，不是无根之金。明面缺火，未土里藏丁（正官）：规矩和责任，藏在心里。</p>
+  </div>
+  <div class="card">
+    <h3>月饼的壬水</h3>
+    <p>壬水生寅月，食神当令、甲木透——传统上说，这是“学习、表达、朋友”的能量旺的盘；有子水为根、辛金为正印。明面缺火，寅木里藏丙（偏财）：机会藏在木里，要动起来才看得见。</p>
+  </div>
+</div>
+<div class="callout">
+<b>老二的丁火，正好落在两处：</b>对月饼的壬水，是天干五合的<b>丁壬合</b>；对爸爸的庚金，是火克金、火炼金。用家里的话说——<b>爸爸托着月饼，月饼的水养着家里的卯木，卯木又点亮老二的灯。</b> 这是家庭趣谈，不是标准合盘；但连起来看，确实像一条链。
+</div>
+</section>
+
+<section id="family">
+<h2>三个人一起看</h2>
+<table>
+  <tr><th></th><th>日主</th><th>木</th><th>火</th><th>土</th><th>金</th><th>水</th><th>明面缺</th></tr>
+  <tr><td>爸爸</td><td>庚金</td><td>2</td><td><b style="color:var(--wx-fire)">0</b></td><td>1</td><td>2</td><td>3</td><td>火（藏 1）</td></tr>
+  <tr><td>月饼</td><td>壬水</td><td>3</td><td><b style="color:var(--wx-fire)">0</b></td><td>1</td><td>1</td><td>3</td><td>火（藏 1）</td></tr>
+  <tr><td>老二</td><td>丁火</td><td>1</td><td><b style="color:var(--wx-fire)">3</b></td><td>2</td><td>1</td><td>1</td><td>—</td></tr>
+</table>
+<p class="note">上表为明字计数（天干 + 地支本气）。含藏干合计：木 8 · 火 6 · 土 6 · 金 6 · 水 8——一家人凑在一起，五行反而挺齐。这是加法趣谈，不是标准合盘。</p>
+<div class="fam">
+  <div class="famchip"><div class="k">木</div><div class="v" style="color:var(--wx-wood)">8</div></div>
+  <div class="famchip"><div class="k">火</div><div class="v" style="color:var(--wx-fire)">6</div></div>
+  <div class="famchip"><div class="k">土</div><div class="v" style="color:var(--wx-earth)">6</div></div>
+  <div class="famchip"><div class="k">金</div><div class="v" style="color:var(--wx-metal)">6</div></div>
+  <div class="famchip"><div class="k">水</div><div class="v" style="color:var(--wx-water)">8</div></div>
+</div>
+<div class="callout">
+<b>三个「卯」：</b>爸爸月支卯、月饼年支卯、老二日支卯。卯是木。家里起名给老二定的用神也是木——这不是算出来的必然，只是一个很舒服的巧合：<b>一家三口，命里都带着同一种木。</b>
+</div>
+</section>
+
+<section id="caveat">
+<h2>口径说明（实诚话）</h2>
+<div class="warnbox">
+<b>这一页是什么：</b>用 lunar-python 重排的两张盘（四柱、藏干、十神、纳音），加家庭五行的取象和趣谈。<br>
+<b>这一页不是什么：</b>不是爸爸和月饼的正式用神定盘。老二的盘走了六路交叉核验；这两张盘没有做同等强度的合化/身强弱分析，所以页面里没有给他们下“喜什么、忌什么”的结论。<br>
+<b>跨盘的生、合、纳音对照</b>是家庭趣谈，不是标准八字合盘；八字是传统文化视角，不替代医疗、教育、人生选择。<br>
+若要给爸爸或月饼做正式用神分析，我可以按老二那套六路核验再跑一遍。
+</div>
+</section>
+
+<footer>
+<b>数据与核验</b>：四柱用 lunar-python 重排（1993-03-20 13:25 未时；2023-02-23 01:02 丑时）；藏干、十神、纳音均取自 lunar-python；老二数据沿用已验证口径（丙午/戊戌/丁卯/辛亥）。<br>
+<b>口径</b>：本页只上私人专区，不进入公开站；出生信息与八字属家庭隐私，请勿外传。页面只做家庭取象，不做正式用神定盘。2026-10-21 · 铁蛋。
+</footer>
+</div>
+
+<script>
+const DATA = {
+  ming: {
+    爸爸: {木:2, 火:0, 土:1, 金:2, 水:3},
+    月饼: {木:3, 火:0, 土:1, 金:1, 水:3}
+  },
+  cang: {
+    爸爸: {木:3, 火:1, 土:1, 金:2, 水:3},
+    月饼: {木:3, 火:1, 土:2, 金:2, 水:4}
+  }
+};
+const ELS = ['木','火','土','金','水'];
+const PEOPLE = [
+  {name:'爸爸', color:'#2a78d6'},
+  {name:'月饼', color:'#eb6834'}
+];
+const gbars = document.getElementById('gbars');
+const chartNote = document.getElementById('chartNote');
+const tip = document.getElementById('tip');
+const MAX = 5;
+
+function render(mode){
+  const d = DATA[mode];
+  gbars.innerHTML = ELS.map(function(el){
+    return '<div class="grow" data-el="'+el+'">'
+      + '<div class="glabel">'+el+'</div>'
+      + '<div class="gtracks">'
+      + PEOPLE.map(function(p){
+          const v = d[p.name][el];
+          const w = v / MAX * 100;
+          return '<div class="gtrack"><span class="gname">'+p.name+'</span>'
+            + '<div class="gtr"><div class="gfl" style="width:'+w+'%;background:'+p.color+'"></div></div>'
+            + '<span class="gval">'+v+'</span></div>';
+        }).join('')
+      + '</div></div>';
+  }).join('');
+  chartNote.textContent = mode === 'ming'
+    ? '明字：父子俩都是水 3 最多，火都是 0。爸爸金 2 木 2，月饼木 3 金 1。'
+    : '含藏干：爸爸木 3、火 1、土 1、金 2、水 3；月饼木 3、火 1、土 2、金 2、水 4。火都从 0 变成 1。';
+  document.querySelectorAll('.toolbar button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.mode === mode);
+  });
+  document.querySelectorAll('.grow').forEach(function(row){
+    row.addEventListener('mousemove', function(ev){
+      const el = row.dataset.el;
+      tip.innerHTML = '<b>'+el+'</b><br>'
+        + '爸爸：明字 '+DATA.ming['爸爸'][el]+' · 含藏干 '+DATA.cang['爸爸'][el]+'<br>'
+        + '月饼：明字 '+DATA.ming['月饼'][el]+' · 含藏干 '+DATA.cang['月饼'][el];
+      const r = document.getElementById('chart').getBoundingClientRect();
+      tip.style.left = Math.min(ev.clientX - r.left + 12, r.width - 240) + 'px';
+      tip.style.top = (ev.clientY - r.top + 12) + 'px';
+      tip.style.opacity = 1;
+    });
+    row.addEventListener('mouseleave', function(){ tip.style.opacity = 0; });
+  });
+}
+document.querySelectorAll('.toolbar button').forEach(function(b){
+  b.addEventListener('click', function(){ render(b.dataset.mode); });
+});
+render('ming');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>老二的五行 · 一张盘讲明白</title>
+<style>
+:root{
+  --surf:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --line:#e1e0d9; --jiang:#C23B2E; --gold:#C79A2B;
+  --wx-wood:#008300; --wx-fire:#e34948; --wx-earth:#eda100; --wx-metal:#4a3aa7; --wx-water:#2a78d6;
+  --tai:#2d8f5f; --warn:#c07a1a; --blue:#2d5f8f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.7}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
+header{padding:30px 4px 20px;border-bottom:1px solid var(--line);margin-bottom:10px}
+h1{margin:0 0 8px;font-size:clamp(26px,4.6vw,42px);letter-spacing:.14em;
+  font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
+h1 .seal{display:inline-block;background:var(--jiang);color:#fff;font-size:.5em;
+  padding:.28em .5em;border-radius:4px;vertical-align:.62em;letter-spacing:.1em;margin-left:14px;font-family:inherit}
+.sub{color:var(--ink2);font-size:14.5px;margin:2px 0 0}
+.sub b{color:var(--jiang)}
+nav.anchors{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}
+nav.anchors a{font-size:12.5px;color:var(--ink2);text-decoration:none;border:1px solid var(--line);
+  background:var(--surf);border-radius:999px;padding:3px 11px}
+nav.anchors a:hover{border-color:var(--gold);color:var(--ink)}
+.lede{font-size:15px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
+  border-left:3px solid var(--jiang);border-radius:10px;padding:14px 18px;margin:16px 0 8px;line-height:2}
+.lede b{color:var(--ink)}
+h2{font-size:21px;letter-spacing:.06em;margin:34px 0 8px;padding-left:10px;
+  border-left:4px solid var(--gold);font-family:"Songti SC","STSong","SimSun",serif}
+h3{font-size:16px;margin:18px 0 6px;letter-spacing:.03em}
+p{font-size:14px;color:var(--ink2);margin:8px 0}
+p b{color:var(--ink)}
+.note{font-size:12.5px;color:var(--muted);line-height:1.9}
+.hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px;margin:14px 0}
+.tile{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:13px 15px;border-top:3px solid var(--gold)}
+.tile .k{font-size:11px;color:var(--muted);letter-spacing:.08em}
+.tile .v{font-size:23px;font-weight:700;letter-spacing:.06em;margin:2px 0 0;
+  font-family:"Songti SC","STSong","SimSun",serif}
+.tile .d{font-size:12px;color:var(--ink2);margin-top:2px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+/* bar chart */
+.chart{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:12px 0;position:relative}
+.toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.toolbar button{border:1px solid var(--line);background:var(--page);color:var(--ink2);border-radius:999px;
+  padding:6px 14px;font-size:13px;cursor:pointer}
+.toolbar button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.bars{display:flex;flex-direction:column;gap:10px}
+.brow{display:grid;grid-template-columns:96px 1fr 74px;gap:10px;align-items:center;cursor:default}
+.blabel{display:flex;align-items:center;gap:7px;font-size:14px}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.brole{font-size:11px;color:var(--muted)}
+.track{height:20px;background:#efeee9;border-radius:0 4px 4px 0;overflow:hidden}
+.fill{height:100%;border-radius:0 4px 4px 0;transition:width .35s ease}
+.bval{text-align:right;font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.chartnote{font-size:12.5px;color:var(--ink2);margin-top:12px;line-height:1.9}
+.tooltip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);
+  border-radius:9px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:8px 11px;font-size:12px;
+  color:var(--ink2);opacity:0;transition:opacity .12s;z-index:20;max-width:260px;line-height:1.7}
+.tooltip b{color:var(--ink)}
+details{margin-top:8px}
+summary{font-size:12px;color:var(--muted);cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:before{content:"＋ ";color:var(--gold)}
+details[open] summary:before{content:"－ "}
+table{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--line);
+  border-radius:10px;overflow:hidden;font-size:13px;margin:8px 0}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f3f2ee;font-weight:600;font-size:12px;color:var(--ink2)}
+tr:last-child td{border-bottom:0}
+/* svg map */
+.mapwrap{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;align-items:center;
+  background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+svg.wxmap{width:100%;height:auto;display:block}
+.wxnode text{font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
+.wxrel{transition:opacity .2s}
+.wxrel.dim{opacity:.12}
+.maptext{font-size:13px;color:var(--ink2);line-height:1.9}
+.maptext b{color:var(--ink)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:6px}
+.wxkey{display:flex;flex-wrap:wrap;gap:7px 14px;margin-top:10px;font-size:12px;color:var(--ink2)}
+.legend i{display:inline-block;width:22px;height:0;border-top:2px solid var(--ink2);vertical-align:middle;margin-right:5px}
+.legend .dash{border-top-style:dashed}
+/* pillars */
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.pillar{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.pillar .ph{font-size:11px;color:var(--muted);letter-spacing:.08em}
+.pillar .pz{font-size:28px;font-weight:700;letter-spacing:.16em;font-family:"Songti SC","STSong","SimSun",serif;margin:2px 0}
+.pillar .pr{font-size:12px;color:var(--ink2)}
+.pillar .ps{font-size:12px;color:var(--muted);margin-top:4px}
+/* timeline */
+.timeline{display:flex;gap:9px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 2px 12px;margin:10px 0}
+.dy{flex:none;width:148px;scroll-snap-align:start;background:var(--surf);border:1px solid var(--line);
+  border-radius:12px;padding:11px 12px}
+.dy .age{font-size:11px;color:var(--muted)}
+.dy .gz{font-size:20px;font-weight:700;letter-spacing:.1em;font-family:"Songti SC","STSong","SimSun",serif}
+.dy .tags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap}
+.dy .tag{font-size:11px;border-radius:6px;padding:1px 7px;color:#fff}
+.dy .dd{font-size:11.5px;color:var(--ink2);margin-top:5px;line-height:1.6}
+/* yongshen */
+.ys{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px;margin:10px 0}
+.yscard{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:12px 14px;border-top:3px solid var(--line)}
+.yscard .role{font-size:11px;color:var(--muted);letter-spacing:.06em}
+.yscard .el{font-size:26px;font-weight:700;font-family:"Songti SC","STSong","SimSun",serif;margin:1px 0}
+.yscard .why{font-size:12.5px;color:var(--ink2)}
+.callout{background:#fbf6ea;border:1px solid #eadfc2;border-left:3px solid var(--gold);
+  border-radius:10px;padding:13px 16px;font-size:13px;color:var(--ink2);line-height:1.95;margin:12px 0}
+.callout b{color:var(--ink)}
+.warnbox{background:#fbf0ec;border:1px solid #efd6cf;border-left:3px solid var(--jiang);
+  border-radius:10px;padding:13px 16px;font-size:13px;color:var(--ink2);line-height:1.95;margin:12px 0}
+.warnbox b{color:var(--ink)}
+/* sensitivity */
+.sens{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:12px 0}
+.sens .row{display:grid;grid-template-columns:110px 1fr 64px;gap:9px;align-items:center;margin:8px 0;cursor:pointer}
+.sens .row .lab{font-size:12.5px;color:var(--ink2)}
+.sens .row .tr{height:18px;background:#efeee9;border-radius:0 4px 4px 0;overflow:hidden;position:relative}
+.sens .row .fl{height:100%;background:var(--gold);border-radius:0 4px 4px 0;transition:width .3s}
+.sens .row.sel .fl{background:#a97e18}
+.sens .row.sel .lab{color:var(--ink);font-weight:600}
+.sensbars{position:relative}
+.sens .thrv{position:absolute;top:-2px;bottom:-2px;
+  left:calc(110px + 9px + (100% - 110px - 64px - 18px) * .5);
+  border-left:1px dashed var(--jiang);pointer-events:none}
+.sens .thrv span{position:absolute;top:-17px;left:4px;font-size:11px;color:var(--jiang);white-space:nowrap}
+.readout{font-size:13px;color:var(--ink2);background:var(--page);border:1px solid var(--line);
+  border-radius:9px;padding:10px 12px;margin-top:10px;line-height:1.85}
+.readout b{color:var(--ink)}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.9}
+footer b{color:var(--ink2)}
+@media (max-width:760px){
+  .mapwrap{grid-template-columns:1fr}
+  .brow{grid-template-columns:84px 1fr 58px;gap:7px}
+  .sens .row{grid-template-columns:88px 1fr 52px}
+  .sens .thrv{left:calc(88px + 9px + (100% - 88px - 52px - 18px) * .5)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>老二的五行<span class="seal">丁</span></h1>
+  <p class="sub">2026-10-20 <b>21:46</b>（亥时）· 丙午 / 戊戌 / 丁卯 / 辛亥 · 给家里人看的白话版</p>
+</header>
+
+<nav class="anchors">
+  <a href="#summary">一句话</a>
+  <a href="#count">五行怎么数</a>
+  <a href="#pillars">四柱</a>
+  <a href="#ten">十神</a>
+  <a href="#combos">四个合</a>
+  <a href="#yongshen">用神</a>
+  <a href="#dayun">大运</a>
+  <a href="#brother">和哥哥</a>
+  <a href="#myths">误解</a>
+</nav>
+
+<section id="summary">
+<p class="lede">
+先说一句人话：<b>他是丁火——不是太阳，是一盏灯。</b>五行俱全，火和土最多；但这盏灯真正需要的，是<b>木</b>（添柴、挡土）和一点点<b>水</b>（润一润），不是再添火，也不是堆金堆土。<br>
+六路交叉核验后，主流判他<b>身弱偏弱</b>（约 75% 置信）：不是身体弱，是“火的力量被土金水泄耗得比较多”。另一派若判“双合全化”，会翻成身强、喜土金水——这是本次最大的分歧，页面里有实验可以自己拨。
+</p>
+<div class="hero">
+  <div class="tile"><div class="k">日主</div><div class="v">丁火</div><div class="d">灯烛之火 · 阴火</div></div>
+  <div class="tile"><div class="k">五行</div><div class="v">俱全</div><div class="d">火3 土2 木1 金1 水1（明字）</div></div>
+  <div class="tile"><div class="k">身强弱</div><div class="v">偏弱</div><div class="d">生扶 41.3% · 主流判</div></div>
+  <div class="tile"><div class="k">用神</div><div class="v">木 · 水</div><div class="d">木为主，水少量为辅</div></div>
+</div>
+</section>
+
+<section id="count">
+<h2>五行怎么数：三种口径，三种答案</h2>
+<p>同一个盘，数法不同，结论会不一样。这不是谁算错，而是“个数”和“力量”不是一回事。点上面的按钮切换，看看三种数法。</p>
+
+<div class="chart" id="chart">
+  <div class="toolbar">
+    <button data-mode="ming" class="on">明字（8 个字）</button>
+    <button data-mode="cang">含藏干（12 个字）</button>
+    <button data-mode="weighted">加权（%）</button>
+  </div>
+  <div class="bars" id="bars"></div>
+  <div class="chartnote" id="chartNote"></div>
+  <div class="tooltip" id="tip"></div>
+  <details>
+    <summary>数据表（三种口径一次看全）</summary>
+    <table>
+      <tr><th>五行</th><th>明字</th><th>含藏干</th><th>加权</th><th>在盘里是谁</th></tr>
+      <tr><td>木</td><td>1</td><td>2</td><td>10.5%</td><td>卯（乙）、亥藏甲</td></tr>
+      <tr><td>火</td><td>3</td><td>4</td><td>21.9%</td><td>丙、午（丁）、丁、戌藏丁</td></tr>
+      <tr><td>土</td><td>2</td><td>3</td><td>37.5%</td><td>戊、戌（戊）、午藏己</td></tr>
+      <tr><td>金</td><td>1</td><td>2</td><td>23.4%</td><td>辛、戌藏辛</td></tr>
+      <tr><td>水</td><td>1</td><td>1</td><td>6.7%</td><td>亥（壬）</td></tr>
+    </table>
+    <p class="note">加权口径：李洪成《四柱的干支量化》戌月旺度系数（木0.674 / 火1.012 / 土1.641 / 金1.498 / 水0.795）。F 路另用 40 分制交叉校验，方向一致。</p>
+  </details>
+</div>
+
+<div class="grid3">
+  <div class="card"><h3>个数：火最多</h3><p>明字里火 3 个，土 2 个，木金水各 1 个。看上去“火最旺”。但月令是戌土——土当令，火在秋天是退气的。</p></div>
+  <div class="card"><h3>力量：土最重</h3><p>按戌月旺度加权，土 37.5%，火只有 21.9%。土是“伤官”，泄火；这就是“个数多 ≠ 力量大”。</p></div>
+  <div class="card"><h3>用神：看缺什么，更看需要什么</h3><p>木 10.5%、水 6.7% 是数量短板；恰好木是印、水是官，都是这盘需要的。这不是“缺啥补啥”，是“用神正好在短板”。</p></div>
+</div>
+</section>
+
+<section id="pillars">
+<h2>四柱：一根一根看</h2>
+<p>四根柱子，像一张桌子的四条腿：年柱看祖辈/少年，月柱看父母/青年，日柱是自己和伴侣，时柱看晚年/事业。点开每根看细节。</p>
+<div class="pillars">
+  <div class="pillar">
+    <div class="ph">年柱 · 丙午</div><div class="pz">丙午</div>
+    <div class="pr">丙 = 劫财（阳火）｜午 = 比肩 / 食神</div>
+    <details><summary>这根柱在说什么</summary><p>年柱火气最旺：丙火透出，午是丁火的“禄”（强根）。传统取象里，祖辈/同辈里有一股很旺的火，能帮他；劫财也代表兄弟、伙伴。</p></details>
+  </div>
+  <div class="pillar">
+    <div class="ph">月柱 · 戊戌</div><div class="pz">戊戌</div>
+    <div class="pr">戊 = 伤官（阳土）｜戌 = 伤官 / 偏财 / 比肩</div>
+    <details><summary>这根柱在说什么</summary><p>出生在戌月，土旺。戊土伤官透出：表达、才华、创造从这里来；但伤官泄身，是这个盘最大的“泄耗”。戌里还藏着辛金偏财、丁火余气。</p></details>
+  </div>
+  <div class="pillar">
+    <div class="ph">日柱 · 丁卯</div><div class="pz">丁卯</div>
+    <div class="pr">丁 = 日主（阴火）｜卯 = 偏印</div>
+    <details><summary>这根柱在说什么</summary><p>日柱是“他自己”。丁火坐在卯木上，像灯放在木桌上：木给他添柴。偏印代表学习、敏感、贵人；但卯被戌合、又被亥争合，生火的力量打了折。</p></details>
+  </div>
+  <div class="pillar">
+    <div class="ph">时柱 · 辛亥</div><div class="pz">辛亥</div>
+    <div class="pr">辛 = 偏财（阴金）｜亥 = 正官 / 正印</div>
+    <details><summary>这根柱在说什么</summary><p>时柱看晚年/事业。辛金偏财透，亥水正官藏，亥里还有甲木正印。传统说“财官在时，主晚发、内敛”；亥水也能润戌月的燥。</p></details>
+  </div>
+</div>
+</section>
+
+<section id="ten">
+<h2>十神：他和世界的关系</h2>
+<p>十神不是“神”，是把五行关系翻译成人话：谁帮他、谁耗他、他擅长什么、他受什么约束。看这张表就够了。</p>
+<table>
+<tr><th>十神</th><th>盘里是谁</th><th>大白话</th><th>在这个盘里</th></tr>
+<tr><td><b>比肩 / 劫财</b></td><td>丙（劫财）、午藏丁（比肩）、戌藏丁</td><td>同辈、兄弟、朋友；帮身，也分资源</td><td>年柱丙午最旺，传统说祖辈/同辈里有助力；也像“旁边还有一盏灯”</td></tr>
+<tr><td><b>食神 / 伤官</b></td><td>戊（伤官）、戌（伤官）、午藏己（食神）</td><td>表达、才华、创造；泄身，太多会累</td><td>月令伤官透干，是这个盘最显眼的能力，也是最大的泄耗</td></tr>
+<tr><td><b>偏财 / 正财</b></td><td>辛（偏财）、戌藏辛</td><td>资源、务实、父亲；耗身</td><td>时干辛金透，坐亥；传统说“财有根但根浅”，身弱不担太多财</td></tr>
+<tr><td><b>正官 / 七杀</b></td><td>亥藏壬（正官）</td><td>规则、责任、事业；克身</td><td>官星藏在时支，不透；传统说偏内敛、守规矩，不是锋芒外露型</td></tr>
+<tr><td><b>正印 / 偏印</b></td><td>卯藏乙（偏印）、亥藏甲（正印）</td><td>学习、母亲、贵人；生身</td><td>卯木贴身，是这个盘最需要的“印”；但甲不透、卯被合，所以要补</td></tr>
+</table>
+<p class="note">十神是传统命理的关系分类，不是性格测评；这里只说“盘里有什么”，不给孩子下定论。</p>
+</section>
+
+<section id="map">
+<h2>五行生克：一张图看懂谁帮谁、谁管谁</h2>
+<p>五行不是五个孤立的标签，而是一张网：实线是“生”（顺时针，像母亲给孩子），虚线是“克”（隔一位，像刹车）。点一个字，看它跟谁生、跟谁克。</p>
+<div class="mapwrap">
+  <svg class="wxmap" viewBox="0 0 440 440" role="img" aria-label="五行生克关系图：木生火、火生土、土生金、金生水、水生木；木克土、土克水、水克火、火克金、金克木">
+    <defs>
+      <marker id="arrowInk" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 z" fill="#52514e"></path>
+      </marker>
+      <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L6,3 L0,6 z" fill="#C23B2E"></path>
+      </marker>
+    </defs>
+
+    <!-- 克：虚线，隔一位 -->
+    <g>
+      <line class="wxrel" data-from="木" x1="232.4" y1="118.0" x2="288.1" y2="289.6" stroke="#C23B2E" stroke-width="1.6" stroke-dasharray="6 5" opacity=".65" marker-end="url(#arrowRed)"></line>
+      <line class="wxrel" data-from="火" x1="320.7" y1="200.2" x2="174.9" y2="306.3" stroke="#C23B2E" stroke-width="1.6" stroke-dasharray="6 5" opacity=".65" marker-end="url(#arrowRed)"></line>
+      <line class="wxrel" data-from="土" x1="269.9" y1="309.8" x2="124.1" y2="203.7" stroke="#C23B2E" stroke-width="1.6" stroke-dasharray="6 5" opacity=".65" marker-end="url(#arrowRed)"></line>
+      <line class="wxrel" data-from="金" x1="150.1" y1="295.3" x2="205.8" y2="123.7" stroke="#C23B2E" stroke-width="1.6" stroke-dasharray="6 5" opacity=".65" marker-end="url(#arrowRed)"></line>
+      <line class="wxrel" data-from="水" x1="126.9" y1="176.7" x2="307.1" y2="176.7" stroke="#C23B2E" stroke-width="1.6" stroke-dasharray="6 5" opacity=".65" marker-end="url(#arrowRed)"></line>
+    </g>
+
+    <!-- 生：实线，顺时针 -->
+    <g>
+      <line class="wxrel" data-from="木" x1="252.4" y1="103.5" x2="315.9" y2="149.7" stroke="#52514e" stroke-width="2" marker-end="url(#arrowInk)"></line>
+      <line class="wxrel" data-from="火" x1="340.7" y1="214.7" x2="316.5" y2="289.6" stroke="#52514e" stroke-width="2" marker-end="url(#arrowInk)"></line>
+      <line class="wxrel" data-from="土" x1="262.3" y1="333.3" x2="183.7" y2="333.3" stroke="#52514e" stroke-width="2" marker-end="url(#arrowInk)"></line>
+      <line class="wxrel" data-from="金" x1="125.3" y1="295.3" x2="101.1" y2="220.4" stroke="#52514e" stroke-width="2" marker-end="url(#arrowInk)"></line>
+      <line class="wxrel" data-from="水" x1="119.3" y1="153.2" x2="182.8" y2="107.0" stroke="#52514e" stroke-width="2" marker-end="url(#arrowInk)"></line>
+    </g>
+
+    <!-- 节点 -->
+    <g class="wxnode" data-el="木">
+      <circle cx="220" cy="80" r="34" fill="#008300" stroke="#fcfcfb" stroke-width="3"></circle>
+      <text x="220" y="88" text-anchor="middle" fill="#fff" font-size="23" font-family="Songti SC,STSong,SimSun,serif" font-weight="700">木</text>
+    </g>
+    <g class="wxnode" data-el="火">
+      <circle cx="353.1" cy="176.7" r="34" fill="#e34948" stroke="#fcfcfb" stroke-width="3"></circle>
+      <text x="353.1" y="184.7" text-anchor="middle" fill="#fff" font-size="23" font-family="Songti SC,STSong,SimSun,serif" font-weight="700">火</text>
+    </g>
+    <g class="wxnode" data-el="土">
+      <circle cx="302.3" cy="333.3" r="34" fill="#eda100" stroke="#fcfcfb" stroke-width="3"></circle>
+      <text x="302.3" y="341.3" text-anchor="middle" fill="#fff" font-size="23" font-family="Songti SC,STSong,SimSun,serif" font-weight="700">土</text>
+    </g>
+    <g class="wxnode" data-el="金">
+      <circle cx="137.7" cy="333.3" r="34" fill="#4a3aa7" stroke="#fcfcfb" stroke-width="3"></circle>
+      <text x="137.7" y="341.3" text-anchor="middle" fill="#fff" font-size="23" font-family="Songti SC,STSong,SimSun,serif" font-weight="700">金</text>
+    </g>
+    <g class="wxnode" data-el="水">
+      <circle cx="86.9" cy="176.7" r="34" fill="#2a78d6" stroke="#fcfcfb" stroke-width="3"></circle>
+      <text x="86.9" y="184.7" text-anchor="middle" fill="#fff" font-size="23" font-family="Songti SC,STSong,SimSun,serif" font-weight="700">水</text>
+    </g>
+  </svg>
+  <div class="maptext">
+    <div id="mapText">五行的关系只有两种：<b>生</b>（实线，顺时针）和<b>克</b>（虚线，隔一位）。点亮一个字，看它跟谁生、跟谁克。</div>
+    <div class="wxkey">
+      <span><b style="color:#008300">木</b> 印 · 用神</span>
+      <span><b style="color:#e34948">火</b> 日主 · 有根</span>
+      <span><b style="color:#eda100">土</b> 伤官 · 首忌</span>
+      <span><b style="color:#4a3aa7">金</b> 偏财 · 次忌</span>
+      <span><b style="color:#2a78d6">水</b> 官 · 喜神（少量）</span>
+    </div>
+    <div class="legend"><span><i></i>生（顺时针）</span><span><i class="dash"></i>克（隔一位）</span></div>
+  </div>
+</div>
+</section>
+
+<section id="combos">
+<h2>四个「合」：为什么身强弱会有争议</h2>
+<p>地支天干之间有四种“合”。合，可以理解为“抱团”：抱成火，火就旺；抱不成，就只是互相牵制。身强弱的争议，几乎都在这四个合上。</p>
+<div class="grid2">
+  <div class="card"><h3>午戌半合火 <span style="color:var(--wx-fire)">●</span></h3><p>年支午 + 月支戌。午是火的中神，戌是火库；合局成立。但缺了寅，只是“旺墓半合”，主流认为<b>合而不真化</b>，火势大约加两到三成。</p></div>
+  <div class="card"><h3>卯戌合火 <span style="color:var(--wx-fire)">●</span></h3><p>月支戌 + 日支卯，紧贴六合。但戌月土旺、火不当令，主流判<b>合而不化</b>；而且卯还被亥卯半合木“抢”，两边牵制。</p></div>
+  <div class="card"><h3>亥卯半合木 <span style="color:var(--wx-wood)">●</span></h3><p>日支卯 + 时支亥。亥水生卯木，保住卯的“印”性。主流认为半三合的力量优先级高于六合，所以卯戌想把卯全化成火，很难。</p></div>
+  <div class="card"><h3>丙辛遥合 <span style="color:var(--wx-water)">●</span></h3><p>年干丙 + 时干辛，中间隔着戊、丁，是“遥合”。戌月不是申子辰/亥月，柱里又有丁（妒合），主流判<b>不化水</b>，最多算合绊：丙仍帮身，辛仍耗身。</p></div>
+</div>
+
+<div class="sens">
+  <h3>生扶率实验：把四个合拨一拨</h3>
+  <p class="note">“生扶率”= 帮他的力量（火+木）占总力量的百分比。50% 是这套量化模型的平衡线，不是普世标准。点任意一条看结论。</p>
+  <div class="sensbars">
+    <div class="row" data-k="base"><div class="lab">基线（不合化）</div><div class="tr"><div class="fl" style="width:32.4%"></div></div><div class="bval">32.4%</div></div>
+    <div class="row" data-k="buhua"><div class="lab">合而不化</div><div class="tr"><div class="fl" style="width:33.2%"></div></div><div class="bval">33.2%</div></div>
+    <div class="row sel" data-k="mid"><div class="lab">中间态（主流）</div><div class="tr"><div class="fl" style="width:41.3%"></div></div><div class="bval">41.3%</div></div>
+    <div class="row" data-k="full"><div class="lab">双合全化（少数派）</div><div class="tr"><div class="fl" style="width:53.5%"></div></div><div class="bval">53.5%</div></div>
+    <div class="thrv"><span>50% 平衡线</span></div>
+  </div>
+  <div class="readout" id="sensReadout"><b>中间态（主流）：41.3%</b>，低于 50% → <b>身弱偏弱</b>。午戌只按一半算、卯戌不化，这是最接近主流规则的中枢假设。置信约 75%。</div>
+</div>
+
+<div class="warnbox">
+<b>为什么会有“身强”这一派？</b> 如果同时把午戌、卯戌都按“全化火”算，生扶率会到 53.5%，刚过 50%，日主就变成“中和偏强”，用神也会反过来变成土、金、水。C 路（调候格局派）就是从这里判身强的。但主流子平要求“化神当令”——戌月火不当令、缺寅、亥卯又争合，所以 F 路把“双合全化”估为 20%–25% 的少数派假设，最终取中间态。<br>
+<b>这不是谁算错，是合化的尺度不同。</b> 页面下方“给大师的三问”可以直接拿去对口径。
+</div>
+</section>
+
+<section id="yongshen">
+<h2>用神：这盏灯需要什么</h2>
+<p>用神不是“缺什么补什么”，是“这个盘最需要什么”。主流弱判下，木为主、水少量为辅、火次之；土和金尽量少。</p>
+<div class="ys">
+  <div class="yscard" style="border-top-color:var(--wx-wood)"><div class="role">用神（主）</div><div class="el" style="color:var(--wx-wood)">木</div><div class="why">印星：生火、制土。像给灯添柴，也像用木头把过多的土挡住。盘里卯木贴身、亥藏甲，但甲不透、卯被合，所以要补。</div></div>
+  <div class="yscard" style="border-top-color:var(--wx-water)"><div class="role">喜神（少量）</div><div class="el" style="color:var(--wx-water)">水</div><div class="why">官星：润戌月的燥，也能生木。但水多克火——一盏灯前泼一盆水就灭了，所以“少量”是关键。</div></div>
+  <div class="yscard" style="border-top-color:var(--wx-fire)"><div class="role">次喜（不宜重）</div><div class="el" style="color:var(--wx-fire)">火</div><div class="why">比劫：帮身。原局已有丙火透、午为禄、戌为火库，火并不缺；再重补火，反而生土、加重伤官。</div></div>
+  <div class="yscard" style="border-top-color:var(--wx-earth)"><div class="role">首忌</div><div class="el" style="color:var(--wx-earth)">土</div><div class="why">伤官：泄火、埋光。原局土已经 37.5%，再见重土就是“土多埋光”，最不值得。</div></div>
+  <div class="yscard" style="border-top-color:var(--wx-metal)"><div class="role">次忌</div><div class="el" style="color:var(--wx-metal)">金</div><div class="why">财星：耗身、克木。原局辛金透、戌藏辛；丙辛合绊能减轻一点，但不宜再重金。</div></div>
+</div>
+
+<div class="callout">
+<b>“身弱”不是“身体弱”。</b> 这是五行力量的描述，不是健康判断，更不是命好命坏的判决。孩子 3.225 kg、哭声响亮，体检指标听医生的；八字只在起名和文化叙事上做参考。<br>
+<b>名字的五行是加分项，不是命令。</b> 音形义、家族偏好、读写方便，永远排在五行前面；不要为了凑偏旁，选一个难写难念的名字。
+</div>
+</section>
+
+<section id="dayun">
+<h2>大运：只列事实，不做吉凶断言</h2>
+<p>起运 <b>5 年 11 个月 10 天</b>（2032-09-30 起运），阳年男顺排。下面是大运干支和五行；传统上会看大运与用神的配合，但流派差异很大，这里只列事实。</p>
+<div class="timeline">
+  <div class="dy"><div class="age">6–15 岁</div><div class="gz">己亥</div><div class="tags"><span class="tag" style="background:var(--wx-earth)">土</span><span class="tag" style="background:var(--wx-water)">水</span></div><div class="dd">土水相见，水气初起。</div></div>
+  <div class="dy"><div class="age">16–25 岁</div><div class="gz">庚子</div><div class="tags"><span class="tag" style="background:var(--wx-metal)">金</span><span class="tag" style="background:var(--wx-water)">水</span></div><div class="dd">金水，水势渐旺。</div></div>
+  <div class="dy"><div class="age">26–35 岁</div><div class="gz">辛丑</div><div class="tags"><span class="tag" style="background:var(--wx-metal)">金</span><span class="tag" style="background:var(--wx-earth)">土</span></div><div class="dd">金土，土金偏重。</div></div>
+  <div class="dy"><div class="age">36–45 岁</div><div class="gz">壬寅</div><div class="tags"><span class="tag" style="background:var(--wx-water)">水</span><span class="tag" style="background:var(--wx-wood)">木</span></div><div class="dd">水木，木得水生。</div></div>
+  <div class="dy"><div class="age">46–55 岁</div><div class="gz">癸卯</div><div class="tags"><span class="tag" style="background:var(--wx-water)">水</span><span class="tag" style="background:var(--wx-wood)">木</span></div><div class="dd">水木，木气续旺。</div></div>
+  <div class="dy"><div class="age">56–65 岁</div><div class="gz">甲辰</div><div class="tags"><span class="tag" style="background:var(--wx-wood)">木</span><span class="tag" style="background:var(--wx-earth)">土</span></div><div class="dd">木土，木能疏土。</div></div>
+  <div class="dy"><div class="age">66–75 岁</div><div class="gz">乙巳</div><div class="tags"><span class="tag" style="background:var(--wx-wood)">木</span><span class="tag" style="background:var(--wx-fire)">火</span></div><div class="dd">木火，火气回升。</div></div>
+  <div class="dy"><div class="age">76–85 岁</div><div class="gz">丙午</div><div class="tags"><span class="tag" style="background:var(--wx-fire)">火</span><span class="tag" style="background:var(--wx-fire)">火</span></div><div class="dd">火火，火气最旺。</div></div>
+</div>
+<p class="note">大运只是“时间段 + 干支”的事实排列；同一段大运，不同流派、不同用神口径，解读可以完全相反。这里不做“哪步好运”的断言。</p>
+</section>
+
+<section id="brother">
+<h2>和哥哥：一个是江，一个是灯</h2>
+<div class="grid2">
+  <div class="card">
+    <h3>老大 · 王斯卯</h3>
+    <p>壬水日主，八字 癸卯 / 甲寅 / 壬子 / 辛丑。水 3、木 3、金 1、土 1、火 0——<b>水木旺，缺火</b>。</p>
+  </div>
+  <div class="card">
+    <h3>老二 · 丁火</h3>
+    <p>丁火日主，八字 丙午 / 戊戌 / 丁卯 / 辛亥。明字火 3、土 2、木 1、金 1、水 1——<b>火旺，木水偏少</b>。</p>
+  </div>
+</div>
+<div class="callout">
+两兄弟的盘里，有两个字碰上了：<b>卯</b>（老大年支、老二日支）和<b>辛</b>（两人都在时干）。老大的壬水日主，遇上老二的丁火日主，天干五合里是<b>丁壬合</b>——传统取象叫“丁壬合木”。<br>
+用家里的话说：<b>一个像江，一个像灯；江边有灯，灯下有水。</b> 这是家庭趣谈，不是标准合盘；但摆在一起看，确实互补——老大水旺缺火，老二火旺。
+</div>
+</section>
+
+<section id="myths">
+<h2>四个常见误解</h2>
+<div class="grid2">
+  <div class="card"><h3>① 身弱 ≠ 体弱</h3><p>“身”是日主五行力量的代称，不是身体。身弱的人也可以很健康；身强的人也会生病。健康看体检和医生。</p></div>
+  <div class="card"><h3>② 五行俱全 ≠ 五行平衡</h3><p>五个都有，不等于五个都刚好。这个盘五行俱全，但土 37.5%、水 6.7%，力量差得很远。</p></div>
+  <div class="card"><h3>③ 缺什么 ≠ 补什么</h3><p>水只有 6.7%，看起来最缺；但水是官星，少量润燥可以，多了克火。补什么，要看用神，不是看最小数。</p></div>
+  <div class="card"><h3>④ 名字不是命令</h3><p>名字是家里的祝福和文化叙事，不是命运的开关。音形义、好写、好念、不撞难听谐音，比“五行分”更重要。</p></div>
+</div>
+<div class="warnbox">
+<b>最后一句实诚话：</b> 八字是传统文化视角，不是科学定论；它不替代医疗、教育、法律、投资判断。这个页面能做的，是把“为什么这么起名”讲清楚，让家里人有个共同的底；孩子的人生，还是他自己走。
+</div>
+</section>
+
+<footer>
+<b>数据与核验</b>：四柱用 lunar-python 排盘，JDN 公式与在线黄历三法互证；五行加权用李洪成《四柱的干支量化》戌月旺度系数；调候引《穷通宝鉴》九月丁火「耑用甲庚」；月令分日引《三命通会·论人元司事》（辛七日、丁五日、戊十八日）；格局引《子平真诠·论伤官》。<br>
+<b>六路核验档</b>：naming/_verify/A_bazi_chart.md（排盘）、B_yongshen_fuya.md（扶抑）、C_yongshen_tiaohou.md（调候/格局异议）、F_strength_sensitivity.md（敏感性仲裁）、D_char_wuxing.md（字五行）、E_shengxiao_ma.md（生肖）。<br>
+<b>口径</b>：本页只上私人专区，不进入公开站；出生信息与八字属家庭隐私，请勿外传。图中颜色只作区分标记（金用紫标），不改变五行本身的含义。2026-10-21 · 铁蛋。
+</footer>
+</div>
+
+<script>
+const ELEMENTS = [
+  {key:'木', color:'#008300', role:'印'},
+  {key:'火', color:'#e34948', role:'比劫'},
+  {key:'土', color:'#eda100', role:'伤官'},
+  {key:'金', color:'#4a3aa7', role:'偏财'},
+  {key:'水', color:'#2a78d6', role:'官'}
+];
+const MODES = {
+  ming: {unit:'个', max:4, values:{木:1,火:3,土:2,金:1,水:1},
+    note:'只数天干+地支本气，共 8 个字：火 3 个最多，土 2，木金水各 1。看上去火最旺，但月令是戌土，火在秋天退气。'},
+  cang: {unit:'个', max:5, values:{木:2,火:4,土:3,金:2,水:1},
+    note:'把地支藏干也算进来，共 12 个字：火 4、土 3，火土仍然最多。但“个数”还是不等于“力量”。'},
+  weighted: {unit:'%', max:40, values:{木:10.5,火:21.9,土:37.5,金:23.4,水:6.7},
+    note:'按戌月旺度系数加权：土 37.5% 最重，金 23.4%，火 21.9%，木 10.5%，水 6.7%。这才接近“力量”的口径。'}
+};
+const bars = document.getElementById('bars');
+const chartNote = document.getElementById('chartNote');
+const tip = document.getElementById('tip');
+let mode = 'ming';
+
+function render(m){
+  mode = m;
+  const d = MODES[m];
+  bars.innerHTML = ELEMENTS.map(function(e){
+    const v = d.values[e.key];
+    const w = Math.max(2, v / d.max * 100);
+    return '<div class="brow" data-el="'+e.key+'">'
+      + '<div class="blabel"><span class="dot" style="background:'+e.color+'"></span>'
+      + '<span><b>'+e.key+'</b> <span class="brole">'+e.role+'</span></span></div>'
+      + '<div class="track"><div class="fill" style="width:'+w+'%;background:'+e.color+'"></div></div>'
+      + '<div class="bval">'+v+d.unit+'</div></div>';
+  }).join('');
+  chartNote.textContent = d.note;
+  document.querySelectorAll('.toolbar button').forEach(function(b){
+    b.classList.toggle('on', b.dataset.mode === m);
+  });
+  document.querySelectorAll('.brow').forEach(function(row){
+    row.addEventListener('mousemove', function(ev){
+      const el = row.dataset.el;
+      const a = MODES.ming.values[el], b = MODES.cang.values[el], c = MODES.weighted.values[el];
+      tip.innerHTML = '<b>'+el+'</b>（'+ELEMENTS.filter(function(x){return x.key===el;})[0].role+'）<br>'
+        + '明字 '+a+' 个 · 含藏干 '+b+' 个 · 加权 '+c+'%';
+      const r = document.getElementById('chart').getBoundingClientRect();
+      tip.style.left = Math.min(ev.clientX - r.left + 12, r.width - 240) + 'px';
+      tip.style.top = (ev.clientY - r.top + 12) + 'px';
+      tip.style.opacity = 1;
+    });
+    row.addEventListener('mouseleave', function(){ tip.style.opacity = 0; });
+  });
+}
+document.querySelectorAll('.toolbar button').forEach(function(b){
+  b.addEventListener('click', function(){ render(b.dataset.mode); });
+});
+render('ming');
+
+// 生扶率实验
+const SENS = {
+  base: {v:32.4, t:'<b>基线（完全不合化）：32.4%</b>，离 50% 很远 → 明确身弱。这是把午戌、卯戌都当“只是合绊”的下限。'},
+  buhua: {v:33.2, t:'<b>合而不化：33.2%</b>，仍远低于 50% → 身弱。合局成立，但火势只小幅增加。'},
+  mid: {v:41.3, t:'<b>中间态（主流）：41.3%</b>，低于 50% → <b>身弱偏弱</b>。午戌按一半算、卯戌不化，这是最接近主流规则的中枢假设。置信约 75%。'},
+  full: {v:53.5, t:'<b>双合全化（少数派）：53.5%</b>，刚过 50% → <b>中和偏强</b>，用神会反转为土金水。需要午戌、卯戌同时全化，且丙辛不化水；主流认为这三个条件同时成立的概率不高。'}
+};
+const readout = document.getElementById('sensReadout');
+document.querySelectorAll('.sens .row').forEach(function(row){
+  row.addEventListener('click', function(){
+    document.querySelectorAll('.sens .row').forEach(function(r){ r.classList.remove('sel'); });
+    row.classList.add('sel');
+    readout.innerHTML = SENS[row.dataset.k].t;
+  });
+});
+
+// 生克图：点击节点，突出它的生/克
+document.querySelectorAll('.wxnode').forEach(function(g){
+  g.style.cursor = 'pointer';
+  g.addEventListener('click', function(){
+    const el = g.dataset.el;
+    document.querySelectorAll('.wxnode').forEach(function(n){ n.classList.toggle('sel', n === g); });
+    document.querySelectorAll('.wxrel').forEach(function(rel){
+      rel.classList.toggle('dim', rel.dataset.from !== el);
+    });
+    const map = {
+      '木':'木生火（添柴），木克土（树根破土）',
+      '火':'火生土（烧成灰），火克金（熔金）',
+      '土':'土生金（矿从土出），土克水（筑堤拦水）',
+      '金':'金生水（金润生水），金克木（斧伐木）',
+      '水':'水生木（浇树），水克火（灭火）'
+    };
+    document.getElementById('mapText').innerHTML = '<b>'+el+'：</b>'+map[el]+'。<br><span style="color:var(--muted)">再点一次别的字切换；点空白处恢复。</span>';
+  });
+});
+document.querySelector('.mapwrap').addEventListener('click', function(ev){
+  if (!ev.target.closest('.wxnode')) {
+    document.querySelectorAll('.wxnode').forEach(function(n){ n.classList.remove('sel'); });
+    document.querySelectorAll('.wxrel').forEach(function(rel){ rel.classList.remove('dim'); });
+    document.getElementById('mapText').innerHTML = '五行的关系只有两种：<b>生</b>（实线，顺时针）和<b>克</b>（虚线，隔一位）。点亮一个字，看它跟谁生、跟谁克。';
+  }
+});
+</script>
+
+</body>
+</html>

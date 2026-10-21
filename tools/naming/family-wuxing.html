@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>我和月饼的五行 · 父子两张盘</title>
+<title>我和月饼的五行 · 双时柱与六路核验</title>
 <style>
 :root{
   --surf:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
@@ -28,23 +28,23 @@ nav.anchors{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px}
 nav.anchors a{font-size:12.5px;color:var(--ink2);text-decoration:none;border:1px solid var(--line);
   background:var(--surf);border-radius:999px;padding:3px 11px}
 nav.anchors a:hover{border-color:var(--gold);color:var(--ink)}
-.lede{font-size:15px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
+.lede{font-size:14.5px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
   border-left:3px solid var(--jiang);border-radius:10px;padding:14px 18px;margin:16px 0 8px;line-height:2}
 .lede b{color:var(--ink)}
 h2{font-size:21px;letter-spacing:.06em;margin:34px 0 8px;padding-left:10px;
   border-left:4px solid var(--gold);font-family:"Songti SC","STSong","SimSun",serif}
-h3{font-size:16px;margin:16px 0 6px}
+h3{font-size:16px;margin:18px 0 6px}
 p{font-size:14px;color:var(--ink2);margin:8px 0}
 p b{color:var(--ink)}
 .note{font-size:12.5px;color:var(--muted);line-height:1.9}
 .hero{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px;margin:14px 0}
 .tile{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:13px 15px;border-top:3px solid var(--gold)}
 .tile .k{font-size:11px;color:var(--muted);letter-spacing:.08em}
-.tile .v{font-size:23px;font-weight:700;letter-spacing:.06em;margin:2px 0 0;
+.tile .v{font-size:22px;font-weight:700;letter-spacing:.05em;margin:2px 0 0;
   font-family:"Songti SC","STSong","SimSun",serif}
-.tile .d{font-size:12px;color:var(--ink2);margin-top:2px}
+.tile .d{font-size:12px;color:var(--ink2);margin-top:2px;line-height:1.6}
 .card{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:10px}
 .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
 table{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--line);
   border-radius:10px;overflow:hidden;font-size:13px;margin:8px 0}
@@ -52,18 +52,26 @@ th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;verti
 th{background:#f3f2ee;font-weight:600;font-size:12px;color:var(--ink2)}
 tr:last-child td{border-bottom:0}
 .bz td,.bz th{text-align:center}
+.small{font-size:12px}
 details{margin-top:7px}
 summary{font-size:12px;color:var(--muted);cursor:pointer;list-style:none}
 summary::-webkit-details-marker{display:none}
 summary:before{content:"＋ ";color:var(--gold)}
 details[open] summary:before{content:"－ "}
 details p{font-size:12.5px;color:var(--ink2);margin:4px 0 2px;line-height:1.85}
-/* grouped bars */
+/* verdict */
+.verdict{background:var(--surf);border:1px solid var(--line);border-radius:13px;padding:15px 17px;margin:12px 0;border-left:4px solid var(--gold)}
+.verdict .tag{font-size:11px;color:var(--muted);letter-spacing:.08em}
+.verdict .big{font-size:19px;font-weight:700;margin:2px 0 4px;font-family:"Songti SC","STSong","SimSun",serif}
+.verdict p{font-size:13px;margin:5px 0}
+.verdict.fork{border-left-color:var(--jiang)}
+/* chart */
 .chart{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:12px 0;position:relative}
 .toolbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
 .toolbar button{border:1px solid var(--line);background:var(--page);color:var(--ink2);border-radius:999px;
-  padding:6px 14px;font-size:13px;cursor:pointer}
+  padding:6px 13px;font-size:12.5px;cursor:pointer}
 .toolbar button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.toolbar .sep{width:1px;height:22px;background:var(--line);margin:0 4px}
 .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);margin-left:auto}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
@@ -79,7 +87,7 @@ details p{font-size:12.5px;color:var(--ink2);margin:4px 0 2px;line-height:1.85}
 .chartnote{font-size:12.5px;color:var(--ink2);margin-top:12px;line-height:1.9}
 .tooltip{position:absolute;pointer-events:none;background:#fff;border:1px solid var(--line);
   border-radius:9px;box-shadow:0 6px 18px rgba(0,0,0,.08);padding:8px 11px;font-size:12px;
-  color:var(--ink2);opacity:0;transition:opacity .12s;z-index:20;max-width:260px;line-height:1.7}
+  color:var(--ink2);opacity:0;transition:opacity .12s;z-index:20;max-width:270px;line-height:1.7}
 .tooltip b{color:var(--ink)}
 /* chain */
 .chain{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:12px 0;background:var(--surf);
@@ -104,6 +112,8 @@ footer b{color:var(--ink2)}
 @media (max-width:760px){
   .grow{grid-template-columns:34px 1fr}
   .gtrack{grid-template-columns:30px 1fr 34px}
+  table{font-size:12px}
+  th,td{padding:6px 7px}
 }
 </style>
 </head>
@@ -111,13 +121,14 @@ footer b{color:var(--ink2)}
 <div class="wrap">
 
 <header>
-  <h1>我和月饼的五行<span class="seal">家</span></h1>
-  <p class="sub">爸爸 <b>1993-03-20 13:25</b> · 月饼（王斯卯）<b>2023-02-23 01:02</b> · 父子两张盘 · 给家里人看的白话版</p>
+  <h1>我和月饼的五行<span class="seal">双</span></h1>
+  <p class="sub">爸爸 <b>1993-03-20 13:25</b>（西安/关中）· 月饼（王斯卯）<b>2023-02-23 01:02</b>（北京）· <b>双时柱口径 + 六路核验</b></p>
 </header>
 
 <nav class="anchors">
   <a href="#summary">一句话</a>
   <a href="#charts">两张盘</a>
+  <a href="#dingpan">正式定盘</a>
   <a href="#compare">五行对比</a>
   <a href="#same">三个共同点</a>
   <a href="#fatherson">父子</a>
@@ -127,53 +138,91 @@ footer b{color:var(--ink2)}
 
 <section id="summary">
 <p class="lede">
-一句话：<b>爸爸是庚金，月饼是壬水；金生水。</b>父子俩明面上都<b>缺火</b>——但爸爸的未土里藏了一点丁火，月饼的寅木里藏了一点丙火，不是真的一点火都没有。家里刚出生的老二，偏偏是<b>丁火</b>：他把火带到了明面上。<br>
-这一页做的是<b>家庭五行取象</b>，不是正式用神定盘；跨盘的生合是趣谈，不是标准合盘。看个明白、图个乐，别当成命好命坏的判决。
+这次不糊弄了。爸爸和月饼的时柱都卡在时辰边界附近，所以我们把<b>两套口径都算了一遍</b>：<br>
+<b>爸爸</b>（西安/关中）：家庭北京时间 → 未时 <b>癸未</b>；真太阳时 <b>12:33:12</b> → 午时 <b>壬午</b>。六路一致：<b>身弱，金为主用、湿土为辅；水木为忌；火只是调候条件项，不是主用</b>。主结论稳，A/B 只换未/午的细节。<br>
+<b>月饼</b>（北京）：家庭北京时间 → 丑时 <b>辛丑</b>；真太阳时 <b>00:34:10</b> → 子时 <b>庚子</b>。六路<b>不收敛</b>：丑时 2:1 取<b>金水</b>（食神佩印），子时 2:1 取<b>木火</b>（食神泄秀）；仲裁路把子时压在 48.0%，保守派仍取金水。稳定的是食神格、食伤旺、财藏、壬水有根不从。<br>
+一句话：<b>爸爸的盘能定，月饼的盘要等大师定「丑/子 + 身弱/身旺」两个口径。</b>
 </p>
 <div class="hero">
-  <div class="tile"><div class="k">爸爸 · 日主</div><div class="v">庚金</div><div class="d">年柱纳音剑锋金 · 水3金2木2土1火0</div></div>
-  <div class="tile"><div class="k">月饼 · 日主</div><div class="v">壬水</div><div class="d">年柱纳音金箔金 · 水3木3金1土1火0</div></div>
-  <div class="tile"><div class="k">共同点</div><div class="v">水旺</div><div class="d">两人日支都是「子」；明面都缺火</div></div>
-  <div class="tile"><div class="k">藏起来的火</div><div class="v">未丁 · 寅丙</div><div class="d">爸爸未土藏丁，月饼寅木藏丙</div></div>
+  <div class="tile"><div class="k">爸爸 · 庚金</div><div class="v">身弱</div><div class="d">用金为主、湿土为辅；水木忌；火条件性</div></div>
+  <div class="tile"><div class="k">月饼 · 壬水</div><div class="v">分叉</div><div class="d">丑时→金水；子时→木火；稳的是食神格</div></div>
+  <div class="tile"><div class="k">共同</div><div class="v">水旺 · 都带卯</div><div class="d">爸爸水3；月饼水3/4；一家三口都有卯</div></div>
+  <div class="tile"><div class="k">关键边界</div><div class="v">2 分钟</div><div class="d">月饼 01:02 距丑时起点仅 2 分钟；子时距边界 25分50秒</div></div>
 </div>
 </section>
 
 <section id="charts">
 <h2>先把两张盘摊开</h2>
-<p>四柱像一张桌子的四条腿：年柱祖辈/少年，月柱父母/青年，日柱自己，时柱晚年/事业。先看字，再看下面的数。</p>
+<p>A = 家庭北京时间口径（旧档）；B = 真太阳时口径（严谨）。同一张盘，只换最后一柱。</p>
 <div class="grid2">
   <div class="card">
-    <h3>爸爸 · 癸酉 / 乙卯 / 庚子 / 癸未</h3>
+    <h3>爸爸 · 癸酉 / 乙卯 / 庚子 / 癸未（A）· 壬午（B）</h3>
     <table class="bz">
-      <tr><th></th><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱</th></tr>
-      <tr><td>天干</td><td>癸</td><td>乙</td><td><b>庚</b></td><td>癸</td></tr>
-      <tr><td>十神</td><td>伤官</td><td>正财</td><td>日主</td><td>伤官</td></tr>
-      <tr><td>地支</td><td>酉</td><td>卯</td><td>子</td><td>未</td></tr>
-      <tr><td>藏干</td><td>辛</td><td>乙</td><td>癸</td><td>己 丁 乙</td></tr>
-      <tr><td>纳音</td><td>剑锋金</td><td>大溪水</td><td>壁上土</td><td>杨柳木</td></tr>
+      <tr><th></th><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱 A</th><th>时柱 B</th></tr>
+      <tr><td>天干</td><td>癸</td><td>乙</td><td><b>庚</b></td><td>癸</td><td>壬</td></tr>
+      <tr><td>十神</td><td>伤官</td><td>正财</td><td>日主</td><td>伤官</td><td>食神</td></tr>
+      <tr><td>地支</td><td>酉</td><td>卯</td><td>子</td><td>未</td><td>午</td></tr>
+      <tr><td>藏干</td><td>辛</td><td>乙</td><td>癸</td><td>己 丁 乙</td><td>丁 己</td></tr>
+      <tr><td>纳音</td><td>剑锋金</td><td>大溪水</td><td>壁上土</td><td>杨柳木</td><td>杨柳木</td></tr>
     </table>
-    <p class="note">农历一九九三年二月廿八，属鸡。庚金日主，生卯月（木旺），财星当令、伤官透；有酉金为根，未土为印。</p>
+    <p class="note">农历一九九三年二月廿八，属鸡。A 未时（北京时间）；B 午时（真太阳时 12:33:12，陕西全境均落午时）。</p>
   </div>
   <div class="card">
-    <h3>月饼 · 癸卯 / 甲寅 / 壬子 / 辛丑</h3>
+    <h3>月饼 · 癸卯 / 甲寅 / 壬子 / 辛丑（A）· 庚子（B）</h3>
     <table class="bz">
-      <tr><th></th><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱</th></tr>
-      <tr><td>天干</td><td>癸</td><td>甲</td><td><b>壬</b></td><td>辛</td></tr>
-      <tr><td>十神</td><td>劫财</td><td>食神</td><td>日主</td><td>正印</td></tr>
-      <tr><td>地支</td><td>卯</td><td>寅</td><td>子</td><td>丑</td></tr>
-      <tr><td>藏干</td><td>乙</td><td>甲 丙 戊</td><td>癸</td><td>己 癸 辛</td></tr>
-      <tr><td>纳音</td><td>金箔金</td><td>大溪水</td><td>桑柘木</td><td>壁上土</td></tr>
+      <tr><th></th><th>年柱</th><th>月柱</th><th>日柱</th><th>时柱 A</th><th>时柱 B</th></tr>
+      <tr><td>天干</td><td>癸</td><td>甲</td><td><b>壬</b></td><td>辛</td><td>庚</td></tr>
+      <tr><td>十神</td><td>劫财</td><td>食神</td><td>日主</td><td>正印</td><td>偏印</td></tr>
+      <tr><td>地支</td><td>卯</td><td>寅</td><td>子</td><td>丑</td><td>子</td></tr>
+      <tr><td>藏干</td><td>乙</td><td>甲 丙 戊</td><td>癸</td><td>己 癸 辛</td><td>癸</td></tr>
+      <tr><td>纳音</td><td>金箔金</td><td>大溪水</td><td>桑柘木</td><td>壁上土</td><td>壁上土</td></tr>
     </table>
-    <p class="note">农历二〇二三年二月初四，属兔。壬水日主，生寅月（木旺），食神当令、甲木透；有子水为根、辛金为正印。</p>
+    <p class="note">农历二〇二三年二月初四，属兔。A 丑时（北京时间 01:02，距边界仅 2 分钟）；B 子时（真太阳时 00:34:10）。</p>
   </div>
 </div>
 </section>
 
+<section id="dingpan">
+<h2>正式定盘：六路核验（双口径）</h2>
+
+<h3>爸爸：三路一致，主结论稳</h3>
+<table>
+  <tr><th>路</th><th>身强弱</th><th>用神 / 喜</th><th>忌</th><th>备注</th></tr>
+  <tr><td>PB 扶抑</td><td>身弱（90%）</td><td>金为用、土为喜（85%）</td><td>水、木</td><td>火扶抑判忌；B 午火被子午冲，属「弱忌被制」</td></tr>
+  <tr><td>PC 调候+格局</td><td>财旺身不任</td><td>格局：金主、湿土辅、丁火佐；调候：丁火主、甲木辅</td><td>水、木、燥土、丙火</td><td>丁火是「条件性喜神」，须先帮身；原局丁弱</td></tr>
+  <tr><td>PF 仲裁</td><td>身弱</td><td>金主、土辅</td><td>木、水</td><td>火不作主用；A/B 用神大类不变</td></tr>
+</table>
+<div class="verdict">
+  <div class="tag">爸爸 · 六路共识</div>
+  <div class="big">身弱 · 金为主 · 湿土为辅 · 水木忌</div>
+  <p>三路在「身不任财（身弱）+ 金土」上一致，这是爸爸这张盘最稳的部分。火的角色有分歧：扶抑派判忌（身弱、火克金），调候派取丁火暖局；但两盘原局的丁火都弱（A 藏未，被癸盖、子未害、卯未合；B 藏午，被子午冲、卯破、壬暗合），所以只能作<b>条件性辅助</b>，不能当主用。A 与 B 的差别在「未土的印」还是「午火的官」，不改变金土大方向；PC 判 B 调候略优。</p>
+</div>
+
+<h3>月饼：用神分叉，不是一句话能定</h3>
+<table>
+  <tr><th>路</th><th>A 丑时（家庭北京时间）</th><th>B 子时（真太阳时）</th></tr>
+  <tr><td>MB 扶抑</td><td><b>身弱</b>（约 75%）；用金、喜水；忌木火；食神佩印</td><td><b>中和偏旺</b>（55–60%）；用木、喜火；忌金水；食神泄秀</td></tr>
+  <tr><td>MC 调候+格局</td><td><b>身旺</b>；喜火、木（需火）、燥土；忌金水湿土；丙火第一、戊土第二</td><td><b>身旺</b>；喜火、木（需火）、燥土；忌金水湿土；丙火第一、戊土第二</td></tr>
+  <tr><td>PF 仲裁</td><td><b>偏弱</b>（生扶 40.8%）；金主水辅；忌木火</td><td><b>中和偏弱</b>（生扶 48.0%）；金主水辅；忌木火</td></tr>
+</table>
+<div class="verdict fork">
+  <div class="tag">月饼 · 六路不收敛</div>
+  <div class="big">丑时 2:1 金水 · 子时 2:1 木火 · 稳定的是食神格</div>
+  <p><b>A 丑时</b>：MB、PF 两路取金水（食神佩印），MC 取火木——2:1 偏金水。<br>
+  <b>B 子时</b>：MB、MC 两路取木火（食神泄秀/调候丙火），PF 量化把生扶压在 48.0% 仍取金水——2:1 偏木火，但置信只有约 55–60%。<br>
+  <b>两盘都稳的</b>：食神格、食伤旺、财藏不透、壬水有根不从、忌湿土。翻转的根因有三件：子刃被丑合绊 → 双子双刃；辛印坐丑有根 → 庚印坐子无根；丑官克水 → 消失。<br>
+  <b>时柱边界</b>：A 盘 01:02 距丑时起点只有 2 分钟，记录误差超过 3 分钟就会翻成子时；B 盘 00:34 距边界 25 分 50 秒，稳健得多。<b>所以严谨主口径更倾向 B（子时）</b>；但 PF 的量化让「B 身弱用金水」仍有约四成空间，不能把木火说成定论。</p>
+</div>
+</section>
+
 <section id="compare">
-<h2>五行对比：两张盘放在一起看</h2>
-<p>横轴是五行，每一格两根条：蓝色是爸爸，橙色是月饼。切到「含藏干」，会把地支里藏的字也算进来——火就从 0 变成 1。</p>
+<h2>五行对比：两套口径 × 两种数法</h2>
+<p>横轴是五行，每格两根条：蓝色爸爸，橙色月饼。先选口径（家庭/真太阳时），再选数法（明字/含藏干）。火和土的移位，就是时柱变化最直观的体现。</p>
 <div class="chart" id="chart">
   <div class="toolbar">
+    <button data-cal="family" class="on">家庭北京时间</button>
+    <button data-cal="true">真太阳时</button>
+    <span class="sep"></span>
     <button data-mode="ming" class="on">明字</button>
     <button data-mode="cang">含藏干</button>
     <div class="legend">
@@ -185,38 +234,38 @@ footer b{color:var(--ink2)}
   <div class="chartnote" id="chartNote"></div>
   <div class="tooltip" id="tip"></div>
   <details>
-    <summary>数据表（父子两口径 + 老二对照）</summary>
+    <summary>数据表（四盘对照）</summary>
     <table>
-      <tr><th>五行</th><th>爸爸·明字</th><th>爸爸·含藏干</th><th>月饼·明字</th><th>月饼·含藏干</th><th>老二·明字</th></tr>
-      <tr><td>木</td><td>2</td><td>3</td><td>3</td><td>3</td><td>1</td></tr>
-      <tr><td>火</td><td>0</td><td>1</td><td>0</td><td>1</td><td>3</td></tr>
-      <tr><td>土</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td></tr>
-      <tr><td>金</td><td>2</td><td>2</td><td>1</td><td>2</td><td>1</td></tr>
-      <tr><td>水</td><td>3</td><td>3</td><td>3</td><td>4</td><td>1</td></tr>
+      <tr><th>五行</th><th>爸爸·家庭明字</th><th>爸爸·家庭藏干</th><th>爸爸·真太阳明字</th><th>爸爸·真太阳藏干</th><th>月饼·家庭明字</th><th>月饼·家庭藏干</th><th>月饼·真太阳明字</th><th>月饼·真太阳藏干</th></tr>
+      <tr><td>木</td><td>2</td><td>3</td><td>2</td><td>2</td><td>3</td><td>3</td><td>3</td><td>3</td></tr>
+      <tr><td>火</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+      <tr><td>土</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>2</td><td>0</td><td>1</td></tr>
+      <tr><td>金</td><td>2</td><td>2</td><td>2</td><td>2</td><td>1</td><td>2</td><td>1</td><td>1</td></tr>
+      <tr><td>水</td><td>3</td><td>3</td><td>3</td><td>3</td><td>3</td><td>4</td><td>4</td><td>4</td></tr>
     </table>
   </details>
 </div>
 <div class="callout">
-<b>看这张图最该记住的两件事：</b>①父子俩的<b>水都最多</b>（各 3 个明字），而且都坐在「子」上；②明面上<b>两个人都没有火</b>，但含藏干一算，爸爸的未土藏丁、月饼的寅木藏丙——各有一点火，只是没摆到明面。
+<b>最该注意的两处移位：</b>①爸爸从 A 到 B，<b>未土 → 午火</b>：明字火 0→1、土 1→0，还多了一个子午冲。②月饼从 A 到 B，<b>丑土 → 子水</b>：明字土 1→0、水 3→4，丑土和子丑合一起消失。<b>同一个「01:02」，换一种时间口径，盘面就换了一半。</b>
 </div>
 </section>
 
 <section id="same">
-<h2>三个共同点</h2>
+<h2>三个共同点（双口径修正版）</h2>
 <div class="grid3">
-  <div class="card"><h3>① 都水旺，都坐「子」</h3><p>爸爸水 3（癸、癸、子），月饼水 3（癸、壬、子）；两人的日支都是<b>子</b>——传统取象里，像父子俩都坐在水面上。水多，想法多、朋友多、流动性强。</p></div>
-  <div class="card"><h3>② 明面缺火，但各藏一点</h3><p>爸爸的未土藏<b>丁火</b>（正官），月饼的寅木藏<b>丙火</b>（偏财）。不是没火，是火藏在土里、木里；传统上说，一个把规矩藏在心里，一个把机会藏在木里。</p></div>
-  <div class="card"><h3>③ 都带「卯」</h3><p>爸爸月支卯、月饼年支卯，老二日支卯——<b>一家三口都带卯</b>。卯是木，也是老二起名的用神。这个巧合，放到下一页讲。</p></div>
+  <div class="card"><h3>① 都水旺</h3><p>爸爸水 3（癸、癸、子），两套口径不变；月饼水 3（家庭）或 4（真太阳时）。两人的日支都是<b>子</b>——传统取象里，像父子俩都坐在水面上。</p></div>
+  <div class="card"><h3>② 火：看口径，也看藏干</h3><p>爸爸 A 明面火 0、未土藏丁；B 明面火 1（午火）、子午冲。月饼两套明面都火 0，但寅木藏丙。所以准确说法不是「两个人都缺火」，而是<b>「明面火都不多；爸爸的火在未/午之间换位置，月饼的火一直藏在寅里」</b>。</p></div>
+  <div class="card"><h3>③ 都带「卯」</h3><p>爸爸月支卯、月饼年支卯，老二日支卯——<b>一家三口都带卯</b>。卯是木，也是老二起名的用神。这个巧合不随口径变。</p></div>
 </div>
 <div class="card">
-  <h3>连纳音都撞了两处</h3>
-  <p>爸爸的月柱纳音是<b>大溪水</b>，月饼的月柱纳音也是<b>大溪水</b>；爸爸的日柱纳音是<b>壁上土</b>，月饼的时柱纳音也是<b>壁上土</b>；两人的年柱纳音还都是金（剑锋金 / 金箔金）。传统纳音像一层“意象皮肤”，父子俩撞了两处，挺有意思。</p>
+  <h3>纳音：换个时柱，还是撞了两处</h3>
+  <p>爸爸的月柱纳音是<b>大溪水</b>，月饼的月柱纳音也是<b>大溪水</b>；爸爸的日柱纳音是<b>壁上土</b>，月饼的时柱纳音（辛丑或庚子）也都是<b>壁上土</b>；两人的年柱纳音还都是金（剑锋金 / 金箔金）。时柱换了，纳音没换——传统纳音像一层“意象皮肤”，父子俩撞了两处。</p>
 </div>
 </section>
 
 <section id="fatherson">
 <h2>父子：一把剑，一条江</h2>
-<p>爸爸庚金，年柱纳音<b>剑锋金</b>——传统取象像剑锋、斧钺；月饼壬水，月柱纳音<b>大溪水</b>——像一条江。金生水：爸爸这把金，托着月饼这条江。</p>
+<p>这一层不随时柱变：爸爸庚金，年柱纳音<b>剑锋金</b>；月饼壬水，月柱纳音<b>大溪水</b>。金生水——爸爸这把金，托着月饼这条江。</p>
 <div class="chain">
   <div class="node" style="background:#4a3aa7"><div class="big">庚金</div><div class="who">爸爸</div></div>
   <div class="arrow">→ 生 →</div>
@@ -229,64 +278,86 @@ footer b{color:var(--ink2)}
 <div class="grid2">
   <div class="card">
     <h3>爸爸的庚金</h3>
-    <p>庚金生在卯月，财旺、伤官透——传统上说，这是“想法多、手上有活、财气旺”的盘；有酉金为根、未土为印，不是无根之金。明面缺火，未土里藏丁（正官）：规矩和责任，藏在心里。</p>
+    <p>庚金生卯月，财旺、伤官/食神透，财旺身弱；有酉金为根（但卯酉冲）、日支子为死地。三路一致取<b>金为主、湿土为辅</b>。<b>A 盘</b>未土藏丁（正官），但子未害、卯未合，丁火近乎虚设；<b>B 盘</b>午火（丁禄）透出，但子午冲、卯破、壬暗合，有根不稳。调候派想用丁火暖局，可惜原局丁火太弱，只能作条件项。</p>
   </div>
   <div class="card">
     <h3>月饼的壬水</h3>
-    <p>壬水生寅月，食神当令、甲木透——传统上说，这是“学习、表达、朋友”的能量旺的盘；有子水为根、辛金为正印。明面缺火，寅木里藏丙（偏财）：机会藏在木里，要动起来才看得见。</p>
+    <p>壬水生寅月，食神当令、甲木透，食伤旺；日支子为羊刃，壬水有根不从。<b>A 丑时</b>：辛正印坐丑有根，子丑合绊子刃，食神佩印，用金水；<b>B 子时</b>：双子双刃，庚偏印坐子无根，食神泄秀，用木火。同一张盘，只差时柱，用神从金翻到木。</p>
   </div>
 </div>
 <div class="callout">
-<b>老二的丁火，正好落在两处：</b>对月饼的壬水，是天干五合的<b>丁壬合</b>；对爸爸的庚金，是火克金、火炼金。用家里的话说——<b>爸爸托着月饼，月饼的水养着家里的卯木，卯木又点亮老二的灯。</b> 这是家庭趣谈，不是标准合盘；但连起来看，确实像一条链。
+<b>老二的丁火，正好落在两处：</b>对月饼的壬水，是天干五合的<b>丁壬合</b>；对爸爸的庚金，是火克金、火炼金。用家里的话说——<b>爸爸托着月饼，月饼的水养着家里的卯木，卯木又点亮老二的灯。</b> 这是家庭趣谈，不是标准合盘；但日主和月柱不随时柱变，这条链依然成立。
 </div>
 </section>
 
 <section id="family">
-<h2>三个人一起看</h2>
+<h2>三个人一起看：两套口径各算一遍</h2>
+<h3>家庭北京时间口径（爸爸癸未 / 月饼辛丑）</h3>
 <table>
   <tr><th></th><th>日主</th><th>木</th><th>火</th><th>土</th><th>金</th><th>水</th><th>明面缺</th></tr>
   <tr><td>爸爸</td><td>庚金</td><td>2</td><td><b style="color:var(--wx-fire)">0</b></td><td>1</td><td>2</td><td>3</td><td>火（藏 1）</td></tr>
   <tr><td>月饼</td><td>壬水</td><td>3</td><td><b style="color:var(--wx-fire)">0</b></td><td>1</td><td>1</td><td>3</td><td>火（藏 1）</td></tr>
   <tr><td>老二</td><td>丁火</td><td>1</td><td><b style="color:var(--wx-fire)">3</b></td><td>2</td><td>1</td><td>1</td><td>—</td></tr>
 </table>
-<p class="note">上表为明字计数（天干 + 地支本气）。含藏干合计：木 8 · 火 6 · 土 6 · 金 6 · 水 8——一家人凑在一起，五行反而挺齐。这是加法趣谈，不是标准合盘。</p>
+<h3>真太阳时口径（爸爸壬午 / 月饼庚子）</h3>
+<table>
+  <tr><th></th><th>日主</th><th>木</th><th>火</th><th>土</th><th>金</th><th>水</th><th>明面缺</th></tr>
+  <tr><td>爸爸</td><td>庚金</td><td>2</td><td>1</td><td>0</td><td>2</td><td>3</td><td>土（藏 1）</td></tr>
+  <tr><td>月饼</td><td>壬水</td><td>3</td><td><b style="color:var(--wx-fire)">0</b></td><td>0</td><td>1</td><td>4</td><td>火（藏 1）、土（藏 1）</td></tr>
+  <tr><td>老二</td><td>丁火</td><td>1</td><td><b style="color:var(--wx-fire)">3</b></td><td>2</td><td>1</td><td>1</td><td>—</td></tr>
+</table>
+<p class="note">上表为明字计数（天干 + 地支本气）。含藏干合计：家庭口径 木 8 · 火 6 · 土 6 · 金 6 · 水 8；真太阳时口径 木 7 · 火 6 · 土 5 · 金 5 · 水 8。两套都挺齐，但真太阳时口径下土金各少 1——因为未/丑换成了午/子。</p>
 <div class="fam">
-  <div class="famchip"><div class="k">木</div><div class="v" style="color:var(--wx-wood)">8</div></div>
-  <div class="famchip"><div class="k">火</div><div class="v" style="color:var(--wx-fire)">6</div></div>
-  <div class="famchip"><div class="k">土</div><div class="v" style="color:var(--wx-earth)">6</div></div>
-  <div class="famchip"><div class="k">金</div><div class="v" style="color:var(--wx-metal)">6</div></div>
-  <div class="famchip"><div class="k">水</div><div class="v" style="color:var(--wx-water)">8</div></div>
+  <div class="famchip"><div class="k">木</div><div class="v" style="color:var(--wx-wood)">8 / 7</div></div>
+  <div class="famchip"><div class="k">火</div><div class="v" style="color:var(--wx-fire)">6 / 6</div></div>
+  <div class="famchip"><div class="k">土</div><div class="v" style="color:var(--wx-earth)">6 / 5</div></div>
+  <div class="famchip"><div class="k">金</div><div class="v" style="color:var(--wx-metal)">6 / 5</div></div>
+  <div class="famchip"><div class="k">水</div><div class="v" style="color:var(--wx-water)">8 / 8</div></div>
 </div>
+<p class="note">格式：家庭口径 / 真太阳时口径（含藏干合计）。这是加法趣谈，不是标准合盘。</p>
 <div class="callout">
-<b>三个「卯」：</b>爸爸月支卯、月饼年支卯、老二日支卯。卯是木。家里起名给老二定的用神也是木——这不是算出来的必然，只是一个很舒服的巧合：<b>一家三口，命里都带着同一种木。</b>
+<b>三个「卯」：</b>爸爸月支卯、月饼年支卯、老二日支卯。卯是木。家里给老二定的用神也是木——这不是算出来的必然，只是一个很舒服的巧合：<b>一家三口，命里都带着同一种木。</b>这个结论不随时柱口径变。
 </div>
 </section>
 
 <section id="caveat">
-<h2>口径说明（实诚话）</h2>
+<h2>口径说明（这次是真严谨，不是客气话）</h2>
 <div class="warnbox">
-<b>这一页是什么：</b>用 lunar-python 重排的两张盘（四柱、藏干、十神、纳音），加家庭五行的取象和趣谈。<br>
-<b>这一页不是什么：</b>不是爸爸和月饼的正式用神定盘。老二的盘走了六路交叉核验；这两张盘没有做同等强度的合化/身强弱分析，所以页面里没有给他们下“喜什么、忌什么”的结论。<br>
-<b>跨盘的生、合、纳音对照</b>是家庭趣谈，不是标准八字合盘；八字是传统文化视角，不替代医疗、教育、人生选择。<br>
-若要给爸爸或月饼做正式用神分析，我可以按老二那套六路核验再跑一遍。
+<b>已经做了什么：</b>六路独立核验——事实排盘（四盘 + 真太阳时精确到秒）、爸爸扶抑、爸爸调候格局、月饼扶抑、月饼调候格局、双时柱敏感性仲裁。四柱、藏干、十神、纳音都用 lunar-python 与 JDN/在线黄历互证。<br>
+<b>爸爸：</b>主结论稳（身弱、金主、湿土辅、水木忌）；火是条件项，不是主用。出生地已确认西安/关中，B 盘（壬午）成立。<br>
+<b>月饼：</b>用神本身分叉，丑时偏金水、子时偏木火；稳定的是食神格、食伤旺、财藏、壬水有根不从。01:02 距丑时边界只有 2 分钟，A 盘本身脆弱；真太阳时子时距边界 25 分 50 秒，更稳健。<b>建议把「丑/子」与「身弱/身旺」两个口径交给大师拍板，再定用神。</b><br>
+<b>不是什么：</b>不是医疗、教育、投资、人生选择的依据；八字是传统文化视角，跨盘生合是家庭趣谈。爸爸/月饼没有起名需求，所以这里只定用神，不选字。
 </div>
 </section>
 
 <footer>
-<b>数据与核验</b>：四柱用 lunar-python 重排（1993-03-20 13:25 未时；2023-02-23 01:02 丑时）；藏干、十神、纳音均取自 lunar-python；老二数据沿用已验证口径（丙午/戊戌/丁卯/辛亥）。<br>
-<b>口径</b>：本页只上私人专区，不进入公开站；出生信息与八字属家庭隐私，请勿外传。页面只做家庭取象，不做正式用神定盘。2026-10-21 · 铁蛋。
+<b>核验档</b>：naming/_verify/P0_four_charts.md（四盘事实）、PB_baba_fuya.md（爸爸扶抑）、PC_baba_tiaohou.md（爸爸调候格局）、MB_yuebing_fuya.md（月饼扶抑）、MC_yuebing_tiaohou.md（月饼调候格局）、PF_hour_sensitivity.md（双时柱仲裁）。<br>
+<b>古籍与工具</b>：lunar-python 1.4.8；JDN 公式 + 在线黄历互证；《穷通宝鉴》二月庚金（专用丁火，借甲引丁，借庚劈甲）、正月壬水（庚→丙→戊，见比劫有庚辛当以戊制）；《子平真诠·论食神》；真太阳时按经度差 + 均时差计算（爸爸 12:33:12；月饼 00:34:10）。<br>
+<b>口径</b>：本页只上私人专区，不进入公开站；出生信息与八字属家庭隐私，请勿外传。页面不构成命理定论，最终以大师/家里口径为准。2026-10-21 · 铁蛋。
 </footer>
 </div>
 
 <script>
 const DATA = {
-  ming: {
-    爸爸: {木:2, 火:0, 土:1, 金:2, 水:3},
-    月饼: {木:3, 火:0, 土:1, 金:1, 水:3}
+  family: {
+    ming: {
+      爸爸: {木:2, 火:0, 土:1, 金:2, 水:3},
+      月饼: {木:3, 火:0, 土:1, 金:1, 水:3}
+    },
+    cang: {
+      爸爸: {木:3, 火:1, 土:1, 金:2, 水:3},
+      月饼: {木:3, 火:1, 土:2, 金:2, 水:4}
+    }
   },
-  cang: {
-    爸爸: {木:3, 火:1, 土:1, 金:2, 水:3},
-    月饼: {木:3, 火:1, 土:2, 金:2, 水:4}
+  true: {
+    ming: {
+      爸爸: {木:2, 火:1, 土:0, 金:2, 水:3},
+      月饼: {木:3, 火:0, 土:0, 金:1, 水:4}
+    },
+    cang: {
+      爸爸: {木:2, 火:1, 土:1, 金:2, 水:3},
+      月饼: {木:3, 火:1, 土:1, 金:1, 水:4}
+    }
   }
 };
 const ELS = ['木','火','土','金','水'];
@@ -298,9 +369,17 @@ const gbars = document.getElementById('gbars');
 const chartNote = document.getElementById('chartNote');
 const tip = document.getElementById('tip');
 const MAX = 5;
+let cal = 'family', mode = 'ming';
 
-function render(mode){
-  const d = DATA[mode];
+const NOTES = {
+  'family|ming': '家庭口径·明字：父子俩都是水 3 最多，火都是 0；爸爸金 2 木 2，月饼木 3 金 1。',
+  'family|cang': '家庭口径·含藏干：爸爸木 3、火 1、土 1、金 2、水 3；月饼木 3、火 1、土 2、金 2、水 4。',
+  'true|ming': '真太阳时·明字：爸爸火 1、土 0（午火换未土）；月饼水 4、土 0、火 0（庚子换辛丑）。',
+  'true|cang': '真太阳时·含藏干：爸爸木 2、火 1、土 1、金 2、水 3；月饼木 3、火 1、土 1、金 1、水 4。'
+};
+
+function render(){
+  const d = DATA[cal][mode];
   gbars.innerHTML = ELS.map(function(el){
     return '<div class="grow" data-el="'+el+'">'
       + '<div class="glabel">'+el+'</div>'
@@ -314,30 +393,30 @@ function render(mode){
         }).join('')
       + '</div></div>';
   }).join('');
-  chartNote.textContent = mode === 'ming'
-    ? '明字：父子俩都是水 3 最多，火都是 0。爸爸金 2 木 2，月饼木 3 金 1。'
-    : '含藏干：爸爸木 3、火 1、土 1、金 2、水 3；月饼木 3、火 1、土 2、金 2、水 4。火都从 0 变成 1。';
-  document.querySelectorAll('.toolbar button').forEach(function(b){
-    b.classList.toggle('on', b.dataset.mode === mode);
-  });
+  chartNote.textContent = NOTES[cal+'|'+mode];
+  document.querySelectorAll('[data-cal]').forEach(function(b){ b.classList.toggle('on', b.dataset.cal===cal); });
+  document.querySelectorAll('[data-mode]').forEach(function(b){ b.classList.toggle('on', b.dataset.mode===mode); });
   document.querySelectorAll('.grow').forEach(function(row){
     row.addEventListener('mousemove', function(ev){
       const el = row.dataset.el;
-      tip.innerHTML = '<b>'+el+'</b><br>'
-        + '爸爸：明字 '+DATA.ming['爸爸'][el]+' · 含藏干 '+DATA.cang['爸爸'][el]+'<br>'
-        + '月饼：明字 '+DATA.ming['月饼'][el]+' · 含藏干 '+DATA.cang['月饼'][el];
+      const a = DATA[cal][mode]['爸爸'][el], b = DATA[cal][mode]['月饼'][el];
+      tip.innerHTML = '<b>'+el+'</b>（'+(cal==='family'?'家庭北京时间':'真太阳时')+'·'+(mode==='ming'?'明字':'含藏干')+'）<br>'
+        + '爸爸 '+a+' · 月饼 '+b;
       const r = document.getElementById('chart').getBoundingClientRect();
-      tip.style.left = Math.min(ev.clientX - r.left + 12, r.width - 240) + 'px';
+      tip.style.left = Math.min(ev.clientX - r.left + 12, r.width - 250) + 'px';
       tip.style.top = (ev.clientY - r.top + 12) + 'px';
       tip.style.opacity = 1;
     });
     row.addEventListener('mouseleave', function(){ tip.style.opacity = 0; });
   });
 }
-document.querySelectorAll('.toolbar button').forEach(function(b){
-  b.addEventListener('click', function(){ render(b.dataset.mode); });
+document.querySelectorAll('[data-cal]').forEach(function(b){
+  b.addEventListener('click', function(){ cal = b.dataset.cal; render(); });
 });
-render('ming');
+document.querySelectorAll('[data-mode]').forEach(function(b){
+  b.addEventListener('click', function(){ mode = b.dataset.mode; render(); });
+});
+render();
 </script>
 
 </body>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>水木相生 · 延伸批｜不靠偏旁</title>
+<style>
+:root{--surf:#fcfcfb;--page:#f9f9f7;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;
+--line:#e1e0d9;--jiang:#C23B2E;--gold:#C79A2B;
+--wx-wood:#008300;--wx-fire:#e34948;--wx-earth:#eda100;--wx-metal:#4a3aa7;--wx-water:#2a78d6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased;line-height:1.7}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
+header{padding:30px 4px 20px;border-bottom:1px solid var(--line);margin-bottom:10px}
+h1{margin:0 0 8px;font-size:clamp(26px,4.6vw,42px);letter-spacing:.14em;font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
+h1 .seal{display:inline-block;background:var(--jiang);color:#fff;font-size:.5em;padding:.28em .5em;border-radius:4px;vertical-align:.62em;letter-spacing:.1em;margin-left:14px;font-family:inherit}
+.sub{color:var(--ink2);font-size:14.5px;margin:2px 0 0}.sub b{color:var(--jiang)}
+.lede{font-size:14.5px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);border-left:3px solid var(--jiang);border-radius:10px;padding:14px 18px;margin:16px 0 8px;line-height:2}
+.lede b{color:var(--ink)}
+h2{font-size:21px;letter-spacing:.06em;margin:34px 0 8px;padding-left:10px;border-left:4px solid var(--gold);font-family:"Songti SC","STSong","SimSun",serif}
+p{font-size:14px;color:var(--ink2);margin:8px 0}p b{color:var(--ink)}
+.note{font-size:13px;color:var(--ink2);margin:4px 0}
+.small{font-size:12px;color:var(--muted)}
+.topbox{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:9px;margin:14px 0}
+.topcard{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:13px 15px;border-top:3px solid var(--gold)}
+.topcard .k{font-size:11px;color:var(--muted);letter-spacing:.08em}
+.topcard .n{font-size:23px;font-weight:700;letter-spacing:.06em;margin:2px 0;font-family:"Songti SC","STSong","SimSun",serif}
+.topcard .n small{display:block;font-size:11px;color:var(--muted);font-weight:400;letter-spacing:0;margin-top:2px;font-family:system-ui,sans-serif}
+.topcard .d{font-size:12.5px;color:var(--ink2);margin-top:5px;line-height:1.7}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 10px;position:sticky;top:0;background:var(--page);padding:8px 0;z-index:5;border-bottom:1px solid var(--line)}
+.tab{border:1px solid var(--line);background:var(--surf);color:var(--ink2);border-radius:999px;padding:8px 16px;font-size:14px;cursor:pointer}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.panel{display:none}.panel.on{display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px;margin-top:10px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:12px 15px}
+.ctop{display:flex;align-items:baseline;gap:9px;margin-bottom:2px;flex-wrap:wrap}
+.num{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.nm{font-size:23px;font-weight:700;letter-spacing:.08em;font-family:"Songti SC","STSong","SimSun",serif}
+.el{font-size:11.5px;color:var(--muted)}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 6px}
+.score{font-size:11.5px;border-radius:6px;padding:1px 8px;font-variant-numeric:tabular-nums;background:#f1f0ec;color:var(--ink2)}
+.score.full{background:#e6f3ec;color:#1f6d47}.score.warn1{background:#fbf0d9;color:#8a5a12}.score.warn2{background:#f7e2d3;color:#8a4412}.score.bad{background:#f5dede;color:#8a2020}
+.flag{font-size:11.5px;color:var(--warn);background:#fbf4e4;border-radius:6px;padding:1px 8px}
+table{width:100%;border-collapse:collapse;background:var(--surf);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13px;margin:8px 0}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f3f2ee;font-weight:600;font-size:12px;color:var(--ink2)}
+tr:last-child td{border-bottom:0}
+.callout{background:#fbf6ea;border:1px solid #eadfc2;border-left:3px solid var(--gold);border-radius:10px;padding:13px 16px;font-size:13px;color:var(--ink2);line-height:1.95;margin:12px 0}
+.callout b{color:var(--ink)}
+.warnbox{background:#fbf0ec;border:1px solid #efd6cf;border-left:3px solid var(--jiang);border-radius:10px;padding:13px 16px;font-size:13px;color:var(--ink2);line-height:1.95;margin:12px 0}
+.warnbox b{color:var(--ink)}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.9}
+footer b{color:var(--ink2)}
+@media (max-width:560px){.cards{grid-template-columns:1fr}.tab{padding:6px 12px;font-size:13px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>水木相生 · 延伸批<span class="seal">木</span></h1>
+  <p class="sub">不按偏旁筛 · 按字义/五行属性/意境 · 佐参：<b>王元一</b>（元木、一水，字面无氵/木）</p>
+</header>
+
+<p class="lede">
+老板说「水木相生想延伸，但不用很刻意偏旁部首」。这一批就按这个来：<b>先看字五行和意境，再看偏旁</b>。<br>
+所以你会看到 <b>春霖 / 春云 / 露禾 / 棣云</b> 这种名字——春无木旁、云无氵、禾无木旁、霖只有雨部；按字义/五行，它们照样是木水或水木。<br>
+五格照旧用家里那套（康熙笔画 + 81 数理 + 三才 + 音形义），分数标在卡上；<b>偏旁只作参考，不作筛选条件</b>。
+</p>
+
+<div class="topbox">
+<div class="topcard"><div class="k">首选 · 春木霖水</div><div class="n">王春霖<small>木+水 · 五格 95 · 全绿</small></div><div class="d">春木得霖雨，水木相生。霖为久雨润物；春无木旁、霖无三点水（只有雨部）——不靠“氵+木”的硬组合。</div></div>
+<div class="topcard"><div class="k">首选 · 无偏旁</div><div class="n">王春云<small>木+水 · 五格 96 · 全绿</small></div><div class="d">春云化雨，木气升发；云为水象，春为木象。两个字都没有氵/木旁。</div></div>
+<div class="topcard"><div class="k">首选 · 露润禾苗</div><div class="n">王露禾<small>水+木 · 五格 96 · 全绿</small></div><div class="d">露润禾苗，水生木长；露无氵（雨部）、禾无木旁。</div></div>
+<div class="topcard"><div class="k">首选 · 春润</div><div class="n">王春润<small>木+水 · 五格 96 · 全绿</small></div><div class="d">春雨润木，水木相生；润有滋养意。</div></div>
+<div class="topcard"><div class="k">兄弟 · 棣云</div><div class="n">王棣云<small>木+水 · 五格 89 · 一⚠️</small></div><div class="d">棣为棠棣（兄弟），云为水象；棣木+云水，兄弟线的新延伸。</div></div>
+</div>
+
+<div class="callout">
+<b>先交代五行裁决（不靠想当然）：</b><br>
+<b>春=木</b>：瓷都/猎名两源取木，康熙 API 取金 → 本批采木（2:1），标注分歧。<br>
+<b>禾=木</b>：瓷都/猎名两源取木，康熙 API 取水 → 本批采木（2:1）。<br>
+<b>一=水</b>：瓷都/猎名两源取水，康熙 API 取土；大师 2026-10-21 判一属水 → 本批采水。<br>
+<b>青=金</b>：三源一致取金——虽然字面是青色（木），本批<b>不放进</b>。这就是“不靠想当然”的例子。<br>
+其余：云/风/雨/露/霖/溪/润/涵/泽=水；林/松/竹/桐/柯/棠/棣/元/东=木；行/方=水。
+</div>
+
+<div class="tabs">
+  <button class="tab on" data-tab="p-top">首选新提名</button>
+  <button class="tab" data-tab="p-pool">字义派 · 已在池</button>
+  <button class="tab" data-tab="p-bro">兄弟 · 棣字延伸</button>
+  <button class="tab" data-tab="p-weak">意境好 · 五格弱</button>
+</div>
+
+<div class="panel on" id="p-top">
+  <div class="cards"><div class="card">
+  <div class="ctop"><span class="num">01</span><span class="nm">王春霖</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score full">95 · 全绿</span><span class="score">土火土</span></div>
+  <p class="note">春木得霖雨，水木相生。霖为久雨润物；春无木旁、霖无三点水（只有雨部）——不靠“氵+木”的硬组合。</p>
+  <p class="note" style="color:var(--muted)">清润里偏劲健，是本批最不像“网红名”的一个。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">02</span><span class="nm">王春云</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score full">96 · 全绿</span><span class="score">土火木</span></div>
+  <p class="note">春云化雨，木气升发；云为水象，春为木象。两个字都没有氵/木旁。</p>
+  <p class="note" style="color:var(--muted)">清润向；音形最轻，看家里接不接受偏柔。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">03</span><span class="nm">王露禾</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score full">96 · 全绿</span><span class="score">土火土</span></div>
+  <p class="note">露润禾苗，水生木长；露无氵（雨部）、禾无木旁。</p>
+  <p class="note" style="color:var(--muted)">画面最具体，也最柔；像一幅田园小品。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">04</span><span class="nm">王春润</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score full">96 · 全绿</span><span class="score">土火土</span></div>
+  <p class="note">春雨润木，水木相生；润有滋养意。</p>
+  <p class="note" style="color:var(--muted)">润带氵，但春不带木——一半靠字义立住。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">05</span><span class="nm">王春涵</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score full">96 · 全绿</span><span class="score">土火木</span></div>
+  <p class="note">春水涵木，涵养生长；涵带氵，春不带木。</p>
+  <p class="note" style="color:var(--muted)">气质安静，读书向。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">06</span><span class="nm">王棣云</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="score">土土火</span></div>
+  <p class="note">棣为棠棣（兄弟），云为水象；棣木+云水，兄弟线的新延伸。</p>
+  <p class="note" style="color:var(--muted)">棣有《诗经·常棣》的兄弟典；云是补象，没有硬凑偏旁。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">07</span><span class="nm">王春溪</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="score">土火火</span></div>
+  <p class="note">春溪绕林，水木相生；溪带氵、春不带木。</p>
+  <p class="note" style="color:var(--muted)">五格 89 一⚠️；画面清亮，数理弱一档。</p>
+</div></div>
+</div>
+<div class="panel" id="p-pool">
+  <p class="small">这些名字已经在家里池子里，拿来对照：它们都不靠“氵+木”的偏旁组合，靠的是字义（偕=木、行=水；义=木、方=水；元=木、方=水；云=水）。</p>
+  <div class="cards"><div class="card">
+  <div class="ctop"><span class="num">01</span><span class="nm">王义方</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score full">95 · 全绿</span><span class="score">土金金</span><span class="flag">已在池</span></div>
+  <p class="note">义=木、方=水；字面无氵木。行事合义，端方有则。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 95 全绿，字义派的样板。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">02</span><span class="nm">王偕行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score full">94 · 全绿</span><span class="score">土土金</span></div>
+  <p class="note">《周易·乾·文言》「与时偕行」；《诗经·秦风·无衣》「与子偕行」。偕=木、行=水，字面无氵木。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 94 全绿。和哥哥同行的叙事最完整。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">03</span><span class="nm">王梦熊</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">91 · 一⚠️</span><span class="score">土金金</span><span class="flag">已在池</span></div>
+  <p class="note">《诗经·小雅·斯干》「维熊维罴，男子之祥」。梦=木、熊=水，字面无氵木。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 91 一⚠️。梦熊之喜，最应景。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">04</span><span class="nm">王务本</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span><span class="score">土土土</span><span class="flag">已在池</span></div>
+  <p class="note">务=水、本=木；君子务本，本立而道生。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 90 一⚠️。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">05</span><span class="nm">王若虚</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span><span class="score">土土火</span><span class="flag">已在池</span></div>
+  <p class="note">若=木、虚=水；虚怀谦冲。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 90 一⚠️。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">06</span><span class="nm">王景行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">86 · 一⚠️</span><span class="score">土土金</span><span class="flag">已在池</span></div>
+  <p class="note">《诗经·小雅·车舝》「高山仰止，景行行止」。景=木、行=水。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 86 一⚠️。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">07</span><span class="nm">王元方</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">85 · 一⚠️</span><span class="score">土金金</span><span class="flag">已在池</span></div>
+  <p class="note">元=木、方=水；《世说新语》陈元方聪慧少年。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 85 一⚠️。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">08</span><span class="nm">王元一</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">83 · 一⚠️</span><span class="score">土金土</span><span class="flag">已在池</span></div>
+  <p class="note">抱元守一（道家）；元=木、一=水（大师 2026-10-21 判一属水）。字面无氵木。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 83 一⚠️。老板拟议大名，未升格。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">09</span><span class="nm">王云启</span><span class="el">水+木</span></div>
+  <div class="badges"><span class="score warn1">83 · 一⚠️</span><span class="score">土土火</span><span class="flag">已在池</span></div>
+  <p class="note">云=水；启=木。老板提名；云程发轫。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 83 一⚠️。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">10</span><span class="nm">王嘉行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">91 · 一⚠️</span><span class="score">土金水</span><span class="flag">已在池</span></div>
+  <p class="note">嘉=木、行=水；美行嘉德。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 91 一⚠️。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">11</span><span class="nm">王敬行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span><span class="score">土金水</span><span class="flag">已在池</span></div>
+  <p class="note">敬=木、行=水；敬慎而行。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 90 一⚠️。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">12</span><span class="nm">王勤行</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="score">土金水</span><span class="flag">已在池</span></div>
+  <p class="note">勤=木、行=水；勤勉笃行。</p>
+  <p class="note" style="color:var(--muted)">已在池；五格 89 一⚠️。</p>
+</div></div>
+</div>
+<div class="panel" id="p-bro">
+  <p class="small">棣=棠棣，古汉语里就是兄弟。棣浔是老板 10-17 初选；棣云是本批新提名。棣泽/棣溪意境顺，但五格弱一档，列在这里备选。</p>
+  <div class="cards"><div class="card">
+  <div class="ctop"><span class="num">01</span><span class="nm">王棣浔</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">90 · 一⚠️</span><span class="score">土土金</span><span class="flag">已在池</span></div>
+  <p class="note">棣=棠棣（兄弟象征）；浔=水边深处。自家组名，与常棣同源。</p>
+  <p class="note" style="color:var(--muted)">老板 10-17 初选里的兄弟水意；已有五格 90。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">02</span><span class="nm">王棣云</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">89 · 一⚠️</span><span class="score">土土火</span></div>
+  <p class="note">棣为棠棣（兄弟），云为水象；棣木+云水，兄弟线的新延伸。</p>
+  <p class="note" style="color:var(--muted)">棣有《诗经·常棣》的兄弟典；云是补象，没有硬凑偏旁。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">03</span><span class="nm">王棣泽</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score full">78 · 全绿</span><span class="score">土土水</span></div>
+  <p class="note">棣为棠棣，泽为水；兄弟+水木。</p>
+  <p class="note" style="color:var(--muted)">五格 78，全绿但三才相克；意境顺，数理弱一档。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">04</span><span class="nm">王棣溪</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn2">78 · 多⚠️</span><span class="score">土土土</span></div>
+  <p class="note">棣为棠棣，溪为水；兄弟+水木。</p>
+  <p class="note" style="color:var(--muted)">五格 78、多⚠️；意境好，数理硬伤。</p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">05</span><span class="nm">王棣泉</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">71 · 一⚠️</span><span class="score">土土木</span></div>
+  <p class="note"></p>
+  <p class="note" style="color:var(--muted)"></p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">06</span><span class="nm">王棣露</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">71 · 一⚠️</span><span class="score">土土木</span></div>
+  <p class="note"></p>
+  <p class="note" style="color:var(--muted)"></p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">07</span><span class="nm">王棣风</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">72 · 一⚠️</span><span class="score">土土木</span></div>
+  <p class="note"></p>
+  <p class="note" style="color:var(--muted)"></p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">08</span><span class="nm">王棣松</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">69 · 一⚠️</span><span class="score">土土水</span></div>
+  <p class="note"></p>
+  <p class="note" style="color:var(--muted)"></p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">09</span><span class="nm">王棣林</span><span class="el">木+木</span></div>
+  <div class="badges"><span class="score warn1">68 · 一⚠️</span><span class="score">土土水</span></div>
+  <p class="note"></p>
+  <p class="note" style="color:var(--muted)"></p>
+</div>
+<div class="card">
+  <div class="ctop"><span class="num">10</span><span class="nm">王棣雨</span><span class="el">木+水</span></div>
+  <div class="badges"><span class="score warn1">69 · 一⚠️</span><span class="score">土土水</span></div>
+  <p class="note"></p>
+  <p class="note" style="color:var(--muted)"></p>
+</div></div>
+</div>
+<div class="panel" id="p-weak">
+  <p class="small">这批意境很美，但五格有三才相克或数理硬伤。家里若以五格为主尺，不建议进短名单；若更喜欢画面，可以单独留。</p>
+  <table>
+    <tr><th>名</th><th>五行</th><th>五格</th><th>档</th><th>三才</th></tr>
+    <tr><td>王春露</td><td>木+水</td><td>79</td><td>全绿</td><td>土火水</td></tr>
+<tr><td>王春泽</td><td>木+水</td><td>77</td><td>多⚠️</td><td>土火土</td></tr>
+<tr><td>王棠溪</td><td>木+水</td><td>77</td><td>多⚠️</td><td>土土土</td></tr>
+<tr><td>王柯雨</td><td>木+水</td><td>73</td><td>一⚠️</td><td>土火金</td></tr>
+<tr><td>王泉林</td><td>水+木</td><td>71</td><td>一⚠️</td><td>土火金</td></tr>
+<tr><td>王竹溪</td><td>木+水</td><td>62</td><td>一⚠️</td><td>土水水</td></tr>
+<tr><td>王林泉</td><td>木+水</td><td>58</td><td>多⚠️</td><td>土木金</td></tr>
+<tr><td>王桐雨</td><td>木+水</td><td>52</td><td>多⚠️</td><td>土火金</td></tr>
+<tr><td>王松溪</td><td>木+水</td><td>48</td><td>慎用</td><td>土木木</td></tr>
+<tr><td>王竹露</td><td>木+水</td><td>48</td><td>慎用</td><td>土水土</td></tr>
+<tr><td>王林溪</td><td>木+水</td><td>48</td><td>慎用</td><td>土木木</td></tr>
+<tr><td>王竹润</td><td>木+水</td><td>47</td><td>慎用</td><td>土水木</td></tr>
+  </table>
+</div>
+
+<div class="warnbox">
+<b>口径说明：</b>本批是“延伸批”，不是最终短名单。新提名（春霖/春云/露禾/春润/棣云等）多为<b>意象名/自组名</b>，没有单一古诗出处；定名前要逐条核验，不要硬安典故。五格分数用家里既有口径；五行按康熙字五行 + 瓷都/猎名两源多数裁决，冲突已标注。名字的五行是文化加分项，不是命令；音形义、好写、好念优先。<br>
+<b>元一</b>仍是拟议大名，未升格；本页只把它当“不靠偏旁”的参照。
+</div>
+
+<footer>
+<b>数据</b>：候选 78 名、用字 42 个；字五行来自康熙字 API + 瓷都/猎名两源核验；康熙笔画来自康熙字 API；五格评分复用 naming/score_all.py 口径（康熙笔画 + 81 数理 + 三才 + 音形义）；占用池 872 名。<br>
+<b>口径</b>：本页只上私人专区，不进入公开站；出生信息与家庭资料请勿外传。2026-10-21 · 铁蛋。
+</footer>
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});
+    document.querySelectorAll('.panel').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');
+    document.getElementById(b.dataset.tab).classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

@@ -578,6 +578,40 @@ body{background:#0b1118}
 .section.paper .wuxing-legend,.section.paper2 .wuxing-legend{color:#a9a08c}
 .section.paper .wuxing-legend b,.section.paper2 .wuxing-legend b{color:var(--paper)}
 
+/* ── 与封面完全对齐：黑金背景、星尘沉底、卡片统一深色 ── */
+html,body{background:#0d1218!important}
+body{background:
+  radial-gradient(circle at 18% 18%,rgba(199,154,43,.10),transparent 38%),
+  radial-gradient(circle at 82% 72%,rgba(178,58,43,.13),transparent 44%),
+  radial-gradient(circle at 50% 110%,rgba(42,120,214,.08),transparent 50%),
+  #0d1218!important;background-attachment:fixed!important}
+.section.paper,.section.paper2,.section.dark{background:transparent!important}
+.section.paper::before,.section.paper2::before,.section.dark::before{display:none!important}
+.dust-canvas{z-index:1!important}
+.section .card,.section .quote-card,.section .name-card,.section .pillar,
+.section .step,.section .egg,.section .mao-card,.section .bro-card,
+.section .glossary,.section .birth-grid div,.section .name-strip .cell,
+.section .tabs .tab,.section .scatter-table,.section .scatter-wrap{
+  background:#151d26!important;border-color:rgba(199,154,43,.22)!important;
+  color:#c9bfa8!important;box-shadow:0 14px 36px rgba(0,0,0,.3)!important}
+.section .egg.priority{box-shadow:0 0 0 1px rgba(199,154,43,.2),0 16px 40px rgba(0,0,0,.3)!important}
+.section .pillar.day{box-shadow:0 0 0 1px rgba(199,154,43,.25),0 14px 36px rgba(0,0,0,.3)!important}
+.section .card h3,.section .name-card h3,.section .mao-who,.section .bro-card h3,
+.section .egg summary,.section .glossary summary,.section .scatter-table summary,
+.section .quote-card .q,.section .birth-grid b{color:#f7f2e6!important}
+.section .card p,.section .quote-card .note,.section .name-card .why,
+.section .mao-card p,.section .bro-card p,.section .step .crit,
+.section .egg-body,.section .glossary-body,.section .scatter-table,
+.section .tab{color:#c9bfa8!important}
+.section .scatter-table th,.section .scatter-table td{
+  color:#c9bfa8!important;border-color:rgba(199,154,43,.18)!important}
+.section .scatter-table th{color:#f7f2e6!important}
+.section .tab.on{background:#b23a2b!important;color:#fff!important}
+.section .scatter-svg text{fill:#c9bfa8!important}
+.section .scatter-svg text[fill="#c79a2b"]{fill:#e8c66a!important}
+.section .scatter-svg text[fill="#b23a2b"]{fill:#e07a6a!important}
+.section .scatter-svg text[fill="#2a78d6"]{fill:#7fb2e8!important}
+
 /* ── 打印 ── */
 @media print{
   @page{margin:14mm}
@@ -633,6 +667,24 @@ body{background:#0b1118}
   .dip text{fill:#333!important}
   .js .reveal{opacity:1!important;transform:none!important}
   a{color:inherit;text-decoration:none}
+  html,body{background:#fff!important;color:#111!important}
+  .section .card,.section .quote-card,.section .name-card,.section .pillar,
+  .section .step,.section .egg,.section .mao-card,.section .bro-card,
+  .section .glossary,.section .birth-grid div,.section .name-strip .cell,
+  .section .tabs .tab,.section .scatter-table,.section .scatter-wrap{
+    background:#fff!important;border-color:#ddd!important;color:#111!important;
+    box-shadow:none!important}
+  .section .card h3,.section .name-card h3,.section .mao-who,.section .bro-card h3,
+  .section .egg summary,.section .glossary summary,.section .scatter-table summary,
+  .section .quote-card .q,.section .birth-grid b{color:#111!important}
+  .section .card p,.section .quote-card .note,.section .name-card .why,
+  .section .mao-card p,.section .bro-card p,.section .step .crit,
+  .section .egg-body,.section .glossary-body,.section .scatter-table,
+  .section .tab{color:#444!important}
+  .section .scatter-svg text{fill:#111!important}
+  .section .scatter-svg text[fill="#c79a2b"],
+  .section .scatter-svg text[fill="#b23a2b"],
+  .section .scatter-svg text[fill="#2a78d6"]{fill:#111!important}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important;scroll-behavior:auto!important}

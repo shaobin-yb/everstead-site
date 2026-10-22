@@ -456,8 +456,12 @@ main{position:relative;z-index:2}
 .photo-frame figcaption{font-size:10.5px;color:#6f6555;text-align:center;letter-spacing:.08em;
   margin-top:8px;font-family:var(--sans)}
 .section.dark .photo-frame{background:#f7f2e6;border-color:rgba(199,154,43,.55)}
-.js .photo-frame.reveal.in{animation:photoWipe 1s cubic-bezier(.2,.8,.2,1) both}
+.js .photo-frame.reveal{transition:opacity .5s ease,transform .5s ease}
+.js .photo-frame.reveal.in{animation:photoWipe .6s cubic-bezier(.2,.8,.2,1) both}
 @keyframes photoWipe{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
+.photo-frame{display:flex;flex-direction:column}
+.photo-frame picture{flex:1 1 auto;min-height:0;display:block;height:auto}
+.photo-frame figcaption{flex:none}
 
 .bro-photo{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(18px,4vw,44px);
   align-items:center;margin:0 0 28px}
@@ -814,7 +818,11 @@ body{background:
     <h1><span class="surname">王</span><span class="given">元一</span></h1>
     <div class="seal-wrap"><span class="seal">元一</span></div>
     <div class="hero-portrait">
-      <img src="photos/photo-01.jpg" alt="小七出生那天" data-lightbox data-caption="小七 · 出生那天" loading="eager">
+      <picture>
+        <source type="image/webp" srcset="photos/photo-01-s.webp 400w, photos/photo-01.webp 1400w" sizes="160px">
+        <img src="photos/photo-01.jpg" alt="小七出生那天" width="2400" height="1800"
+          loading="eager" decoding="async" data-lightbox data-full="photos/photo-01.webp" data-caption="小七 · 出生那天">
+      </picture>
     </div>
     <div class="sub">小名 小七 · 英文 Seven · 家里叫 五六七 / Seven 哥</div>
     <p class="quote">“见一，守一，抱一，入吾元一。”<span>南宋 · 李嘉谋《元始说先天道德经注解》</span></p>
@@ -1257,7 +1265,11 @@ body{background:
     </div>
     <div class="bro-photo">
       <figure class="photo-frame bro-frame">
-        <img src="photos/photo-04.jpg" alt="哥哥来看弟弟" loading="lazy" data-lightbox data-caption="哥哥来看弟弟 · 2026-10-21">
+        <picture>
+          <source type="image/webp" srcset="photos/photo-04-s.webp 525w, photos/photo-04.webp 1050w" sizes="(max-width:820px) 92vw, 520px">
+          <img src="photos/photo-04.jpg" alt="哥哥来看弟弟" width="1800" height="2400"
+            loading="lazy" decoding="async" data-lightbox data-full="photos/photo-04.webp" data-caption="哥哥来看弟弟 · 2026-10-21">
+        </picture>
         <figcaption>哥哥来看弟弟 · 2026-10-21</figcaption>
       </figure>
       <div class="bro-quote">
@@ -1301,15 +1313,27 @@ body{background:
     </div>
     <div class="letter-photos">
       <figure class="photo-frame reveal">
-        <img src="photos/photo-02.jpg" alt="出生那天" loading="lazy" data-lightbox data-caption="出生那天 · 2026-10-20">
-        <figcaption>出生第一天 · 2026-10-20</figcaption>
+        <picture>
+          <source type="image/webp" srcset="photos/photo-02-s.webp 700w, photos/photo-02.webp 1400w" sizes="(max-width:820px) 92vw, 476px">
+          <img src="photos/photo-02.jpg" alt="出生那天" width="2600" height="1950"
+            loading="lazy" decoding="async" data-lightbox data-full="photos/photo-02.webp" data-caption="出生那天 · 2026-10-20">
+        </picture>
+        <figcaption>出生那天 · 2026-10-20</figcaption>
       </figure>
       <figure class="photo-frame reveal">
-        <img src="photos/photo-03.jpg" alt="妈妈辛苦了" loading="lazy" data-lightbox data-caption="妈妈，辛苦了">
+        <picture>
+          <source type="image/webp" srcset="photos/photo-03-s.webp 375w, photos/photo-03.webp 1050w" sizes="(max-width:820px) 46vw, 238px">
+          <img src="photos/photo-03.jpg" alt="妈妈辛苦了" width="1650" height="2200"
+            loading="lazy" decoding="async" data-lightbox data-full="photos/photo-03.webp" data-caption="妈妈，辛苦了">
+        </picture>
         <figcaption>妈妈，辛苦了</figcaption>
       </figure>
       <figure class="photo-frame reveal">
-        <img src="photos/photo-05.jpg" alt="添丁之喜" loading="lazy" data-lightbox data-caption="添丁之喜">
+        <picture>
+          <source type="image/webp" srcset="photos/photo-05-s.webp 375w, photos/photo-05.webp 1050w" sizes="(max-width:820px) 46vw, 238px">
+          <img src="photos/photo-05.jpg" alt="添丁之喜" width="1500" height="2000"
+            loading="lazy" decoding="async" data-lightbox data-full="photos/photo-05.webp" data-caption="添丁之喜">
+        </picture>
         <figcaption>添丁之喜</figcaption>
       </figure>
     </div>
@@ -2356,7 +2380,7 @@ body{background:
   var lb = $('#lightbox'), lbImg = $('#lb-img'), lbCap = $('#lb-cap');
   function openLightbox(img){
     if(!lb || !lbImg){ return; }
-    lbImg.src = img.currentSrc || img.src;
+    lbImg.src = img.dataset.full || img.currentSrc || img.src;
     lbImg.alt = img.alt || '';
     if(lbCap){ lbCap.textContent = img.dataset.caption || img.alt || ''; }
     lb.classList.add('open');

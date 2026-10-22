@@ -466,6 +466,9 @@ body.lb-open{overflow:hidden}
   box-shadow:0 10px 30px rgba(0,0,0,.3);transition:.25s}
 .music-btn:hover{border-color:var(--gold);transform:translateY(-1px)}
 .music-btn.playing{border-color:var(--gold);box-shadow:0 0 22px rgba(199,154,43,.35)}
+@keyframes musicPrompt{0%,100%{box-shadow:0 10px 30px rgba(0,0,0,.3)}
+  50%{box-shadow:0 0 24px rgba(199,154,43,.45)}}
+.music-btn:not(.playing):not(.dead){animation:musicPrompt 2.6s ease-in-out infinite}
 .music-btn.dead{opacity:.4;pointer-events:none}
 .music-eq{display:flex;align-items:flex-end;gap:2px;height:16px;width:18px}
 .music-eq i{display:block;width:3px;height:6px;background:var(--gold2);border-radius:2px;
@@ -1928,7 +1931,7 @@ body.lb-open{overflow:hidden}
   <span class="music-eq" aria-hidden="true"><i></i><i></i><i></i></span>
   <span class="music-label">轻音乐</span>
 </button>
-<div class="music-hint" id="music-hint">动一下，音乐就响</div>
+<div class="music-hint" id="music-hint">点一下屏幕，音乐就响</div>
 
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="照片预览">
   <button class="lb-close" id="lb-close" aria-label="关闭">×</button>
@@ -2074,10 +2077,11 @@ body.lb-open{overflow:hidden}
     scatter.addEventListener('mouseleave', function(){ tip.classList.remove('show'); });
   }
 
-  // 轻音乐：尽量自动播放；被拦则一动就播
+  // 轻音乐：能自动就自动；被拦则点/滑/碰一下就播
   var bgm = $('#bgm'), musicBtn = $('#music-btn'), musicHint = $('#music-hint');
   var fadeTimer = null;
   var musicAutoArmed = false;
+  var musicStarted = false;
   function fadeTo(target, ms, done){
     if(!bgm){ return; }
     clearInterval(fadeTimer);
@@ -2090,11 +2094,13 @@ body.lb-open{overflow:hidden}
   }
   function hideMusicHint(){ if(musicHint){ musicHint.classList.remove('show'); } }
   function playMusic(){
-    if(!bgm || !bgm.paused){ return; }
+    if(!bgm){ return; }
+    if(musicStarted && !bgm.paused){ return; }
     bgm.volume = 0;
     var p = bgm.play();
     if(p && p.then){
       p.then(function(){
+        musicStarted = true;
         musicAutoArmed = true;
         musicBtn.classList.add('playing');
         hideMusicHint();
@@ -2120,24 +2126,33 @@ body.lb-open{overflow:hidden}
       musicBtn.title = '音乐未加载';
     });
     bgm.addEventListener('playing', function(){
+      musicStarted = true;
+      musicAutoArmed = true;
       musicBtn.classList.add('playing');
       hideMusicHint();
     });
-    bgm.addEventListener('pause', function(){ musicBtn.classList.remove('playing'); });
+    bgm.addEventListener('pause', function(){
+      musicStarted = false;
+      musicBtn.classList.remove('playing');
+    });
     musicBtn.addEventListener('click', function(e){
       e.stopPropagation();
       musicAutoArmed = true;
-      if(bgm.paused){ playMusic(); } else { pauseMusic(); }
+      if(musicStarted && !bgm.paused){ pauseMusic(); } else { playMusic(); }
     });
     document.addEventListener('pointerdown', armAutoMusic, {passive:true});
+    document.addEventListener('pointerup', armAutoMusic, {passive:true});
     document.addEventListener('mousemove', armAutoMusic, {passive:true});
     document.addEventListener('wheel', armAutoMusic, {passive:true});
     document.addEventListener('touchstart', armAutoMusic, {passive:true});
+    document.addEventListener('touchend', armAutoMusic, {passive:true});
+    document.addEventListener('touchcancel', armAutoMusic, {passive:true});
+    document.addEventListener('click', armAutoMusic, {passive:true});
     document.addEventListener('keydown', armAutoMusic, {passive:true});
     document.addEventListener('scroll', armAutoMusic, {passive:true});
     setTimeout(function(){ playMusic(); }, 300);
     if(musicHint){
-      setTimeout(function(){ if(bgm.paused){ musicHint.classList.add('show'); } }, 1800);
+      setTimeout(function(){ if(!musicStarted){ musicHint.classList.add('show'); } }, 1800);
       setTimeout(hideMusicHint, 9000);
     }
   }

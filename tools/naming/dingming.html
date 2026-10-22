@@ -129,7 +129,9 @@ main{position:relative;z-index:2}
 .center-note{text-align:center;font-size:clamp(16px,2.4vw,20px);line-height:1.95;
   margin:36px auto 0;max-width:880px}
 .center-note b{color:var(--red)}
+.note-sub{display:block;font-size:12.5px;color:var(--muted);margin-top:8px;letter-spacing:.02em}
 .section.dark .center-note b{color:var(--gold2)}
+.section.dark .note-sub{color:#8f8776}
 .footnote{margin-top:28px;font-size:12.5px;color:var(--muted);line-height:1.95;
   border-top:1px dashed #ded3bf;padding-top:14px}
 .section.dark .footnote{color:#8f8776;border-color:rgba(199,154,43,.2)}
@@ -398,6 +400,15 @@ main{position:relative;z-index:2}
 .eggs.two{grid-template-columns:repeat(2,1fr)}
 .eggs.two .egg:first-child{grid-column:1/-1}
 @media(max-width:760px){.eggs.two{grid-template-columns:1fr}}
+
+/* ── 术语小抄 ── */
+.glossary{background:var(--paper3);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin-top:18px;box-shadow:0 10px 28px rgba(70,50,20,.045)}
+.glossary summary{cursor:pointer;font-weight:700;color:var(--red);font-size:14px}
+.glossary-body{margin-top:12px;font-size:13.5px;line-height:1.95;color:#4a443a}
+.glossary-body p{margin:8px 0}
+.glossary-body b{color:var(--ink)}
+.gloss-note{border-top:1px dashed var(--line);padding-top:10px;color:var(--muted)}
 
 /* ── 动态 / 照片 / 音乐 ── */
 .hero-portrait{width:clamp(118px,15vw,160px);margin:16px auto 0;text-align:center;
@@ -688,7 +699,7 @@ body.lb-open{overflow:hidden}
       <div class="tag">金代 · 晋真人语录</div>
       <p class="q">“抱元者，抱守元阳真炁；守一者，守其一灵神也。”</p>
       <p class="src">《晋真人语录》</p>
-      <p class="note">炁，同“气”。抱元是抱住元阳真炁，守一是守住一灵神。名字取的是两个宾语，动词留给一辈子去做。</p>
+      <p class="note">炁，同“气”。抱元是抱住元阳真炁，守一是守住一灵神。名字取的是两个宾语，动词留给一辈子去做。这是道家文化语，不是宗教要求。</p>
     </div>
     <p class="center-note reveal">所以“元一”不是头衔，是功课：<b>抱元守一，守住自己的根本。</b></p>
   </div>
@@ -799,9 +810,9 @@ body.lb-open{overflow:hidden}
     </div>
     <div class="grid-2">
       <div class="card reveal">
-        <h3>用神：木主，水辅</h3>
-        <p>主流弱判：<b>身弱偏弱</b>——这里的「身」是八字里的日主（丁火），指日主在整张盘里的力量偏弱，<b>不是身体弱，更不是健康问题</b>。</p>
-        <p class="muted">用木（主）、水（少量辅）、火（次）；忌土（首）、金（次）、重火。宝宝出生 3.225kg，五行俱全。</p>
+        <h3>用神（最有帮助的五行）：木主，水辅</h3>
+        <p>按主流判断：<b>身弱偏弱</b>——这里的「身」是八字里的日主（丁火），指日主在整张盘里的力量偏弱，<b>不是身体弱，更不是健康问题</b>。</p>
+        <p class="muted">用木（主）、水（少量辅）、火（次）；选字上避开土（首）、金（次）、重火。宝宝出生 3.225kg，五行俱全。</p>
       </div>
       <div class="card reveal">
         <h3>名字正好补上</h3>
@@ -809,7 +820,23 @@ body.lb-open{overflow:hidden}
       </div>
     </div>
     <p class="center-note reveal">丁卯日，卯木生丁火——<b>自带柴火的小孩。</b></p>
-    <p class="footnote reveal">排盘：lunar-python + JDN 公式 + 在线黄历三法互证；起运 5 年 11 个月 10 天（2032-09-30）。</p>
+    <p class="footnote reveal">排盘：lunar-python + JDN 公式 + 在线黄历三法互证；大运起算 5 年 11 个月 10 天（2032-09-30，传统命理说法，不是人生起跑线）。</p>
+    <details class="glossary reveal">
+      <summary>看不懂？点开「术语小抄」</summary>
+      <div class="glossary-body">
+        <p><b>八字 / 四柱 / 命盘：</b>年、月、日、时四组，每组两个字；上面叫天干，下面叫地支。四组合起来就是一张「命盘」。是传统命理的写法，不是体检报告。</p>
+        <p><b>日主：</b>八字里代表“自己”的那个字；爸爸庚金、妈妈甲木、哥哥壬水、小七丁火。</p>
+        <p><b>身弱 / 身旺：</b>日主在整张盘里的力量偏弱或偏强；是命盘平衡术语，<b>不是身体强弱，也不是健康判断</b>。</p>
+        <p><b>用神 / 忌神：</b>对命盘最有帮助 / 最不需要的五行（金木水火土）；是起名选字的参考，<b>不是生活禁忌</b>。</p>
+        <p><b>五格 / 四维：</b>两套不同的名字打分尺——五格是传统姓名学数理；四维是时代穿透、日常可用、音律、意象气质四项。都不是人生评级。</p>
+        <p><b>A / B / C / D 档：</b>按用神规则排的档位，不是优劣评级。</p>
+        <p><b>起运：</b>传统命理的大运起算时间，不是人生起跑线。</p>
+        <p><b>冲 / 合：</b>命盘里两种力量的方向关系（拉扯或合拢），不是吉凶判决。</p>
+        <p><b>少阳：</b>易学里的“生发之气”，<b>不是中医的少阳经 / 少阳病</b>。</p>
+        <p><b>老阴 / 少阳 / 少阴 / 老阳：</b>易学里表示阴阳消长的四个数（6 / 7 / 8 / 9），不是医学术语。</p>
+        <p class="gloss-note">这些是传统文化叙事和起名参考。宝宝的健康看医生；名字是家里给他的祝福。</p>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -882,6 +909,7 @@ body.lb-open{overflow:hidden}
       <div class="card reveal">
         <h3>七 = 少阳</h3>
         <p>六老阴、七少阳、八少阴、九老阳。七是少阳，主生发。</p>
+        <p class="muted">这里的「少阳」是易学里的生发之气，<b>不是中医的少阳经 / 少阳病</b>。</p>
       </div>
       <div class="card reveal">
         <h3>七星高照</h3>
@@ -966,7 +994,7 @@ body.lb-open{overflow:hidden}
       <div class="arrow"><span>木生火</span></div>
       <div class="node fire"><span class="node-dot"></span><span class="who">弟弟 · 小七</span><span class="el">丁火</span></div>
     </div>
-    <p class="center-note reveal">一家四口，金木水火，正好一条相生链；土没上场，留白。</p>
+    <p class="center-note reveal">一家四口，金木水火，正好一条相生链；土没上场，留白。<span class="note-sub">（说的是四个人的日主，不是全家缺土，也不是身体缺什么）</span></p>
     <div class="quote-card reveal">
       <p class="q">弟弟用神木水——木是妈妈，水是哥哥。<br>“元一”两个字，把妈妈和哥哥带在身边。</p>
     </div>
@@ -1012,6 +1040,7 @@ body.lb-open{overflow:hidden}
         <summary><span class="egg-num">04</span><b>四维第 16 名</b><span class="egg-hint">点开</span></summary>
         <div class="egg-body">
           <p>四维重估 #16/627。1 + 6 = <b>7</b>。</p>
+          <p>四维 = 时代穿透 / 日常可用 / 音律 / 意象气质，四项打分。</p>
           <p>又回到小名的七。</p>
         </div>
       </details>
@@ -1026,7 +1055,7 @@ body.lb-open{overflow:hidden}
         <summary><span class="egg-num">06</span><b>两个 12 = 亥时</b><span class="egg-hint">点开</span></summary>
         <div class="egg-body">
           <p>三个卯：3 × 4 = <b>12</b>。</p>
-          <p>五格 84：8 + 4 = <b>12</b>。</p>
+          <p>五格 84（传统姓名学数理）：8 + 4 = <b>12</b>。</p>
           <p>第 12 地支是亥——他正好亥时出生。</p>
         </div>
       </details>
@@ -1147,10 +1176,10 @@ body.lb-open{overflow:hidden}
 
     <div class="tab-panel on" id="p-road" role="tabpanel">
       <div class="ladder reveal">
-        <div class="step"><div class="num">1075</div><div class="stage">全 池</div><div class="crit">十二典 + 综合榜 + 大师提名</div></div>
+        <div class="step"><div class="num">1075</div><div class="stage">全 池</div><div class="crit">十二典 + 综合榜 + 外部提名</div></div>
         <div class="step"><div class="num">89</div><div class="stage">终审圈选</div><div class="crit">字义 / 音形 / 家族偏好 / 出处逐条核</div></div>
         <div class="step"><div class="num">21</div><div class="stage">真八字分层</div><div class="crit">主流弱判 A/B/C/D；元一判水后进 A</div></div>
-        <div class="step"><div class="num">10</div><div class="stage">大师提名</div><div class="crit">4A / 2B / 2C / 2D；6 个进 Top100</div></div>
+        <div class="step"><div class="num">10</div><div class="stage">外部复核</div><div class="crit">4A / 2B / 2C / 2D；6 个进 前100</div></div>
         <div class="step"><div class="num">1</div><div class="stage">王元一</div><div class="crit">木水双全 · 三卯 · 七星 · 4+7=11</div></div>
       </div>
 
@@ -1158,9 +1187,9 @@ body.lb-open{overflow:hidden}
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-08-17</div><div class="tl-text"><b>初衷定调</b>老板纠正：名字的初衷是「抱元守一」。</div></div>
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-09-14</div><div class="tl-text"><b>初定</b>王元一；状态：持续斟酌。</div></div>
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-09-24</div><div class="tl-text"><b>收窄</b>产检确认男孩向，开始「斯」字辈 / 生肖嵌字方向。</div></div>
-        <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-13</div><div class="tl-text"><b>大师十名入池</b>10 名，4A / 2B / 2C / 2D；名字不列。</div></div>
+        <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-13</div><div class="tl-text"><b>外部十名入池</b>10 名，4A / 2B / 2C / 2D；名字不列。</div></div>
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-20</div><div class="tl-text"><b>出生</b>21:46，北京，3.225kg；丙午 / 戊戌 / 丁卯 / 辛亥。</div></div>
-        <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-21</div><div class="tl-text"><b>判水</b>大师判「一」属水；元一进 A 档。</div></div>
+        <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-21</div><div class="tl-text"><b>判水</b>命理口径判「一」属水；元一进 A 档（按用神规则）。</div></div>
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-22</div><div class="tl-text"><b>定名</b>王元一 / 小七 / Seven。</div></div>
       </div>
 
@@ -1168,7 +1197,7 @@ body.lb-open{overflow:hidden}
 
     <div class="tab-panel" id="p-also" role="tabpanel">
       <div class="gallery">
-        <div class="name-card reveal"><div class="nc-top"><h3>五格最高的两个</h3><span class="scores">五格 98</span></div><p class="why">分数最高，双金；弱判落 D。四维也偏后。<b>分数最高，八字不合。</b></p></div>
+        <div class="name-card reveal"><div class="nc-top"><h3>五格最高的两个</h3><span class="scores">五格 98</span></div><p class="why">分数最高，双金（两个字都属金）；弱判落 D。四维也偏后。<b>分数最高，八字不合。</b></p></div>
         <div class="name-card reveal"><div class="nc-top"><h3>四维最高的几个</h3><span class="scores">四维 81.2 / 80.5</span></div><p class="why">四维很漂亮；但元素、气场不合。<b>审美高分，不等于八字合用。</b></p></div>
         <div class="name-card reveal"><div class="nc-top"><h3>最贴原意的备胎</h3><span class="scores">五格 94 · 四维 79.5</span></div><p class="why">有一个最贴原意的备胎。<b>如果元一没过，就是它。</b></p></div>
         <div class="name-card reveal"><div class="nc-top"><h3>一结尾的结构性</h3><span class="scores">五格 83–84</span></div><p class="why">同结构的「王X一」名，五格都卡在 83–84；外格 2、总格 9 左右。<b>不是元一一个人的问题。</b></p></div>
@@ -1838,7 +1867,7 @@ body.lb-open{overflow:hidden}
 <circle class="pt" cx="324.9" cy="469.2" r="3.2" fill="#7f93a8" opacity=".42" data-x="61" data-y="63.5" data-rank="627"/>
 <line x1="72" y1="123.9" x2="844" y2="123.9" stroke="#c79a2b" stroke-width="1" stroke-dasharray="4 5" opacity=".45"/>
 <line x1="631.0" y1="70" x2="631.0" y2="480" stroke="#c79a2b" stroke-width="1" stroke-dasharray="4 5" opacity=".35"/>
-<text x="80" y="116.9" font-size="10.5" fill="#c79a2b">四维 79.5 · Top 5%</text>
+<text x="80" y="116.9" font-size="10.5" fill="#c79a2b">四维 79.5 · 前 5%</text>
 <text x="631.0" y="472" text-anchor="middle" font-size="10.5" fill="#c79a2b">五格 84</text>
 <circle class="pt" cx="817.4" cy="210.3" r="4.6" fill="#b23a2b" opacity=".9" stroke="#f7f2e6" stroke-width="1.6" data-x="98" data-y="75.5" data-rank="345"/>
 <circle class="pt" cx="631.0" cy="102.4" r="4.6" fill="#2a78d6" opacity=".9" stroke="#f7f2e6" stroke-width="1.6" data-x="84" data-y="80.5" data-rank="6"/>
@@ -1853,7 +1882,7 @@ body.lb-open{overflow:hidden}
 </svg>
         <div class="scatter-tip" id="scatter-tip"></div>
       </div>
-      <p class="scatter-note reveal"><b>元一不是分最高的。</b>五格 84，约中上；四维 79.5，Top 5%（#16/627）。池内五格最高 98，四维最高 81.2。两把尺子，各说各话——最后按八字用神定去留。</p>
+      <p class="scatter-note reveal"><b>元一不是分最高的。</b>五格 84，约中上；四维 79.5，前 5%（#16/627）。池内五格最高 98，四维最高 81.2。两把尺子，各说各话——最后按八字用神定去留。</p>
       <details class="scatter-table reveal">
         <summary>看数据表（指数，不列名字）</summary>
         <table>
@@ -1878,8 +1907,8 @@ body.lb-open{overflow:hidden}
     <div class="tab-panel" id="p-wire" role="tabpanel">
       <div class="wire-grid">
         <div class="card reveal"><h3>三卯 × 4 = 12</h3><p>爸爸月卯、月饼年卯、小七日卯；三个卯，3 × 4 = 12；第 12 地支是亥——他正好亥时出生。</p></div>
-        <div class="card reveal"><h3>子午冲，木通关</h3><p>爸爸、哥哥的日支都是子；小七的年支是午——子午相冲。但家里三卯成木，木能通关：水生木、木生火，冲里有生。</p></div>
-        <div class="card reveal"><h3>四个合</h3><p>午戌半合火；卯戌合火；亥卯半合木；丙辛遥合水。四组把火、木、水串在一起；丙辛是遥合，化不化另说。</p></div>
+        <div class="card reveal"><h3>子午冲，木通关</h3><p>爸爸、哥哥的日支都是子；小七的年支是午——子午相冲。但家里三卯成木，木能通关：水生木、木生火，冲里有生。</p><p class="muted">这里的「冲」是两股方向相反的力量互相拉扯，不是灾祸。</p></div>
+        <div class="card reveal"><h3>四个合</h3><p>午戌半合火；卯戌合火；亥卯半合木；丙辛遥合水。四组把火、木、水串在一起；丙辛是遥合，化不化另说。</p><p class="muted">这里的「合」是力量合拢的倾向，不是吉凶判决。</p></div>
         <div class="card reveal"><h3>五行俱全</h3><p>火 3、土 2、木 1、金 1、水 1——五行不缺。用神木水，名字「元一」正好补木水。</p></div>
       </div>
       <p class="footnote reveal">深水区只给爱看的人；别拿它去吓长辈。</p>
@@ -1897,7 +1926,7 @@ body.lb-open{overflow:hidden}
       <div class="sec-line"></div>
     </div>
     <div class="link-grid">
-      <a class="link-card reveal" href="erbao.html"><i>收</i><b>收网页</b><span>真八字收网 · 木水短名单 · 六路核验</span></a>
+      <a class="link-card reveal" href="erbao.html"><i>收</i><b>收网技术记录</b><span>真八字 · 木水短名单 · 六路核验（含候选名）</span></a>
       <a class="link-card reveal" href="wuxing.html"><i>五</i><b>五行详解</b><span>三种数法 · 十神 · 四个合 · 生扶率实验</span></a>
       <a class="link-card reveal" href="family-wuxing.html"><i>父</i><b>父子五行</b><span>爸爸 × 月饼 · 双时柱 · 家里三个卯</span></a>
       <a class="link-card reveal" href="shuimu.html"><i>水</i><b>水木相生</b><span>不按偏旁的延伸批 · 5 个首选</span></a>

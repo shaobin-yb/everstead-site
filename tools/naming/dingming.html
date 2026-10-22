@@ -187,7 +187,9 @@ main{position:relative;z-index:2}
 .birth-grid div{background:var(--paper3);border:1px solid var(--line);border-radius:12px;
   padding:12px 14px;display:flex;justify-content:space-between;gap:10px;font-size:13px}
 .birth-grid span{color:var(--muted)}
-.birth-grid b{font-weight:600}
+.birth-grid b{font-weight:600;color:var(--ink)}
+.birth-note{text-align:center;font-size:12.5px;color:#8f8776;margin:-8px 0 24px;line-height:1.9}
+.birth-note b{color:var(--gold2)}
 .bazi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .pillar{background:var(--paper3);border:1px solid var(--line);border-radius:16px;
   padding:16px 8px;text-align:center;box-shadow:0 10px 28px rgba(70,50,20,.05)}
@@ -809,11 +811,14 @@ body{background:#0b1118}
     <div class="birth-grid reveal">
       <div><span>出生</span><b>2026-10-20 21:46</b></div>
       <div><span>农历</span><b>丙午年 九月十一</b></div>
-      <div><span>体重</span><b>3.225 kg</b></div>
+      <div><span>体重</span><b>3.250 kg（3250g）</b></div>
+      <div><span>身长</span><b>50 cm</b></div>
       <div><span>时辰</span><b>亥时</b></div>
       <div><span>日主</span><b>丁火</b></div>
       <div><span>生肖</span><b>马</b></div>
+      <div><span>哥哥出生</span><b>3270g / 50cm</b></div>
     </div>
+    <p class="birth-note reveal">哥哥月饼：3270g / 50cm；小七：3250g / 50cm——<b>体重差 20g，两个 50cm，也是缘分。</b></p>
     <div class="bazi reveal">
       <div class="pillar">
         <div class="pl">年柱</div>
@@ -854,7 +859,7 @@ body{background:#0b1118}
       <div class="card reveal">
         <h3>用神（最有帮助的五行）：木主，水辅</h3>
         <p>按主流判断：<b>身弱偏弱</b>——这里的「身」是八字里的日主（丁火），指日主在整张盘里的力量偏弱，<b>不是身体弱，更不是健康问题</b>。</p>
-        <p class="muted">用木（主）、水（少量辅）、火（次）；选字上避开土（首）、金（次）、重火。宝宝出生 3.225kg，五行俱全。</p>
+        <p class="muted">用木（主）、水（少量辅）、火（次）；选字上避开土（首）、金（次）、重火。宝宝出生 3.250kg，五行俱全。</p>
       </div>
       <div class="card reveal">
         <h3>名字正好补上</h3>
@@ -1108,6 +1113,14 @@ body{background:#0b1118}
           <p>4 是卯。连起名的池子，都从卯开始。</p>
         </div>
       </details>
+      <details class="egg reveal">
+        <summary><span class="egg-num">08</span><b>两个 50cm</b><span class="egg-hint">点开</span></summary>
+        <div class="egg-body">
+          <p>哥哥月饼：3270g / 50cm。</p>
+          <p>小七：3250g / 50cm。</p>
+          <p>体重差 <b>20g</b>，身长一模一样——<b>两个 50cm，也是缘分。</b></p>
+        </div>
+      </details>
     </div>
     <p class="footnote reveal">彩蛋只是好玩，不是取名依据；真正定名字的，是八字用神、字义和家里人的喜欢。</p>
   </div>
@@ -1230,7 +1243,7 @@ body{background:#0b1118}
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-09-14</div><div class="tl-text"><b>初定</b>王元一；状态：持续斟酌。</div></div>
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-09-24</div><div class="tl-text"><b>收窄</b>产检确认男孩向，开始「斯」字辈 / 生肖嵌字方向。</div></div>
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-13</div><div class="tl-text"><b>外部十名入池</b>10 名，4A / 2B / 2C / 2D；名字不列。</div></div>
-        <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-20</div><div class="tl-text"><b>出生</b>21:46，北京，3.225kg；丙午 / 戊戌 / 丁卯 / 辛亥。</div></div>
+        <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-20</div><div class="tl-text"><b>出生</b>21:46，北京，3.250kg；丙午 / 戊戌 / 丁卯 / 辛亥。</div></div>
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-21</div><div class="tl-text"><b>判水</b>命理口径判「一」属水；元一进 A 档（按用神规则）。</div></div>
         <div class="tl-item"><span class="tl-dot"></span><div class="tl-date">2026-10-22</div><div class="tl-text"><b>定名</b>王元一 / 小七 / Seven。</div></div>
       </div>
@@ -2350,7 +2363,7 @@ body{background:#0b1118}
   if(dust && !reduceMotion){
     var dctx = dust.getContext('2d');
     var ddpr = Math.min(2, window.devicePixelRatio || 1);
-    var dparts = [];
+    var dparts = [], dmx = -9999, dmy = -9999;
     function sizeDust(){
       var w = innerWidth, h = innerHeight;
       dust.width = Math.max(1, Math.round(w * ddpr));
@@ -2380,11 +2393,26 @@ body{background:#0b1118}
         dctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
         dctx.fillStyle = 'rgba(199,154,43,' + p.a + ')';
         dctx.fill();
+        for(var j=i+1;j<dparts.length;j++){
+          var q = dparts[j], qx = p.x-q.x, qy = p.y-q.y, qd = qx*qx+qy*qy;
+          if(qd < 120*120){
+            dctx.beginPath(); dctx.moveTo(p.x,p.y); dctx.lineTo(q.x,q.y);
+            dctx.strokeStyle = 'rgba(199,154,43,' + (0.10*(1-qd/(120*120))) + ')';
+            dctx.lineWidth = .6; dctx.stroke();
+          }
+        }
+        var mx = p.x-dmx, my = p.y-dmy, md = mx*mx+my*my;
+        if(md < 170*170){
+          dctx.beginPath(); dctx.moveTo(p.x,p.y); dctx.lineTo(dmx,dmy);
+          dctx.strokeStyle = 'rgba(232,198,106,.10)'; dctx.lineWidth = .5; dctx.stroke();
+        }
       }
       requestAnimationFrame(drawDust);
     }
     sizeDust();
     window.addEventListener('resize', sizeDust, {passive:true});
+    document.addEventListener('pointermove', function(e){ dmx = e.clientX; dmy = e.clientY; }, {passive:true});
+    document.addEventListener('pointerleave', function(){ dmx = -9999; dmy = -9999; });
     requestAnimationFrame(drawDust);
   }
 

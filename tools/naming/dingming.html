@@ -580,6 +580,7 @@ body{background:#0b1118}
 
 /* ── 与封面完全对齐：黑金背景、星尘沉底、卡片统一深色 ── */
 html,body{background:#0d1218!important}
+.hero{background:transparent!important}
 body{background:
   radial-gradient(circle at 18% 18%,rgba(199,154,43,.10),transparent 38%),
   radial-gradient(circle at 82% 72%,rgba(178,58,43,.13),transparent 44%),
@@ -613,6 +614,29 @@ body{background:
 .section .scatter-svg text[fill="#2a78d6"]{fill:#7fb2e8!important}
 .section .char-big.one{background:linear-gradient(180deg,rgba(199,154,43,.16),rgba(199,154,43,.06))!important;
   border-color:rgba(199,154,43,.38)!important}
+/* 补齐最后浅色残留：展开条 / 三卯格 / 照片框 / 家书 / 资料库卡 */
+.section details.more{background:#151d26!important;border-color:rgba(199,154,43,.22)!important;
+  color:#c9bfa8!important;box-shadow:0 14px 36px rgba(0,0,0,.3)!important}
+.section details.more summary{color:var(--gold2)!important}
+.section details.more .more-body{color:#c9bfa8!important}
+.section details.more .more-body b{color:#f7f2e6}
+.section .mp{background:#131b24!important;border-color:rgba(199,154,43,.18)!important;
+  color:#e3d7bd!important}
+.section .link-card{background:#151d26!important;border-color:rgba(199,154,43,.22)!important;
+  box-shadow:0 14px 36px rgba(0,0,0,.3)!important}
+.section .link-card:hover{border-color:rgba(199,154,43,.55)!important}
+.section .link-card b{color:#f7f2e6!important}
+.section .link-card span{color:#a9a08c!important}
+.section .link-card i{background:rgba(199,154,43,.12)!important;color:var(--gold2)!important;
+  border:1px solid rgba(199,154,43,.28)}
+.section .photo-frame{background:#111820!important;border-color:rgba(199,154,43,.35)!important;
+  box-shadow:0 18px 44px rgba(0,0,0,.5)!important}
+.section .photo-frame figcaption{color:#9b9078!important}
+.section .letter{background:linear-gradient(180deg,#141c26,#0f151d)!important;
+  border-color:rgba(199,154,43,.3)!important;color:#e3d7bd!important;
+  box-shadow:0 26px 70px rgba(0,0,0,.55)!important}
+.section .letter p{color:#e3d7bd!important}
+.section .letter .sig{color:#b9ae95!important}
 
 /* ── 打印 ── */
 @media print{
@@ -688,6 +712,13 @@ body{background:
   .section .scatter-svg text[fill="#b23a2b"],
   .section .scatter-svg text[fill="#2a78d6"]{fill:#111!important}
   .section .char-big.one{background:#fff!important;border-color:#ddd!important}
+  .section details.more,.section .mp,.section .link-card,.section .photo-frame,.section .letter{
+    background:#fff!important;border-color:#ddd!important;color:#111!important;box-shadow:none!important}
+  .section details.more summary,.section details.more .more-body b,.section .link-card b{color:#111!important}
+  .section details.more .more-body,.section .link-card span,.section .photo-frame figcaption,
+  .section .letter p,.section .letter .sig{color:#444!important}
+  .section .mp .hit{background:#008300!important;color:#fff!important}
+  .section .link-card i{background:#f1eadb!important;color:#b23a2b!important;border-color:#ddd!important}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important;scroll-behavior:auto!important}

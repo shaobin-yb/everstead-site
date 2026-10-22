@@ -427,6 +427,17 @@ main{position:relative;z-index:2}
   background:radial-gradient(circle,rgba(232,198,106,.16),rgba(232,198,106,.05) 42%,transparent 68%);
   mix-blend-mode:screen}
 @media(hover:none){.hero-glow{display:none}}
+/* 全页光标点亮：封面同款光晕，铺满整站 */
+.page-glow,.page-light{position:fixed;left:0;top:0;border-radius:50%;
+  pointer-events:none;opacity:0;will-change:transform;
+  transition:opacity .45s ease;mix-blend-mode:screen}
+.page-glow{z-index:1;width:620px;height:620px;
+  background:radial-gradient(circle,rgba(232,198,106,.17),
+    rgba(232,198,106,.06) 40%,rgba(232,198,106,.02) 58%,transparent 70%)}
+.page-light{z-index:3;width:560px;height:560px;
+  background:radial-gradient(circle,rgba(232,198,106,.12),
+    rgba(232,198,106,.045) 42%,transparent 70%)}
+@media(hover:none){.page-glow,.page-light{display:none}}
 .shooting{position:absolute;top:20%;left:72%;width:140px;height:1px;z-index:1;pointer-events:none;
   background:linear-gradient(90deg,transparent,rgba(232,198,106,.92));opacity:0;
   transform:rotate(-32deg);animation:shoot 11s ease-in-out infinite}
@@ -441,8 +452,8 @@ main{position:relative;z-index:2}
 .photo-frame figcaption{font-size:10.5px;color:#6f6555;text-align:center;letter-spacing:.08em;
   margin-top:8px;font-family:var(--sans)}
 .section.dark .photo-frame{background:#f7f2e6;border-color:rgba(199,154,43,.55)}
-.js .photo-frame.reveal{clip-path:inset(0 0 100% 0);transition:opacity .85s ease,transform .85s ease,clip-path 1.05s ease}
-.js .photo-frame.reveal.in{clip-path:inset(0)}
+.js .photo-frame.reveal.in{animation:photoWipe 1s cubic-bezier(.2,.8,.2,1) both}
+@keyframes photoWipe{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
 
 .bro-photo{display:grid;grid-template-columns:1.02fr .98fr;gap:clamp(18px,4vw,44px);
   align-items:center;margin:0 0 28px}
@@ -548,10 +559,12 @@ body.lb-open{overflow:hidden}
   transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
 .spot::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;
   animation:spotBreath 7s ease-in-out infinite;transition:opacity .3s;
-  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(199,154,43,.2),transparent 46%)}
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),
+    rgba(232,198,106,.42),rgba(232,198,106,.13) 36%,transparent 66%)}
 @keyframes spotBreath{0%,100%{opacity:.1}50%{opacity:.35}}
 .spot:hover::after{opacity:1;animation:none}
-.spot:hover{transform:translateY(-2px);border-color:rgba(199,154,43,.5)}
+.spot:hover{transform:translateY(-2px);border-color:rgba(232,198,106,.7);
+  box-shadow:0 0 0 1px rgba(232,198,106,.22),0 10px 40px rgba(232,198,106,.14)}
 
 /* ── 深色纸面：让尘光/光晕/卡片呼吸可见 ── */
 body{background:#0b1118}
@@ -630,8 +643,16 @@ body{background:
 .section .link-card i{background:rgba(199,154,43,.12)!important;color:var(--gold2)!important;
   border:1px solid rgba(199,154,43,.28)}
 .section .photo-frame{background:#111820!important;border-color:rgba(199,154,43,.35)!important;
-  box-shadow:0 18px 44px rgba(0,0,0,.5)!important}
+  box-shadow:0 18px 44px rgba(0,0,0,.5)!important;
+  transition:transform .35s ease,border-color .35s ease,box-shadow .35s ease}
+.section .photo-frame:hover{border-color:rgba(232,198,106,.75)!important;
+  box-shadow:0 0 0 1px rgba(232,198,106,.3),0 20px 60px rgba(0,0,0,.55),
+    0 0 46px rgba(232,198,106,.3)!important}
 .section .photo-frame figcaption{color:#9b9078!important}
+.section .mp{transition:border-color .25s ease,background-color .25s ease,box-shadow .25s ease}
+.section .mp:hover{border-color:rgba(232,198,106,.5)!important;
+  box-shadow:0 0 18px rgba(232,198,106,.16)}
+.section .tab:hover{color:var(--gold2)!important;border-color:rgba(232,198,106,.55)!important}
 .section .letter{background:linear-gradient(180deg,#141c26,#0f151d)!important;
   border-color:rgba(199,154,43,.3)!important;color:#e3d7bd!important;
   box-shadow:0 26px 70px rgba(0,0,0,.55)!important}
@@ -644,7 +665,7 @@ body{background:
   body{background:#fff;color:#111}
   body::after,.progress,.dotnav,.totop,.toast,.scroll-cue,.hero .sky,.hero .watermark,
   .hero .actions,.star-btn,.f-actions,#fab-nav,.tabs,.scatter-tip,
-  .hero-glow,.shooting,.hero-canvas,.music-btn,.music-hint,.lightbox{display:none!important}
+  .hero-glow,.page-glow,.page-light,.shooting,.hero-canvas,.music-btn,.music-hint,.lightbox{display:none!important}
   .tab-panel{display:block!important}
   .scatter-wrap{overflow:visible!important}
   .scatter-svg{min-width:0!important}
@@ -727,6 +748,8 @@ body{background:
 </style>
 </head>
 <body>
+<div class="page-glow" id="page-glow" aria-hidden="true"></div>
+<div class="page-light" id="page-light" aria-hidden="true"></div>
 <div class="progress" id="progress"></div>
 <nav class="dotnav" aria-label="页内导航">
   <a class="dot" href="#hero" data-label="封面"></a>
@@ -780,7 +803,6 @@ body{background:
   </svg>
   <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
   <div class="watermark" aria-hidden="true">午</div>
-  <div class="hero-glow" id="hero-glow" aria-hidden="true"></div>
   <span class="shooting" aria-hidden="true"></span>
   <div class="content">
     <div class="kicker">王 门 · 次 子 · 定 名 帖</div>
@@ -788,8 +810,7 @@ body{background:
     <h1><span class="surname">王</span><span class="given">元一</span></h1>
     <div class="seal-wrap"><span class="seal">元一</span></div>
     <div class="hero-portrait">
-      <img src="photos/photo-01.jpg" alt="小七出生第二天" data-lightbox data-caption="小七 · 第 2 天" loading="eager">
-      <span class="hp-cap">小七 · 第 2 天</span>
+      <img src="photos/photo-01.jpg" alt="小七出生那天" data-lightbox data-caption="小七 · 出生那天" loading="eager">
     </div>
     <div class="sub">小名 小七 · 英文 Seven · 家里叫 五六七 / Seven 哥</div>
     <p class="quote">“见一，守一，抱一，入吾元一。”<span>南宋 · 李嘉谋《元始说先天道德经注解》</span></p>
@@ -1269,7 +1290,7 @@ body{background:
     </div>
     <div class="letter-photos">
       <figure class="photo-frame reveal">
-        <img src="photos/photo-02.jpg" alt="出生第一天" loading="lazy" data-lightbox data-caption="出生第一天 · 2026-10-20">
+        <img src="photos/photo-02.jpg" alt="出生那天" loading="lazy" data-lightbox data-caption="出生那天 · 2026-10-20">
         <figcaption>出生第一天 · 2026-10-20</figcaption>
       </figure>
       <figure class="photo-frame reveal">
@@ -2357,18 +2378,27 @@ body{background:
     if(e.key === 'Escape'){ closeLightbox(); }
   });
 
-  // 首屏光晕（仅桌面精细指针）
-  var hero = $('#hero'), heroGlow = $('#hero-glow');
+  // 全页光晕：鼠标所在区域点亮（仅桌面精细指针）
+  var hero = $('#hero'), pageGlow = $('#page-glow'), pageLight = $('#page-light');
   var finePointer = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(hero && heroGlow && finePointer && !reduceMotion){
-    hero.addEventListener('mousemove', function(e){
-      var r = hero.getBoundingClientRect();
-      heroGlow.style.left = (e.clientX - r.left) + 'px';
-      heroGlow.style.top = (e.clientY - r.top) + 'px';
-      heroGlow.style.opacity = '1';
+  if(pageGlow && finePointer && !reduceMotion){
+    var pgx = -9999, pgy = -9999, pgRaf = 0;
+    function placeGlow(){
+      pgRaf = 0;
+      pageGlow.style.transform = 'translate3d(' + (pgx - 310) + 'px,' + (pgy - 310) + 'px,0)';
+      if(pageLight){ pageLight.style.transform = 'translate3d(' + (pgx - 280) + 'px,' + (pgy - 280) + 'px,0)'; }
+    }
+    document.addEventListener('pointermove', function(e){
+      pgx = e.clientX; pgy = e.clientY;
+      pageGlow.style.opacity = '1';
+      if(pageLight){ pageLight.style.opacity = '1'; }
+      if(!pgRaf){ pgRaf = requestAnimationFrame(placeGlow); }
+    }, {passive:true});
+    document.addEventListener('pointerleave', function(){
+      pageGlow.style.opacity = '0';
+      if(pageLight){ pageLight.style.opacity = '0'; }
     });
-    hero.addEventListener('mouseleave', function(){ heroGlow.style.opacity = '0'; });
   }
 
   // 首屏星尘连线
@@ -2490,9 +2520,11 @@ body{background:
           }
         }
         var mx = p.x-dmx, my = p.y-dmy, md = mx*mx+my*my;
-        if(md < 170*170){
+        if(md < 220*220){
+          var near = 1 - md/(220*220);
           dctx.beginPath(); dctx.moveTo(p.x,p.y); dctx.lineTo(dmx,dmy);
-          dctx.strokeStyle = 'rgba(232,198,106,.10)'; dctx.lineWidth = .5; dctx.stroke();
+          dctx.strokeStyle = 'rgba(232,198,106,' + (0.08 + 0.22*near) + ')';
+          dctx.lineWidth = .5 + near*.4; dctx.stroke();
         }
       }
       requestAnimationFrame(drawDust);
@@ -2505,7 +2537,7 @@ body{background:
   }
 
   // 全页卡片：跟随鼠标的高光 + 轻微浮动
-  var spotEls = $$('.card, .quote-card, .name-card, .pillar, .link-card, .bro-card, .mao-card, .egg, .letter');
+  var spotEls = $$('.card, .quote-card, .name-card, .pillar, .link-card, .bro-card, .mao-card, .egg, .letter, .step, .glossary, .scatter-table, .birth-grid div');
   spotEls.forEach(function(el){ el.classList.add('spot'); });
   if(finePointer && !reduceMotion){
     spotEls.forEach(function(el){

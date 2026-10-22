@@ -549,6 +549,31 @@ body.lb-open{overflow:hidden}
 .spot:hover::after{opacity:1;animation:none}
 .spot:hover{transform:translateY(-2px);border-color:rgba(199,154,43,.5)}
 
+/* ── 深色纸面：让尘光/光晕/卡片呼吸可见 ── */
+body{background:#0b1118}
+.section.paper{background:#0b1118}
+.section.paper2{background:#101720}
+.section.paper,.section.paper2{color:var(--paper)}
+.section.paper .sec-title,.section.paper2 .sec-title{color:var(--paper)}
+.section.paper .sec-sub,.section.paper2 .sec-sub{color:#a9a08c}
+.section.paper .sec-num,.section.paper2 .sec-num{color:var(--gold2)}
+.section.paper .center-note,.section.paper2 .center-note{color:var(--paper)}
+.section.paper .center-note b,.section.paper2 .center-note b{color:var(--gold2)}
+.section.paper .note-sub,.section.paper2 .note-sub{color:#8f8776}
+.section.paper .footnote,.section.paper2 .footnote{color:#8f8776;border-color:rgba(199,154,43,.2)}
+.section.paper .name-arrow{color:#c9bfa8}
+.section.paper .tl-text,.section.paper2 .tl-text{color:#c9bfa8}
+.section.paper .tl-text b,.section.paper2 .tl-text b{color:var(--paper)}
+.section.paper .tl-date,.section.paper2 .tl-date{color:var(--gold2)}
+.section.paper .tl-dot,.section.paper2 .tl-dot{background:#101720;border-color:var(--gold)}
+.section.paper .scatter-note,.section.paper2 .scatter-note{color:#c9bfa8}
+.section.paper .scatter-note b,.section.paper2 .scatter-note b{color:var(--gold2)}
+.section.paper .bro-quote p{color:#f3e9d2}
+.section.paper .bro-quote .bq-kicker{color:var(--gold2)}
+.section.paper .bro-quote span{color:#a9a08c}
+.section.paper .wuxing-legend,.section.paper2 .wuxing-legend{color:#a9a08c}
+.section.paper .wuxing-legend b,.section.paper2 .wuxing-legend b{color:var(--paper)}
+
 /* ── 打印 ── */
 @media print{
   @page{margin:14mm}
@@ -578,6 +603,22 @@ body.lb-open{overflow:hidden}
   .section.dark .sec-title,.section.dark .card h3,.section.dark .quote-card .q{color:#111!important}
   .section.dark .sec-sub,.section.dark .footnote,.section.dark .card p,
   .section.dark .quote-card .note,.section.dark .node .who,.section.dark .node .el{color:#444!important}
+  .section.paper .sec-title,.section.paper2 .sec-title,
+  .section.paper .center-note,.section.paper2 .center-note,
+  .section.paper .center-note b,.section.paper2 .center-note b,
+  .section.paper .tl-text,.section.paper2 .tl-text,
+  .section.paper .tl-text b,.section.paper2 .tl-text b,
+  .section.paper .scatter-note,.section.paper2 .scatter-note,
+  .section.paper .scatter-note b,.section.paper2 .scatter-note b,
+  .section.paper .bro-quote p,.section.paper .bro-quote .bq-kicker,
+  .section.paper .wuxing-legend b,.section.paper2 .wuxing-legend b{color:#111!important}
+  .section.paper .sec-sub,.section.paper2 .sec-sub,
+  .section.paper .sec-num,.section.paper2 .sec-num,
+  .section.paper .footnote,.section.paper2 .footnote,
+  .section.paper .note-sub,.section.paper2 .note-sub,
+  .section.paper .name-arrow,.section.paper .tl-date,.section.paper2 .tl-date,
+  .section.paper .bro-quote span,.section.paper .wuxing-legend,
+  .section.paper2 .wuxing-legend{color:#444!important}
   .card,.quote-card,.pillar,.mao-card,.egg,.letter,.bro-card{box-shadow:none!important;
     break-inside:avoid}
   .grid-2,.grid-3,.bazi,.mao-grid,.family-chain,.name-strip,.letter{break-inside:avoid}

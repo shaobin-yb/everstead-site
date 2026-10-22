@@ -513,8 +513,8 @@ body.lb-open{overflow:hidden}
   pointer-events:none;opacity:.9}
 .section.dark{overflow:hidden}
 .section.dark::before{content:"";position:absolute;inset:-25%;z-index:0;pointer-events:none;
-  background:radial-gradient(circle at 30% 35%,rgba(199,154,43,.07),transparent 42%),
-             radial-gradient(circle at 70% 65%,rgba(42,120,214,.06),transparent 45%);
+  background:radial-gradient(circle at 30% 35%,rgba(199,154,43,.10),transparent 42%),
+             radial-gradient(circle at 70% 65%,rgba(42,120,214,.08),transparent 45%);
   animation:aurora 20s ease-in-out infinite alternate}
 .section.dark .wrap{position:relative;z-index:2}
 @keyframes aurora{from{transform:translate(-2%,-1%) scale(1)}to{transform:translate(2%,1%) scale(1.08)}}
@@ -535,17 +535,18 @@ body.lb-open{overflow:hidden}
 .section{overflow:hidden}
 .section.paper::before,.section.paper2::before{content:"";position:absolute;inset:-25%;z-index:0;
   pointer-events:none;
-  background:radial-gradient(circle at 24% 30%,rgba(199,154,43,.055),transparent 40%),
-             radial-gradient(circle at 76% 70%,rgba(178,58,43,.04),transparent 42%);
+  background:radial-gradient(circle at 24% 30%,rgba(199,154,43,.08),transparent 40%),
+             radial-gradient(circle at 76% 70%,rgba(178,58,43,.06),transparent 42%);
   animation:aurora 26s ease-in-out infinite alternate}
 .section .wrap,.footer .wrap{position:relative;z-index:2}
-.dust-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;opacity:.55}
+.dust-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;opacity:.78}
 .spot{position:relative;overflow:hidden;
   transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
-.spot::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;
-  transition:opacity .3s;
-  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(199,154,43,.13),transparent 46%)}
-.spot:hover::after{opacity:1}
+.spot::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.16;
+  animation:spotBreath 7s ease-in-out infinite;transition:opacity .3s;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(199,154,43,.2),transparent 46%)}
+@keyframes spotBreath{0%,100%{opacity:.1}50%{opacity:.35}}
+.spot:hover::after{opacity:1;animation:none}
 .spot:hover{transform:translateY(-2px);border-color:rgba(199,154,43,.5)}
 
 /* ── 打印 ── */
@@ -2316,12 +2317,12 @@ body.lb-open{overflow:hidden}
       dust.style.width = w + 'px';
       dust.style.height = h + 'px';
       dctx.setTransform(ddpr, 0, 0, ddpr, 0, 0);
-      var n = w < 700 ? 18 : 34;
+      var n = w < 700 ? 24 : 48;
       dparts = [];
       for(var i=0;i<n;i++){
         dparts.push({x:Math.random()*w, y:Math.random()*h,
           vy:0.08+Math.random()*0.18, vx:(Math.random()-.5)*0.05,
-          r:Math.random()*1.6+0.4, a:0.12+Math.random()*0.35,
+          r:Math.random()*1.8+0.5, a:0.18+Math.random()*0.34,
           ph:Math.random()*6.28});
       }
     }

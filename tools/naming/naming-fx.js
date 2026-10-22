@@ -9,8 +9,9 @@
     '.naming-fx-dust{position:fixed;inset:0;z-index:51;pointer-events:none;opacity:.75}',
     '.naming-fx-progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;pointer-events:none;background:linear-gradient(90deg,#b23a2b,#c79a2b)}',
     '.naming-fx-spot{position:relative}',
-    '.naming-fx-spot::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(circle at var(--fx-x,50%) var(--fx-y,50%),rgba(199,154,43,.2),transparent 46%)}',
-    '.naming-fx-spot:hover::after{opacity:1}',
+    '.naming-fx-spot::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:.16;animation:namingFxBreath 7s ease-in-out infinite;transition:opacity .3s;background:radial-gradient(circle at var(--fx-x,50%) var(--fx-y,50%),rgba(199,154,43,.2),transparent 46%)}',
+    '@keyframes namingFxBreath{0%,100%{opacity:.1}50%{opacity:.35}}',
+    '.naming-fx-spot:hover::after{opacity:1;animation:none}',
     '@media(prefers-reduced-motion:reduce){.naming-fx-aurora{animation:none}.naming-fx-dust{display:none}}'
   ].join('\n');
   var st = document.createElement('style');

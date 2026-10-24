@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>郑博仁 · 八字全解</title>
+<style>
+:root{
+  --page:#f6f1e7; --surf:#fffdf8; --ink:#1c1a17; --ink2:#555047; --muted:#8d8679;
+  --line:#e2dac9; --red:#B23A2E; --red2:#8f2b22; --gold:#B88A2E; --gold2:#7d5a16;
+  --green:#2F7D57; --blue:#2F5D8A; --gray:#7C8288; --amber:#a86f10;
+  --mu:#2F7D57; --huo:#B23A2E; --tu:#B88A2E; --jin:#7C8288; --shui:#2F5D8A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:
+  radial-gradient(circle at 15% 6%, rgba(178,58,46,.06), transparent 40%),
+  radial-gradient(circle at 85% 12%, rgba(184,138,46,.07), transparent 44%),
+  var(--page);
+  color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+  -webkit-font-smoothing:antialiased;line-height:1.7}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 20px 90px}
+h1,h2,h3,h4{font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
+a{color:var(--red2);text-decoration:none}
+a:hover{text-decoration:underline}
+.hero{padding:38px 4px 26px;border-bottom:1px solid var(--line);position:relative}
+.hero:after{content:"";position:absolute;left:4px;bottom:-1px;width:110px;height:3px;background:var(--red)}
+.kicker{font-size:12.5px;letter-spacing:.24em;color:var(--red2);text-transform:uppercase}
+.hero h1{margin:8px 0 10px;font-size:clamp(30px,5vw,48px);letter-spacing:.12em}
+.hero h1 .seal{display:inline-block;background:var(--red);color:#fff;font-size:.38em;
+  padding:.35em .55em;border-radius:5px;vertical-align:.75em;letter-spacing:.1em;margin-left:14px;
+  box-shadow:0 4px 12px rgba(143,43,34,.22);font-family:inherit}
+.hero .sub{color:var(--ink2);font-size:15px;margin:0;max-width:900px}
+.hero .sub b{color:var(--red2)}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.badge{font-size:12px;border:1px solid var(--line);background:var(--surf);border-radius:999px;
+  padding:4px 11px;color:var(--ink2)}
+.badge b{color:var(--red2)}
+.nav{position:sticky;top:0;z-index:40;background:rgba(246,241,231,.92);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);
+  display:flex;flex-wrap:wrap;gap:4px;padding:8px 0;margin:0 -20px 18px;padding-left:20px;padding-right:20px}
+.nav a{font-size:12.5px;color:var(--ink2);padding:4px 9px;border-radius:999px;white-space:nowrap}
+.nav a:hover{background:#fff;color:var(--red2);text-decoration:none}
+section.block{background:var(--surf);border:1px solid var(--line);border-radius:16px;
+  padding:24px 26px;margin:18px 0;box-shadow:0 5px 20px rgba(44,35,18,.04);scroll-margin-top:64px}
+section.block h2{margin:0 0 6px;font-size:22px;letter-spacing:.08em;color:var(--red2)}
+section.block h2 .no{color:var(--gold);font-size:.72em;margin-right:8px;letter-spacing:.06em}
+section.block .lead{color:var(--ink2);font-size:14px;margin:2px 0 16px}
+section.block h3{margin:20px 0 8px;font-size:16px;color:var(--ink)}
+section.block h4{margin:14px 0 6px;font-size:14.5px;color:var(--ink2)}
+p{margin:8px 0;font-size:14px;color:var(--ink2)}
+ul{margin:8px 0;padding-left:20px;font-size:14px;color:var(--ink2)}
+li{margin:5px 0}
+b{color:var(--ink)}
+.small{font-size:12.5px;color:var(--muted)}
+.note{font-size:13px;color:var(--ink2);background:#fbf7ec;border-left:3px solid var(--gold);
+  padding:10px 14px;border-radius:0 9px 9px 0;margin:12px 0}
+.note b{color:var(--gold2)}
+.warn{font-size:13px;color:#7a4a17;background:#fbf0dd;border-left:3px solid var(--amber);
+  padding:10px 14px;border-radius:0 9px 9px 0;margin:12px 0}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.kpi{background:#fbf8f0;border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+.kpi .k{font-size:12px;color:var(--muted);letter-spacing:.08em}
+.kpi .v{font-size:22px;font-weight:700;margin-top:2px;font-family:"Songti SC","STSong","SimSun",serif;letter-spacing:.06em}
+.kpi .n{font-size:12px;color:var(--ink2);margin-top:2px}
+.kpi.red .v{color:var(--red2)} .kpi.gold .v{color:var(--gold2)} .kpi.green .v{color:var(--green)}
+.kpi.blue .v{color:var(--blue)} .kpi.gray .v{color:var(--gray)}
+.toggle{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
+.toggle button{border:1px solid var(--line);background:#fbf8f0;border-radius:999px;
+  padding:6px 14px;font-size:13px;color:var(--ink2);cursor:pointer;font-family:inherit}
+.toggle button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pillar{border:1px solid var(--line);border-radius:14px;padding:14px 12px 12px;background:#fcfaf4;position:relative}
+.pillar .lab{font-size:11.5px;color:var(--muted);letter-spacing:.12em}
+.pillar .gz{display:flex;align-items:baseline;gap:8px;margin:4px 0 2px}
+.pillar .gan{font-size:34px;font-family:"Songti SC","STSong","SimSun",serif;line-height:1.1}
+.pillar .zhi{font-size:34px;font-family:"Songti SC","STSong","SimSun",serif;line-height:1.1;color:var(--ink2)}
+.pillar .shen{font-size:12px;color:var(--red2);margin-bottom:6px}
+.pillar .row{font-size:12px;color:var(--ink2);margin:3px 0}
+.pillar .row b{font-weight:600}
+.pillar .hidden{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+.pillar .hchip{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:1px 7px;color:var(--ink2);background:#fff}
+.elem{display:grid;grid-template-columns:70px 1fr 46px;gap:8px;align-items:center;margin:6px 0}
+.elem .nm{font-size:13px;font-weight:700}
+.elem .track{height:16px;background:#efe9da;border-radius:999px;overflow:hidden}
+.elem .fill{height:100%;border-radius:999px;min-width:2px}
+.elem .val{text-align:right;font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink2)}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.bar-col h4{margin:0 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:11.5px;border-radius:999px;padding:2px 8px;background:#f1ece0;color:#5f594e;border:1px solid transparent}
+.chip.good{background:#e3efe7;color:#2f6b4c}
+.chip.bad{background:#f8e5e0;color:#9c3a2a}
+.chip.mid{background:#f7edd8;color:#8a641c}
+.chip.elem-木{background:#e3efe7;color:#2f6b4c}
+.chip.elem-火{background:#f8e5e0;color:#9c3a2a}
+.chip.elem-土{background:#f7edd8;color:#8a641c}
+.chip.elem-金{background:#eceef0;color:#5f666c}
+.chip.elem-水{background:#e3ebf3;color:#2f5d8a}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:13px;background:#fffdf8}
+th,td{padding:8px 10px;border-bottom:1px solid #eee6d6;text-align:left;vertical-align:top}
+th{background:#f7f1e4;color:var(--ink2);font-weight:600;white-space:nowrap;position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+tr.hl td{background:#fdf3df}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.timeline{display:flex;gap:10px;overflow-x:auto;padding:6px 2px 12px;scroll-snap-type:x proximity}
+.dy{min-width:168px;flex:0 0 auto;border:1px solid var(--line);border-radius:13px;
+  padding:11px 12px;background:#fcfaf4;scroll-snap-align:start;position:relative}
+.dy.cur{border-color:var(--red);box-shadow:0 0 0 2px rgba(178,58,46,.12)}
+.dy .y{font-size:11.5px;color:var(--muted)}
+.dy .gz{font-size:22px;font-family:"Songti SC","STSong","SimSun",serif;margin:2px 0;letter-spacing:.08em}
+.dy .s{font-size:12.5px;color:var(--ink2)}
+.dy .e{font-size:11.5px;color:var(--muted);margin-top:3px}
+.dy .now{position:absolute;right:8px;top:8px;font-size:10.5px;background:var(--red);color:#fff;border-radius:999px;padding:1px 6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:#fcfaf4;border:1px solid var(--line);border-radius:13px;padding:14px 16px}
+.card h4{margin:0 0 6px;font-size:15px}
+.card p{margin:5px 0;font-size:13.5px}
+.card ul{margin:5px 0;font-size:13.5px}
+.quote{border-left:2px solid var(--gold);background:#fbf7ec;padding:7px 11px;border-radius:0 8px 8px 0;font-size:13px;color:#443d31;margin:8px 0}
+details{border:1px solid var(--line);border-radius:12px;background:#fcfaf4;padding:0 14px;margin:10px 0}
+details summary{cursor:pointer;padding:11px 0;font-size:14px;font-weight:600;color:var(--ink)}
+details[open]{padding-bottom:12px}
+.glossary dt{font-weight:700;font-size:13.5px;margin-top:9px;color:var(--ink)}
+.glossary dd{margin:2px 0 0 0;font-size:13px;color:var(--ink2)}
+footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.85}
+footer b{color:var(--ink2)}
+@media (max-width:760px){
+  .pillars{grid-template-columns:repeat(2,1fr)}
+  .bars{grid-template-columns:1fr}
+  .two{grid-template-columns:1fr}
+  .wrap{padding:16px 12px 60px}
+  .nav{margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px}
+  section.block{padding:18px 16px}
+}
+@media (max-width:560px){
+  .grid.g3{grid-template-columns:1fr 1fr}
+  .grid.g4{grid-template-columns:1fr 1fr}
+  .kpi{padding:10px 11px}
+  .kpi .v{font-size:19px}
+}
+@media print{
+  body{background:#fff}
+  .nav,.toggle{display:none!important}
+  section.block{box-shadow:none;break-inside:avoid}
+  details{display:block}
+  details summary{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="kicker">八字专题 · 私人专区 · 传统命理视角</div>
+  <h1>郑博仁 · 八字全解<span class="seal">郑</span></h1>
+  <p class="sub">2017-01-02 09:30（北京时间）· 四川巴中通江 · 男 · 己土日主 · <b>火土为用，金水为忌</b></p>
+  <div class="badges">
+    <span class="badge">排盘 <b>engine-bazi</b> + lunar-python + JDN + 万年历</span>
+    <span class="badge">两盘对照 <b>巳时 / 辰时</b></span>
+    <span class="badge">十二典名字库 <b>600 名</b></span>
+    <span class="badge">noindex · 不对外</span>
+  </div>
+</header>
+
+<nav class="nav">
+  <a href="#summary">摘要</a><a href="#chart">排盘</a><a href="#elements">五行</a><a href="#ten-gods">十神</a>
+  <a href="#ge-ju">格局</a><a href="#relations">合冲</a><a href="#shensha">神煞</a><a href="#dayun">大运</a>
+  <a href="#liunian">流年</a><a href="#reading">成长解读</a><a href="#naming">起名</a><a href="#method">方法</a><a href="#glossary">术语</a>
+</nav>
+
+<section class="block" id="summary">
+  <h2><span class="no">00</span>先看结论</h2>
+  <p class="lead">这是一份“排盘事实 + 传统命理解读”的专题页。排盘、十神、神煞、合冲、大运、流年由 engine-bazi 计算；解读部分明确标注“传统视角”，不作医学、法律、投资建议。</p>
+  <div class="grid g3" id="kpis"></div>
+  <div class="note"><b>一句话：</b>己土生在子月寒冬，原局金水偏旺、火偏弱；年干丙火透出，是暖局的关键。格局偏财格，财旺、食伤有力、印星透出（A 有根，B 无根），官杀弱。取名与环境以<b>火第一、土第二、木少量</b>，忌金水再旺。</div>
+</section>
+
+<section class="block" id="chart">
+  <h2><span class="no">01</span>排盘：两盘对照</h2>
+  <p class="lead">出生时间 09:30 是北京时间；按标准时排盘得 <b>巳时己巳</b>（A 盘）。按通江经度 107.24°E 折算真太阳时约 08:34:48，得 <b>辰时戊辰</b>（B 盘）。两盘只有时柱不同，年/月/日三柱一致。</p>
+  <div class="toggle" id="chartToggle">
+    <button data-chart="A" class="on">A 盘 · 北京时间（巳时）</button>
+    <button data-chart="B">B 盘 · 真太阳时（辰时）</button>
+  </div>
+  <div class="pillars" id="pillars"></div>
+  <div id="chartNote" class="note"></div>
+  <h3>三路互证与起运</h3>
+  <div class="grid g3">
+    <div class="kpi"><div class="k">三路排盘</div><div class="v" style="font-size:16px">lunar-python · JDN · 万年历</div><div class="n">年月日三柱“丙申 庚子 己丑”、日干支己丑、小寒 2017-01-05 11:55:45 全部对上</div></div>
+    <div class="kpi"><div class="k">真太阳时</div><div class="v" style="font-size:16px">约 08:34:48</div><div class="n">经度差 −51.0 min，均时差约 −4.2 min；辰时，距 09:00 边界约 25 min</div></div>
+    <div class="kpi"><div class="k">起运</div><div class="v" style="font-size:16px">2018-01-12</div><div class="n">丙申阳年男命顺排；辛丑运 2018-01-12 至 2028-01-11</div></div>
+  </div>
+  <div class="warn"><b>两盘差异：</b>A 盘时柱己巳，正印丙火在巳有根，印星强，原局无官杀；B 盘时柱戊辰，申子辰三合水局，水势更旺，丙火只透年干、无根，正印由强转中和，辰中乙木为七杀。B 盘财更旺、寒湿更重，对火土的需求更强。两盘的“补火土”结论一致。</div>
+</section>
+
+<section class="block" id="elements">
+  <h2><span class="no">02</span>五行力量：火是药，金水是病</h2>
+  <p class="lead">左边是四柱明字（8 个字），右边是 engine-bazi 的含藏干计数（14 个字）。两种口径都显示：<b>土有根、金水有势、火不透旺、木极弱</b>。</p>
+  <div class="bars">
+    <div class="bar-col"><h4 id="elemTitle1">明字计数</h4><div id="elemBars1"></div></div>
+    <div class="bar-col"><h4 id="elemTitle2">含藏干计数</h4><div id="elemBars2"></div></div>
+  </div>
+  <div class="note" id="seasonNote"></div>
+  <p><b>怎么读：</b>子月是水旺、木相、金休、土囚、火死的季节。火在季节上“死”，但年干丙火透出，是调候的命根子；土虽然“囚”，但日支丑、年支申藏戊、时支巳/辰藏戊，土有根有帮。金水不需要再添，名字和环境应给火土“加力”。</p>
+</section>
+
+<section class="block" id="ten-gods">
+  <h2><span class="no">03</span>十神结构：财旺、食伤有力、印透出、官杀弱</h2>
+  <p class="lead">十神是“日主与其他字的关系”。这张表看的是“哪一类力量多、哪一类透干、哪一类有根”。</p>
+  <div class="grid g2">
+    <div class="card"><h4 id="tgTitle">A 盘 · 十神力量</h4><div id="tgBars"></div></div>
+    <div class="card"><h4>一句话读法</h4>
+      <p><b>比肩/劫财（土）</b>：同辈、合作、竞争，也是帮身的力量。原局土有根，不是孤立无援。</p>
+      <p><b>食神/伤官（金）</b>：表达、创意、技能、输出。伤官透月，孩子有表达欲和自己的想法，不宜硬压。</p>
+      <p><b>偏财/正财（水）</b>：资源、现实感、父亲/家庭资源。财旺，说明对“实际的东西”敏感，也容易分心。</p>
+      <p><b>正印（火）</b>：学习、长辈、保护、学历。印为用，学习环境和长辈支持是关键。</p>
+      <p><b>官杀（木）</b>：规则、压力、纪律、责任。A 盘无官杀，B 盘仅辰中乙木七杀；规则感更依赖后天培养。</p>
+    </div>
+  </div>
+  <div class="note"><b>结构关键词：</b>伤官透月 + 正印透年 = “表达有锋芒，但有学习/长辈兜底”；偏财格 + 财旺 = “务实、资源感强”；官杀弱 = “不吃硬压，宜用引导而不是命令”。</div>
+</section>
+
+<section class="block" id="ge-ju">
+  <h2><span class="no">04</span>格局与调候：偏财格，用丙调候</h2>
+  <p class="lead">格局回答“这张盘的主要矛盾是什么”；调候回答“冬天的己土最需要什么”。两者要一起看。</p>
+  <div class="two">
+    <div class="card"><h4>A 盘 · 偏财格（顺用）</h4>
+      <p>财星 <b>癸水</b> 藏于申、子、丑，月令子水旺；<b>不透干</b>，属于“财旺而不显”。月干庚金伤官透出，食伤生财；年干丙火正印透出，护身；日主己土有丑根、比劫帮身。</p>
+      <p><b>顺用</b>：不硬堵财，而是用印/比劫把身扶起来，让财为己所用。对应取名：火（印）优先，土（比劫）第二，木（官杀）少量，金水不宜再添。</p>
+    </div>
+    <div class="card"><h4>B 盘 · 偏财格（顺用）</h4>
+      <p>财星癸水藏于申、子、丑、辰，申子辰三合水局，财更旺；丙火只透年干、无根，印星由强转中和；时干戊土劫财，辰中乙木七杀。</p>
+      <p><b>顺用</b>同理，但 B 盘寒湿更重、财更旺，对火土的需求更强；七杀出现，说明规则/压力议题比 A 盘更明显，宜“先扶身、再谈规则”。</p>
+    </div>
+  </div>
+  <h3>调候：子月己土，用丙调候，甲辅之</h3>
+  <div class="quote">《穷通宝鉴》三冬己土：“湿泥寒冻，非丙暖不生，取丙为尊，甲木能参用，不可用癸。”</div>
+  <p>A 盘：丙火透年干，巳中丙火有根；B 盘：丙火透年干，但无巳根（辰中无丙），火更弱。甲木为辅，但原局木极弱（A 无木，B 仅辰中乙木），所以<b>木只能少量参用，不能当主药</b>。</p>
+  <h3>三派对照：为什么起名取“火 &gt; 土 &gt; 木”</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>口径</th><th>结论</th><th>对起名/环境的含义</th></tr></thead>
+    <tbody>
+      <tr><td>engine-bazi 扶抑</td><td><b>中和</b>（土有根有帮）</td><td>不按从格论；火土帮身仍优先</td></tr>
+      <tr><td>加权模型（四套）</td><td><b>中和偏弱</b>；同党 30.4%–45.7%</td><td>火 &gt; 土 &gt; 木；忌金水</td></tr>
+      <tr><td>调候</td><td><b>火 primary，木 secondary</b></td><td>火第一；木只作辅，不可喧宾夺主</td></tr>
+      <tr class="hl"><td>综合口径</td><td><b>火第一、土第二、木少量参用；忌金、水</b></td><td>名字/环境补火土，金水字不进主库</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>模型分歧怎么看：</b>engine 判“中和”，我们的加权模型判“中和偏弱”，两者不是谁对谁错，而是权重不同。共同点是：<b>不是从格、土有根、火偏弱、金水成势</b>。所以“补火土”是稳健结论，不依赖单一模型。</div>
+</section>
+
+<section class="block" id="relations">
+  <h2><span class="no">05</span>合冲刑害：合多、刑破在年时、B 盘三合水局</h2>
+  <p class="lead">合冲刑害是结构关系，不等于吉凶。合多主牵绊/合作，刑破主动荡/内耗；要结合十神和用神看。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>关系</th><th>A 盘（巳时）</th><th>B 盘（辰时）</th><th>怎么读</th></tr></thead>
+    <tbody id="relRows"></tbody>
+  </table></div>
+  <div class="grid g2">
+    <div class="card"><h4>空亡</h4>
+      <p>日柱 <b>甲申旬</b>，空亡 <b>午未</b>；年柱 <b>甲午旬</b>，空亡 <b>辰巳</b>。2026 丙午流年，午是日柱空亡，传统上有“填实/冲动”两说；engine 另标“丙午与庚子天克地冲（反吟）”，主环境/情绪起伏，宜稳。</p>
+    </div>
+    <div class="card"><h4>胎元 / 命宫 / 身宫 / 胎息</h4>
+      <p>A 盘：胎元 <b>辛卯</b>，命宫 <b>庚子</b>，身宫 <b>甲午</b>，胎息 <b>甲子</b>。<br>B 盘：命宫 <b>辛丑</b>，身宫 <b>癸巳</b>，胎元/胎息相同。这些是传统排盘的辅助位，不作单独吉凶断。</p>
+    </div>
+  </div>
+  <div class="note"><b>重点：</b>A 盘“申巳合水 + 刑 + 破”在年时，传统上主早年环境变动/内耗；B 盘“申子辰三合水局”使财更旺、寒湿更重，丑辰破在日时，主内在拉扯。两盘子丑合土都保住日支根——有牵绊，但不是无根。</div>
+</section>
+
+<section class="block" id="shensha">
+  <h2><span class="no">06</span>神煞：吉神多，凶神有制</h2>
+  <p class="lead">神煞是传统辅助参考，不能单凭一个“凶煞”断吉凶。下面按柱列出，类别与说明来自 engine-bazi；解读只作文化参考。</p>
+  <div id="shenshaTable"></div>
+  <div class="grid g2">
+    <div class="card"><h4>吉神</h4>
+      <p><b>天乙贵人</b>（年/月）：传统主贵人相助、逢凶化吉。<b>德秀贵人</b>（年/日/时）：禀气清粹。<b>天厨贵人</b>（年）：食禄福泽。<b>金舆</b>（年）：财运/车辆/出行。<b>将星</b>（月）：领导才能。<b>太极贵人</b>（日）：聪慧好学、宜研哲理。<b>天喜</b>（日）：喜庆/婚恋吉兆。<b>天德/天德合</b>：贵人助力。</p>
+    </div>
+    <div class="card"><h4>中性 / 凶煞</h4>
+      <p><b>华盖</b>（日/B 时）：孤独清高、聪明好学、艺术天赋。<b>飞刃</b>（年）：羊刃冲位，主动荡急变。<b>十恶大败</b>（日）：传统主财库不聚，提醒理财谨慎，不是“命不好”。<b>劫煞/绞神</b>（A 时）：注意意外/人际纠纷。<b>童子煞</b>（B 日）：传统说法，多指小时候体质敏感/需细心照顾，不作病断。</p>
+    </div>
+  </div>
+  <div class="warn"><b>读法：</b>原局吉神多（天乙、德秀、天厨、金舆、将星、太极、天喜），且有正印护身；凶煞集中在“理财/安全/人际”这类可管理的议题上。神煞不是判决书，孩子成长以家庭、教育、医生为准。</div>
+</section>
+
+<section class="block" id="dayun">
+  <h2><span class="no">07</span>大运：辛丑起步，壬寅财星，丙午晚运转暖</h2>
+  <p class="lead">丙申阳年男命顺排，起运 2018-01-12。大运按起运日满十年；下面是从 engine-bazi 返回的九步大运（至 2108）。</p>
+  <div class="timeline" id="dayunTimeline"></div>
+  <div class="grid g2">
+    <div class="card"><h4>当前：辛丑（2018–2028）· 食神运</h4>
+      <p>辛金食神、丑土。食神泄秀，利表达/技能；但辛金生水、丑为湿土，对“火弱金水旺”的盘是耗。孩子现在 9 岁，正处这一步的尾声；环境/名字宜火土，少寒湿。</p>
+    </div>
+    <div class="card"><h4>下一步：壬寅（2028–2038）· 正财运</h4>
+      <p>壬水正财透，寅木藏丙火。财星运覆盖初中/高中/大学阶段：资源/机会多，但也容易分心；寅中丙火是亮点，火土环境仍然重要。传统上“财旺宜扶身”，读书阶段以稳为主。</p>
+    </div>
+  </div>
+  <div class="note"><b>后面的火运：</b>丙午（2068–2078）正印、丁未（2078–2088）偏印，火土到位，晚运转暖。大运是传统节律，不是命运剧本；越远的运，参考价值越低，别拿它给孩子贴标签。</div>
+</section>
+
+<section class="block" id="liunian">
+  <h2><span class="no">08</span>流年 2026–2037：丙午印星年，先稳后进</h2>
+  <p class="lead">流年是“年份与命局的互动”，只作传统参考。2026 丙午是正印流年，火来暖局；但与月柱庚子天克地冲（反吟），主环境/情绪起伏。</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>年份</th><th>干支</th><th>十神</th><th>纳音</th><th>神煞（传统）</th><th>伏吟/反吟</th></tr></thead>
+    <tbody id="liunianRows"></tbody>
+  </table></div>
+  <div class="grid g2">
+    <div class="card"><h4>2026 丙午 · 正印</h4>
+      <p>火来暖局，印星到位，传统上利学习、长辈助力、贵人。但“丙午与庚子天克地冲”是反吟，主环境/情绪起伏（转学、搬家、家庭变动等），宜稳不宜躁。流年神煞见灾煞/病符/丧门/大耗，按传统说法提醒注意安全/作息即可，<b>不作病灾断</b>。</p>
+    </div>
+    <div class="card"><h4>2027–2028 · 火土转接</h4>
+      <p>2027 丁未偏印，火土继续暖局，红鸾（吉）主喜庆/人际，吊客/大耗提醒出行/财务。2028 戊申劫财，申与年支伏吟，又逢壬寅大运交界，环境/同辈变化多，宜提前做稳定安排。</p>
+    </div>
+  </div>
+  <details>
+    <summary>展开：2026 流月（12 个月）</summary>
+    <div class="table-wrap"><table>
+      <thead><tr><th>月</th><th>干支</th><th>十神</th><th>五行</th><th>神煞（传统）</th></tr></thead>
+      <tbody id="liuyueRows"></tbody>
+    </table></div>
+    <p class="small">按节气月排列：1 月=丑月（小寒—立春前），不是公历月份。流月只作传统参考；具体安排以学校/家庭/医生为准。</p>
+  </details>
+</section>
+
+<section class="block" id="xiaoyun">
+  <h2><span class="no">09</span>小运：两派对照</h2>
+  <p class="lead">小运是起运前的辅助运，流派不同结果不同。engine-bazi 同时返回《三命通会》和《星平会海》两法；起运后以大运为主。</p>
+  <details open>
+    <summary>《三命通会》法（男起丙寅顺行）</summary>
+    <div class="table-wrap"><table><thead><tr><th>年龄</th><th>干支</th><th>十神</th></tr></thead><tbody id="xy1"></tbody></table></div>
+  </details>
+  <details>
+    <summary>《星平会海》法（由时柱起）</summary>
+    <div class="table-wrap"><table><thead><tr><th>年龄</th><th>干支</th><th>十神</th></tr></thead><tbody id="xy2"></tbody></table></div>
+  </details>
+</section>
+
+<section class="block" id="reading">
+  <h2><span class="no">10</span>成长解读：性格、学业、环境、健康、六亲、事业</h2>
+  <p class="lead">下面是从命盘结构出发的“传统取象”，不是给孩子贴标签，更不是决定论。教育、家庭、环境、个人选择，永远比命盘更重要。</p>
+  <div class="two">
+    <div class="card"><h4>性格：外表温和，内里有主意</h4>
+      <p>己土是田园土，包容、耐性、务实；日支丑是墓库，内敛、藏事、慢热；华盖/太极贵人，好思辨、喜独处，对艺术/哲学/玄学有兴趣；伤官透月，表达有锋芒、创意强、不服硬管；正印透年，学习力和长辈缘是加分项。</p>
+      <p><b>相处建议：</b>给空间、讲道理、少当众硬压；把“不服管”引导成“有主见”。</p>
+    </div>
+    <div class="card"><h4>学业：印为用，火为调候</h4>
+      <p>正印为用，传统上主学习、学历、长辈/老师助力；偏财旺，现实感强、容易被“有用/有趣”的东西吸引。火弱时容易怕冷、动力不足、分心；火土环境（向阳、暖色、规律作息、鼓励式教育）更利于专注。</p>
+      <p>2026 丙午印星年利学习，但反吟宜稳；2028 后进入财星大运，资源/机会多，需防分心。建议固定作息、少熬夜、多户外——这是传统取象 + 常识，不是医学建议。</p>
+    </div>
+    <div class="card"><h4>成长环境：喜暖、喜稳、喜明亮</h4>
+      <p>原局寒湿、金水偏旺，传统上宜温暖、明亮、干燥、稳定的环境；少寒湿、少熬夜、少频繁变动。颜色可用红/橙/暖黄/米色（火土），但这些是传统取象，不是风水处方。</p>
+    </div>
+    <div class="card"><h4>健康：传统取象，不作病断</h4>
+      <p>金水旺、火弱，传统上注意保暖、脾胃、呼吸道；丑为湿土、子为寒水，冬天/湿冷环境要留意。孩子具体健康以儿科医生为准；命理不替代体检和就医。</p>
+    </div>
+    <div class="card"><h4>六亲：印星为用，长辈助力大</h4>
+      <p>正印为用 → 母亲/长辈/老师助力明显；偏财旺 → 父亲/家庭资源是重要支撑；比劫有根 → 同辈/合作不缺；官杀弱 → 纪律/规则需要后天培养，不宜用“高压”代替引导；日支丑墓库 → 内心世界丰富，需要耐心沟通。</p>
+    </div>
+    <div class="card"><h4>事业倾向：偏财格，食伤生财</h4>
+      <p>偏财格顺用，食伤生财，传统上适合资源整合、商业、技术、创意、项目型工作；官杀弱，不一定适合强层级/强纪律的环境，更适合有自主空间的方向。孩子还小，先看兴趣和学业，不宜过早定型。</p>
+    </div>
+  </div>
+  <div class="warn"><b>边界：</b>以上是传统命理视角的文化解读，不是心理测评、医学诊断、升学规划或投资建议。孩子的实际发展，取决于家庭、教育、健康、兴趣和努力。</div>
+</section>
+
+<section class="block" id="naming">
+  <h2><span class="no">11</span>起名建议：火 &gt; 土 &gt; 木，忌金水</h2>
+  <p class="lead">八字给的是“方向”，名字给的是“日常加力”。博仁现在的名字“郑博仁”：郑=火（帮），博=水（忌），仁=金（忌/仇），字义好，但五行方向与原局相反。</p>
+  <div class="grid g3">
+    <div class="kpi red"><div class="k">第一用神</div><div class="v">火</div><div class="n">丙火调候；暖局、印星、学习/长辈</div></div>
+    <div class="kpi gold"><div class="k">第二用神</div><div class="v">土</div><div class="n">帮身、比劫；但土多也泄火生金，不宜过重</div></div>
+    <div class="kpi green"><div class="k">少量参用</div><div class="v">木</div><div class="n">甲木辅佐；只作点缀，不宜双木成势</div></div>
+  </div>
+  <p><b>取名口径：</b>只取火/土，或木+火/火+木；避免金、水字；郑姓 19 画，天格固定 20（分歧⚠️），目标“人/地/外/总四格全绿”。名字库 12 典 × 50 = 600 条，全部有原文出处、三源五行核验；Top20：照耀、理远、智远、圣达、知哲、知时、夏明、圣道、明哲、明恕、贞志、俊良、亮采、礼容、恩明、恕容、彝伦、益明、明忠、易直。</p>
+  <p><a id="nameLink" href="zheng-boren.html"><b>→ 打开十二典名字库（600 名，可筛选/搜索）</b></a></p>
+  <div class="note"><b>提醒：</b>名字是辅助，不是决定项。字义、读音、方言谐音、家庭意见、孩子自己的感受，优先于分数。是否改大名，由家长/舅舅家定。</div>
+</section>
+
+<section class="block" id="method">
+  <h2><span class="no">12</span>方法与免责声明</h2>
+  <div class="grid g2">
+    <div class="card"><h4>排盘与计算</h4>
+      <ul>
+        <li>engine-bazi（Liki Chart Engine）2026.10.23.0：bazi_chart / bazi_fullchart / bazi_liunian / bazi_xiaoyun / bazi_liuyue。</li>
+        <li>A 盘：instant 2017-01-02T09:30:00+08:00，longitude 120，Asia/Shanghai，male → 丙申 庚子 己丑 己巳。</li>
+        <li>B 盘：同 instant，longitude 107.24 → 丙申 庚子 己丑 戊辰（真太阳时校正）。</li>
+        <li>三路复核：lunar-python、JDN 日干支公式、在线万年历；小寒 2017-01-05 11:55:45；日柱己丑三路一致。</li>
+        <li>旺衰：engine 扶抑“中和”；另做位置加权、去季节、敏感性 27 组、得令得地得势四套模型，结论“中和偏弱”。</li>
+      </ul>
+    </div>
+    <div class="card"><h4>边界</h4>
+      <ul>
+        <li>传统命理视角，不是医学、法律、投资、升学建议；神煞/流年不作吉凶断言。</li>
+        <li>出生时间 09:30 为家长转述；若原始记录接近 09:00，时柱会变，需重排。当前 A/B 两盘用神结论一致。</li>
+        <li>页面只使用出生时间、地点、八字；不含身份证号、住址、出生证明影像。</li>
+        <li>noindex,nofollow，仅私人专区；不对外分享。</li>
+      </ul>
+    </div>
+  </div>
+  <div class="warn"><b>一句话：</b>命盘是“倾向”，不是“判决”。这份页面的价值，是帮家人理解孩子的气质与需要，而不是替他决定人生。</div>
+</section>
+
+<section class="block" id="glossary">
+  <h2><span class="no">13</span>术语小抄</h2>
+  <details open><summary>点开：四柱、十神、格局、调候、大运、流年……</summary>
+    <dl class="glossary">
+      <dt>四柱 / 八字</dt><dd>年柱、月柱、日柱、时柱，每柱一个天干+一个地支，共八个字。日柱的天干叫“日主”，代表命主自己。</dd>
+      <dt>藏干</dt><dd>地支里“藏着”的天干，分本气、中气、余气；藏干决定地支的十神和力量。</dd>
+      <dt>十神</dt><dd>以日主为中心，其他字与日主的关系：比肩/劫财（同我）、食神/伤官（我生）、偏财/正财（我克）、正官/七杀（克我）、正印/偏印（生我）。</dd>
+      <dt>偏财格</dt><dd>月令或月支主气为偏财，且结构成立。偏财主资源、现实、父亲/家庭资源；顺用是“扶身以任财”，不是硬堵。</dd>
+      <dt>调候</dt><dd>按出生季节看命局最需要的气候。子月己土寒湿，最需要丙火暖局；甲木辅佐。</dd>
+      <dt>扶抑</dt><dd>看日主强弱，弱则帮（印/比劫），强则泄（食伤/财/官杀）。不同模型权重不同，结论可能不同。</dd>
+      <dt>大运</dt><dd>每十年一步的运势干支，从月柱顺/逆排。起运时间按出生到下一个“节”的时间折算。</dd>
+      <dt>流年</dt><dd>每一年的干支与命局的互动；流年十神、神煞、伏吟/反吟是传统参考。</dd>
+      <dt>小运</dt><dd>起运前的辅助运，流派不同（三命通会/星平会海），只作参考。</dd>
+      <dt>神煞</dt><dd>传统命理里的“星”，分吉/中性/凶；不能单凭神煞断吉凶，要结合格局、用神、十神。</dd>
+      <dt>空亡</dt><dd>旬空的地支，传统上主“落空/填实”两种读法；不是简单的“没有”。</dd>
+      <dt>纳音</dt><dd>六十甲子配五行的一种古法，如“山下火”“壁上土”；本页只作辅助展示。</dd>
+      <dt>长生十二宫</dt><dd>描述天干在十二地支的旺衰阶段：长生、沐浴、冠带、临官、帝旺、衰、病、死、墓、绝、胎、养。</dd>
+      <dt>胎元 / 命宫 / 身宫 / 胎息</dt><dd>传统排盘的辅助位，用于补充结构信息，不作单独吉凶断。</dd>
+      <dt>伏吟 / 反吟</dt><dd>流年与命局某柱干支相同（伏吟）或天克地冲（反吟），传统上主“重复/变动/情绪起伏”，宜稳。</dd>
+    </dl>
+  </details>
+</section>
+
+<footer>
+  <b>数据</b>：engine-bazi（Liki Chart Engine）2026.10.23.0；排盘三路复核；名字库三源五行。生成：2026-10-24 · 铁蛋。<br>
+  <b>口径</b>：传统命理视角，仅供文化参考；非医学/法律/投资/升学建议。神煞、流年、大运均不作吉凶断言。<br>
+  <b>隐私</b>：noindex,nofollow；仅私人专区；不含身份证号/住址/出生证明影像。
+</footer>
+</div>
+
+<script>
+const D = {"birth": {"name": "郑博仁", "gender": "男", "date": "2017-01-02", "time": "09:30（北京时间）", "place": "四川省巴中市通江县", "longitude": 107.24, "timezone": "Asia/Shanghai", "true_solar": "约 08:34:48（辰时）", "zodiac": "猴"}, "charts": {"A": {"label": "A 盘 · 北京时间（巳时）", "pillars": [{"gan": "丙", "zhi": "申", "na_yin": "山下火", "gan_shen": "正印", "cang_gan": {"main": "庚", "mid": "壬", "minor": "戊"}, "hidden": [{"gan": "庚", "shen": "伤官", "qi": "本气"}, {"gan": "壬", "shen": "正财", "qi": "中气"}, {"gan": "戊", "shen": "劫财", "qi": "余气"}], "chang_sheng": "沐浴", "self_sitting": "病", "xun": "甲午旬", "xun_kong": "辰巳", "is_void": false, "shen_sha": [{"category": "吉", "description": "主贵人相助，逢凶化吉", "name": "天乙贵人"}, {"category": "吉", "description": "主禀气清粹，逢凶化吉", "name": "德秀贵人"}, {"category": "吉", "description": "主食禄福泽", "name": "天厨贵人"}, {"category": "凶", "description": "羊刃冲位，主动荡急变", "name": "飞刃"}, {"category": "吉", "description": "天德所合，主贵人助力", "name": "天德合"}, {"category": "吉", "description": "主财运、车辆、出行顺利", "name": "金舆"}], "label": "年柱", "key": "nian"}, {"gan": "庚", "zhi": "子", "na_yin": "壁上土", "gan_shen": "伤官", "cang_gan": {"main": "癸", "mid": null, "minor": null}, "hidden": [{"gan": "癸", "shen": "偏财", "qi": "本气"}], "chang_sheng": "绝", "self_sitting": "死", "xun": "甲午旬", "xun_kong": "辰巳", "is_void": false, "shen_sha": [{"category": "吉", "description": "主贵人相助，逢凶化吉", "name": "天乙贵人"}, {"category": "吉", "description": "主领导才能，有权威", "name": "将星"}], "label": "月柱", "key": "yue"}, {"gan": "己", "zhi": "丑", "na_yin": "霹雳火", "gan_shen": "比肩", "cang_gan": {"main": "己", "mid": "癸", "minor": "辛"}, "hidden": [{"gan": "己", "shen": "比肩", "qi": "本气"}, {"gan": "癸", "shen": "偏财", "qi": "中气"}, {"gan": "辛", "shen": "食神", "qi": "余气"}], "chang_sheng": "墓", "self_sitting": "墓", "xun": "甲申旬", "xun_kong": "午未", "is_void": false, "shen_sha": [{"category": "吉", "description": "主聪慧好学，宜研哲理玄学", "name": "太极贵人"}, {"category": "吉", "description": "主禀气清粹，逢凶化吉", "name": "德秀贵人"}, {"category": "中性", "description": "主孤独清高，聪明好学，有艺术天赋", "name": "华盖"}, {"category": "吉", "description": "主喜庆之事，婚恋吉兆", "name": "天喜"}, {"category": "凶", "description": "日柱十恶大败日，主财库不聚，须谨慎理财", "name": "十恶大败"}], "label": "日柱", "key": "ri"}, {"gan": "己", "zhi": "巳", "na_yin": "大林木", "gan_shen": "比肩", "cang_gan": {"main": "丙", "mid": "庚", "minor": "戊"}, "hidden": [{"gan": "丙", "shen": "正印", "qi": "本气"}, {"gan": "庚", "shen": "伤官", "qi": "中气"}, {"gan": "戊", "shen": "劫财", "qi": "余气"}], "chang_sheng": "帝旺", "self_sitting": "帝旺", "xun": "甲子旬", "xun_kong": "戌亥", "is_void": false, "shen_sha": [{"category": "吉", "description": "主禀气清粹，逢凶化吉", "name": "德秀贵人"}, {"category": "吉", "description": "天德贵人，主福泽深厚，化险为夷", "name": "天德"}, {"category": "凶", "description": "主破财、意外、是非", "name": "劫煞"}, {"category": "凶", "description": "主受困被缚，身不由己", "name": "绞神"}], "label": "时柱", "key": "shi"}], "fu_yi": {"wuxing_count": {"土": 5, "水": 3, "火": 2, "金": 4}, "wang_shuai": {"土": "囚", "木": "相", "水": "旺", "火": "死", "金": "休"}, "yong": "无候选", "xi": "无候选", "ji": "无候选", "qiangruo": "中和", "model": "support_control_with_day_master_strength", "basis": {"root_type": "zhi_mid", "season": "囚", "yin_bi_count": 2, "day_master_roots": [{"branch": "申", "pillar": "nian", "source": "minor_qi", "stem": "戊"}, {"branch": "丑", "pillar": "ri", "source": "main_qi", "stem": "己"}, {"branch": "巳", "pillar": "shi", "source": "minor_qi", "stem": "戊"}], "relation_facts": [{"branches": ["申", "巳"], "field": "zhi_liu_he", "group": "申巳合水", "pillars": ["nian", "shi"], "targets": ["day_master_root"]}, {"branches": ["子", "丑"], "field": "zhi_liu_he", "group": "子丑合土", "pillars": ["yue", "ri"], "targets": ["day_branch", "day_master_root"]}, {"branches": ["申", "巳"], "field": "liu_xing", "group": "申巳刑", "pillars": ["nian", "shi"], "targets": ["day_master_root"]}, {"branches": ["申", "巳"], "field": "liu_po", "group": "申巳破", "pillars": ["nian", "shi"], "targets": ["day_master_root"]}, {"branches": ["申", "子"], "field": "san_he_partial", "group": "申子水半合局", "pillars": ["nian", "yue"], "targets": ["day_master_root"]}]}}, "ten_gods": [{"shi_shen": "比肩", "wuxing": "土", "transparent": true, "hidden": true, "rooted": true, "timely": false, "count": 3, "strength": "strong"}, {"shi_shen": "劫财", "wuxing": "土", "transparent": false, "hidden": true, "rooted": true, "timely": false, "count": 2, "strength": "neutral"}, {"shi_shen": "食神", "wuxing": "金", "transparent": false, "hidden": true, "rooted": true, "timely": false, "count": 1, "strength": "neutral"}, {"shi_shen": "伤官", "wuxing": "金", "transparent": true, "hidden": true, "rooted": true, "timely": false, "count": 3, "strength": "strong"}, {"shi_shen": "偏财", "wuxing": "水", "transparent": false, "hidden": true, "rooted": true, "timely": true, "count": 2, "strength": "strong"}, {"shi_shen": "正财", "wuxing": "水", "transparent": false, "hidden": true, "rooted": true, "timely": true, "count": 1, "strength": "strong"}, {"shi_shen": "正印", "wuxing": "火", "transparent": true, "hidden": true, "rooted": true, "timely": false, "count": 2, "strength": "strong"}], "elements": [{"wuxing": "木", "season": "相", "season_strength": "strong", "strength": "strong", "transparent": false, "rooted": false, "controls": "土", "controlled_by": "金", "controller_strength": "weak", "reasons": ["timely"]}, {"wuxing": "火", "season": "死", "season_strength": "weak", "strength": "strong", "transparent": true, "rooted": true, "controls": "金", "controlled_by": "水", "controller_strength": "strong", "reasons": ["transparent_rooted"]}, {"wuxing": "土", "season": "囚", "season_strength": "weak", "strength": "strong", "transparent": true, "rooted": true, "controls": "水", "controlled_by": "木", "controller_strength": "strong", "reasons": ["transparent_rooted"]}, {"wuxing": "金", "season": "休", "season_strength": "weak", "strength": "strong", "transparent": true, "rooted": true, "controls": "木", "controlled_by": "火", "controller_strength": "weak", "reasons": ["transparent_rooted"]}, {"wuxing": "水", "season": "旺", "season_strength": "strong", "strength": "strong", "transparent": false, "rooted": true, "controls": "火", "controlled_by": "土", "controller_strength": "weak", "reasons": ["timely"]}], "ge_ju": {"ge_ju": "偏财格", "yong_fa": "顺用", "pattern_god": "癸", "pattern_god_ten_god": "偏财", "pattern_god_source": "main_qi_not_transparent", "structure": {"pattern": {"roots": [{"branch": "申", "pillar": "nian", "source": "mid_qi", "stem": "壬"}, {"branch": "子", "pillar": "yue", "source": "main_qi", "stem": "癸"}, {"branch": "丑", "pillar": "ri", "source": "mid_qi", "stem": "癸"}], "season": "旺", "strength": "strong", "timely": true, "transparent_pillars": [], "wuxing": "水"}, "controller": {"roots": [{"branch": "申", "pillar": "nian", "source": "minor_qi", "stem": "戊"}, {"branch": "丑", "pillar": "ri", "source": "main_qi", "stem": "己"}, {"branch": "巳", "pillar": "shi", "source": "minor_qi", "stem": "戊"}], "season": "囚", "strength": "strong", "timely": false, "transparent_pillars": ["ri", "shi"], "wuxing": "土"}, "generator": {"roots": [{"branch": "申", "pillar": "nian", "source": "main_qi", "stem": "庚"}, {"branch": "丑", "pillar": "ri", "source": "minor_qi", "stem": "辛"}, {"branch": "巳", "pillar": "shi", "source": "mid_qi", "stem": "庚"}], "season": "休", "strength": "strong", "timely": false, "transparent_pillars": ["yue"], "wuxing": "金"}, "relation_facts": [{"branches": ["申", "巳"], "field": "zhi_liu_he", "group": "申巳合水", "pillars": ["nian", "shi"], "targets": ["generator", "pattern", "controller"]}, {"branches": ["子", "丑"], "field": "zhi_liu_he", "group": "子丑合土", "pillars": ["yue", "ri"], "targets": ["pattern", "controller", "generator"]}, {"branches": ["申", "巳"], "field": "liu_xing", "group": "申巳刑", "pillars": ["nian", "shi"], "targets": ["generator", "pattern", "controller"]}, {"branches": ["申", "巳"], "field": "liu_po", "group": "申巳破", "pillars": ["nian", "shi"], "targets": ["generator", "pattern", "controller"]}, {"branches": ["申", "子"], "field": "san_he_partial", "group": "申子水半合局", "pillars": ["nian", "yue"], "targets": ["generator", "pattern", "controller"]}]}}, "tiao_hou": {"primary_wuxing": "火", "secondary_wuxing": "木", "season": "冬", "detail": "子月己土，用丙调候，甲辅之", "model": "qiongtong_primary_secondary_table", "primary": {"stem": "丙", "transparent": true, "hidden": true, "occurrences": [{"branch": "申", "pillar": "nian", "source": "gan", "stem": "丙"}, {"branch": "巳", "pillar": "shi", "source": "main_qi", "stem": "丙"}], "relation_facts": [{"branches": ["申", "巳"], "field": "zhi_liu_he", "group": "申巳合水", "pillars": ["nian", "shi"], "targets": ["primary"]}, {"branches": ["申", "巳"], "field": "liu_xing", "group": "申巳刑", "pillars": ["nian", "shi"], "targets": ["primary"]}, {"branches": ["申", "巳"], "field": "liu_po", "group": "申巳破", "pillars": ["nian", "shi"], "targets": ["primary"]}, {"branches": ["申", "子"], "field": "san_he_partial", "group": "申子水半合局", "pillars": ["nian", "yue"], "targets": ["primary"]}]}, "secondary": {"hidden": false, "occurrences": [], "relation_facts": [], "stem": "甲", "transparent": false}}, "relations": {"zhi_liu_he": [{"pillar_a": 0, "pillar_b": 3, "wuxing": "水", "zhi_a": "申", "zhi_b": "巳"}, {"pillar_a": 1, "pillar_b": 2, "wuxing": "土", "zhi_a": "子", "zhi_b": "丑"}], "san_he_partial": [{"type": "半合", "name": "申子水半合局", "wuxing": "水", "branches": ["申", "子"], "pillars": ["nian", "yue"]}], "liu_xing": [{"pillar_a": 0, "pillar_b": 3, "zhi_a": "申", "zhi_b": "巳"}], "liu_po": [{"zhi_a": "申", "zhi_b": "巳", "pillar_a": 0, "pillar_b": 3}], "gong_jia": [{"pillar_a": 3, "pillar_b": 2, "type": "三合拱", "wuxing": "金", "zhi": "酉"}], "relation_groups": [{"field": "liu_po", "group": "申巳"}, {"field": "san_he_partial", "group": "申子"}, {"field": "zhi_liu_he", "group": "子丑"}, {"field": "zhi_liu_he", "group": "巳申"}]}, "san_yuan": {"tai_yuan": {"gan": "辛", "zhi": "卯"}, "ming_gong": {"gan": "庚", "zhi": "子"}, "shen_gong": {"gan": "甲", "zhi": "午"}}, "tai_xi": {"gan": "甲", "zhi": "子"}, "nayin_rel": [{"a": "nian", "b": "yue", "relation": "相生"}, {"a": "nian", "b": "ri", "relation": "相同"}, {"a": "nian", "b": "shi", "relation": "相生"}, {"a": "yue", "b": "ri", "relation": "相生"}, {"a": "yue", "b": "shi", "relation": "相克"}, {"a": "ri", "b": "shi", "relation": "相生"}], "chang_sheng": [{"index": "酉", "name": "长生"}, {"index": "申", "name": "沐浴"}, {"index": "未", "name": "冠带"}, {"index": "午", "name": "临官"}, {"index": "巳", "name": "帝旺"}, {"index": "辰", "name": "衰"}, {"index": "卯", "name": "病"}, {"index": "寅", "name": "死"}, {"index": "丑", "name": "墓"}, {"index": "子", "name": "绝"}, {"index": "亥", "name": "胎"}, {"index": "戌", "name": "养"}], "lu_roots": [{"shi_shen": "正印", "gan": "丙", "zhi": "巳"}, {"shi_shen": "伤官", "gan": "庚", "zhi": "申"}], "atomic": {"day_master_element": "土", "day_master_stem": "己", "day_branch": "丑", "month_longevity": "绝", "year_stem_ten_god": "正印", "month_main_ten_god": "偏财", "hour_stem_ten_god": "比肩", "pattern_god_transparent": false, "pillar_punishments": {"nian": true, "yue": false, "ri": false, "shi": true}, "officer_killing_cleaned": false, "wealth_tomb_present": false, "wealth_star_in_tomb": false, "spouse_palace_state": "合", "day_branch_type": "墓库", "year_officer_killing": false}, "day_xun": "甲申旬", "day_xun_kong": "午未", "da_yun": {"steps": [{"gan": "辛", "zhi": "丑", "name": "辛丑", "wuxing": "金", "shi_shen": "食神运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "庚", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "辛", "branch": "丑"}, {"source": "natal_hidden_stem", "pillar": "shi", "stem": "庚", "branch": "巳"}], "end_date": "2028-01-11", "end_year": 2028, "start_date": "2018-01-12", "start_year": 2018}, {"gan": "壬", "zhi": "寅", "name": "壬寅", "wuxing": "水", "shi_shen": "正财运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "壬", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "yue", "stem": "癸", "branch": "子"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "癸", "branch": "丑"}], "end_date": "2038-01-11", "end_year": 2038, "start_date": "2028-01-12", "start_year": 2028}, {"gan": "癸", "zhi": "卯", "name": "癸卯", "wuxing": "水", "shi_shen": "偏财运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "壬", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "yue", "stem": "癸", "branch": "子"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "癸", "branch": "丑"}], "end_date": "2048-01-11", "end_year": 2048, "start_date": "2038-01-12", "start_year": 2038}, {"gan": "甲", "zhi": "辰", "name": "甲辰", "wuxing": "木", "shi_shen": "正官运", "rooted": false, "end_date": "2058-01-11", "end_year": 2058, "start_date": "2048-01-12", "start_year": 2048}, {"gan": "乙", "zhi": "巳", "name": "乙巳", "wuxing": "木", "shi_shen": "七杀运", "rooted": false, "end_date": "2068-01-11", "end_year": 2068, "start_date": "2058-01-12", "start_year": 2058}, {"gan": "丙", "zhi": "午", "name": "丙午", "wuxing": "火", "shi_shen": "正印运", "rooted": true, "root_refs": [{"source": "sitting_branch_main_qi", "stem": "丁", "branch": "午"}, {"source": "natal_hidden_stem", "pillar": "shi", "stem": "丙", "branch": "巳"}], "end_date": "2078-01-11", "end_year": 2078, "start_date": "2068-01-12", "start_year": 2068}, {"gan": "丁", "zhi": "未", "name": "丁未", "wuxing": "火", "shi_shen": "偏印运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "shi", "stem": "丙", "branch": "巳"}], "end_date": "2088-01-11", "end_year": 2088, "start_date": "2078-01-12", "start_year": 2078}, {"gan": "戊", "zhi": "申", "name": "戊申", "wuxing": "土", "shi_shen": "劫财运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "戊", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "己", "branch": "丑"}, {"source": "natal_hidden_stem", "pillar": "shi", "stem": "戊", "branch": "巳"}], "end_date": "2098-01-11", "end_year": 2098, "start_date": "2088-01-12", "start_year": 2088}, {"gan": "己", "zhi": "酉", "name": "己酉", "wuxing": "土", "shi_shen": "比肩运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "戊", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "己", "branch": "丑"}, {"source": "natal_hidden_stem", "pillar": "shi", "stem": "戊", "branch": "巳"}], "end_date": "2108-01-11", "end_year": 2108, "start_date": "2098-01-12", "start_year": 2098}], "direction": "顺排", "start_date": "2018-01-12", "start_day_after": 10, "start_month_after": 0, "start_year_after": 1}}, "B": {"label": "B 盘 · 真太阳时（辰时）", "pillars": [{"gan": "丙", "zhi": "申", "na_yin": "山下火", "gan_shen": "正印", "cang_gan": {"main": "庚", "mid": "壬", "minor": "戊"}, "hidden": [{"gan": "庚", "shen": "伤官", "qi": "本气"}, {"gan": "壬", "shen": "正财", "qi": "中气"}, {"gan": "戊", "shen": "劫财", "qi": "余气"}], "chang_sheng": "沐浴", "self_sitting": "病", "xun": "甲午旬", "xun_kong": "辰巳", "is_void": false, "shen_sha": [{"category": "吉", "description": "主贵人相助，逢凶化吉", "name": "天乙贵人"}, {"category": "吉", "description": "主禀气清粹，逢凶化吉", "name": "德秀贵人"}, {"category": "吉", "description": "主食禄福泽", "name": "天厨贵人"}, {"category": "凶", "description": "羊刃冲位，主动荡急变", "name": "飞刃"}, {"category": "吉", "description": "天德所合，主贵人助力", "name": "天德合"}, {"category": "吉", "description": "主财运、车辆、出行顺利", "name": "金舆"}], "label": "年柱", "key": "nian"}, {"gan": "庚", "zhi": "子", "na_yin": "壁上土", "gan_shen": "伤官", "cang_gan": {"main": "癸", "mid": null, "minor": null}, "hidden": [{"gan": "癸", "shen": "偏财", "qi": "本气"}], "chang_sheng": "绝", "self_sitting": "死", "xun": "甲午旬", "xun_kong": "辰巳", "is_void": false, "shen_sha": [{"category": "吉", "description": "主贵人相助，逢凶化吉", "name": "天乙贵人"}, {"category": "吉", "description": "主领导才能，有权威", "name": "将星"}], "label": "月柱", "key": "yue"}, {"gan": "己", "zhi": "丑", "na_yin": "霹雳火", "gan_shen": "比肩", "cang_gan": {"main": "己", "mid": "癸", "minor": "辛"}, "hidden": [{"gan": "己", "shen": "比肩", "qi": "本气"}, {"gan": "癸", "shen": "偏财", "qi": "中气"}, {"gan": "辛", "shen": "食神", "qi": "余气"}], "chang_sheng": "墓", "self_sitting": "墓", "xun": "甲申旬", "xun_kong": "午未", "is_void": false, "shen_sha": [{"category": "吉", "description": "主聪慧好学，宜研哲理玄学", "name": "太极贵人"}, {"category": "吉", "description": "主禀气清粹，逢凶化吉", "name": "德秀贵人"}, {"category": "中性", "description": "传统取象主幼年多病、姻缘迟滞", "name": "童子煞"}, {"category": "中性", "description": "主孤独清高，聪明好学，有艺术天赋", "name": "华盖"}, {"category": "吉", "description": "主喜庆之事，婚恋吉兆", "name": "天喜"}, {"category": "凶", "description": "日柱十恶大败日，主财库不聚，须谨慎理财", "name": "十恶大败"}], "label": "日柱", "key": "ri"}, {"gan": "戊", "zhi": "辰", "na_yin": "大林木", "gan_shen": "劫财", "cang_gan": {"main": "戊", "mid": "乙", "minor": "癸"}, "hidden": [{"gan": "戊", "shen": "劫财", "qi": "本气"}, {"gan": "乙", "shen": "七杀", "qi": "中气"}, {"gan": "癸", "shen": "偏财", "qi": "余气"}], "chang_sheng": "衰", "self_sitting": "冠带", "xun": "甲子旬", "xun_kong": "戌亥", "is_void": false, "shen_sha": [{"category": "吉", "description": "主聪慧好学，宜研哲理玄学", "name": "太极贵人"}, {"category": "吉", "description": "主禀气清粹，逢凶化吉", "name": "德秀贵人"}, {"category": "中性", "description": "主孤独清高，聪明好学，有艺术天赋", "name": "华盖"}], "label": "时柱", "key": "shi"}], "fu_yi": {"wuxing_count": {"土": 5, "木": 1, "水": 4, "火": 1, "金": 3}, "wang_shuai": {"土": "囚", "木": "相", "水": "旺", "火": "死", "金": "休"}, "yong": "无候选", "xi": "无候选", "ji": "无候选", "qiangruo": "中和", "model": "support_control_with_day_master_strength", "basis": {"root_type": "zhi_mid", "season": "囚", "yin_bi_count": 2, "day_master_roots": [{"branch": "申", "pillar": "nian", "source": "minor_qi", "stem": "戊"}, {"branch": "丑", "pillar": "ri", "source": "main_qi", "stem": "己"}, {"branch": "辰", "pillar": "shi", "source": "main_qi", "stem": "戊"}], "relation_facts": [{"branches": ["子", "丑"], "field": "zhi_liu_he", "group": "子丑合土", "pillars": ["yue", "ri"], "targets": ["day_branch", "day_master_root"]}, {"branches": ["丑", "辰"], "field": "liu_po", "group": "丑辰破", "pillars": ["ri", "shi"], "targets": ["day_branch", "day_master_root"]}, {"branches": ["申", "子", "辰"], "field": "san_he", "group": "申子辰水局", "pillars": ["nian", "yue", "shi"], "targets": ["day_master_root"]}]}}, "ten_gods": [{"shi_shen": "比肩", "wuxing": "土", "transparent": true, "hidden": true, "rooted": true, "timely": false, "count": 2, "strength": "strong"}, {"shi_shen": "劫财", "wuxing": "土", "transparent": true, "hidden": true, "rooted": true, "timely": false, "count": 3, "strength": "strong"}, {"shi_shen": "食神", "wuxing": "金", "transparent": false, "hidden": true, "rooted": true, "timely": false, "count": 1, "strength": "neutral"}, {"shi_shen": "伤官", "wuxing": "金", "transparent": true, "hidden": true, "rooted": true, "timely": false, "count": 2, "strength": "strong"}, {"shi_shen": "偏财", "wuxing": "水", "transparent": false, "hidden": true, "rooted": true, "timely": true, "count": 3, "strength": "strong"}, {"shi_shen": "正财", "wuxing": "水", "transparent": false, "hidden": true, "rooted": true, "timely": true, "count": 1, "strength": "strong"}, {"shi_shen": "七杀", "wuxing": "木", "transparent": false, "hidden": true, "rooted": true, "timely": true, "count": 1, "strength": "strong"}, {"shi_shen": "正印", "wuxing": "火", "transparent": true, "hidden": false, "rooted": false, "timely": false, "count": 1, "strength": "neutral"}], "elements": [{"wuxing": "木", "season": "相", "season_strength": "strong", "strength": "strong", "transparent": false, "rooted": true, "controls": "土", "controlled_by": "金", "controller_strength": "weak", "reasons": ["timely"]}, {"wuxing": "火", "season": "死", "season_strength": "weak", "strength": "neutral", "transparent": true, "rooted": false, "controls": "金", "controlled_by": "水", "controller_strength": "strong", "reasons": []}, {"wuxing": "土", "season": "囚", "season_strength": "weak", "strength": "strong", "transparent": true, "rooted": true, "controls": "水", "controlled_by": "木", "controller_strength": "strong", "reasons": ["transparent_rooted"]}, {"wuxing": "金", "season": "休", "season_strength": "weak", "strength": "strong", "transparent": true, "rooted": true, "controls": "木", "controlled_by": "火", "controller_strength": "weak", "reasons": ["transparent_rooted"]}, {"wuxing": "水", "season": "旺", "season_strength": "strong", "strength": "strong", "transparent": false, "rooted": true, "controls": "火", "controlled_by": "土", "controller_strength": "weak", "reasons": ["timely"]}], "ge_ju": {"ge_ju": "偏财格", "yong_fa": "顺用", "pattern_god": "癸", "pattern_god_ten_god": "偏财", "pattern_god_source": "main_qi_not_transparent", "structure": {"pattern": {"roots": [{"branch": "申", "pillar": "nian", "source": "mid_qi", "stem": "壬"}, {"branch": "子", "pillar": "yue", "source": "main_qi", "stem": "癸"}, {"branch": "丑", "pillar": "ri", "source": "mid_qi", "stem": "癸"}, {"branch": "辰", "pillar": "shi", "source": "minor_qi", "stem": "癸"}], "season": "旺", "strength": "strong", "timely": true, "transparent_pillars": [], "wuxing": "水"}, "controller": {"roots": [{"branch": "申", "pillar": "nian", "source": "minor_qi", "stem": "戊"}, {"branch": "丑", "pillar": "ri", "source": "main_qi", "stem": "己"}, {"branch": "辰", "pillar": "shi", "source": "main_qi", "stem": "戊"}], "season": "囚", "strength": "strong", "timely": false, "transparent_pillars": ["ri", "shi"], "wuxing": "土"}, "generator": {"roots": [{"branch": "申", "pillar": "nian", "source": "main_qi", "stem": "庚"}, {"branch": "丑", "pillar": "ri", "source": "minor_qi", "stem": "辛"}], "season": "休", "strength": "strong", "timely": false, "transparent_pillars": ["yue"], "wuxing": "金"}, "relation_facts": [{"branches": ["子", "丑"], "field": "zhi_liu_he", "group": "子丑合土", "pillars": ["yue", "ri"], "targets": ["pattern", "controller", "generator"]}, {"branches": ["丑", "辰"], "field": "liu_po", "group": "丑辰破", "pillars": ["ri", "shi"], "targets": ["controller", "pattern", "generator"]}, {"branches": ["申", "子", "辰"], "field": "san_he", "group": "申子辰水局", "pillars": ["nian", "yue", "shi"], "targets": ["generator", "pattern", "controller"]}]}}, "tiao_hou": {"primary_wuxing": "火", "secondary_wuxing": "木", "season": "冬", "detail": "子月己土，用丙调候，甲辅之", "model": "qiongtong_primary_secondary_table", "primary": {"stem": "丙", "transparent": true, "hidden": false, "occurrences": [{"branch": "申", "pillar": "nian", "source": "gan", "stem": "丙"}], "relation_facts": [{"branches": ["申", "子", "辰"], "field": "san_he", "group": "申子辰水局", "pillars": ["nian", "yue", "shi"], "targets": ["primary"]}]}, "secondary": {"hidden": false, "occurrences": [], "relation_facts": [], "stem": "甲", "transparent": false}}, "relations": {"zhi_liu_he": [{"pillar_a": 1, "pillar_b": 2, "wuxing": "土", "zhi_a": "子", "zhi_b": "丑"}], "san_he": [{"type": "三合", "name": "申子辰水局", "wuxing": "水", "branches": ["申", "子", "辰"], "pillars": ["nian", "yue", "shi"]}], "liu_po": [{"zhi_a": "丑", "zhi_b": "辰", "pillar_a": 2, "pillar_b": 3}], "relation_groups": [{"field": "liu_po", "group": "辰丑"}, {"field": "san_he", "group": "申子辰"}, {"field": "zhi_liu_he", "group": "子丑"}]}, "san_yuan": {"tai_yuan": {"gan": "辛", "zhi": "卯"}, "ming_gong": {"gan": "辛", "zhi": "丑"}, "shen_gong": {"gan": "癸", "zhi": "巳"}}, "tai_xi": {"gan": "甲", "zhi": "子"}, "nayin_rel": [{"a": "nian", "b": "yue", "relation": "相生"}, {"a": "nian", "b": "ri", "relation": "相同"}, {"a": "nian", "b": "shi", "relation": "相生"}, {"a": "yue", "b": "ri", "relation": "相生"}, {"a": "yue", "b": "shi", "relation": "相克"}, {"a": "ri", "b": "shi", "relation": "相生"}], "chang_sheng": [{"index": "酉", "name": "长生"}, {"index": "申", "name": "沐浴"}, {"index": "未", "name": "冠带"}, {"index": "午", "name": "临官"}, {"index": "巳", "name": "帝旺"}, {"index": "辰", "name": "衰"}, {"index": "卯", "name": "病"}, {"index": "寅", "name": "死"}, {"index": "丑", "name": "墓"}, {"index": "子", "name": "绝"}, {"index": "亥", "name": "胎"}, {"index": "戌", "name": "养"}], "lu_roots": [{"shi_shen": "伤官", "gan": "庚", "zhi": "申"}], "atomic": {"day_master_element": "土", "day_master_stem": "己", "day_branch": "丑", "month_longevity": "绝", "year_stem_ten_god": "正印", "month_main_ten_god": "偏财", "hour_stem_ten_god": "劫财", "pattern_god_transparent": false, "pillar_punishments": {"nian": false, "yue": false, "ri": false, "shi": false}, "officer_killing_cleaned": false, "wealth_tomb_present": true, "wealth_star_in_tomb": true, "spouse_palace_state": "合", "day_branch_type": "墓库", "year_officer_killing": false}, "day_xun": "甲申旬", "day_xun_kong": "午未", "da_yun": {"steps": [{"gan": "辛", "zhi": "丑", "name": "辛丑", "wuxing": "金", "shi_shen": "食神运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "庚", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "辛", "branch": "丑"}], "end_date": "2028-01-11", "end_year": 2028, "start_date": "2018-01-12", "start_year": 2018}, {"gan": "壬", "zhi": "寅", "name": "壬寅", "wuxing": "水", "shi_shen": "正财运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "壬", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "yue", "stem": "癸", "branch": "子"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "癸", "branch": "丑"}, {"source": "natal_hidden_stem", "pillar": "shi", "stem": "癸", "branch": "辰"}], "end_date": "2038-01-11", "end_year": 2038, "start_date": "2028-01-12", "start_year": 2028}, {"gan": "癸", "zhi": "卯", "name": "癸卯", "wuxing": "水", "shi_shen": "偏财运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "壬", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "yue", "stem": "癸", "branch": "子"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "癸", "branch": "丑"}, {"source": "natal_hidden_stem", "pillar": "shi", "stem": "癸", "branch": "辰"}], "end_date": "2048-01-11", "end_year": 2048, "start_date": "2038-01-12", "start_year": 2038}, {"gan": "甲", "zhi": "辰", "name": "甲辰", "wuxing": "木", "shi_shen": "正官运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "shi", "stem": "乙", "branch": "辰"}], "end_date": "2058-01-11", "end_year": 2058, "start_date": "2048-01-12", "start_year": 2048}, {"gan": "乙", "zhi": "巳", "name": "乙巳", "wuxing": "木", "shi_shen": "七杀运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "shi", "stem": "乙", "branch": "辰"}], "end_date": "2068-01-11", "end_year": 2068, "start_date": "2058-01-12", "start_year": 2058}, {"gan": "丙", "zhi": "午", "name": "丙午", "wuxing": "火", "shi_shen": "正印运", "rooted": true, "root_refs": [{"source": "sitting_branch_main_qi", "stem": "丁", "branch": "午"}], "end_date": "2078-01-11", "end_year": 2078, "start_date": "2068-01-12", "start_year": 2068}, {"gan": "丁", "zhi": "未", "name": "丁未", "wuxing": "火", "shi_shen": "偏印运", "rooted": false, "end_date": "2088-01-11", "end_year": 2088, "start_date": "2078-01-12", "start_year": 2078}, {"gan": "戊", "zhi": "申", "name": "戊申", "wuxing": "土", "shi_shen": "劫财运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "戊", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "己", "branch": "丑"}, {"source": "natal_hidden_stem", "pillar": "shi", "stem": "戊", "branch": "辰"}], "end_date": "2098-01-11", "end_year": 2098, "start_date": "2088-01-12", "start_year": 2088}, {"gan": "己", "zhi": "酉", "name": "己酉", "wuxing": "土", "shi_shen": "比肩运", "rooted": true, "root_refs": [{"source": "natal_hidden_stem", "pillar": "nian", "stem": "戊", "branch": "申"}, {"source": "natal_hidden_stem", "pillar": "ri", "stem": "己", "branch": "丑"}, {"source": "natal_hidden_stem", "pillar": "shi", "stem": "戊", "branch": "辰"}], "end_date": "2108-01-11", "end_year": 2108, "start_date": "2098-01-12", "start_year": 2098}], "direction": "顺排", "start_date": "2018-01-12", "start_day_after": 10, "start_month_after": 0, "start_year_after": 1}}}, "liunian": [{"year": 2026, "ganzhi": "丙午", "shi_shen": "正印", "wuxing": "火", "na_yin": "天河水", "shensha": ["灾煞(凶)", "桃花(中性)", "病符(凶)", "丧门(凶)", "大耗(凶)"], "fuyin_fanyin": [{"detail": "丙午与庚子天克地冲", "natal_index": 1, "type": "反吟"}], "relations": ["丙克庚", "丙生己", "丙生己", "午子相冲", "午丑相害", "辛丙合化水", "己生辛", "己生辛"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": false, "officer_killing": false, "seal_star": false, "food_injury": true}, "controls_elements": ["金"], "wealth_breaks_seal": false, "year_branch_relations": {"丑": "liu_hai", "子": "liu_chong"}, "year_branch_controlled_by": ["水"], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": false, "gan_combines": false, "dayun_gan_combines": true, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": true, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": false}]}}, {"year": 2027, "ganzhi": "丁未", "shi_shen": "偏印", "wuxing": "火", "na_yin": "天河水", "shensha": ["红鸾(吉)", "吊客(凶)", "大耗(凶)"], "fuyin_fanyin": [], "relations": ["丁克庚", "丁生己", "丁生己", "未子相害", "未丑相冲", "未巳拱午，火方候选", "辛丙合化水", "己生辛"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": true, "officer_killing": false, "seal_star": false, "food_injury": true}, "controls_elements": ["金", "水"], "wealth_breaks_seal": false, "year_branch_relations": {"丑": "liu_chong", "子": "liu_hai", "巳": "san_hui_gong"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": false, "gan_combines": false, "dayun_gan_combines": false, "dayun_zhi_clashes_year": true, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": false}]}}, {"year": 2028, "ganzhi": "戊申", "shi_shen": "劫财", "wuxing": "土", "na_yin": "大驿土", "shensha": ["天乙贵人(吉)"], "fuyin_fanyin": [{"detail": "申地支伏吟", "natal_index": 0, "type": "伏吟"}], "relations": ["丙生戊", "戊生庚", "申子半合水局，缺辰", "申巳合化水", "辛丙合化水", "己生辛", "己生辛", "丑子合化土"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": true, "officer_killing": true, "seal_star": false, "food_injury": false}, "controls_elements": ["木", "水"], "wealth_breaks_seal": false, "year_branch_relations": {"子": "half_he", "巳": "liu_he"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": false, "gan_combines": false, "dayun_gan_combines": false, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": true}]}}, {"year": 2029, "ganzhi": "己酉", "shi_shen": "比肩", "wuxing": "土", "na_yin": "大驿土", "shensha": ["桃花(中性)", "病符(凶)"], "fuyin_fanyin": [], "relations": ["丙生己", "己生庚", "酉子相破", "酉丑半合金局，缺巳", "酉巳半合金局，缺丑", "壬克丙", "庚生壬", "己克壬"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": true, "officer_killing": true, "seal_star": false, "food_injury": false}, "controls_elements": ["木", "水"], "wealth_breaks_seal": false, "year_branch_relations": {"丑": "half_he", "巳": "half_he"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": false, "gan_combines": false, "dayun_gan_combines": false, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": false}, {"kind": "san_he", "group": "三合巳酉丑", "branches": ["巳", "酉", "丑"], "includes_year": true}]}}, {"year": 2030, "ganzhi": "庚戌", "shi_shen": "伤官", "wuxing": "金", "na_yin": "钗钏金", "shensha": ["丧门(凶)", "吊客(凶)"], "fuyin_fanyin": [], "relations": ["丙克庚", "己生庚", "己生庚", "戌申拱酉，金方候选", "戌子暗合", "戌丑恃势之刑", "壬克丙", "庚生壬"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": true, "officer_killing": true, "seal_star": false, "food_injury": false}, "controls_elements": ["木", "水"], "wealth_breaks_seal": false, "year_branch_relations": {"丑": "xing", "申": "san_hui_gong"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": false, "gan_combines": false, "dayun_gan_combines": false, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": false}]}}, {"year": 2031, "ganzhi": "辛亥", "shi_shen": "食神", "wuxing": "金", "na_yin": "钗钏金", "shensha": ["驿马(中性)", "丧门(凶)", "大耗(凶)"], "fuyin_fanyin": [], "relations": ["辛丙合化水", "己生辛", "己生辛", "亥申相害", "亥丑拱子，水方候选", "亥巳相冲", "壬克丙", "庚生壬"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": false, "officer_killing": true, "seal_star": true, "food_injury": false}, "controls_elements": ["木", "火"], "wealth_breaks_seal": false, "year_branch_relations": {"丑": "san_hui_gong", "巳": "liu_chong", "申": "liu_hai"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": false, "gan_combines": false, "dayun_gan_combines": false, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": false}, {"kind": "san_hui", "group": "三会亥子丑", "branches": ["亥", "子", "丑"], "includes_year": true}]}}, {"year": 2032, "ganzhi": "壬子", "shi_shen": "正财", "wuxing": "水", "na_yin": "桑柘木", "shensha": ["天乙贵人(吉)"], "fuyin_fanyin": [{"detail": "子地支伏吟", "natal_index": 1, "type": "伏吟"}], "relations": ["壬克丙", "庚生壬", "己克壬", "己克壬", "子申半合水局，缺辰", "子丑合化土", "壬克丙", "庚生壬"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": false, "officer_killing": false, "seal_star": true, "food_injury": false}, "controls_elements": ["火"], "wealth_breaks_seal": false, "year_branch_relations": {"丑": "liu_he", "申": "half_he"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": true, "gan_combines": false, "dayun_gan_combines": false, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": true}]}}, {"year": 2033, "ganzhi": "癸丑", "shi_shen": "偏财", "wuxing": "水", "na_yin": "桑柘木", "shensha": ["华盖(中性)", "天喜(吉)", "病符(凶)"], "fuyin_fanyin": [{"detail": "丑地支伏吟", "natal_index": 2, "type": "伏吟"}], "relations": ["癸克丙", "庚生癸", "己克癸", "己克癸", "丑子合化土", "丑巳拱酉，金局候选", "壬克丙", "庚生壬"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": true, "officer_killing": false, "seal_star": true, "food_injury": false}, "controls_elements": ["火", "水"], "wealth_breaks_seal": false, "year_branch_relations": {"子": "liu_he", "巳": "san_he_gong"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": true, "gan_combines": false, "dayun_gan_combines": false, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": false}]}}, {"year": 2034, "ganzhi": "甲寅", "shi_shen": "正官", "wuxing": "木", "na_yin": "大溪水", "shensha": ["驿马(中性)", "劫煞(凶)", "病符(凶)", "吊客(凶)", "大耗(凶)"], "fuyin_fanyin": [], "relations": ["甲生丙", "庚克甲", "甲己合化土", "甲己合化土", "寅申相冲", "寅丑暗合", "寅巳无恩之刑", "壬克丙"], "atomic": {"controls_targets": {"day_master": true, "wealth_star": false, "officer_killing": false, "seal_star": false, "food_injury": false}, "controls_elements": ["土"], "wealth_breaks_seal": false, "year_branch_relations": {"巳": "xing", "申": "liu_chong"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": true, "day_gan_controls_year_gan": false, "gan_combines": true, "dayun_gan_combines": false, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": false}, {"kind": "xing", "group": "三刑寅巳申", "branches": ["寅", "巳", "申"], "includes_year": true}]}}, {"year": 2035, "ganzhi": "乙卯", "shi_shen": "七杀", "wuxing": "木", "na_yin": "大溪水", "shensha": ["灾煞(凶)", "丧门(凶)", "吊客(凶)"], "fuyin_fanyin": [], "relations": ["乙生丙", "乙庚合化金", "乙克己", "乙克己", "卯申暗合", "卯子无礼之刑", "壬克丙", "庚生壬"], "atomic": {"controls_targets": {"day_master": true, "wealth_star": false, "officer_killing": false, "seal_star": false, "food_injury": false}, "controls_elements": ["土"], "wealth_breaks_seal": false, "year_branch_relations": {"子": "xing"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": true, "day_gan_controls_year_gan": false, "gan_combines": false, "dayun_gan_combines": false, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": false}, {"kind": "xing", "group": "三刑子卯", "branches": ["子", "卯"], "includes_year": true}]}}, {"year": 2036, "ganzhi": "丙辰", "shi_shen": "正印", "wuxing": "火", "na_yin": "沙中土", "shensha": ["华盖(中性)"], "fuyin_fanyin": [], "relations": ["丙克庚", "丙生己", "丙生己", "辰申拱子，水局候选", "辰子半合水局，缺申", "辰丑相破", "壬克丙", "庚生壬"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": true, "officer_killing": false, "seal_star": false, "food_injury": true}, "controls_elements": ["金", "水"], "wealth_breaks_seal": false, "year_branch_relations": {"子": "half_he", "申": "san_he_gong"}, "year_branch_controlled_by": [], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": false, "gan_combines": false, "dayun_gan_combines": false, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": true, "combinations": [{"kind": "san_he", "group": "三合申子辰", "branches": ["申", "子", "辰"], "includes_year": true}]}}, {"year": 2037, "ganzhi": "丁巳", "shi_shen": "偏印", "wuxing": "火", "na_yin": "沙中土", "shensha": ["劫煞(凶)"], "fuyin_fanyin": [{"detail": "巳地支伏吟", "natal_index": 3, "type": "伏吟"}], "relations": ["丁克庚", "丁生己", "丁生己", "巳申合化水", "巳丑拱酉，金局候选", "壬克丙", "庚生壬", "己克壬"], "atomic": {"controls_targets": {"day_master": false, "wealth_star": false, "officer_killing": false, "seal_star": false, "food_injury": true}, "controls_elements": ["金"], "wealth_breaks_seal": false, "year_branch_relations": {"丑": "san_he_gong", "申": "liu_he"}, "year_branch_controlled_by": ["水"], "year_gan_controls_day_gan": false, "day_gan_controls_year_gan": false, "gan_combines": false, "dayun_gan_combines": true, "dayun_zhi_clashes_year": false, "day_void_branches": ["午", "未"], "year_equals_day_pillar": false, "dayun_equals_year_pillar": false, "year_gan_equals_natal_year_gan": false, "combinations": [{"kind": "half_he", "group": "三合申子辰", "branches": ["申", "子"], "includes_year": false}]}}], "xiaoyun": [{"method": "san_ming_tong_hui", "basis": "《三命通会》：男起丙寅顺行、女起壬申逆行", "zhus": [{"age": 1, "gan": "丙", "zhi": "寅", "name": "丙寅", "shi_shen": "正印"}, {"age": 2, "gan": "丁", "zhi": "卯", "name": "丁卯", "shi_shen": "偏印"}, {"age": 3, "gan": "戊", "zhi": "辰", "name": "戊辰", "shi_shen": "劫财"}, {"age": 4, "gan": "己", "zhi": "巳", "name": "己巳", "shi_shen": "比肩"}, {"age": 5, "gan": "庚", "zhi": "午", "name": "庚午", "shi_shen": "伤官"}, {"age": 6, "gan": "辛", "zhi": "未", "name": "辛未", "shi_shen": "食神"}, {"age": 7, "gan": "壬", "zhi": "申", "name": "壬申", "shi_shen": "正财"}, {"age": 8, "gan": "癸", "zhi": "酉", "name": "癸酉", "shi_shen": "偏财"}, {"age": 9, "gan": "甲", "zhi": "戌", "name": "甲戌", "shi_shen": "正官"}, {"age": 10, "gan": "乙", "zhi": "亥", "name": "乙亥", "shi_shen": "七杀"}, {"age": 11, "gan": "丙", "zhi": "子", "name": "丙子", "shi_shen": "正印"}, {"age": 12, "gan": "丁", "zhi": "丑", "name": "丁丑", "shi_shen": "偏印"}]}, {"method": "xing_ping_hui_hai", "basis": "《星平会海》：由时柱起，阳男阴女顺、阴男阳女逆", "zhus": [{"age": 1, "gan": "己", "zhi": "巳", "name": "己巳", "shi_shen": "比肩"}, {"age": 2, "gan": "庚", "zhi": "午", "name": "庚午", "shi_shen": "伤官"}, {"age": 3, "gan": "辛", "zhi": "未", "name": "辛未", "shi_shen": "食神"}, {"age": 4, "gan": "壬", "zhi": "申", "name": "壬申", "shi_shen": "正财"}, {"age": 5, "gan": "癸", "zhi": "酉", "name": "癸酉", "shi_shen": "偏财"}, {"age": 6, "gan": "甲", "zhi": "戌", "name": "甲戌", "shi_shen": "正官"}, {"age": 7, "gan": "乙", "zhi": "亥", "name": "乙亥", "shi_shen": "七杀"}, {"age": 8, "gan": "丙", "zhi": "子", "name": "丙子", "shi_shen": "正印"}, {"age": 9, "gan": "丁", "zhi": "丑", "name": "丁丑", "shi_shen": "偏印"}, {"age": 10, "gan": "戊", "zhi": "寅", "name": "戊寅", "shi_shen": "劫财"}, {"age": 11, "gan": "己", "zhi": "卯", "name": "己卯", "shi_shen": "比肩"}, {"age": 12, "gan": "庚", "zhi": "辰", "name": "庚辰", "shi_shen": "伤官"}]}], "liuyue_2026": [{"month": 1, "name": "丑月", "ganzhi": "己丑", "shi_shen": "比肩", "wuxing": "土", "shensha": ["华盖(中性)", "天喜(吉)"]}, {"month": 2, "name": "寅月", "ganzhi": "庚寅", "shi_shen": "伤官", "wuxing": "金", "shensha": ["驿马(中性)", "劫煞(凶)"]}, {"month": 3, "name": "卯月", "ganzhi": "辛卯", "shi_shen": "食神", "wuxing": "金", "shensha": ["灾煞(凶)"]}, {"month": 4, "name": "辰月", "ganzhi": "壬辰", "shi_shen": "正财", "wuxing": "水", "shensha": ["华盖(中性)"]}, {"month": 5, "name": "巳月", "ganzhi": "癸巳", "shi_shen": "偏财", "wuxing": "水", "shensha": ["劫煞(凶)"]}, {"month": 6, "name": "午月", "ganzhi": "甲午", "shi_shen": "正官", "wuxing": "木", "shensha": ["灾煞(凶)", "桃花(中性)"]}, {"month": 7, "name": "未月", "ganzhi": "乙未", "shi_shen": "七杀", "wuxing": "木", "shensha": ["红鸾(吉)"]}, {"month": 8, "name": "申月", "ganzhi": "丙申", "shi_shen": "正印", "wuxing": "火", "shensha": ["天乙贵人(吉)"]}, {"month": 9, "name": "酉月", "ganzhi": "丁酉", "shi_shen": "偏印", "wuxing": "火", "shensha": ["桃花(中性)"]}, {"month": 10, "name": "戌月", "ganzhi": "戊戌", "shi_shen": "劫财", "wuxing": "土", "shensha": []}, {"month": 11, "name": "亥月", "ganzhi": "己亥", "shi_shen": "比肩", "wuxing": "土", "shensha": ["驿马(中性)"]}, {"month": 12, "name": "子月", "ganzhi": "庚子", "shi_shen": "伤官", "wuxing": "金", "shensha": ["天乙贵人(吉)"]}], "source": {"engine": "engine-bazi (Liki Chart Engine) 2026.10.23.0", "tools": ["bazi_chart", "bazi_fullchart", "bazi_liunian", "bazi_xiaoyun", "bazi_liuyue"], "verified": "lunar-python + JDN + 在线万年历三路复核"}};
+const ELEM_ORDER = ['木','火','土','金','水'];
+const ELEM_COLOR = {木:'#2F7D57', 火:'#B23A2E', 土:'#B88A2E', 金:'#7C8288', 水:'#2F5D8A'};
+const STR_CN = {strong:'强', neutral:'中', weak:'弱'};
+const GAN_E = {甲:'木',乙:'木',丙:'火',丁:'火',戊:'土',己:'土',庚:'金',辛:'金',壬:'水',癸:'水'};
+const ZHI_E = {子:'水',丑:'土',寅:'木',卯:'木',辰:'土',巳:'火',午:'火',未:'土',申:'金',酉:'金',戌:'土',亥:'水'};
+let cur = 'A';
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function chart(){return D.charts[cur];}
+function elemChip(e){return `<span class="chip elem-${e}">${e}</span>`;}
+function catClass(c){return c==='吉'?'good':c==='凶'?'bad':'mid';}
+
+function renderKpis(){
+  const b = D.birth;
+  const el = document.getElementById('kpis');
+  el.innerHTML = [
+    ['日主','己土','田园土 · 包容务实','gold'],
+    ['格局','偏财格','顺用 · 财旺、食伤生财','red'],
+    ['调候','丙火','子月己土，用丙调候，甲辅之','red'],
+    ['身强弱','中和 / 偏弱','engine 判中和；加权模型判中和偏弱','blue'],
+    ['喜用','火 &gt; 土 &gt; 木','火第一，土第二，木少量','green'],
+    ['忌','金 · 水','原局金水偏旺，不再添','gray']
+  ].map(([k,v,n,c])=>`<div class="kpi ${c}"><div class="k">${k}</div><div class="v">${v}</div><div class="n">${n}</div></div>`).join('');
+}
+
+function renderPillars(){
+  const arr = chart().pillars;
+  const box = document.getElementById('pillars');
+  box.innerHTML = arr.map(p=>{
+    const shen = p.shen_sha || [];
+    return `<div class="pillar">
+      <div class="lab">${esc(p.label)}</div>
+      <div class="gz"><span class="gan">${esc(p.gan)}</span><span class="zhi">${esc(p.zhi)}</span></div>
+      <div class="shen">天干 ${esc(p.gan_shen)} · ${elemChip(GAN_E[p.gan])}</div>
+      <div class="hchip" style="display:inline-block;margin-bottom:5px">地支 ${elemChip(ZHI_E[p.zhi])}</div>
+      <div class="row"><b>藏干</b>：${(p.hidden||[]).map(h=>`${esc(h.gan)}(${esc(h.shen)}·${esc(h.qi)})`).join('、')||'—'}</div>
+      <div class="row"><b>纳音</b>：${esc(p.na_yin)}</div>
+      <div class="row"><b>长生</b>：${esc(p.chang_sheng)} · <b>自坐</b>：${esc(p.self_sitting)}</div>
+      <div class="row"><b>旬空</b>：${esc(p.xun_kong||'—')}${p.is_void?'（落空）':''}</div>
+      <div class="hidden">${shen.slice(0,6).map(x=>`<span class="hchip" title="${esc(x.description||'')}">${esc(x.name)}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+  const note = document.getElementById('chartNote');
+  note.innerHTML = cur==='A'
+    ? '<b>A 盘：</b>时柱 <b>己巳</b>。正印丙火在巳有根，印星强；原局无官杀。申巳合水/刑/破、申子半合水、子丑合土、丑巳拱酉。'
+    : '<b>B 盘：</b>时柱 <b>戊辰</b>。申子辰三合水局，水势更旺；丙火只透年干、无根，正印转中和；辰中乙木七杀。丑辰破、子丑合土。';
+}
+
+function elemBars(counts, elId){
+  const max = Math.max(...ELEM_ORDER.map(e=>counts[e]||0), 1);
+  document.getElementById(elId).innerHTML = ELEM_ORDER.map(e=>{
+    const v = counts[e]||0;
+    return `<div class="elem"><div class="nm" style="color:${ELEM_COLOR[e]}">${e}</div>
+      <div class="track"><div class="fill" style="width:${(v/max*100).toFixed(1)}%;background:${ELEM_COLOR[e]}"></div></div>
+      <div class="val">${v}</div></div>`;
+  }).join('');
+}
+
+function renderElements(){
+  const c = chart();
+  const mc = {木:0,火:0,土:0,金:0,水:0};
+  c.pillars.forEach(p=>{mc[GAN_E[p.gan]]++; mc[ZHI_E[p.zhi]]++;});
+  document.getElementById('elemTitle1').textContent = `${cur} 盘 · 明字（8 字）`;
+  document.getElementById('elemTitle2').textContent = `${cur} 盘 · 含藏干（engine 计数）`;
+  elemBars(mc,'elemBars1');
+  elemBars(c.fu_yi.wuxing_count||{},'elemBars2');
+  const ws = c.fu_yi.wang_shuai||{};
+  document.getElementById('seasonNote').innerHTML = `<b>月令旺衰：</b>${ELEM_ORDER.map(e=>`${e}${ws[e]||'—'}`).join(' · ')}。子月水旺、火死；火虽不得令，但年干丙火透出，是调候的关键。`;
+}
+
+function renderTenGods(){
+  const arr = (chart().ten_gods||[]).slice().sort((a,b)=>b.count-a.count);
+  const max = Math.max(...arr.map(x=>x.count),1);
+  document.getElementById('tgTitle').textContent = `${cur} 盘 · 十神力量`;
+  document.getElementById('tgBars').innerHTML = arr.map(x=>{
+    const cls = x.strength==='strong'?'good':'mid';
+    return `<div class="elem"><div class="nm" style="font-size:12.5px">${esc(x.shi_shen)}<br><span class="small">${esc(x.wuxing)}</span></div>
+      <div class="track"><div class="fill" style="width:${(x.count/max*100).toFixed(1)}%;background:${ELEM_COLOR[x.wuxing]||'#999'}"></div></div>
+      <div class="val">${x.count}</div></div>
+      <div class="chips" style="margin:-2px 0 8px 78px">
+        <span class="chip ${cls}">${esc(STR_CN[x.strength]||x.strength)}</span>
+        ${x.transparent?'<span class="chip">透干</span>':''}
+        ${x.rooted?'<span class="chip">有根</span>':''}
+        ${x.timely?'<span class="chip">得令</span>':''}
+      </div>`;
+  }).join('');
+}
+
+const DESC_OVERRIDE = {
+  '童子煞': '传统说法，多指幼时体质敏感、需细心照顾；不作病断。',
+  '十恶大败': '传统理财提醒，主财库不聚；不是“命不好”。',
+  '飞刃': '羊刃冲位，传统主动荡/急变，注意安全。',
+  '劫煞': '传统提醒注意意外/人际纠纷，不作凶断。',
+  '绞神': '传统提醒注意人际纠纷/琐事缠绕，不作凶断。'
+};
+
+function renderShensha(){
+  const arr = chart().pillars;
+  const labels = {nian:'年柱',yue:'月柱',ri:'日柱',shi:'时柱'};
+  let html = '<div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody>';
+  arr.forEach(p=>{
+    const ss = p.shen_sha||[];
+    html += `<tr><td><b>${labels[p.key]}</b><br>${esc(p.gan)}${esc(p.zhi)}</td>
+      <td>${ss.map(x=>`<span class="chip ${catClass(x.category)}">${esc(x.name)}·${esc(x.category)}</span>`).join(' ')||'—'}</td>
+      <td class="small">${ss.map(x=>`${esc(x.name)}：${esc(DESC_OVERRIDE[x.name]||x.description||'')}`).join('<br>')||'—'}</td></tr>`;
+  });
+  html += '</tbody></table></div>';
+  document.getElementById('shenshaTable').innerHTML = html;
+}
+
+function fmtPart(rel, keys){
+  const out = [];
+  keys.forEach(k=>{
+    (rel[k]||[]).forEach(x=>{
+      if(k==='zhi_liu_he') out.push(`${x.zhi_a}${x.zhi_b}合${x.wuxing}`);
+      else if(k==='san_he' || k==='san_he_partial') out.push(x.name);
+      else if(k==='liu_xing') out.push(`${x.zhi_a}${x.zhi_b}刑`);
+      else if(k==='liu_po') out.push(`${x.zhi_a}${x.zhi_b}破`);
+      else if(k==='gong_jia') out.push(`${x.zhi}三合拱（${x.wuxing}）`);
+    });
+  });
+  return out.length?out.join('；'):'无';
+}
+
+function relRows(){
+  const A = D.charts.A.relations, B = D.charts.B.relations;
+  return [
+    ['六合', fmtPart(A,['zhi_liu_he']), fmtPart(B,['zhi_liu_he']), '合主牵绊/合作，也主“合住”某个字'],
+    ['三合/半合', fmtPart(A,['san_he','san_he_partial']), fmtPart(B,['san_he','san_he_partial']), '三合水局在 B 盘成势，财更旺、寒湿更重'],
+    ['刑/破', fmtPart(A,['liu_xing','liu_po']), fmtPart(B,['liu_xing','liu_po']), '刑破主动荡/内耗，在年时或日时，注意环境/情绪'],
+    ['拱夹', fmtPart(A,['gong_jia']), fmtPart(B,['gong_jia']), '拱出的字是“候选力量”，不一定会成局']
+  ];
+}
+
+function renderRelations(){
+  const rows = relRows();
+  document.getElementById('relRows').innerHTML = rows.map(r=>`<tr><td><b>${r[0]}</b></td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td class="small">${esc(r[3])}</td></tr>`).join('');
+}
+
+function renderDayun(){
+  const steps = (D.charts.A.da_yun&&D.charts.A.da_yun.steps)||[];
+  const now = 2026;
+  document.getElementById('dayunTimeline').innerHTML = steps.map(s=>{
+    const curCls = now>=s.start_year && now<s.end_year ? ' cur':'';
+    return `<div class="dy${curCls}">
+      ${curCls?'<span class="now">当前</span>':''}
+      <div class="y">${s.start_year}–${s.end_year}</div>
+      <div class="gz">${esc(s.name)}</div>
+      <div class="s">${esc(s.shi_shen||'')} · ${elemChip(s.wuxing||'')}</div>
+      <div class="e">${s.start_date} → ${s.end_date}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderLiunian(){
+  const rows = D.liunian||[];
+  document.getElementById('liunianRows').innerHTML = rows.map(x=>{
+    const hl = x.year===2026?' class="hl"':'';
+    const fy = (x.fuyin_fanyin||[]).map(z=>`${z.type}：${z.detail||''}`).join('；');
+    const ss = (x.shensha||[]).slice(0,4).map(s=>`<span class="chip ${/吉/.test(s)?'good':/凶/.test(s)?'bad':'mid'}">${esc(s)}</span>`).join(' ');
+    return `<tr${hl}><td><b>${x.year}</b></td><td>${esc(x.ganzhi)}</td><td>${esc(x.shi_shen)}</td><td>${esc(x.na_yin)}</td><td>${ss}</td><td class="small">${esc(fy||'—')}</td></tr>`;
+  }).join('');
+}
+
+function renderXiaoyun(){
+  const arr = D.xiaoyun||[];
+  arr.forEach((m,i)=>{
+    const id = i===0?'xy1':'xy2';
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = (m.zhus||[]).map(z=>`<tr><td class="num">${z.age}岁</td><td>${esc(z.name)}</td><td>${esc(z.shi_shen)}</td></tr>`).join('');
+  });
+}
+
+function renderLiuyue(){
+  const el = document.getElementById('liuyueRows');
+  if(!el) return;
+  el.innerHTML = (D.liuyue_2026||[]).map(x=>{
+    const ss = (x.shensha||[]).map(s=>`<span class="chip ${/吉/.test(s)?'good':/凶/.test(s)?'bad':'mid'}">${esc(s)}</span>`).join(' ');
+    return `<tr><td>${x.month}月 · ${esc(x.name)}</td><td>${esc(x.ganzhi)}</td><td>${esc(x.shi_shen)}</td><td>${esc(x.wuxing)}</td><td>${ss||'—'}</td></tr>`;
+  }).join('');
+}
+
+function setChart(tag){
+  cur = tag;
+  document.querySelectorAll('#chartToggle button').forEach(b=>b.classList.toggle('on', b.dataset.chart===tag));
+  renderPillars(); renderElements(); renderTenGods(); renderShensha(); renderRelations();
+}
+
+document.getElementById('chartToggle').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(b) setChart(b.dataset.chart);
+});
+
+renderKpis();
+setChart('A');
+renderDayun();
+renderLiunian();
+renderXiaoyun();
+renderLiuyue();
+
+(function(){
+  const a = document.getElementById('nameLink');
+  const isSite = location.pathname.includes('/everstead-site/') ||
+                 location.hostname.includes('everstead.cn');
+  if(a && !isSite){
+    a.href = '郑博仁-十二典名字库.html';
+  }
+})();
+</script>
+</body>
+</html>

@@ -6,6 +6,7 @@ Disallow: /tools/combo-report/
 Disallow: /tools/counterparty/
 Disallow: /tools/deck/
 Disallow: /tools/meal/
+Disallow: /tools/yuezi/
 Disallow: /tools/nursery/
 Disallow: /tools/nursery-parents/
 Disallow: /tools/family-links/

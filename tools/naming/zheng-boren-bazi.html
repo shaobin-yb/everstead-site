@@ -252,6 +252,8 @@ footer b{color:var(--ink2)}
     </tbody>
   </table></div>
   <div class="note"><b>模型分歧怎么看：</b>engine 判“中和”，我们的加权模型判“中和偏弱”，两者不是谁对谁错，而是权重不同。共同点是：<b>不是从格、土有根、火偏弱、金水成势</b>。所以“补火土”是稳健结论，不依赖单一模型。</div>
+  <h3>命理原子事实（A 盘为主，B 盘差异另注）</h3>
+  <div class="grid g4" id="atomicCards"></div>
 </section>
 
 <section class="block" id="relations">
@@ -576,6 +578,22 @@ function renderRelations(){
   document.getElementById('relRows').innerHTML = rows.map(r=>`<tr><td><b>${r[0]}</b></td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td class="small">${esc(r[3])}</td></tr>`).join('');
 }
 
+function renderAtomic(){
+  const a = D.charts.A.atomic, b = D.charts.B.atomic;
+  const items = [
+    ['日主','己土','田园土 · 身根在丑'],
+    ['日支','丑','墓库 · 配偶宫合'],
+    ['月令','绝','子月 · 水旺火死'],
+    ['格局','偏财格','财星癸水不透干'],
+    ['调候','丙火','A 有巳根 / B 无根'],
+    ['空亡','午未','日柱甲申旬'],
+    ['财库', b.wealth_tomb_present?'B 有':'A 无', b.wealth_star_in_tomb?'B 盘财星入墓':'A 盘财星不入墓'],
+    ['官杀', a.year_officer_killing?'有':'少', 'A 盘无 / B 盘辰中乙木七杀']
+  ];
+  document.getElementById('atomicCards').innerHTML = items.map(([k,v,n])=>
+    `<div class="kpi"><div class="k">${k}</div><div class="v" style="font-size:19px">${v}</div><div class="n">${n}</div></div>`).join('');
+}
+
 function renderDayun(){
   const steps = (D.charts.A.da_yun&&D.charts.A.da_yun.steps)||[];
   const now = 2026;
@@ -631,6 +649,7 @@ document.getElementById('chartToggle').addEventListener('click', e=>{
 
 renderKpis();
 setChart('A');
+renderAtomic();
 renderDayun();
 renderLiunian();
 renderXiaoyun();

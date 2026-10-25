@@ -72,6 +72,7 @@ input[type=search]{width:150px}
 .card .top{display:flex;align-items:baseline;gap:10px;margin-bottom:2px;flex-wrap:wrap}
 .card .nm{font-size:27px;font-weight:700;letter-spacing:.12em;
   font-family:"Songti SC","STSong","SimSun",serif}
+.card .nm .sur{color:var(--muted);font-weight:600;letter-spacing:.02em;margin-right:2px}
 .card .badge{margin-left:auto;font-size:13px;font-weight:700;padding:2px 9px;
   border-radius:7px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .b-A{background:#f6ead0;color:#8a641c} .b-B{background:#f7e0dc;color:#9c2f24}
@@ -147,7 +148,7 @@ footer b{color:var(--ink2)}
 <div class="controls">
   <div class="tabs" id="tabs"></div>
   <div class="gap"></div>
-  <input type="search" id="q" placeholder="搜名字/用字/出处…">
+  <input type="search" id="q" placeholder="搜姓名/用字/出处…">
   <select id="tier">
     <option value="">全部档位</option>
     <option value="A">A 档（综合≥90）</option>
@@ -284,7 +285,7 @@ function render(){
   else if(curGroup!=='全部') list=(GROUP_DATA[curGroup]||[]).slice();
   if(curTier==='green') list=list.filter(r=>r.tier_var==='四格全绿');
   else if(curTier) list=list.filter(r=>tierOf(r)===curTier);
-  if(curQ){const q=curQ; list=list.filter(r=>r.name.includes(q)||(r.source_quote||'').includes(q)||(r.meaning||'').includes(q)||(r.source_book||'').includes(q));}
+  if(curQ){const q=curQ, qn=q.replace(/^郑/,''); list=list.filter(r=>r.name.includes(qn)||(r.source_quote||'').includes(q)||(r.meaning||'').includes(q)||(r.source_book||'').includes(q));}
   if(curSort==='total') list.sort((a,b)=>b.total-a.total);
   if(curSort==='score') list.sort((a,b)=>b.score-a.score);
   if(curSort==='bazi') list.sort((a,b)=>b.bazi_score-a.bazi_score);
@@ -299,7 +300,7 @@ function render(){
     const elems=(r.elems||[]).join('+');
     return `<div class="card" style="--bk:${col}" onclick="this.classList.toggle('open')">
       <div class="top">
-        <span class="nm">${esc(r.name)}</span>
+        <span class="nm"><span class="sur">郑</span>${esc(r.name)}</span>
         <span class="badge ${TIER_CLS[t]}">${r.total.toFixed(1)} · ${t}档</span>
       </div>
       <p class="src"><span class="bk">${esc(srcLabel(r))}</span></p>

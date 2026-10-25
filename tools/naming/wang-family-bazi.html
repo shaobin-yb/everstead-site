@@ -26,9 +26,16 @@ a{color:var(--red2);text-decoration:none}
 .hero .sub b{color:var(--red2)}
 .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 .badge{font-size:12px;border:1px solid var(--line);background:var(--surf);border-radius:999px;padding:4px 11px;color:var(--ink2)}
-.person-nav{position:sticky;top:0;z-index:50;background:rgba(246,241,231,.93);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:8px 0;margin:0 -20px 18px;padding-left:20px;padding-right:20px}
-.person-nav a{font-size:13px;color:var(--ink2);padding:5px 12px;border-radius:999px;border:1px solid transparent}
-.person-nav a:hover{background:#fff;border-color:var(--line);color:var(--red2);text-decoration:none}
+.tabbar{position:sticky;top:0;z-index:50;background:rgba(246,241,231,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px;padding:9px 0;margin:0 -20px 8px;padding-left:20px;padding-right:20px}
+.tabbar button{font-size:13.5px;color:var(--ink2);padding:7px 15px;border-radius:999px;border:1px solid var(--line);background:#fbf8f0;cursor:pointer;font-family:inherit}
+.tabbar button:hover{border-color:#c8bda6;color:var(--red2)}
+.tabbar button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tab-hint{font-size:12.5px;color:var(--muted);margin:2px 0 14px}
+.board{display:none}
+.board.on{display:block}
+.board-nav{display:flex;justify-content:space-between;gap:10px;margin:10px 0 0}
+.board-nav a{font-size:12.5px;color:var(--ink2);border:1px solid var(--line);background:#fbf8f0;border-radius:999px;padding:4px 12px}
+.board-nav a:hover{color:var(--red2);text-decoration:none;border-color:#c8bda6}
 section.block{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:24px 26px;margin:18px 0;box-shadow:0 5px 20px rgba(44,35,18,.04);scroll-margin-top:60px}
 section.block h2{margin:0 0 6px;font-size:24px;letter-spacing:.06em;color:var(--red2)}
 section.block h3{margin:20px 0 8px;font-size:16px;color:var(--ink)}
@@ -94,6 +101,8 @@ details{border:1px solid var(--line);border-radius:12px;background:#fcfaf4;paddi
 details summary{cursor:pointer;padding:11px 0;font-size:14px;font-weight:600;color:var(--ink)}
 details[open]{padding-bottom:12px}
 .compare td:first-child{font-weight:700;white-space:nowrap}
+.glossary dt{font-weight:700;font-size:13.5px;margin-top:9px;color:var(--ink)}
+.glossary dd{margin:2px 0 0 0;font-size:13px;color:var(--ink2)}
 footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.85}
 @media (max-width:760px){
   .pillars{grid-template-columns:repeat(2,1fr)}
@@ -102,10 +111,10 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
   .person-head{display:block}
   .person-badges{max-width:none;margin-top:8px}
   .wrap{padding:16px 12px 60px}
-  .person-nav{margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px}
+  .tabbar{margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px}
   section.block{padding:18px 16px}
 }
-@media print{.person-nav,.toggle{display:none!important}section.block{box-shadow:none;break-inside:avoid}details{display:block}details summary{display:none}}
+@media print{.tabbar,.tab-hint,.toggle{display:none!important}.board{display:block!important}section.block{box-shadow:none;break-inside:avoid}details{display:block}details summary{display:none}}
 </style>
 </head>
 <body>
@@ -122,16 +131,17 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
   </div>
 </header>
 
-<nav class="person-nav">
-  <a href="#p-boss">爸爸 · 王少斌</a>
-  <a href="#p-moon">月饼 · 王斯卯</a>
-  <a href="#p-seven">小七 · 王元一</a>
-  <a href="#compare">家庭对照</a>
-</nav>
+<div class="tabbar" id="tabbar">
+  <button data-board="boss" class="on">爸爸 · 王少斌</button>
+  <button data-board="moon">月饼 · 王斯卯</button>
+  <button data-board="seven">小七 · 王元一</button>
+  <button data-board="compare">家庭对照</button>
+</div>
+<p class="tab-hint">点上面的 tab 切换，一人一版；每个板块都按郑博仁那版的详细度做。</p>
 
 <p class="note"><b>先说明：</b>排盘、十神、神煞、合冲、大运、流年由 engine-bazi（Liki Chart Engine 2026.10.23.0）计算；三路复核用 lunar-python + JDN + 在线万年历。解读是传统命理视角，不是医学/法律/投资/升学建议；神煞/流年不作吉凶断言。三个人的“身强弱/用神”都有模型分歧，页内按“engine / 家庭六路 / 调候”分开摆，不硬合成一个结论。</p>
 
-<section class="block person" id="p-boss">
+<section class="block person board on" data-board="boss" id="p-boss">
       <div class="person-head">
         <div><div class="kicker">本人</div>
           <h2>爸爸 · 王少斌</h2>
@@ -142,6 +152,13 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
       <p class="lead">庚金日主，卯月财旺。家庭六路核验判身弱、财旺身不任；engine 扶抑判中和。用神金为主、湿土为辅；忌木水；火为条件性调候。</p>
       <div class="grid g3"><div class="kpi"><div class="k">日主</div><div class="v" style="font-size:20px">庚金</div><div class="n">剑锋金 · 阳金</div></div><div class="kpi"><div class="k">格局</div><div class="v" style="font-size:20px">正财格</div><div class="n">engine；家庭口径：财旺身弱、伤官生财</div></div><div class="kpi"><div class="k">身强弱</div><div class="v" style="font-size:20px">身弱 / 中和</div><div class="n">家庭六路判身弱；engine 扶抑判中和</div></div><div class="kpi"><div class="k">用神</div><div class="v" style="font-size:20px">金为主、湿土为辅</div><div class="n">比劫帮身、印星生身</div></div><div class="kpi"><div class="k">忌</div><div class="v" style="font-size:20px">木、水</div><div class="n">财旺、食伤泄身</div></div><div class="kpi"><div class="k">关键词</div><div class="v" style="font-size:20px">财旺身弱</div><div class="n">伤官生财 · 合作/稳健</div></div></div>
       <div class="warn"><b>engine 扶抑：</b>中和（土1、木3、水3、火1、金2）；正财格，顺用；调候丁火为主、甲木为辅。<br><b>家庭六路（P0/PB/PC/PF）：</b>身弱、财旺身不任、伤官生财；用神金为主、湿土为辅；忌木水；火为条件性调候，不作主用。<br><b>A/B 差异：</b>A 未土印星弱喜被伤（子未害/卯未合）；B 午火官星忌但被冲（子午冲/卯破）；B 更弱。<br><b>本页取口径：</b>按家庭六路取金土；engine 的“中和”只作交叉检查。</div>
+      <h3>三路核验与起运</h3>
+      <div class="grid g3">
+      <div class="kpi"><div class="k">出生</div><div class="v" style="font-size:16px">1993-03-20 13:25（北京时间）</div><div class="n">陕西西安/关中 · 农历 一九九三年二月二十八</div></div>
+      <div class="kpi"><div class="k">真太阳时</div><div class="v" style="font-size:16px">约 12:33:12（西安 108.94°E）</div><div class="n">A 盘 癸酉 乙卯 庚子 癸未 / B 盘 癸酉 乙卯 庚子 壬午</div></div>
+      <div class="kpi"><div class="k">起运</div><div class="v" style="font-size:16px">1998-02-09</div><div class="n">逆排排 · 大运起止按起运日满十年</div></div>
+    </div>
+    <div class="note"><b>三路复核：</b>lunar-python + JDN + 在线万年历；1993-03-20 年月日三柱、节气（惊蛰后/春分前）、日柱庚子均一致。真太阳时 12:33:12（西安 108.94°E），距未时边界 26 分 48 秒。起运 1998-02-09，逆排。</div>
       <h3>排盘 · 两盘对照</h3>
       <div class="toggle">
           <button class="on" onclick="showPanel('boss','A',this)">A 家庭北京时间（未时）</button>
@@ -229,6 +246,10 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
           <div class="track"><div class="fill" style="width:33.3%;background:#B88A2E"></div></div>
           <div class="val">1</div></div><div class="chips" style="margin:-2px 0 8px 78px"><span class="chip mid">中</span><span class="chip">有根</span></div></div>
       </div>
+      <div class="two" style="margin-top:10px">
+        <div class="card"><h4>五行怎么读</h4><p>明字：水3、金2、木2、土1、火0；含藏干：土1、木3、水3、火1、金2。木旺、水旺、金被卯酉冲、土弱、火只藏未。财旺身弱，金土是药，水木是耗。</p></div>
+        <div class="card"><h4>十神怎么读</h4><p>伤官3、正财3、比肩1、劫财1、正官1、正印1。伤官生财、财旺、身弱；官星被乙庚合/子未害/子午冲牵制，印星弱。结构关键词：财旺身弱、伤官生财、合作/稳健。</p></div>
+      </div>
       <h3>格局与调候</h3><div class="two">
       <div class="card"><h4>格局</h4>
         <p><b>正财格</b>（顺用）</p>
@@ -243,8 +264,25 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
         <p class="small">调候是“季节最需要什么”，扶抑是“日主强弱怎么平衡”；两者不一致时，要分开看。</p>
       </div>
     </div>
+      <h3>三派对照：身强弱 / 用神</h3><div class="table-wrap"><table><thead><tr><th>口径</th><th>结论</th><th>怎么用</th></tr></thead><tbody><tr><td><b>engine 扶抑</b></td><td>中和；正财格；调候丁火/甲木</td><td class="small">engine 只作交叉检查</td></tr><tr><td><b>家庭六路</b></td><td>身弱、财旺身不任；用金为主、湿土为辅；忌木水</td><td class="small">本页主口径</td></tr><tr><td><b>调候</b></td><td>丁火为主、甲木为辅；原局丁藏未/午、甲无 → 用神虚设，待运</td><td class="small">火只作条件性调候</td></tr><tr><td><b>综合</b></td><td>金土为主，火点缀；忌木水</td><td class="small">合作/稳健，不宜高杠杆</td></tr></tbody></table></div>
+      <h3>命理原子事实</h3><div class="grid g3"><div class="kpi"><div class="k">日主</div><div class="v" style="font-size:19px">庚金</div><div class="n">以日干为“我”</div></div><div class="kpi"><div class="k">日支</div><div class="v" style="font-size:19px">子</div><div class="n">桃花</div></div><div class="kpi"><div class="k">月令</div><div class="v" style="font-size:19px">胎</div><div class="n">日主在月支的长生阶段</div></div><div class="kpi"><div class="k">格局</div><div class="v" style="font-size:19px">正财格</div><div class="n">格神：正财</div></div><div class="kpi"><div class="k">调候</div><div class="v" style="font-size:19px">火 / 木</div><div class="n">卯月庚金，用丁调候，甲辅之</div></div><div class="kpi"><div class="k">空亡</div><div class="v" style="font-size:19px">辰巳</div><div class="n">甲午旬</div></div><div class="kpi"><div class="k">配偶宫</div><div class="v" style="font-size:19px">A 刑 / B 冲</div><div class="n">日支与命局的关系</div></div><div class="kpi"><div class="k">财库</div><div class="v" style="font-size:19px">A 有 / B 无</div><div class="n">A 盘财星入墓；B 盘不入墓</div></div></div>
       <h3>合冲刑害</h3><div class="table-wrap"><table><thead><tr><th>关系</th><th>本盘</th><th>怎么读</th></tr></thead><tbody><tr><td><b>六合</b></td><td>无</td><td class="small">合主牵绊/合作，也主“合住”某个字</td></tr><tr><td><b>三合/半合</b></td><td>卯未木半合局</td><td class="small">三合/半合成局，力量更大</td></tr><tr><td><b>刑/破</b></td><td>卯子刑；酉子破</td><td class="small">刑破主动荡/内耗，注意环境/情绪</td></tr><tr><td><b>拱夹</b></td><td>无</td><td class="small">拱出的字是“候选力量”，不一定会成局</td></tr></tbody></table></div>
-      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>癸酉</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr><tr><td><b>月柱</b><br>乙卯</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip bad">灾煞·凶</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>灾煞：传统提醒注意意外/变动，不作凶断。</td></tr><tr><td><b>日柱</b><br>庚子</td><td><span class="chip mid">童子煞·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">天喜·吉</span> <span class="chip bad">绞神·凶</span></td><td class="small">童子煞：传统说法，多指幼时体质敏感、需细心照顾；不作病断。<br>将星：主领导才能，有权威<br>天喜：主喜庆之事，婚恋吉兆<br>绞神：传统提醒注意人际纠纷/琐事缠绕，不作凶断。</td></tr><tr><td><b>时柱</b><br>癸未</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip bad">寡宿·凶</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>寡宿：传统主孤独/独处；可理解为需要个人空间，不作凶断。</td></tr></tbody></table></div>
+      <h3>空亡 / 胎元命宫</h3><div class="two">
+      <div class="card"><h4>空亡</h4>
+        <p>日柱 <b>甲午旬</b>，空亡 <b>辰巳</b>；年柱 <b>甲子旬</b>，空亡 <b>戌亥</b>。</p>
+        <p class="small">空亡不是“没有”，传统上有“落空/填实”两说；逢合、逢冲都可能改变读法。</p>
+      </div>
+      <div class="card"><h4>胎元 / 命宫 / 身宫 / 胎息</h4>
+        <p>胎元 <b>丙午</b>，命宫 <b>己未</b>，身宫 <b>癸亥</b>，胎息 <b>乙丑</b>。</p>
+        <p class="small">这些是传统排盘的辅助位，用于补充结构信息，不作单独吉凶断。</p>
+      </div>
+    </div>
+    <div class="note"><b>本盘重点：</b>日柱庚子甲午旬空辰巳；年柱癸酉甲子旬空戌亥。A 子未害、B 子午冲，配偶宫 A 刑/B 冲，家庭沟通留空间。</div>
+      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>癸酉</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr><tr><td><b>月柱</b><br>乙卯</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip bad">灾煞·凶</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>灾煞：传统提醒注意意外/变动，不作凶断。</td></tr><tr><td><b>日柱</b><br>庚子</td><td><span class="chip mid">童子煞·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">天喜·吉</span> <span class="chip bad">绞神·凶</span></td><td class="small">童子煞：传统说法，多指幼时体质敏感、需细心照顾；不作病断。<br>将星：主领导才能，有权威<br>天喜：主喜庆之事，婚恋吉兆<br>绞神：传统提醒注意人际纠纷/琐事缠绕，不作凶断。</td></tr><tr><td><b>时柱</b><br>癸未</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip bad">寡宿·凶</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>寡宿：传统主孤独/独处；可理解为需要个人空间，不作凶断。</td></tr></tbody></table></div><div class="two">
+      <div class="card"><h4>吉神</h4><p>将星、天乙贵人、德秀贵人、天厨贵人、天喜</p></div>
+      <div class="card"><h4>中性 / 凶煞</h4><p>桃花、童子煞、羊刃、血刃、灾煞、绞神、寡宿</p></div>
+    </div>
+    <div class="warn"><b>读法：</b>吉神：天乙、德秀、天厨、将星、天喜；凶煞：羊刃、血刃、灾煞、童子煞、绞神、寡宿。羊刃主锋芒，血刃/灾煞注意安全，寡宿需个人空间；不是“命不好”。</div>
     </div><div id="boss-panel-B" class="panel" style="display:none">
       <div class="pillars"><div class="pillar">
           <div class="lab">年柱</div>
@@ -329,6 +367,10 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
           <div class="track"><div class="fill" style="width:50.0%;background:#B88A2E"></div></div>
           <div class="val">1</div></div><div class="chips" style="margin:-2px 0 8px 78px"><span class="chip mid">中</span><span class="chip">有根</span></div></div>
       </div>
+      <div class="two" style="margin-top:10px">
+        <div class="card"><h4>五行怎么读</h4><p>明字：水3、金2、木2、土1、火0；含藏干：土1、木3、水3、火1、金2。木旺、水旺、金被卯酉冲、土弱、火只藏未。财旺身弱，金土是药，水木是耗。</p></div>
+        <div class="card"><h4>十神怎么读</h4><p>伤官3、正财3、比肩1、劫财1、正官1、正印1。伤官生财、财旺、身弱；官星被乙庚合/子未害/子午冲牵制，印星弱。结构关键词：财旺身弱、伤官生财、合作/稳健。</p></div>
+      </div>
       <h3>格局与调候</h3><div class="two">
       <div class="card"><h4>格局</h4>
         <p><b>正财格</b>（顺用）</p>
@@ -343,8 +385,25 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
         <p class="small">调候是“季节最需要什么”，扶抑是“日主强弱怎么平衡”；两者不一致时，要分开看。</p>
       </div>
     </div>
+      <h3>三派对照：身强弱 / 用神</h3><div class="table-wrap"><table><thead><tr><th>口径</th><th>结论</th><th>怎么用</th></tr></thead><tbody><tr><td><b>engine 扶抑</b></td><td>中和；正财格；调候丁火/甲木</td><td class="small">engine 只作交叉检查</td></tr><tr><td><b>家庭六路</b></td><td>身弱、财旺身不任；用金为主、湿土为辅；忌木水</td><td class="small">本页主口径</td></tr><tr><td><b>调候</b></td><td>丁火为主、甲木为辅；原局丁藏未/午、甲无 → 用神虚设，待运</td><td class="small">火只作条件性调候</td></tr><tr><td><b>综合</b></td><td>金土为主，火点缀；忌木水</td><td class="small">合作/稳健，不宜高杠杆</td></tr></tbody></table></div>
+      <h3>命理原子事实</h3><div class="grid g3"><div class="kpi"><div class="k">日主</div><div class="v" style="font-size:19px">庚金</div><div class="n">以日干为“我”</div></div><div class="kpi"><div class="k">日支</div><div class="v" style="font-size:19px">子</div><div class="n">桃花</div></div><div class="kpi"><div class="k">月令</div><div class="v" style="font-size:19px">胎</div><div class="n">日主在月支的长生阶段</div></div><div class="kpi"><div class="k">格局</div><div class="v" style="font-size:19px">正财格</div><div class="n">格神：正财</div></div><div class="kpi"><div class="k">调候</div><div class="v" style="font-size:19px">火 / 木</div><div class="n">卯月庚金，用丁调候，甲辅之</div></div><div class="kpi"><div class="k">空亡</div><div class="v" style="font-size:19px">辰巳</div><div class="n">甲午旬</div></div><div class="kpi"><div class="k">配偶宫</div><div class="v" style="font-size:19px">A 刑 / B 冲</div><div class="n">日支与命局的关系</div></div><div class="kpi"><div class="k">财库</div><div class="v" style="font-size:19px">A 有 / B 无</div><div class="n">A 盘财星入墓；B 盘不入墓</div></div></div>
       <h3>合冲刑害</h3><div class="table-wrap"><table><thead><tr><th>关系</th><th>本盘</th><th>怎么读</th></tr></thead><tbody><tr><td><b>六合</b></td><td>无</td><td class="small">合主牵绊/合作，也主“合住”某个字</td></tr><tr><td><b>三合/半合</b></td><td>无</td><td class="small">三合/半合成局，力量更大</td></tr><tr><td><b>刑/破</b></td><td>卯子刑；酉子破；卯午破</td><td class="small">刑破主动荡/内耗，注意环境/情绪</td></tr><tr><td><b>拱夹</b></td><td>无</td><td class="small">拱出的字是“候选力量”，不一定会成局</td></tr></tbody></table></div>
-      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>癸酉</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr><tr><td><b>月柱</b><br>乙卯</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip bad">灾煞·凶</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>灾煞：传统提醒注意意外/变动，不作凶断。</td></tr><tr><td><b>日柱</b><br>庚子</td><td><span class="chip mid">童子煞·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">天喜·吉</span> <span class="chip bad">绞神·凶</span></td><td class="small">童子煞：传统说法，多指幼时体质敏感、需细心照顾；不作病断。<br>将星：主领导才能，有权威<br>天喜：主喜庆之事，婚恋吉兆<br>绞神：传统提醒注意人际纠纷/琐事缠绕，不作凶断。</td></tr><tr><td><b>时柱</b><br>壬午</td><td><span class="chip good">德秀贵人·吉</span> <span class="chip good">福星贵人·吉</span> <span class="chip bad">飞刃·凶</span> <span class="chip mid">桃花·中性</span> <span class="chip bad">灾煞·凶</span> <span class="chip good">红鸾·吉</span> <span class="chip bad">勾神·凶</span></td><td class="small">德秀贵人：主禀气清粹，逢凶化吉<br>福星贵人：主一生福气，平安顺遂<br>飞刃：羊刃冲位，传统主动荡/急变，注意安全。<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>灾煞：传统提醒注意意外/变动，不作凶断。<br>红鸾：主婚喜、恋爱、添丁<br>勾神：传统提醒注意人际牵绊/琐事，不作凶断。</td></tr></tbody></table></div>
+      <h3>空亡 / 胎元命宫</h3><div class="two">
+      <div class="card"><h4>空亡</h4>
+        <p>日柱 <b>甲午旬</b>，空亡 <b>辰巳</b>；年柱 <b>甲子旬</b>，空亡 <b>戌亥</b>。</p>
+        <p class="small">空亡不是“没有”，传统上有“落空/填实”两说；逢合、逢冲都可能改变读法。</p>
+      </div>
+      <div class="card"><h4>胎元 / 命宫 / 身宫 / 胎息</h4>
+        <p>胎元 <b>丙午</b>，命宫 <b>庚申</b>，身宫 <b>壬戌</b>，胎息 <b>乙丑</b>。</p>
+        <p class="small">这些是传统排盘的辅助位，用于补充结构信息，不作单独吉凶断。</p>
+      </div>
+    </div>
+    <div class="note"><b>本盘重点：</b>日柱庚子甲午旬空辰巳；年柱癸酉甲子旬空戌亥。A 子未害、B 子午冲，配偶宫 A 刑/B 冲，家庭沟通留空间。</div>
+      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>癸酉</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr><tr><td><b>月柱</b><br>乙卯</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip bad">灾煞·凶</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>灾煞：传统提醒注意意外/变动，不作凶断。</td></tr><tr><td><b>日柱</b><br>庚子</td><td><span class="chip mid">童子煞·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">天喜·吉</span> <span class="chip bad">绞神·凶</span></td><td class="small">童子煞：传统说法，多指幼时体质敏感、需细心照顾；不作病断。<br>将星：主领导才能，有权威<br>天喜：主喜庆之事，婚恋吉兆<br>绞神：传统提醒注意人际纠纷/琐事缠绕，不作凶断。</td></tr><tr><td><b>时柱</b><br>壬午</td><td><span class="chip good">德秀贵人·吉</span> <span class="chip good">福星贵人·吉</span> <span class="chip bad">飞刃·凶</span> <span class="chip mid">桃花·中性</span> <span class="chip bad">灾煞·凶</span> <span class="chip good">红鸾·吉</span> <span class="chip bad">勾神·凶</span></td><td class="small">德秀贵人：主禀气清粹，逢凶化吉<br>福星贵人：主一生福气，平安顺遂<br>飞刃：羊刃冲位，传统主动荡/急变，注意安全。<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>灾煞：传统提醒注意意外/变动，不作凶断。<br>红鸾：主婚喜、恋爱、添丁<br>勾神：传统提醒注意人际牵绊/琐事，不作凶断。</td></tr></tbody></table></div><div class="two">
+      <div class="card"><h4>吉神</h4><p>将星、天乙贵人、德秀贵人、天厨贵人、天喜、福星贵人、红鸾</p></div>
+      <div class="card"><h4>中性 / 凶煞</h4><p>桃花、童子煞、羊刃、血刃、灾煞、绞神、飞刃、勾神</p></div>
+    </div>
+    <div class="warn"><b>读法：</b>吉神：天乙、德秀、天厨、将星、天喜；凶煞：羊刃、血刃、灾煞、童子煞、绞神、寡宿。羊刃主锋芒，血刃/灾煞注意安全，寡宿需个人空间；不是“命不好”。</div>
     </div>
       <h3>大运</h3>
       <div class="timeline"><div class="dy">
@@ -402,8 +461,18 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
           <div class="s">七杀运 · <span class="chip elem-火">火</span></div>
           <div class="e">2078-02-09 → 2088-02-08</div>
         </div></div>
+      <div class="two"><div class="card"><h4>当前：壬子（2018–2028，食神运）</h4><p>壬子（2018–2028，食神运）：食神泄秀，但子水旺、金水相生；身弱财旺，合作/团队比单打独斗稳。</p></div><div class="card"><h4>下一步：辛亥（2028–2038，劫财运）</h4><p>辛亥（2028–2038，劫财运）：辛金劫财帮身，亥水食神；金水仍旺，火土为调候/帮身；适合稳中求进。</p></div></div>
       <h3>流年 2026–2037</h3>
       <div class="table-wrap"><table><thead><tr><th>年份</th><th>干支</th><th>十神</th><th>纳音</th><th>神煞（传统）</th><th>伏吟/反吟</th></tr></thead><tbody><tr class="hl"><td><b>2026</b></td><td>丙午</td><td>七杀</td><td>天河水</td><td><span class="chip mid">桃花(中性)</span> <span class="chip bad">灾煞(凶)</span> <span class="chip good">红鸾(吉)</span> <span class="chip bad">大耗(凶)</span></td><td class="small">反吟：丙午与庚子天克地冲</td></tr><tr><td><b>2027</b></td><td>丁未</td><td>正官</td><td>天河水</td><td><span class="chip good">天乙贵人(吉)</span> <span class="chip bad">丧门(凶)</span></td><td class="small">伏吟：未地支伏吟</td></tr><tr><td><b>2028</b></td><td>戊申</td><td>偏印</td><td>大驿土</td><td><span class="chip bad">病符(凶)</span></td><td class="small">—</td></tr><tr><td><b>2029</b></td><td>己酉</td><td>正印</td><td>大驿土</td><td><span class="chip mid">桃花(中性)</span> <span class="chip bad">羊刃(凶)</span> <span class="chip bad">吊客(凶)</span> <span class="chip bad">大耗(凶)</span></td><td class="small">伏吟：酉地支伏吟；反吟：己酉与乙卯天克地冲</td></tr><tr><td><b>2030</b></td><td>庚戌</td><td>比肩</td><td>钗钏金</td><td><span class="chip bad">病符(凶)</span> <span class="chip bad">丧门(凶)</span></td><td class="small">—</td></tr><tr><td><b>2031</b></td><td>辛亥</td><td>劫财</td><td>钗钏金</td><td><span class="chip mid">驿马(中性)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">—</td></tr><tr><td><b>2032</b></td><td>壬子</td><td>食神</td><td>桑柘木</td><td><span class="chip good">天喜(吉)</span></td><td class="small">伏吟：子地支伏吟</td></tr><tr><td><b>2033</b></td><td>癸丑</td><td>伤官</td><td>桑柘木</td><td><span class="chip mid">华盖(中性)</span> <span class="chip good">天乙贵人(吉)</span> <span class="chip bad">病符(凶)</span> <span class="chip bad">丧门(凶)</span></td><td class="small">—</td></tr><tr><td><b>2034</b></td><td>甲寅</td><td>偏财</td><td>大溪水</td><td><span class="chip bad">劫煞(凶)</span> <span class="chip mid">驿马(中性)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">—</td></tr><tr><td><b>2035</b></td><td>乙卯</td><td>正财</td><td>大溪水</td><td><span class="chip bad">灾煞(凶)</span> <span class="chip bad">大耗(凶)</span></td><td class="small">伏吟：乙卯伏吟</td></tr><tr><td><b>2036</b></td><td>丙辰</td><td>七杀</td><td>沙中土</td><td><span class="chip mid">华盖(中性)</span> <span class="chip bad">病符(凶)</span></td><td class="small">—</td></tr><tr><td><b>2037</b></td><td>丁巳</td><td>正官</td><td>沙中土</td><td><span class="chip bad">劫煞(凶)</span> <span class="chip bad">丧门(凶)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">—</td></tr></tbody></table></div><div class="note"><b>2026 提醒：</b>2026 丙午七杀，火来克身/规则压力；与日柱庚子天克地冲（反吟），家庭/环境易动，宜稳。</div>
+      <div class="two">
+      <div class="card"><h4>2026 丙午</h4><p>丙午 七杀 · 火 · 反吟：丙午与庚子天克地冲</p><p>2026 丙午七杀，火来克身/规则压力；与日柱庚子天克地冲（反吟），家庭/环境易动；宜稳、少硬碰。</p></div>
+      <div class="card"><h4>2027–2028</h4><p>丁未 正官 · 火 · 伏吟：未地支伏吟<br>戊申 偏印 · 土 · 无伏吟/反吟</p><p>2027 丁未正官，未与日支子相害、与时支未伏吟，规则/责任议题；2028 戊申偏印，申金帮身但病符提醒作息。</p></div>
+    </div>
+      <h3>2026 流月</h3>
+      <details><summary>展开：2026 流月（12 个月，按节气月）</summary>
+      <div class="table-wrap"><table><thead><tr><th>月</th><th>干支</th><th>十神</th><th>五行</th><th>神煞（传统）</th></tr></thead><tbody><tr><td>1月 · 丑月</td><td>己丑</td><td>正印</td><td>土</td><td><span class="chip mid">华盖(中性)</span> <span class="chip good">天乙贵人(吉)</span></td></tr><tr><td>2月 · 寅月</td><td>庚寅</td><td>比肩</td><td>金</td><td><span class="chip bad">劫煞(凶)</span> <span class="chip mid">驿马(中性)</span></td></tr><tr><td>3月 · 卯月</td><td>辛卯</td><td>劫财</td><td>金</td><td><span class="chip bad">灾煞(凶)</span></td></tr><tr><td>4月 · 辰月</td><td>壬辰</td><td>食神</td><td>水</td><td><span class="chip mid">华盖(中性)</span></td></tr><tr><td>5月 · 巳月</td><td>癸巳</td><td>伤官</td><td>水</td><td><span class="chip bad">劫煞(凶)</span></td></tr><tr><td>6月 · 午月</td><td>甲午</td><td>偏财</td><td>木</td><td><span class="chip mid">桃花(中性)</span> <span class="chip bad">灾煞(凶)</span> <span class="chip good">红鸾(吉)</span></td></tr><tr><td>7月 · 未月</td><td>乙未</td><td>正财</td><td>木</td><td><span class="chip good">天乙贵人(吉)</span></td></tr><tr><td>8月 · 申月</td><td>丙申</td><td>七杀</td><td>火</td><td>—</td></tr><tr><td>9月 · 酉月</td><td>丁酉</td><td>正官</td><td>火</td><td><span class="chip mid">桃花(中性)</span> <span class="chip bad">羊刃(凶)</span></td></tr><tr><td>10月 · 戌月</td><td>戊戌</td><td>偏印</td><td>土</td><td>—</td></tr><tr><td>11月 · 亥月</td><td>己亥</td><td>正印</td><td>土</td><td><span class="chip mid">驿马(中性)</span></td></tr><tr><td>12月 · 子月</td><td>庚子</td><td>比肩</td><td>金</td><td><span class="chip good">天喜(吉)</span></td></tr></tbody></table></div>
+      <p class="small">按节气月排列：1 月=丑月（小寒—立春前），不是公历月份。流月只作传统参考。</p>
+    </details>
       <h3>小运（两派对照）</h3>
       <details open><summary>san_ming_tong_hui</summary>
           <p class="small">《三命通会》：男起丙寅顺行、女起壬申逆行</p>
@@ -414,7 +483,9 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
         </details>
       <h3>解读</h3>
       <div class="two"><div class="card"><h4>性格倾向</h4><p>庚金直、重义气、执行力强；财星旺、伤官旺，务实、重结果、脑子快。身弱财旺，容易把事和钱都扛在自己身上；乙庚合，重实利、轻名位，有时规则感要让位于结果。桃花/羊刃/将星，人缘与锋芒并存。</p></div><div class="card"><h4>事业 / 财富</h4><p>正财格、伤官生财，适合资源整合、商业、项目、技术+商业。身弱财旺，不宜单打独斗或高杠杆，合作与团队是放大器。大运喜申酉辰丑（金土），丁运次之。</p></div><div class="card"><h4>财富 / 资源</h4><p>财旺身弱，钱和资源的机会多，但“扛不扛得住”是关键；稳健、合作、现金流优先，避免过度扩张。</p></div><div class="card"><h4>家庭 / 六亲</h4><p>配偶宫子水，A 盘子未害、B 盘子午冲，传统上主家庭/伴侣沟通要花心思；财星旺，父亲/家庭资源是支撑；印星弱，长辈/学习支持需后天补。</p></div><div class="card"><h4>环境 / 用神建议</h4><p>颜色/材质偏金土（白/金/银/黄/米/陶/玉），少大面积木水（绿/蓝/黑）；环境宜干爽、明亮、有秩序；火（红）只作点缀，不作主调。</p></div><div class="card"><h4>提醒</h4><p>名字“王少斌”不再改；本篇只作八字结构参考。</p></div></div>
-    </section><section class="block person" id="p-moon">
+      <h3>用神与生活建议</h3>
+      <div class="grid g3"><div class="kpi"><div class="k">用神</div><div class="v" style="font-size:19px">金</div><div class="n">比劫帮身、制财</div></div><div class="kpi"><div class="k">辅</div><div class="v" style="font-size:19px">湿土</div><div class="n">印星生身</div></div><div class="kpi"><div class="k">忌</div><div class="v" style="font-size:19px">木、水</div><div class="n">财旺、食伤泄身</div></div></div><div class="note">颜色/材质偏金土（白/金/银/黄/米/陶/玉），少大面积木水（绿/蓝/黑）；环境宜干爽、明亮、有秩序；火（红）只作点缀，不作主调。</div>
+    </section><section class="block person board" data-board="moon" id="p-moon">
       <div class="person-head">
         <div><div class="kicker">老大</div>
           <h2>月饼 · 王斯卯</h2>
@@ -425,6 +496,13 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
       <p class="lead">壬水日主，寅月食神格；食伤旺、财藏、壬水有根不从。A 丑时偏弱（食神佩印，用金喜水，忌木仇火）；B 子时中和偏旺（食神泄秀，用木喜火，忌金、次忌水）。用神分叉，待大师定盘；调候丙火第一、戊土第二，金水偏多。</p>
       <div class="grid g3"><div class="kpi"><div class="k">日主</div><div class="v" style="font-size:20px">壬水</div><div class="n">金箔金 · 阳水</div></div><div class="kpi"><div class="k">格局</div><div class="v" style="font-size:20px">食神格</div><div class="n">顺用；食伤旺、财藏</div></div><div class="kpi"><div class="k">身强弱</div><div class="v" style="font-size:20px">A 偏弱 / B 中和偏旺</div><div class="n">家庭六路；engine 判身强</div></div><div class="kpi"><div class="k">用神</div><div class="v" style="font-size:20px">A 金水 / B 木火</div><div class="n">用神分叉，待大师定盘</div></div><div class="kpi"><div class="k">忌</div><div class="v" style="font-size:20px">A 木火 / B 金水</div><div class="n">随 A/B 翻转</div></div><div class="kpi"><div class="k">关键词</div><div class="v" style="font-size:20px">食神佩印 / 泄秀</div><div class="n">金水偏多 · 火土为出口</div></div></div>
       <div class="warn"><b>engine 扶抑：</b>身强；食神格；调候庚金为主、丙火为辅。<br><b>家庭六路（MB/MC/PF）：</b>A 丑时偏弱（食神佩印，用金喜水，忌木、仇火）；B 子时中和偏旺（食神泄秀，用木喜火，忌金、次忌水）；调候丙火第一、戊土第二；<b>用神分叉，待大师定盘</b>。<br><b>A/B 差异：</b>A 辛丑正印有根、官印相生，食神有制；B 庚子偏印虚浮、双子伏吟，食神泄秀更强。<br><b>本页取口径：</b>先把 A/B 与用神定下来；未定盘前不按单一口径改名/改环境。</div>
+      <h3>三路核验与起运</h3>
+      <div class="grid g3">
+      <div class="kpi"><div class="k">出生</div><div class="v" style="font-size:16px">2023-02-23 01:02（北京时间）</div><div class="n">北京 · 农历 二〇二三年二月初四</div></div>
+      <div class="kpi"><div class="k">真太阳时</div><div class="v" style="font-size:16px">约 00:34:10（北京 116.4°E）</div><div class="n">A 盘 癸卯 甲寅 壬子 辛丑 / B 盘 癸卯 甲寅 壬子 庚子</div></div>
+      <div class="kpi"><div class="k">起运</div><div class="v" style="font-size:16px">2029-05-13</div><div class="n">逆排排 · 大运起止按起运日满十年</div></div>
+    </div>
+    <div class="note"><b>三路复核：</b>lunar-python + JDN + 在线万年历；2023-02-23 年月日三柱、节气（雨水后/惊蛰前）、日柱壬子均一致。真太阳时 00:34:10（北京 116.4°E），距丑时边界 25 分 50 秒。起运 2029-05-13，逆排。</div>
       <h3>排盘 · 两盘对照</h3>
       <div class="toggle">
           <button class="on" onclick="showPanel('moon','A',this)">A 家庭北京时间（丑时）</button>
@@ -516,6 +594,10 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
           <div class="track"><div class="fill" style="width:33.3%;background:#B88A2E"></div></div>
           <div class="val">1</div></div><div class="chips" style="margin:-2px 0 8px 78px"><span class="chip mid">中</span><span class="chip">有根</span></div></div>
       </div>
+      <div class="two" style="margin-top:10px">
+        <div class="card"><h4>五行怎么读</h4><p>A 明字：水3、木3、金1、土1、火0；含藏干：土2、木3、水4、火1、金2。B 明字：水4、木3、金1、土0、火0；含藏干：土1、木3、水4、火1、金1。水木旺、火土弱；金水偏多，火土是出口。</p></div>
+        <div class="card"><h4>十神怎么读</h4><p>A 劫财3、正印2、食神2、比肩1、伤官1、偏财1、正官1、七杀1；B 劫财3、食神2、偏印1、伤官1、偏财1、七杀1。食神旺，A 印有根、B 印虚；官杀弱。结构关键词：食神佩印（A）/食神泄秀（B）。</p></div>
+      </div>
       <h3>格局与调候</h3><div class="two">
       <div class="card"><h4>格局</h4>
         <p><b>食神格</b>（顺用）</p>
@@ -530,8 +612,25 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
         <p class="small">调候是“季节最需要什么”，扶抑是“日主强弱怎么平衡”；两者不一致时，要分开看。</p>
       </div>
     </div>
+      <h3>三派对照：身强弱 / 用神</h3><div class="table-wrap"><table><thead><tr><th>口径</th><th>结论</th><th>怎么用</th></tr></thead><tbody><tr><td><b>engine 扶抑</b></td><td>身强；食神格；调候庚金/丙火</td><td class="small">engine 只作交叉检查</td></tr><tr><td><b>家庭六路</b></td><td>A 偏弱（金水）/ B 中和偏旺（木火）；用神分叉</td><td class="small">待大师定盘</td></tr><tr><td><b>调候</b></td><td>丙火第一、戊土第二；金水偏多</td><td class="small">火土是出口</td></tr><tr><td><b>综合</b></td><td>先定 A/B 与用神；未定盘前不按单一口径</td><td class="small">不急着改名/改环境</td></tr></tbody></table></div>
+      <h3>命理原子事实</h3><div class="grid g3"><div class="kpi"><div class="k">日主</div><div class="v" style="font-size:19px">壬水</div><div class="n">以日干为“我”</div></div><div class="kpi"><div class="k">日支</div><div class="v" style="font-size:19px">子</div><div class="n">桃花</div></div><div class="kpi"><div class="k">月令</div><div class="v" style="font-size:19px">病</div><div class="n">日主在月支的长生阶段</div></div><div class="kpi"><div class="k">格局</div><div class="v" style="font-size:19px">食神格</div><div class="n">格神：食神</div></div><div class="kpi"><div class="k">调候</div><div class="v" style="font-size:19px">金 / 火</div><div class="n">寅月壬水，用庚调候，丙辅之</div></div><div class="kpi"><div class="k">空亡</div><div class="v" style="font-size:19px">寅卯</div><div class="n">甲辰旬</div></div><div class="kpi"><div class="k">配偶宫</div><div class="v" style="font-size:19px">A 合 / B 刑</div><div class="n">日支与命局的关系</div></div><div class="kpi"><div class="k">财库</div><div class="v" style="font-size:19px">A/B 均无</div><div class="n">A/B 财星不入墓</div></div></div>
       <h3>合冲刑害</h3><div class="table-wrap"><table><thead><tr><th>关系</th><th>本盘</th><th>怎么读</th></tr></thead><tbody><tr><td><b>六合</b></td><td>子丑合土</td><td class="small">合主牵绊/合作，也主“合住”某个字</td></tr><tr><td><b>三合/半合</b></td><td>无</td><td class="small">三合/半合成局，力量更大</td></tr><tr><td><b>刑/破</b></td><td>卯子刑</td><td class="small">刑破主动荡/内耗，注意环境/情绪</td></tr><tr><td><b>拱夹</b></td><td>无</td><td class="small">拱出的字是“候选力量”，不一定会成局</td></tr></tbody></table></div>
-      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>癸卯</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip good">将星·吉</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>将星：主领导才能，有权威</td></tr><tr><td><b>月柱</b><br>甲寅</td><td><span class="chip good">天厨贵人·吉</span> <span class="chip good">文昌·吉</span> <span class="chip bad">亡神·凶</span> <span class="chip mid">驿马·中性</span></td><td class="small">天厨贵人：主食禄福泽<br>文昌：主学业、文书、才华<br>亡神：主心机深虑，事多暗耗<br>驿马：主动荡、奔波、迁移</td></tr><tr><td><b>日柱</b><br>壬子</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">童子煞·中性</span> <span class="chip good">天德合·吉</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">红鸾·吉</span> <span class="chip bad">勾神·凶</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>童子煞：传统说法，多指幼时体质敏感、需细心照顾；不作病断。<br>天德合：天德所合，主贵人助力<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>红鸾：主婚喜、恋爱、添丁<br>勾神：传统提醒注意人际牵绊/琐事，不作凶断。<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr><tr><td><b>时柱</b><br>辛丑</td><td><span class="chip bad">寡宿·凶</span> <span class="chip good">金舆·吉</span></td><td class="small">寡宿：传统主孤独/独处；可理解为需要个人空间，不作凶断。<br>金舆：主财运、车辆、出行顺利</td></tr></tbody></table></div>
+      <h3>空亡 / 胎元命宫</h3><div class="two">
+      <div class="card"><h4>空亡</h4>
+        <p>日柱 <b>甲辰旬</b>，空亡 <b>寅卯</b>；年柱 <b>甲午旬</b>，空亡 <b>辰巳</b>。</p>
+        <p class="small">空亡不是“没有”，传统上有“落空/填实”两说；逢合、逢冲都可能改变读法。</p>
+      </div>
+      <div class="card"><h4>胎元 / 命宫 / 身宫 / 胎息</h4>
+        <p>胎元 <b>乙巳</b>，命宫 <b>甲寅</b>，身宫 <b>丙辰</b>，胎息 <b>丁丑</b>。</p>
+        <p class="small">这些是传统排盘的辅助位，用于补充结构信息，不作单独吉凶断。</p>
+      </div>
+    </div>
+    <div class="note"><b>本盘重点：</b>日柱壬子甲辰旬空寅卯；年柱癸卯甲午旬空辰巳。A 子丑合、B 双子伏吟；日支羊刃，情绪/规则感需要被看见。</div>
+      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>癸卯</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip good">将星·吉</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>将星：主领导才能，有权威</td></tr><tr><td><b>月柱</b><br>甲寅</td><td><span class="chip good">天厨贵人·吉</span> <span class="chip good">文昌·吉</span> <span class="chip bad">亡神·凶</span> <span class="chip mid">驿马·中性</span></td><td class="small">天厨贵人：主食禄福泽<br>文昌：主学业、文书、才华<br>亡神：主心机深虑，事多暗耗<br>驿马：主动荡、奔波、迁移</td></tr><tr><td><b>日柱</b><br>壬子</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">童子煞·中性</span> <span class="chip good">天德合·吉</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">红鸾·吉</span> <span class="chip bad">勾神·凶</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>童子煞：传统说法，多指幼时体质敏感、需细心照顾；不作病断。<br>天德合：天德所合，主贵人助力<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>红鸾：主婚喜、恋爱、添丁<br>勾神：传统提醒注意人际牵绊/琐事，不作凶断。<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr><tr><td><b>时柱</b><br>辛丑</td><td><span class="chip bad">寡宿·凶</span> <span class="chip good">金舆·吉</span></td><td class="small">寡宿：传统主孤独/独处；可理解为需要个人空间，不作凶断。<br>金舆：主财运、车辆、出行顺利</td></tr></tbody></table></div><div class="two">
+      <div class="card"><h4>吉神</h4><p>天乙贵人、德秀贵人、天厨贵人、将星、文昌、天德合、红鸾、金舆</p></div>
+      <div class="card"><h4>中性 / 凶煞</h4><p>驿马、童子煞、桃花、亡神、羊刃、勾神、血刃、寡宿</p></div>
+    </div>
+    <div class="warn"><b>读法：</b>吉神：天乙、德秀、天厨、将星、文昌、天德合、红鸾、金舆；凶煞：羊刃、亡神、童子煞、勾神、血刃、寡宿、灾煞、大耗。按传统提醒，不作凶断。</div>
     </div><div id="moon-panel-B" class="panel" style="display:none">
       <div class="pillars"><div class="pillar">
           <div class="lab">年柱</div>
@@ -616,6 +715,10 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
           <div class="track"><div class="fill" style="width:33.3%;background:#7C8288"></div></div>
           <div class="val">1</div></div><div class="chips" style="margin:-2px 0 8px 78px"><span class="chip mid">中</span><span class="chip">透干</span></div></div>
       </div>
+      <div class="two" style="margin-top:10px">
+        <div class="card"><h4>五行怎么读</h4><p>A 明字：水3、木3、金1、土1、火0；含藏干：土2、木3、水4、火1、金2。B 明字：水4、木3、金1、土0、火0；含藏干：土1、木3、水4、火1、金1。水木旺、火土弱；金水偏多，火土是出口。</p></div>
+        <div class="card"><h4>十神怎么读</h4><p>A 劫财3、正印2、食神2、比肩1、伤官1、偏财1、正官1、七杀1；B 劫财3、食神2、偏印1、伤官1、偏财1、七杀1。食神旺，A 印有根、B 印虚；官杀弱。结构关键词：食神佩印（A）/食神泄秀（B）。</p></div>
+      </div>
       <h3>格局与调候</h3><div class="two">
       <div class="card"><h4>格局</h4>
         <p><b>食神格</b>（顺用）</p>
@@ -630,8 +733,25 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
         <p class="small">调候是“季节最需要什么”，扶抑是“日主强弱怎么平衡”；两者不一致时，要分开看。</p>
       </div>
     </div>
+      <h3>三派对照：身强弱 / 用神</h3><div class="table-wrap"><table><thead><tr><th>口径</th><th>结论</th><th>怎么用</th></tr></thead><tbody><tr><td><b>engine 扶抑</b></td><td>身强；食神格；调候庚金/丙火</td><td class="small">engine 只作交叉检查</td></tr><tr><td><b>家庭六路</b></td><td>A 偏弱（金水）/ B 中和偏旺（木火）；用神分叉</td><td class="small">待大师定盘</td></tr><tr><td><b>调候</b></td><td>丙火第一、戊土第二；金水偏多</td><td class="small">火土是出口</td></tr><tr><td><b>综合</b></td><td>先定 A/B 与用神；未定盘前不按单一口径</td><td class="small">不急着改名/改环境</td></tr></tbody></table></div>
+      <h3>命理原子事实</h3><div class="grid g3"><div class="kpi"><div class="k">日主</div><div class="v" style="font-size:19px">壬水</div><div class="n">以日干为“我”</div></div><div class="kpi"><div class="k">日支</div><div class="v" style="font-size:19px">子</div><div class="n">桃花</div></div><div class="kpi"><div class="k">月令</div><div class="v" style="font-size:19px">病</div><div class="n">日主在月支的长生阶段</div></div><div class="kpi"><div class="k">格局</div><div class="v" style="font-size:19px">食神格</div><div class="n">格神：食神</div></div><div class="kpi"><div class="k">调候</div><div class="v" style="font-size:19px">金 / 火</div><div class="n">寅月壬水，用庚调候，丙辅之</div></div><div class="kpi"><div class="k">空亡</div><div class="v" style="font-size:19px">寅卯</div><div class="n">甲辰旬</div></div><div class="kpi"><div class="k">配偶宫</div><div class="v" style="font-size:19px">A 合 / B 刑</div><div class="n">日支与命局的关系</div></div><div class="kpi"><div class="k">财库</div><div class="v" style="font-size:19px">A/B 均无</div><div class="n">A/B 财星不入墓</div></div></div>
       <h3>合冲刑害</h3><div class="table-wrap"><table><thead><tr><th>关系</th><th>本盘</th><th>怎么读</th></tr></thead><tbody><tr><td><b>六合</b></td><td>无</td><td class="small">合主牵绊/合作，也主“合住”某个字</td></tr><tr><td><b>三合/半合</b></td><td>无</td><td class="small">三合/半合成局，力量更大</td></tr><tr><td><b>刑/破</b></td><td>卯子刑；卯子刑</td><td class="small">刑破主动荡/内耗，注意环境/情绪</td></tr><tr><td><b>拱夹</b></td><td>无</td><td class="small">拱出的字是“候选力量”，不一定会成局</td></tr></tbody></table></div>
-      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>癸卯</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip good">将星·吉</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>将星：主领导才能，有权威</td></tr><tr><td><b>月柱</b><br>甲寅</td><td><span class="chip good">天厨贵人·吉</span> <span class="chip good">文昌·吉</span> <span class="chip bad">亡神·凶</span> <span class="chip mid">驿马·中性</span></td><td class="small">天厨贵人：主食禄福泽<br>文昌：主学业、文书、才华<br>亡神：主心机深虑，事多暗耗<br>驿马：主动荡、奔波、迁移</td></tr><tr><td><b>日柱</b><br>壬子</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">童子煞·中性</span> <span class="chip good">天德合·吉</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">红鸾·吉</span> <span class="chip bad">勾神·凶</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>童子煞：传统说法，多指幼时体质敏感、需细心照顾；不作病断。<br>天德合：天德所合，主贵人助力<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>红鸾：主婚喜、恋爱、添丁<br>勾神：传统提醒注意人际牵绊/琐事，不作凶断。<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr><tr><td><b>时柱</b><br>庚子</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">红鸾·吉</span> <span class="chip bad">勾神·凶</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>红鸾：主婚喜、恋爱、添丁<br>勾神：传统提醒注意人际牵绊/琐事，不作凶断。<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr></tbody></table></div>
+      <h3>空亡 / 胎元命宫</h3><div class="two">
+      <div class="card"><h4>空亡</h4>
+        <p>日柱 <b>甲辰旬</b>，空亡 <b>寅卯</b>；年柱 <b>甲午旬</b>，空亡 <b>辰巳</b>。</p>
+        <p class="small">空亡不是“没有”，传统上有“落空/填实”两说；逢合、逢冲都可能改变读法。</p>
+      </div>
+      <div class="card"><h4>胎元 / 命宫 / 身宫 / 胎息</h4>
+        <p>胎元 <b>乙巳</b>，命宫 <b>乙卯</b>，身宫 <b>乙卯</b>，胎息 <b>丁丑</b>。</p>
+        <p class="small">这些是传统排盘的辅助位，用于补充结构信息，不作单独吉凶断。</p>
+      </div>
+    </div>
+    <div class="note"><b>本盘重点：</b>日柱壬子甲辰旬空寅卯；年柱癸卯甲午旬空辰巳。A 子丑合、B 双子伏吟；日支羊刃，情绪/规则感需要被看见。</div>
+      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>癸卯</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip good">将星·吉</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>将星：主领导才能，有权威</td></tr><tr><td><b>月柱</b><br>甲寅</td><td><span class="chip good">天厨贵人·吉</span> <span class="chip good">文昌·吉</span> <span class="chip bad">亡神·凶</span> <span class="chip mid">驿马·中性</span></td><td class="small">天厨贵人：主食禄福泽<br>文昌：主学业、文书、才华<br>亡神：主心机深虑，事多暗耗<br>驿马：主动荡、奔波、迁移</td></tr><tr><td><b>日柱</b><br>壬子</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">童子煞·中性</span> <span class="chip good">天德合·吉</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">红鸾·吉</span> <span class="chip bad">勾神·凶</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>童子煞：传统说法，多指幼时体质敏感、需细心照顾；不作病断。<br>天德合：天德所合，主贵人助力<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>红鸾：主婚喜、恋爱、添丁<br>勾神：传统提醒注意人际牵绊/琐事，不作凶断。<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr><tr><td><b>时柱</b><br>庚子</td><td><span class="chip bad">羊刃·凶</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">红鸾·吉</span> <span class="chip bad">勾神·凶</span> <span class="chip bad">血刃·凶</span></td><td class="small">羊刃：主刚强、行动力与锋芒；传统上宜修脾气、注意安全，不作凶断。<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>红鸾：主婚喜、恋爱、添丁<br>勾神：传统提醒注意人际牵绊/琐事，不作凶断。<br>血刃：传统提醒注意安全/小伤，不作凶断。</td></tr></tbody></table></div><div class="two">
+      <div class="card"><h4>吉神</h4><p>天乙贵人、德秀贵人、天厨贵人、将星、文昌、天德合、红鸾</p></div>
+      <div class="card"><h4>中性 / 凶煞</h4><p>驿马、童子煞、桃花、亡神、羊刃、勾神、血刃</p></div>
+    </div>
+    <div class="warn"><b>读法：</b>吉神：天乙、德秀、天厨、将星、文昌、天德合、红鸾、金舆；凶煞：羊刃、亡神、童子煞、勾神、血刃、寡宿、灾煞、大耗。按传统提醒，不作凶断。</div>
     </div>
       <h3>大运</h3>
       <div class="note"><b>未起运：</b>2029-05-13 起运；当前走小运，见下方小运表。</div><div class="timeline"><div class="dy">
@@ -689,8 +809,18 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
           <div class="s">伤官运 · <span class="chip elem-木">木</span></div>
           <div class="e">2109-05-13 → 2119-05-12</div>
         </div></div>
+      <div class="two"><div class="card"><h4>起运前（2026）</h4><p>2026 未起运（2029-05-13 起运），当前走小运；先按小运/童限看环境，不套大运。</p></div><div class="card"><h4>起运后第一步：癸丑（2029–2039，劫财运）</h4><p>第一步癸丑（2029–2039，劫财运）：丑土湿土、劫财；A 盘丑为官印相生，B 盘丑为劫财；童年/小学阶段，环境稳定比“补什么”更重要。</p></div></div>
       <h3>流年 2026–2037</h3>
       <div class="table-wrap"><table><thead><tr><th>年份</th><th>干支</th><th>十神</th><th>纳音</th><th>神煞（传统）</th><th>伏吟/反吟</th></tr></thead><tbody><tr class="hl"><td><b>2026</b></td><td>丙午</td><td>偏财</td><td>天河水</td><td><span class="chip bad">灾煞(凶)</span> <span class="chip good">天喜(吉)</span> <span class="chip bad">大耗(凶)</span></td><td class="small">反吟：丙午与壬子天克地冲</td></tr><tr><td><b>2027</b></td><td>丁未</td><td>正财</td><td>天河水</td><td><span class="chip mid">华盖(中性)</span> <span class="chip bad">大耗(凶)</span></td><td class="small">反吟：丁未与辛丑天克地冲</td></tr><tr><td><b>2028</b></td><td>戊申</td><td>七杀</td><td>大驿土</td><td><span class="chip bad">劫煞(凶)</span> <span class="chip bad">大耗(凶)</span></td><td class="small">反吟：戊申与甲寅天克地冲</td></tr><tr><td><b>2029</b></td><td>己酉</td><td>正官</td><td>大驿土</td><td><span class="chip bad">灾煞(凶)</span> <span class="chip mid">桃花(中性)</span> <span class="chip bad">大耗(凶)</span></td><td class="small">反吟：己酉与癸卯天克地冲</td></tr><tr><td><b>2030</b></td><td>庚戌</td><td>偏印</td><td>钗钏金</td><td><span class="chip bad">丧门(凶)</span></td><td class="small">—</td></tr><tr><td><b>2031</b></td><td>辛亥</td><td>正印</td><td>钗钏金</td><td><span class="chip bad">丧门(凶)</span></td><td class="small">—</td></tr><tr><td><b>2032</b></td><td>壬子</td><td>比肩</td><td>桑柘木</td><td><span class="chip mid">桃花(中性)</span> <span class="chip good">红鸾(吉)</span> <span class="chip bad">羊刃(凶)</span> <span class="chip bad">丧门(凶)</span></td><td class="small">伏吟：壬子伏吟</td></tr><tr><td><b>2033</b></td><td>癸丑</td><td>劫财</td><td>桑柘木</td><td><span class="chip bad">病符(凶)</span> <span class="chip bad">丧门(凶)</span></td><td class="small">伏吟：丑地支伏吟</td></tr><tr><td><b>2034</b></td><td>甲寅</td><td>食神</td><td>大溪水</td><td><span class="chip mid">驿马(中性)</span> <span class="chip bad">病符(凶)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">伏吟：甲寅伏吟</td></tr><tr><td><b>2035</b></td><td>乙卯</td><td>伤官</td><td>大溪水</td><td><span class="chip good">天乙贵人(吉)</span> <span class="chip bad">病符(凶)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">伏吟：卯地支伏吟</td></tr><tr><td><b>2036</b></td><td>丙辰</td><td>偏财</td><td>沙中土</td><td><span class="chip mid">华盖(中性)</span> <span class="chip bad">病符(凶)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">—</td></tr><tr><td><b>2037</b></td><td>丁巳</td><td>正财</td><td>沙中土</td><td><span class="chip mid">驿马(中性)</span> <span class="chip bad">劫煞(凶)</span> <span class="chip good">天乙贵人(吉)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">—</td></tr></tbody></table></div><div class="note"><b>2026 提醒：</b>2026 丙午偏财，火为调候；与日柱壬子天克地冲（反吟），情绪/环境易动；3 岁，以稳定作息为主。</div>
+      <div class="two">
+      <div class="card"><h4>2026 丙午</h4><p>丙午 偏财 · 火 · 反吟：丙午与壬子天克地冲</p><p>2026 丙午偏财，火为调候；与日柱壬子天克地冲（反吟），情绪/环境易动；3 岁，以稳定作息为主。</p></div>
+      <div class="card"><h4>2027–2028</h4><p>丁未 正财 · 火 · 反吟：丁未与辛丑天克地冲<br>戊申 七杀 · 土 · 反吟：戊申与甲寅天克地冲</p><p>2027 丁未正财，未与辛丑天克地冲（反吟）；2028 戊申七杀，申与甲寅天克地冲（反吟）；连续变动，家里尽量给稳定环境。</p></div>
+    </div>
+      <h3>2026 流月</h3>
+      <details><summary>展开：2026 流月（12 个月，按节气月）</summary>
+      <div class="table-wrap"><table><thead><tr><th>月</th><th>干支</th><th>十神</th><th>五行</th><th>神煞（传统）</th></tr></thead><tbody><tr><td>1月 · 丑月</td><td>己丑</td><td>正官</td><td>土</td><td>—</td></tr><tr><td>2月 · 寅月</td><td>庚寅</td><td>偏印</td><td>金</td><td><span class="chip mid">驿马(中性)</span></td></tr><tr><td>3月 · 卯月</td><td>辛卯</td><td>正印</td><td>金</td><td><span class="chip good">天乙贵人(吉)</span></td></tr><tr><td>4月 · 辰月</td><td>壬辰</td><td>比肩</td><td>水</td><td><span class="chip mid">华盖(中性)</span></td></tr><tr><td>5月 · 巳月</td><td>癸巳</td><td>劫财</td><td>水</td><td><span class="chip mid">驿马(中性)</span> <span class="chip bad">劫煞(凶)</span> <span class="chip good">天乙贵人(吉)</span></td></tr><tr><td>6月 · 午月</td><td>甲午</td><td>食神</td><td>木</td><td><span class="chip bad">灾煞(凶)</span> <span class="chip good">天喜(吉)</span></td></tr><tr><td>7月 · 未月</td><td>乙未</td><td>伤官</td><td>木</td><td><span class="chip mid">华盖(中性)</span></td></tr><tr><td>8月 · 申月</td><td>丙申</td><td>偏财</td><td>火</td><td><span class="chip bad">劫煞(凶)</span></td></tr><tr><td>9月 · 酉月</td><td>丁酉</td><td>正财</td><td>火</td><td><span class="chip bad">灾煞(凶)</span> <span class="chip mid">桃花(中性)</span></td></tr><tr><td>10月 · 戌月</td><td>戊戌</td><td>七杀</td><td>土</td><td>—</td></tr><tr><td>11月 · 亥月</td><td>己亥</td><td>正官</td><td>土</td><td>—</td></tr><tr><td>12月 · 子月</td><td>庚子</td><td>偏印</td><td>金</td><td><span class="chip mid">桃花(中性)</span> <span class="chip good">红鸾(吉)</span> <span class="chip bad">羊刃(凶)</span></td></tr></tbody></table></div>
+      <p class="small">按节气月排列：1 月=丑月（小寒—立春前），不是公历月份。流月只作传统参考。</p>
+    </details>
       <h3>小运（两派对照）</h3>
       <details open><summary>san_ming_tong_hui</summary>
           <p class="small">《三命通会》：男起丙寅顺行、女起壬申逆行</p>
@@ -701,7 +831,9 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
         </details>
       <h3>解读</h3>
       <div class="two"><div class="card"><h4>性格倾向</h4><p>壬水聪明、灵活、好奇心强；食神旺，表达/才艺/创造力好，也懂享受。A 食神佩印，有长辈/学习支持；B 食神泄秀，才华更外放。子卯刑/子丑合/双子伏吟，内在敏感、情绪和规则感需要被看见；羊刃有主见。</p></div><div class="card"><h4>成长 / 学业</h4><p>3 岁半，食神旺，兴趣广、语言/艺术/动手能力强。A 用印，适合有体系、有长辈引导的学习；B 用食伤，适合启发式/项目式。火土是出口，多户外/阳光/规律作息；金水偏多，少寒湿、少放任。</p></div><div class="card"><h4>健康（传统取象）</h4><p>水旺寒湿，传统上注意脾胃/泌尿/呼吸道；以儿科医生为准。</p></div><div class="card"><h4>家庭 / 六亲</h4><p>日支子水羊刃，A 子丑合、B 双子伏吟；与父母/弟弟的互动里，既有主见也敏感；需要稳定环境和被尊重。</p></div><div class="card"><h4>环境 / 用神建议</h4><p>用神分叉：A 金水（白/金/蓝），B 木火（绿/红/橙）；调候丙火/戊土（阳光/暖色/土色）。先定 A/B 再定颜色/方位，不要一刀切；名字里的“卯”属木，正好落在分叉上。</p></div><div class="card"><h4>提醒</h4><p>出生 01:02 距丑时边界仅 2 分钟，A 盘本身有 ±2 分钟风险；B 盘更稳。用神分叉，未定盘前不建议按单一口径改名/改环境。</p></div></div>
-    </section><section class="block person" id="p-seven">
+      <h3>用神与生活建议</h3>
+      <div class="grid g3"><div class="kpi"><div class="k">A 用神</div><div class="v" style="font-size:19px">金水</div><div class="n">食神佩印</div></div><div class="kpi"><div class="k">B 用神</div><div class="v" style="font-size:19px">木火</div><div class="n">食神泄秀</div></div><div class="kpi"><div class="k">忌</div><div class="v" style="font-size:19px">随 A/B 翻转</div><div class="n">先定盘再谈颜色/名字</div></div></div><div class="note">用神分叉：A 金水（白/金/蓝），B 木火（绿/红/橙）；调候丙火/戊土（阳光/暖色/土色）。先定 A/B 再定颜色/方位，不要一刀切；名字里的“卯”属木，正好落在分叉上。</div>
+    </section><section class="block person board" data-board="seven" id="p-seven">
       <div class="person-head">
         <div><div class="kicker">老二</div>
           <h2>小七 · 王元一</h2>
@@ -712,6 +844,13 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
       <p class="lead">丁火日主，戌月伤官格；家庭六路核验判身弱偏弱（非极弱/从弱）。用神木（主）、水（少量辅）、火（次）；忌土（首忌）、金（次忌），重火慎用。</p>
       <div class="grid g3"><div class="kpi"><div class="k">日主</div><div class="v" style="font-size:20px">丁火</div><div class="n">炉中火 · 阴火</div></div><div class="kpi"><div class="k">格局</div><div class="v" style="font-size:20px">伤官格</div><div class="n">逆用；伤官生财</div></div><div class="kpi"><div class="k">身强弱</div><div class="v" style="font-size:20px">身弱偏弱</div><div class="n">家庭六路；engine 判中和</div></div><div class="kpi"><div class="k">用神</div><div class="v" style="font-size:20px">木主、水少量、火次</div><div class="n">忌土首忌、金次忌，重火慎用</div></div><div class="kpi"><div class="k">忌</div><div class="v" style="font-size:20px">土、金</div><div class="n">伤官泄身、财星耗身</div></div><div class="kpi"><div class="k">关键词</div><div class="v" style="font-size:20px">伤官生财</div><div class="n">身弱偏弱 · 重火慎用</div></div></div>
       <div class="warn"><b>engine 扶抑：</b>中和；伤官格（逆用）；调候甲木为主、庚金为辅。<br><b>家庭六路（A–F）：</b>身弱偏弱（非极弱/从弱）；用神木主、水少量辅、火次；忌土首忌、金次忌；<b>重火慎用</b>。<br><b>A/B：</b>同盘（丙午/戊戌/丁卯/辛亥）；卯戌合、午戌半合、亥卯半合；日支卯木偏印，时支亥水正官/正印。<br><b>本页取口径：</b>按家庭六路取木主水辅火次；engine 的“中和/调候庚金”只作交叉检查。</div>
+      <h3>三路核验与起运</h3>
+      <div class="grid g3">
+      <div class="kpi"><div class="k">出生</div><div class="v" style="font-size:16px">2026-10-20 21:46（北京时间）</div><div class="n">北京 · 农历 二〇二六年九月十一</div></div>
+      <div class="kpi"><div class="k">真太阳时</div><div class="v" style="font-size:16px">约 21:31（北京 116.4°E）</div><div class="n">A 盘 丙午 戊戌 丁卯 辛亥 / B 盘 丙午 戊戌 丁卯 辛亥</div></div>
+      <div class="kpi"><div class="k">起运</div><div class="v" style="font-size:16px">2032-09-30</div><div class="n">顺排排 · 大运起止按起运日满十年</div></div>
+    </div>
+    <div class="note"><b>三路复核：</b>lunar-python + JDN + 在线黄历；2026-10-20 年月日三柱、节气（寒露后/霜降前）、日柱丁卯均一致。真太阳时约 21:31（北京 116.4°E），仍为亥时；A/B 同盘。起运 2032-09-30，顺排。</div>
       <h3>排盘 · 两盘对照</h3>
       <div class="note"><b>A/B 同盘：</b>A 北京时与 B 真太阳时都是亥时辛亥，两盘一致。</div>
       <div id="seven-panel-A" class="panel">
@@ -800,6 +939,10 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
           <div class="track"><div class="fill" style="width:33.3%;background:#2F7D57"></div></div>
           <div class="val">1</div></div><div class="chips" style="margin:-2px 0 8px 78px"><span class="chip mid">中</span><span class="chip">有根</span></div></div>
       </div>
+      <div class="two" style="margin-top:10px">
+        <div class="card"><h4>五行怎么读</h4><p>明字：火3（丙午丁）、土2（戊戌）、木1（卯）、金1（辛）、水1（亥）；含藏干：土3、木2、水1、火4、金2。五行俱全，火土多、木水少；伤官生财、身弱偏弱。</p></div>
+        <div class="card"><h4>十神怎么读</h4><p>比肩3、伤官2、偏财2、劫财1、食神1、正官1、偏印1、正印1。伤官生财、身弱；官印有但弱，木是药。结构关键词：伤官生财、身弱偏弱、重火慎用。</p></div>
+      </div>
       <h3>格局与调候</h3><div class="two">
       <div class="card"><h4>格局</h4>
         <p><b>伤官格</b>（逆用）</p>
@@ -814,8 +957,25 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
         <p class="small">调候是“季节最需要什么”，扶抑是“日主强弱怎么平衡”；两者不一致时，要分开看。</p>
       </div>
     </div>
+      <h3>三派对照：身强弱 / 用神</h3><div class="table-wrap"><table><thead><tr><th>口径</th><th>结论</th><th>怎么用</th></tr></thead><tbody><tr><td><b>engine 扶抑</b></td><td>中和；伤官格；调候甲木/庚金</td><td class="small">engine 只作交叉检查</td></tr><tr><td><b>家庭六路</b></td><td>身弱偏弱；用木主、水少量、火次；忌土金</td><td class="small">本页主口径</td></tr><tr><td><b>调候</b></td><td>甲木为主、庚金为辅；原局木有卯/亥甲，火有丙/丁</td><td class="small">重火慎用</td></tr><tr><td><b>综合</b></td><td>木主、水少量、火次；忌土金</td><td class="small">名字“元一”=木+水，正合</td></tr></tbody></table></div>
+      <h3>命理原子事实</h3><div class="grid g3"><div class="kpi"><div class="k">日主</div><div class="v" style="font-size:19px">丁火</div><div class="n">以日干为“我”</div></div><div class="kpi"><div class="k">日支</div><div class="v" style="font-size:19px">卯</div><div class="n">桃花</div></div><div class="kpi"><div class="k">月令</div><div class="v" style="font-size:19px">养</div><div class="n">日主在月支的长生阶段</div></div><div class="kpi"><div class="k">格局</div><div class="v" style="font-size:19px">伤官格</div><div class="n">格神：伤官</div></div><div class="kpi"><div class="k">调候</div><div class="v" style="font-size:19px">木 / 金</div><div class="n">戌月丁火，用甲调候，庚辅之</div></div><div class="kpi"><div class="k">空亡</div><div class="v" style="font-size:19px">戌亥</div><div class="n">甲子旬</div></div><div class="kpi"><div class="k">配偶宫</div><div class="v" style="font-size:19px">A 合 / B 合</div><div class="n">日支与命局的关系</div></div><div class="kpi"><div class="k">财库</div><div class="v" style="font-size:19px">A/B 均无</div><div class="n">A/B 财星不入墓</div></div></div>
       <h3>合冲刑害</h3><div class="table-wrap"><table><thead><tr><th>关系</th><th>本盘</th><th>怎么读</th></tr></thead><tbody><tr><td><b>六合</b></td><td>戌卯合火</td><td class="small">合主牵绊/合作，也主“合住”某个字</td></tr><tr><td><b>三合/半合</b></td><td>亥卯木半合局；午戌火半合局</td><td class="small">三合/半合成局，力量更大</td></tr><tr><td><b>刑/破</b></td><td>午卯破</td><td class="small">刑破主动荡/内耗，注意环境/情绪</td></tr><tr><td><b>拱夹</b></td><td>无</td><td class="small">拱出的字是“候选力量”，不一定会成局</td></tr></tbody></table></div>
-      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>丙午</td><td><span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip good">禄神·吉</span> <span class="chip good">天德·吉</span> <span class="chip good">月德·吉</span> <span class="chip good">将星·吉</span></td><td class="small">德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>禄神：日主临官之位，主福禄安康<br>天德：天德贵人，主福泽深厚，化险为夷<br>月德：月德贵人，主月令之德，人缘佳<br>将星：主领导才能，有权威</td></tr><tr><td><b>月柱</b><br>戊戌</td><td><span class="chip good">德秀贵人·吉</span> <span class="chip mid">华盖·中性</span></td><td class="small">德秀贵人：主禀气清粹，逢凶化吉<br>华盖：主孤独清高，聪明好学，有艺术天赋</td></tr><tr><td><b>日柱</b><br>丁卯</td><td><span class="chip good">太极贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">天喜·吉</span> <span class="chip bad">绞神·凶</span></td><td class="small">太极贵人：主聪慧好学，宜研哲理玄学<br>德秀贵人：主禀气清粹，逢凶化吉<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>天喜：主喜庆之事，婚恋吉兆<br>绞神：传统提醒注意人际纠纷/琐事缠绕，不作凶断。</td></tr><tr><td><b>时柱</b><br>辛亥</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">福星贵人·吉</span> <span class="chip good">天德合·吉</span> <span class="chip bad">劫煞·凶</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>福星贵人：主一生福气，平安顺遂<br>天德合：天德所合，主贵人助力<br>劫煞：传统提醒注意意外/人际纠纷，不作凶断。</td></tr></tbody></table></div>
+      <h3>空亡 / 胎元命宫</h3><div class="two">
+      <div class="card"><h4>空亡</h4>
+        <p>日柱 <b>甲子旬</b>，空亡 <b>戌亥</b>；年柱 <b>甲辰旬</b>，空亡 <b>寅卯</b>。</p>
+        <p class="small">空亡不是“没有”，传统上有“落空/填实”两说；逢合、逢冲都可能改变读法。</p>
+      </div>
+      <div class="card"><h4>胎元 / 命宫 / 身宫 / 胎息</h4>
+        <p>胎元 <b>己丑</b>，命宫 <b>丙申</b>，身宫 <b>戊戌</b>，胎息 <b>壬戌</b>。</p>
+        <p class="small">这些是传统排盘的辅助位，用于补充结构信息，不作单独吉凶断。</p>
+      </div>
+    </div>
+    <div class="note"><b>本盘重点：</b>日柱丁卯甲子旬空戌亥；月支戌、时支亥落空；空亡逢合可填实（午戌、卯戌、亥卯）。日支卯木偏印，时支亥水正官/正印。</div>
+      <h3>神煞</h3><div class="table-wrap"><table><thead><tr><th>柱</th><th>神煞（吉/中性/凶）</th><th>说明</th></tr></thead><tbody><tr><td><b>年柱</b><br>丙午</td><td><span class="chip good">德秀贵人·吉</span> <span class="chip good">天厨贵人·吉</span> <span class="chip good">禄神·吉</span> <span class="chip good">天德·吉</span> <span class="chip good">月德·吉</span> <span class="chip good">将星·吉</span></td><td class="small">德秀贵人：主禀气清粹，逢凶化吉<br>天厨贵人：主食禄福泽<br>禄神：日主临官之位，主福禄安康<br>天德：天德贵人，主福泽深厚，化险为夷<br>月德：月德贵人，主月令之德，人缘佳<br>将星：主领导才能，有权威</td></tr><tr><td><b>月柱</b><br>戊戌</td><td><span class="chip good">德秀贵人·吉</span> <span class="chip mid">华盖·中性</span></td><td class="small">德秀贵人：主禀气清粹，逢凶化吉<br>华盖：主孤独清高，聪明好学，有艺术天赋</td></tr><tr><td><b>日柱</b><br>丁卯</td><td><span class="chip good">太极贵人·吉</span> <span class="chip good">德秀贵人·吉</span> <span class="chip mid">桃花·中性</span> <span class="chip good">将星·吉</span> <span class="chip good">天喜·吉</span> <span class="chip bad">绞神·凶</span></td><td class="small">太极贵人：主聪慧好学，宜研哲理玄学<br>德秀贵人：主禀气清粹，逢凶化吉<br>桃花：人缘/异性缘，中性；不作吉凶断。<br>将星：主领导才能，有权威<br>天喜：主喜庆之事，婚恋吉兆<br>绞神：传统提醒注意人际纠纷/琐事缠绕，不作凶断。</td></tr><tr><td><b>时柱</b><br>辛亥</td><td><span class="chip good">天乙贵人·吉</span> <span class="chip good">福星贵人·吉</span> <span class="chip good">天德合·吉</span> <span class="chip bad">劫煞·凶</span></td><td class="small">天乙贵人：主贵人相助，逢凶化吉<br>福星贵人：主一生福气，平安顺遂<br>天德合：天德所合，主贵人助力<br>劫煞：传统提醒注意意外/人际纠纷，不作凶断。</td></tr></tbody></table></div><div class="two">
+      <div class="card"><h4>吉神</h4><p>德秀贵人、天厨贵人、禄神、天德、月德、将星、太极贵人、天喜、天乙贵人、福星贵人、天德合</p></div>
+      <div class="card"><h4>中性 / 凶煞</h4><p>华盖、桃花、绞神、劫煞</p></div>
+    </div>
+    <div class="warn"><b>读法：</b>吉神：德秀、天厨、禄神、天德、月德、将星、太极、天喜、天乙、福星、天德合；中性：华盖、桃花；凶煞：绞神、劫煞。吉神多，凶煞可管理。</div>
     </div>
       <h3>大运</h3>
       <div class="note"><b>未起运：</b>2032-09-30 起运；当前走小运，见下方小运表。</div><div class="timeline"><div class="dy">
@@ -873,8 +1033,18 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
           <div class="s">比肩运 · <span class="chip elem-火">火</span></div>
           <div class="e">2112-09-30 → 2122-09-29</div>
         </div></div>
+      <div class="two"><div class="card"><h4>起运前（2026）</h4><p>2026 未起运（2032-09-30 起运），当前走小运；0 岁，先看喂养/作息/环境。</p></div><div class="card"><h4>起运后第一步：己亥（2032–2042，食神运）</h4><p>第一步己亥（2032–2042，食神运）：己土食神、亥水官印；童年/小学阶段，木火为用，环境宜温暖、有生机、有规律。</p></div></div>
       <h3>流年 2026–2037</h3>
       <div class="table-wrap"><table><thead><tr><th>年份</th><th>干支</th><th>十神</th><th>纳音</th><th>神煞（传统）</th><th>伏吟/反吟</th></tr></thead><tbody><tr class="hl"><td><b>2026</b></td><td>丙午</td><td>劫财</td><td>天河水</td><td>—</td><td class="small">伏吟：丙午伏吟</td></tr><tr><td><b>2027</b></td><td>丁未</td><td>比肩</td><td>天河水</td><td><span class="chip mid">华盖(中性)</span> <span class="chip bad">病符(凶)</span></td><td class="small">—</td></tr><tr><td><b>2028</b></td><td>戊申</td><td>伤官</td><td>大驿土</td><td><span class="chip mid">驿马(中性)</span> <span class="chip bad">劫煞(凶)</span> <span class="chip bad">丧门(凶)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">—</td></tr><tr><td><b>2029</b></td><td>己酉</td><td>食神</td><td>大驿土</td><td><span class="chip bad">灾煞(凶)</span> <span class="chip good">红鸾(吉)</span> <span class="chip good">天乙贵人(吉)</span> <span class="chip bad">丧门(凶)</span></td><td class="small">—</td></tr><tr><td><b>2030</b></td><td>庚戌</td><td>正财</td><td>钗钏金</td><td><span class="chip mid">华盖(中性)</span></td><td class="small">伏吟：戌地支伏吟</td></tr><tr><td><b>2031</b></td><td>辛亥</td><td>偏财</td><td>钗钏金</td><td><span class="chip bad">劫煞(凶)</span> <span class="chip good">天乙贵人(吉)</span> <span class="chip bad">病符(凶)</span></td><td class="small">伏吟：辛亥伏吟</td></tr><tr><td><b>2032</b></td><td>壬子</td><td>正官</td><td>桑柘木</td><td><span class="chip bad">灾煞(凶)</span> <span class="chip mid">桃花(中性)</span> <span class="chip bad">病符(凶)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">反吟：壬子与丙午天克地冲</td></tr><tr><td><b>2033</b></td><td>癸丑</td><td>七杀</td><td>桑柘木</td><td><span class="chip bad">丧门(凶)</span> <span class="chip bad">吊客(凶)</span></td><td class="small">—</td></tr><tr><td><b>2034</b></td><td>甲寅</td><td>正印</td><td>大溪水</td><td>—</td><td class="small">—</td></tr><tr><td><b>2035</b></td><td>乙卯</td><td>偏印</td><td>大溪水</td><td><span class="chip mid">桃花(中性)</span> <span class="chip good">天喜(吉)</span></td><td class="small">伏吟：卯地支伏吟</td></tr><tr><td><b>2036</b></td><td>丙辰</td><td>劫财</td><td>沙中土</td><td><span class="chip bad">病符(凶)</span> <span class="chip bad">丧门(凶)</span> <span class="chip bad">大耗(凶)</span></td><td class="small">—</td></tr><tr><td><b>2037</b></td><td>丁巳</td><td>比肩</td><td>沙中土</td><td><span class="chip mid">驿马(中性)</span> <span class="chip bad">吊客(凶)</span> <span class="chip bad">大耗(凶)</span></td><td class="small">反吟：丁巳与辛亥天克地冲</td></tr></tbody></table></div><div class="note"><b>2026 提醒：</b>2026 丙午劫财，火来帮身但重火慎用；与年柱丙午伏吟，重复/变动之象；小婴儿只作环境参考。</div>
+      <div class="two">
+      <div class="card"><h4>2026 丙午</h4><p>丙午 劫财 · 火 · 伏吟：丙午伏吟</p><p>2026 丙午劫财，火来帮身但重火慎用；与年柱丙午伏吟，重复/变动之象；小婴儿只作环境参考。</p></div>
+      <div class="card"><h4>2027–2028</h4><p>丁未 比肩 · 火 · 无伏吟/反吟<br>戊申 伤官 · 土 · 无伏吟/反吟</p><p>2027 丁未比肩，火土；2028 戊申伤官，申金驿马/劫煞；土金渐旺，用木火调候，注意作息/环境稳定。</p></div>
+    </div>
+      <h3>2026 流月</h3>
+      <details><summary>展开：2026 流月（12 个月，按节气月）</summary>
+      <div class="table-wrap"><table><thead><tr><th>月</th><th>干支</th><th>十神</th><th>五行</th><th>神煞（传统）</th></tr></thead><tbody><tr><td>1月 · 丑月</td><td>己丑</td><td>食神</td><td>土</td><td>—</td></tr><tr><td>2月 · 寅月</td><td>庚寅</td><td>正财</td><td>金</td><td>—</td></tr><tr><td>3月 · 卯月</td><td>辛卯</td><td>偏财</td><td>金</td><td><span class="chip mid">桃花(中性)</span> <span class="chip good">天喜(吉)</span></td></tr><tr><td>4月 · 辰月</td><td>壬辰</td><td>正官</td><td>水</td><td>—</td></tr><tr><td>5月 · 巳月</td><td>癸巳</td><td>七杀</td><td>水</td><td><span class="chip mid">驿马(中性)</span></td></tr><tr><td>6月 · 午月</td><td>甲午</td><td>正印</td><td>木</td><td>—</td></tr><tr><td>7月 · 未月</td><td>乙未</td><td>偏印</td><td>木</td><td><span class="chip mid">华盖(中性)</span></td></tr><tr><td>8月 · 申月</td><td>丙申</td><td>劫财</td><td>火</td><td><span class="chip mid">驿马(中性)</span> <span class="chip bad">劫煞(凶)</span></td></tr><tr><td>9月 · 酉月</td><td>丁酉</td><td>比肩</td><td>火</td><td><span class="chip bad">灾煞(凶)</span> <span class="chip good">红鸾(吉)</span> <span class="chip good">天乙贵人(吉)</span></td></tr><tr><td>10月 · 戌月</td><td>戊戌</td><td>伤官</td><td>土</td><td><span class="chip mid">华盖(中性)</span></td></tr><tr><td>11月 · 亥月</td><td>己亥</td><td>食神</td><td>土</td><td><span class="chip bad">劫煞(凶)</span> <span class="chip good">天乙贵人(吉)</span></td></tr><tr><td>12月 · 子月</td><td>庚子</td><td>正财</td><td>金</td><td><span class="chip bad">灾煞(凶)</span> <span class="chip mid">桃花(中性)</span></td></tr></tbody></table></div>
+      <p class="small">按节气月排列：1 月=丑月（小寒—立春前），不是公历月份。流月只作传统参考。</p>
+    </details>
       <h3>小运（两派对照）</h3>
       <details open><summary>san_ming_tong_hui</summary>
           <p class="small">《三命通会》：男起丙寅顺行、女起壬申逆行</p>
@@ -885,9 +1055,11 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
         </details>
       <h3>解读</h3>
       <div class="two"><div class="card"><h4>性格倾向</h4><p>丁火细腻、温和、有礼，想象力好；伤官旺，表达/创意强；身弱，敏感、需要安全感；正官/正印，规则感和学习力是加分项，但不宜高压。</p></div><div class="card"><h4>成长 / 学业</h4><p>0 岁，身弱偏弱；用神木主，环境宜温暖、有生机、有规律；水少量作规则/引导；火次之、慎用重火；忌土金过旺（寒湿/过度金气）。</p></div><div class="card"><h4>健康（传统取象）</h4><p>丁火弱、土金旺，传统上注意保暖、脾胃、呼吸道；以儿科医生为准。</p></div><div class="card"><h4>家庭 / 六亲</h4><p>日支卯木偏印，时支亥水正官/正印；长辈/学习支持是助力。与哥哥（壬水）是“水克火”的五行关系，传统上哥哥的规则/压力对小七明显，家里可用“木”通关（沟通/学习/成长）。</p></div><div class="card"><h4>环境 / 用神建议</h4><p>颜色/材质偏木（绿/青）为主，水少量（蓝/黑），火次（红/橙，慎用）；忌土金过旺（黄/白/大面积金属）。名字“元一”=木+水，正合用神木主水辅。</p></div><div class="card"><h4>提醒</h4><p>小七刚出生，命理只作气质/环境参考；健康、喂养、作息以儿科医生和妈妈的意见为准。</p></div></div>
+      <h3>用神与生活建议</h3>
+      <div class="grid g3"><div class="kpi"><div class="k">用神</div><div class="v" style="font-size:19px">木</div><div class="n">印星生身</div></div><div class="kpi"><div class="k">辅</div><div class="v" style="font-size:19px">水少量、火次</div><div class="n">官杀/比劫</div></div><div class="kpi"><div class="k">忌</div><div class="v" style="font-size:19px">土、金</div><div class="n">伤官/财星耗身</div></div></div><div class="note">颜色/材质偏木（绿/青）为主，水少量（蓝/黑），火次（红/橙，慎用）；忌土金过旺（黄/白/大面积金属）。名字“元一”=木+水，正合用神木主水辅。</div>
     </section>
 
-<section class="block" id="compare">
+<section class="block board" data-board="compare" id="compare">
   <h2>家庭对照：三口人的五行链</h2>
   <p class="lead">把三个人的日主、用神、忌神放在一起看，避免“全家一个补法”。</p>
   <div class="table-wrap"><table class="compare">
@@ -922,6 +1094,29 @@ footer{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-si
   <div class="warn"><b>一句话：</b>命盘是“倾向”，不是“判决”。这份页面的价值，是帮家里人理解彼此的气质与需要，而不是替谁决定人生。</div>
 </section>
 
+<section class="block" id="glossary">
+  <h2>术语小抄</h2>
+  <details open><summary>点开：四柱、十神、格局、调候、大运、流年……</summary>
+    <dl class="glossary">
+      <dt>四柱 / 八字</dt><dd>年柱、月柱、日柱、时柱，每柱一个天干+一个地支，共八个字。日柱天干叫“日主”，代表命主自己。</dd>
+      <dt>藏干</dt><dd>地支里“藏着”的天干，分本气、中气、余气；藏干决定地支的十神和力量。</dd>
+      <dt>十神</dt><dd>以日主为中心：比肩/劫财（同我）、食神/伤官（我生）、偏财/正财（我克）、正官/七杀（克我）、正印/偏印（生我）。</dd>
+      <dt>格局</dt><dd>月令/月支主气形成的结构，如正财格、食神格、伤官格；顺用/逆用是取用方向。</dd>
+      <dt>调候</dt><dd>按出生季节看命局最需要的气候；如卯月庚金用丁火，寅月壬水用庚金/丙火。</dd>
+      <dt>扶抑</dt><dd>看日主强弱，弱则帮（印/比劫），强则泄（食伤/财/官杀）；不同模型权重不同，结论可能不同。</dd>
+      <dt>大运</dt><dd>每十年一步的运势干支，从月柱顺/逆排；起运时间按出生到下一个“节”的时间折算。</dd>
+      <dt>流年 / 流月</dt><dd>每一年的干支、每一个节气月与命局的互动；流年十神、神煞、伏吟/反吟是传统参考。</dd>
+      <dt>小运</dt><dd>起运前的辅助运，流派不同（三命通会/星平会海），只作参考。</dd>
+      <dt>神煞</dt><dd>传统命理里的“星”，分吉/中性/凶；不能单凭神煞断吉凶，要结合格局、用神、十神。</dd>
+      <dt>空亡</dt><dd>旬空的地支，传统上有“落空/填实”两种读法；不是简单的“没有”。</dd>
+      <dt>纳音</dt><dd>六十甲子配五行的一种古法，如“剑锋金”“大溪水”；本页只作辅助展示。</dd>
+      <dt>长生十二宫</dt><dd>天干在十二地支的旺衰阶段：长生、沐浴、冠带、临官、帝旺、衰、病、死、墓、绝、胎、养。</dd>
+      <dt>胎元 / 命宫 / 身宫 / 胎息</dt><dd>传统排盘的辅助位，用于补充结构信息，不作单独吉凶断。</dd>
+      <dt>伏吟 / 反吟</dt><dd>流年与命局某柱干支相同（伏吟）或天克地冲（反吟），传统上主“重复/变动/情绪起伏”，宜稳。</dd>
+    </dl>
+  </details>
+</section>
+
 <footer>
   <b>数据</b>：engine-bazi（Liki Chart Engine）2026.10.23.0；三路排盘复核；家庭六路口径来自既有核验报告。生成：2026-10-25 · 铁蛋。<br>
   <b>口径</b>：传统命理视角，仅供文化参考；非医学/法律/投资/升学建议。神煞、流年、大运均不作吉凶断言。<br>
@@ -938,6 +1133,19 @@ function showPanel(pid, tag, btn){
     btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('on', b===btn));
   }
 }
+function showBoard(pid){
+  document.querySelectorAll('.board').forEach(el=>el.classList.toggle('on', el.dataset.board===pid));
+  document.querySelectorAll('#tabbar button').forEach(b=>b.classList.toggle('on', b.dataset.board===pid));
+  if(pid==='compare') history.replaceState(null,'','#compare');
+  else history.replaceState(null,'','#p-'+pid);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('#tabbar button').forEach(b=>b.addEventListener('click',()=>showBoard(b.dataset.board)));
+(function(){
+  const h=location.hash.replace('#','');
+  if(h==='p-moon'||h==='p-seven'||h==='compare') showBoard(h.replace('p-',''));
+  else showBoard('boss');
+})();
 </script>
 </body>
 </html>

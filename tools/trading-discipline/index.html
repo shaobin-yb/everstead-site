@@ -141,6 +141,7 @@ p,li{text-wrap:pretty}
   font-family:var(--mono);font-size:10px;letter-spacing:.12em;font-weight:600;
   color:#fda4af;border:1px solid rgba(244,63,94,.45);border-radius:4px;padding:2px 7px;
 }
+.rule-title .badge.cyan{color:#67e8f9;border-color:rgba(34,211,238,.45)}
 .rule-desc{margin-top:5px;font-size:13px;color:var(--muted);line-height:1.7}
 
 .quote{
@@ -324,7 +325,7 @@ ul.terms li .why{color:var(--muted);font-size:12.5px;display:block;margin-top:2p
   <!-- ================= 四条纪律 ================= -->
   <div class="section-head">
     <span class="no">01</span>
-    <h2>四条纪律</h2>
+    <h2>五条纪律</h2>
     <span class="hint">按重要程度排序</span>
   </div>
 
@@ -356,6 +357,29 @@ ul.terms li .why{color:var(--muted);font-size:12.5px;display:block;margin-top:2p
     <div class="rule-head">
       <div class="rule-no">02</div>
       <div>
+        <div class="rule-title">空仓也是一种策略<span class="badge cyan">高优先级</span></div>
+        <div class="rule-desc">钱空着有时间成本，但为了「不空着」而买入，成本更贵。</div>
+      </div>
+    </div>
+    <div class="quote">
+      <span class="tag">原话存档</span>
+      「货币虽然有时间成本，但是空仓也是一种策略。空仓策略让自己更有定力，这个策略优先级也很高。」
+      <span class="note">2026-10-27 · 语音转写，字词按语义理解，意思不动</span>
+    </div>
+    <div class="block-label">EXECUTE · 执行条款</div>
+    <ul class="terms">
+      <li><b>空仓是主动决策，不是"没仓位"的被动状态。</b><span class="why">没有符合纪律的机会时，空仓就是当下最优的仓位。</span></li>
+      <li><b>接受货币的时间成本，换取定力。</b><span class="why">现金跑不赢风险资产是常态；为了不承担这个成本而强行入场，往往亏得更多。</span></li>
+      <li><b>不为了「不空着」而找标的。</b><span class="why">手痒、怕踏空、怕钱闲着——这是强行买入的三个典型理由，都是情绪，不是逻辑。</span></li>
+      <li><b>清仓后不急着回场，空仓期只观察、不动手。</b><span class="why">等「看准了」再买（纪律 05）；看不准就一直空着。</span></li>
+    </ul>
+  </div>
+
+  <!-- 纪律三 -->
+  <div class="rule">
+    <div class="rule-head">
+      <div class="rule-no">03</div>
+      <div>
         <div class="rule-title">资金性质与持仓结构：先想清楚这是谁的钱</div>
         <div class="rule-desc">第一次用这么大的资金量、还是全家人的钱，去承受这么大的亏损。</div>
       </div>
@@ -374,10 +398,10 @@ ul.terms li .why{color:var(--muted);font-size:12.5px;display:block;margin-top:2p
     </ul>
   </div>
 
-  <!-- 纪律三 -->
+  <!-- 纪律四 -->
   <div class="rule">
     <div class="rule-head">
-      <div class="rule-no">03</div>
+      <div class="rule-no">04</div>
       <div>
         <div class="rule-title">杠杆资金：单独管、单独算、到线就撤</div>
         <div class="rule-desc">大帐乱管 = 没有细节 = 亏了都不知道亏在哪个账户。</div>
@@ -397,10 +421,10 @@ ul.terms li .why{color:var(--muted);font-size:12.5px;display:block;margin-top:2p
     </ul>
   </div>
 
-  <!-- 纪律四 -->
+  <!-- 纪律五 -->
   <div class="rule">
     <div class="rule-head">
-      <div class="rule-no">04</div>
+      <div class="rule-no">05</div>
       <div>
         <div class="rule-title">不做 T：把动作减到最少</div>
         <div class="rule-desc">做 T 的幻觉是"我能掌控市场"，实际多半变成半路加仓、山顶加仓。</div>
@@ -536,6 +560,7 @@ ul.terms li .why{color:var(--muted);font-size:12.5px;display:block;margin-top:2p
 
   <ul class="log-list">
     <li><span class="d">2026-10-27</span><span>初版：四条纪律（止损止盈线 / 资金性质与持仓结构 / 杠杆单独管理 / 不做 T）+ 七条建议 + 止损计算器 + 月度自查清单。</span></li>
+    <li><span class="d">2026-10-27</span><span><b style="color:#67e8f9">补充纪律 02「空仓也是一种策略」</b>：货币有时间成本，但空仓是主动策略、让自己更有定力，优先级高。原 02–04 顺延为 03–05；月度自查加一条。</span></li>
   </ul>
 
   <div class="foot">
@@ -632,6 +657,7 @@ ul.terms li .why{color:var(--muted);font-size:12.5px;display:block;margin-top:2p
     '本月没有一笔单子扛过止损线（触线即执行）',
     '本月没有做 T，没有"卖了再买回来"的操作',
     '持仓没有超过事先定的单票上限 / 单行业上限',
+    '没有为了「不空着」而强行买入（空仓也是一种策略）',
     '杠杆资金和其他资金分开记录，账目各自清楚',
     '亏损时没有摊薄加仓、没有换股追热点',
     '本月交易次数 ≤ 计划次数（没有手痒多下单）'

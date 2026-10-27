@@ -53,6 +53,49 @@ p,li{text-wrap:pretty}
 }
 .wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 64px}
 
+/* ---- 密码门(与私人专区同密码) ---- */
+.gate{
+  position:relative;z-index:3;
+  max-width:420px;margin:80px auto 0;
+  text-align:center;
+  border:1px solid var(--line);border-radius:16px;
+  padding:44px 32px;
+  background:var(--panel);backdrop-filter:blur(10px);
+  box-shadow:0 8px 40px rgba(0,0,0,.35);
+}
+.gate .lock{font-size:44px;margin-bottom:14px}
+.gate h2{font-size:20px;font-weight:700;letter-spacing:.08em;margin-bottom:8px}
+.gate p{font-size:12px;color:var(--muted);margin-bottom:28px;line-height:1.8}
+.gate input{
+  width:100%;padding:12px 16px;
+  font-family:var(--mono);font-size:16px;letter-spacing:.35em;
+  color:var(--text);background:rgba(3,6,12,.6);
+  border:1px solid var(--line);border-radius:10px;
+  outline:none;text-align:center;
+  transition:border-color .25s, box-shadow .25s;
+}
+.gate input:focus{border-color:var(--line-strong);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+.gate button{
+  margin-top:16px;width:100%;padding:12px;
+  font-size:14px;font-weight:600;letter-spacing:.2em;
+  color:#03101f;cursor:pointer;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+  border:none;border-radius:10px;
+  transition:transform .2s, box-shadow .2s;
+}
+.gate button:hover{transform:translateY(-2px);box-shadow:var(--glow)}
+.gate button:active{transform:scale(.98)}
+.gate.err{animation:shake .4s}
+.gate .err-msg{display:none;margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--rose)}
+.gate.err .err-msg{display:block}
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%,60%{transform:translateX(-8px)}
+  40%,80%{transform:translateX(8px)}
+}
+.content{display:none}
+.content.open{display:block}
+
 .topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0;flex-wrap:wrap}
 .topbar .logo{
   width:40px;height:40px;border-radius:10px;flex-shrink:0;
@@ -313,7 +356,16 @@ dialog::backdrop{background:rgba(2,5,10,.72);backdrop-filter:blur(3px)}
 <body>
 <div class="bg-grid"></div>
 
-<div class="wrap">
+<div class="gate" id="gate">
+  <div class="lock">🔐</div>
+  <h2>持仓台账</h2>
+  <p>私人持仓数据<br>输入私人专区密码后查看</p>
+  <input type="password" id="pw" placeholder="••••••" maxlength="16" autocomplete="off" inputmode="numeric">
+  <button id="btn-unlock" type="button">解 锁</button>
+  <div class="err-msg" id="err">密码不对, 再试一次</div>
+</div>
+
+<div class="wrap content" id="content">
   <div class="topbar">
     <div class="logo">账</div>
     <div class="brand">PORT<em style="font-style:normal;color:var(--cyan)">FOLIO</em></div>
@@ -384,6 +436,43 @@ dialog::backdrop{background:rgba(2,5,10,.72);backdrop-filter:blur(3px)}
 </dialog>
 
 <script>
+/* ============ 密码门(与私人专区同密码, 源码只存哈希) ============ */
+(function(){
+  var HASH = 'a68afcaa33dc88de7217371b041b422543aa16e2958365dde8112487475e37cd';
+  var gate = document.getElementById('gate');
+  var content = document.getElementById('content');
+  var input = document.getElementById('pw');
+
+  function show(){
+    gate.style.display = 'none';
+    content.classList.add('open');
+  }
+  async function sha256hex(str){
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+  }
+  async function unlock(){
+    try {
+      var h = await sha256hex(input.value);
+      if (h === HASH){
+        sessionStorage.setItem('td_pf_ok','1');
+        show();
+      } else {
+        gate.classList.remove('err');
+        void gate.offsetWidth;
+        gate.classList.add('err');
+        input.value = '';
+        input.focus();
+      }
+    } catch(e){
+      alert('浏览器不支持密码校验，请用 Chrome / Edge / Safari 打开');
+    }
+  }
+  document.getElementById('btn-unlock').addEventListener('click', unlock);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+  if (sessionStorage.getItem('td_pf_ok') === '1') show();
+})();
+
 (function(){
   'use strict';
   var KEY = 'td_portfolio_v1';

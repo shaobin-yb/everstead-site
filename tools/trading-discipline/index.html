@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>投资纪律手册 · 私人存档</title>
+<style>
+/* ============================================================
+   投资纪律手册 TRADING DISCIPLINE · 2026-10-27
+   私人专区 · 深空底 + 玻璃拟态, 零外部依赖
+   内容分三层: 原话存档 / 执行条款 / 铁蛋建议(明确区分)
+   ============================================================ */
+:root{
+  --bg:#03060c;
+  --panel:rgba(10,20,38,.55);
+  --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --violet:#8b5cf6;
+  --rose:#f43f5e;
+  --red:#ef4444;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --text:#e2ecf7;
+  --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+h1,h2,h3{text-wrap:balance}
+p,li{text-wrap:pretty}
+.num{font-variant-numeric:tabular-nums}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
+    var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+}
+.wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 64px}
+
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0;flex-wrap:wrap}
+.topbar .logo{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:19px;color:#03101f;box-shadow:var(--glow);
+  font-family:var(--mono);
+}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.24em;font-size:15px}
+.topbar .back{
+  margin-left:auto;font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+  color:var(--muted);border:1px solid var(--line);border-radius:999px;
+  padding:6px 14px;transition:border-color .2s,color .2s;
+}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+
+.hero{padding:44px 0 8px}
+.hero .kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.34em;color:var(--cyan);
+  text-transform:uppercase;margin-bottom:14px;
+}
+.hero .kicker::before{content:'// ';opacity:.6}
+.hero h1{
+  font-size:clamp(30px,5vw,44px);line-height:1.15;font-weight:800;letter-spacing:.02em;
+  background:linear-gradient(92deg,#e8f6ff 8%,var(--cyan) 42%,var(--violet) 92%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero .sub{margin-top:14px;font-size:14px;color:var(--muted);line-height:1.9}
+.hero .date{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:10px;letter-spacing:.08em}
+
+.anchor{
+  margin:32px 0 8px;padding:18px 22px;
+  border-left:3px solid var(--rose);border-radius:0 12px 12px 0;
+  background:linear-gradient(90deg, rgba(244,63,94,.10), rgba(244,63,94,.02));
+  font-size:15px;line-height:1.9;
+}
+.anchor b{color:#fda4af}
+.anchor .src{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
+
+.section-head{
+  display:flex;align-items:baseline;gap:12px;
+  padding-bottom:12px;margin:48px 0 20px;border-bottom:1px solid var(--line);
+}
+.section-head .no{
+  font-family:var(--mono);font-weight:800;font-size:13px;color:var(--cyan);
+}
+.section-head h2{font-size:19px;font-weight:700;letter-spacing:.06em}
+.section-head .hint{margin-left:auto;font-size:11px;color:var(--muted);font-family:var(--mono)}
+
+/* ---- 纪律卡 ---- */
+.rule{
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);
+  padding:26px 26px 22px;margin-bottom:18px;
+  transition:border-color .25s, background .25s;
+}
+.rule:hover{border-color:var(--line-strong);background:var(--panel-hover)}
+.rule.priority{border-color:rgba(244,63,94,.38)}
+.rule.priority:hover{border-color:rgba(244,63,94,.6)}
+.rule-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:16px}
+.rule-no{
+  font-family:var(--mono);font-weight:800;font-size:26px;line-height:1;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  flex-shrink:0;padding-top:2px;
+}
+.rule.priority .rule-no{
+  background:linear-gradient(135deg,#fb7185,var(--rose));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.rule-title{font-size:18px;font-weight:700;line-height:1.4}
+.rule-title .badge{
+  display:inline-block;margin-left:8px;vertical-align:2px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;font-weight:600;
+  color:#fda4af;border:1px solid rgba(244,63,94,.45);border-radius:4px;padding:2px 7px;
+}
+.rule-desc{margin-top:5px;font-size:13px;color:var(--muted);line-height:1.7}
+
+.quote{
+  margin:0 0 16px;padding:14px 18px;border-radius:10px;
+  background:rgba(3,6,12,.45);border:1px solid var(--line);
+  font-size:13.5px;line-height:1.95;color:#b9cbe0;
+}
+.quote .tag{
+  display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;
+  color:var(--cyan);border:1px solid var(--line);border-radius:4px;
+  padding:1px 7px;margin-bottom:8px;
+}
+.quote .note{display:block;margin-top:8px;font-size:11px;color:var(--muted)}
+
+.block-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--cyan);
+  margin:16px 0 10px;
+}
+.block-label.warn{color:#fbbf24}
+
+ul.terms{list-style:none}
+ul.terms li{
+  position:relative;padding-left:22px;margin-bottom:9px;
+  font-size:14px;line-height:1.85;
+}
+ul.terms li::before{
+  content:'▸';position:absolute;left:4px;color:var(--cyan);font-size:12px;top:2px;
+}
+.rule.priority ul.terms li::before{color:#fb7185}
+ul.terms li b{color:#fff}
+ul.terms li .why{color:var(--muted);font-size:12.5px;display:block;margin-top:2px}
+
+/* ---- 计算器 ---- */
+.calc{
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);
+  padding:26px;margin-bottom:18px;
+}
+.calc-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;
+}
+.field label{
+  display:block;font-size:12px;color:var(--muted);margin-bottom:6px;letter-spacing:.04em;
+}
+.field input{
+  width:100%;padding:10px 12px;
+  font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums;
+  color:var(--text);background:rgba(3,6,12,.6);
+  border:1px solid var(--line);border-radius:9px;outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+.field input:focus{border-color:var(--line-strong);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+.calc-out{
+  margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;
+}
+.out-cell{
+  padding:14px 16px;border:1px solid var(--line);border-radius:10px;
+  background:rgba(3,6,12,.4);
+}
+.out-cell .k{font-size:11px;color:var(--muted);letter-spacing:.06em;margin-bottom:6px}
+.out-cell .v{font-family:var(--mono);font-size:19px;font-weight:700;font-variant-numeric:tabular-nums}
+.out-cell .v.up{color:var(--green)}
+.out-cell .v.down{color:var(--red)}
+.out-cell .v.neutral{color:var(--text)}
+.out-cell .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.calc-verdict{
+  margin-top:16px;padding:14px 18px;border-radius:10px;font-size:14px;line-height:1.8;
+  border:1px solid var(--line);background:rgba(3,6,12,.4);
+}
+.calc-verdict.alarm{border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.08);color:#fca5a5}
+.calc-verdict.safe{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.06);color:#86efac}
+.calc-verdict.idle{color:var(--muted)}
+
+/* ---- 建议 ---- */
+.advice{
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);
+  padding:8px 26px 18px;
+}
+.adv{
+  padding:18px 0;border-bottom:1px solid var(--line);
+}
+.adv:last-child{border-bottom:none}
+.adv .h{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.adv .h .idx{
+  font-family:var(--mono);font-size:12px;font-weight:700;color:var(--violet);flex-shrink:0;
+}
+.adv .h .t{font-size:15px;font-weight:600}
+.adv p{font-size:13.5px;color:#b9cbe0;line-height:1.9}
+.adv p b{color:#fff}
+.adv .why{margin-top:6px;font-size:12.5px;color:var(--muted)}
+
+/* ---- 复盘清单 ---- */
+.review{
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:22px 26px;
+}
+.rev-header{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-bottom:14px;flex-wrap:wrap;
+}
+.rev-count{font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rev-count b{color:var(--cyan);font-size:18px}
+.check-item{
+  display:flex;align-items:flex-start;gap:12px;padding:11px 4px;
+  border-bottom:1px dashed rgba(56,189,248,.10);cursor:pointer;
+  transition:background-color .15s;
+}
+.check-item:last-child{border-bottom:none}
+.check-item:hover{background:rgba(56,189,248,.03)}
+.check-item input{
+  appearance:none;-webkit-appearance:none;
+  width:19px;height:19px;margin-top:2px;flex-shrink:0;cursor:pointer;
+  border:1px solid var(--line-strong);border-radius:5px;background:rgba(3,6,12,.6);
+  position:relative;transition:background-color .15s,border-color .15s;
+}
+.check-item input:checked{background:rgba(34,211,238,.18);border-color:var(--cyan)}
+.check-item input:checked::after{
+  content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--cyan);font-size:13px;font-weight:800;
+}
+.check-item span{font-size:14px;line-height:1.7}
+.check-item input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(125,146,173,.5)}
+.rev-foot{margin-top:14px;font-size:11.5px;color:var(--muted);line-height:1.7}
+
+/* ---- 日志 ---- */
+.log-list{list-style:none}
+.log-list li{
+  display:flex;gap:16px;padding:12px 0;border-bottom:1px dashed rgba(56,189,248,.10);
+  font-size:13.5px;line-height:1.8;
+}
+.log-list li:last-child{border-bottom:none}
+.log-list .d{font-family:var(--mono);font-size:12px;color:var(--cyan);flex-shrink:0;padding-top:2px}
+
+.foot{
+  margin-top:56px;padding-top:16px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);
+  text-align:center;line-height:2;
+}
+
+@media (max-width:520px){
+  .wrap{padding:0 16px 48px}
+  .rule{padding:20px 18px 16px}
+  .calc{padding:20px 18px}
+  .advice{padding:6px 18px 14px}
+  .review{padding:18px}
+  .rule-head{gap:12px}
+  .rule-no{font-size:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">纪</div>
+    <div class="brand">TRADING <em style="font-style:normal;color:var(--cyan)">DISCIPLINE</em></div>
+    <a class="back" href="../../private.html">← 返回私人专区</a>
+  </div>
+
+  <div class="hero">
+    <div class="kicker">Private Archive · 只给家里人看</div>
+    <h1>投资纪律手册</h1>
+    <p class="sub">这一课的学费已经交了。把规矩写下来，就不算白亏。<br>
+    每条纪律分三层：<b style="color:#dbe7f5">原话存档</b>（当时的真实判断）／<b style="color:#dbe7f5">执行条款</b>（以后怎么做）／<b style="color:#dbe7f5">铁蛋建议</b>（补强的部分）。</p>
+    <p class="date">2026-10-27 起记录 · 后续随时补充</p>
+  </div>
+
+  <div class="anchor">
+    <b>市场不知道你的成本价，禀赋效应知道。</b><br>
+    亏损时最难的不是判断行情，是承认「我买错了」。扛单扛的从来不是股票，是自己的面子。
+    <span class="src">—— 2026 年 7 月至今这一轮的总结</span>
+  </div>
+
+  <!-- ================= 四条纪律 ================= -->
+  <div class="section-head">
+    <span class="no">01</span>
+    <h2>四条纪律</h2>
+    <span class="hint">按重要程度排序</span>
+  </div>
+
+  <!-- 纪律一 -->
+  <div class="rule priority">
+    <div class="rule-head">
+      <div class="rule-no">01</div>
+      <div>
+        <div class="rule-title">止损止盈线：先写下来，再买进去<span class="badge">重中之重</span></div>
+        <div class="rule-desc">这条排在第一位，因为这一轮的难受，全部来自这里。</div>
+      </div>
+    </div>
+    <div class="quote">
+      <span class="tag">原话存档</span>
+      「重中之重就是，止损止盈线。7 月份这波下跌之后，本来就可以止损，结果硬扛到现在越来越难受，甚至本金阶段，禀赋效应让自己更容易出现决策的问题。」
+      <span class="note">2026-10-27 · 语音转写，字词按语义理解，意思不动</span>
+    </div>
+    <div class="block-label">EXECUTE · 执行条款</div>
+    <ul class="terms">
+      <li><b>买入前先写死三件事：止损价、目标价、仓位上限。</b><span class="why">写不出来 = 这笔不买。止损不是"心里有数"，是写下来的数字。</span></li>
+      <li><b>止损线到点即执行，不设「再等等」的例外。</b><span class="why">7 月那次"本来可以止损"，例外只开了一次，代价是扛到现在。</span></li>
+      <li><b>止盈同样预设，分批兑现。</b><span class="why">不追求卖在最高点——那是运气，不是能力。</span></li>
+      <li><b>每天做一次「清仓测试」：如果今天是空仓，我还会在现价买它吗？</b><span class="why">答案是"不会" → 就该卖。成本价和决策无关，市场不知道你的成本。</span></li>
+    </ul>
+  </div>
+
+  <!-- 纪律二 -->
+  <div class="rule">
+    <div class="rule-head">
+      <div class="rule-no">02</div>
+      <div>
+        <div class="rule-title">资金性质与持仓结构：先想清楚这是谁的钱</div>
+        <div class="rule-desc">第一次用这么大的资金量、还是全家人的钱，去承受这么大的亏损。</div>
+      </div>
+    </div>
+    <div class="quote">
+      <span class="tag">原话存档</span>
+      「这次带着全家人的资金去亏损了，第一次这么大资金量，迎来这么大资金量的亏损。配置一定要选好，持仓结构一直是必须要有的，不是眼睁睁看着快钱、热钱，自己没那个时点判断力。尤其不要除自己以外的资金去炒股。」
+      <span class="note">2026-10-27 · 语音转写，字词按语义理解，意思不动</span>
+    </div>
+    <div class="block-label">EXECUTE · 执行条款</div>
+    <ul class="terms">
+      <li><b>资金按性质分级：家人的钱 = 不能亏的钱。</b><span class="why">只放债基 / 存款 / 货基，不进股市，不碰波动资产。</span></li>
+      <li><b>持仓结构事先定义：核心仓 / 卫星仓比例、单票上限、单行业上限。</b><span class="why">结构是"必须一直有"的，不是行情好的时候才想。</span></li>
+      <li><b>不追快钱、热钱。</b><span class="why">原话："自己没那个时点判断力"——承认这一点，就少亏一大半。</span></li>
+      <li><b>除自己以外的资金，一律不进股市。</b><span class="why">赚了是应该，亏了是交代不清。这条没有例外。</span></li>
+    </ul>
+  </div>
+
+  <!-- 纪律三 -->
+  <div class="rule">
+    <div class="rule-head">
+      <div class="rule-no">03</div>
+      <div>
+        <div class="rule-title">杠杆资金：单独管、单独算、到线就撤</div>
+        <div class="rule-desc">大帐乱管 = 没有细节 = 亏了都不知道亏在哪个账户。</div>
+      </div>
+    </div>
+    <div class="quote">
+      <span class="tag">原话存档</span>
+      「杠杆资金设置好止盈线，杠杆资金单独管理，不要一团乱麻，大帐乱管理，没有具体的细节。杠杆资金，只要够一倍的收益率，立马收手撤离，债基稳收益。如果需要继续投资，只能拿出一半资金，然后止损是成本线。」
+      <span class="note">2026-10-27 · 语音转写，字词按语义理解，意思不动</span>
+    </div>
+    <div class="block-label">EXECUTE · 执行条款</div>
+    <ul class="terms">
+      <li><b>杠杆资金独立账户、独立台账、独立纪律。</b><span class="why">不和自有资金混在一起算收益，亏了赚了都看得见来路。</span></li>
+      <li><b>收益率到 +100%（一倍）→ 无条件清仓撤离，转债基。</b><span class="why">够一倍就收手，不恋战、不"再多赚点"。</span></li>
+      <li><b>撤离后如再投资：只用一半资金，止损线 = 成本线。</b><span class="why">含义是：这部分钱不允许亏本金，碰成本线就走。</span></li>
+      <li><b>债务到期日必须写进计划：到期前完成降杠杆。</b><span class="why">收益率和时间，谁先到听谁的（铁蛋补充，见建议 03）。</span></li>
+    </ul>
+  </div>
+
+  <!-- 纪律四 -->
+  <div class="rule">
+    <div class="rule-head">
+      <div class="rule-no">04</div>
+      <div>
+        <div class="rule-title">不做 T：把动作减到最少</div>
+        <div class="rule-desc">做 T 的幻觉是"我能掌控市场"，实际多半变成半路加仓、山顶加仓。</div>
+      </div>
+    </div>
+    <div class="quote">
+      <span class="tag">原话存档</span>
+      「个股的做 T 直接摒弃掉。这种 T 很多时候是自己觉得可以掌控市场，更多时候是半路加仓、山顶加仓，执行纪律也不好，以后不要做 T。看准了就买，需要就减仓，可以逐步减仓。如果断定今天低点、明天高开可以减仓，直接先卖掉手头的。」
+      <span class="note">2026-10-27 · 语音转写，字词按语义理解，意思不动</span>
+    </div>
+    <div class="block-label">EXECUTE · 执行条款</div>
+    <ul class="terms">
+      <li><b>不做日内 T，不做"卖了再买回来"的差价。</b><span class="why">盘中临时决策 = 纪律最容易崩的时刻。</span></li>
+      <li><b>买：看准了一次买或分批买，不追。</b></li>
+      <li><b>卖：需要减仓就分批减，逐步兑现。</b><span class="why">减仓是仓位管理，不是猜点位。</span></li>
+      <li><b>判断次日高开想减仓 → 直接先卖掉手头一部分。</b><span class="why">不赌次日，落袋为安。这是"先卖后不买"，不是 T。</span></li>
+    </ul>
+  </div>
+
+  <!-- ================= 止损计算器 ================= -->
+  <div class="section-head">
+    <span class="no">02</span>
+    <h2>止损计算器</h2>
+    <span class="hint">把线变成数字</span>
+  </div>
+
+  <div class="calc">
+    <div class="calc-grid">
+      <div class="field">
+        <label for="cost">成本价（元）</label>
+        <input type="number" id="cost" step="0.01" min="0" inputmode="decimal" placeholder="例如 10.00">
+      </div>
+      <div class="field">
+        <label for="now">现价（元）</label>
+        <input type="number" id="now" step="0.01" min="0" inputmode="decimal" placeholder="例如 9.20">
+      </div>
+      <div class="field">
+        <label for="qty">持仓数量（股/份）</label>
+        <input type="number" id="qty" step="1" min="0" inputmode="numeric" placeholder="例如 1000">
+      </div>
+      <div class="field">
+        <label for="stop">止损线（%）</label>
+        <input type="number" id="stop" step="0.5" min="0" max="99" inputmode="decimal" value="12">
+      </div>
+    </div>
+    <div class="calc-out">
+      <div class="out-cell">
+        <div class="k">当前浮动盈亏</div>
+        <div class="v neutral" id="out-pnl">—</div>
+        <div class="sub" id="out-pnl-pct">填完上面四项自动计算</div>
+      </div>
+      <div class="out-cell">
+        <div class="k">止损触发价</div>
+        <div class="v neutral" id="out-stop">—</div>
+        <div class="sub" id="out-stop-sub">按止损线从成本价折算</div>
+      </div>
+      <div class="out-cell">
+        <div class="k">距止损线</div>
+        <div class="v neutral" id="out-gap">—</div>
+        <div class="sub">现价离触发价还有多少空间</div>
+      </div>
+    </div>
+    <div class="calc-verdict idle" id="verdict">输入成本和现价后给出判断。</div>
+  </div>
+
+  <!-- ================= 建议 ================= -->
+  <div class="section-head">
+    <span class="no">03</span>
+    <h2>铁蛋的建议</h2>
+    <span class="hint">补强用 · 不代表老板原话</span>
+  </div>
+
+  <div class="advice">
+    <div class="adv">
+      <div class="h"><span class="idx">A1</span><span class="t">止损量化到数字，别只留在心里</span></div>
+      <p>建议三条线一起用：<b>单票 -10%～-15%</b>（按个股波动率定，波动大的取下限）、<b>组合从高点回撤 -15% 硬止损</b>、<b>时间止损</b>（买入逻辑 3 个月不兑现就撤）。三条线在买入前写进备忘录，触线只执行、不商量。</p>
+      <p class="why">单票止损防个股，组合止损防"每只都没破线但加一起亏很多"，时间止损防"死扛等回本"。</p>
+    </div>
+    <div class="adv">
+      <div class="h"><span class="idx">A2</span><span class="t">三本账物理隔离</span></div>
+      <p>生活账户（家人的钱、生活备用金）／风险账户（自己的钱）／杠杆账户（借款）——<b>分账户、分记录、不互相补</b>。每月各算各的收益率，合并看总账。</p>
+      <p class="why">"一团乱麻"的根不是记性差，是混账。混在一起，亏损就永远说不清是哪本账的问题。</p>
+    </div>
+    <div class="adv">
+      <div class="h"><span class="idx">A3</span><span class="t">杠杆目标加一条时间线</span></div>
+      <p>只设"一倍收益就撤"不够——<b>债务有到期日</b>。在日历上标出每笔借款的到期日，倒推降杠杆的时间表：收益率和到期日，谁先到听谁的。到期前没到一倍收益，也按计划降杠杆，不赌最后一把。</p>
+      <p class="why">杠杆最大的风险不是亏，是"到期时必须卖"——被迫在坏时点平仓，主动权就没了。</p>
+    </div>
+    <div class="adv">
+      <div class="h"><span class="idx">A4</span><span class="t">减少决策次数 = 减少犯错次数</span></div>
+      <p>用条件单 / 价位提醒替代盯盘：止损价、止盈价提前挂好，盘中不看盘、不做临时决策。<b>"直接先卖"这个方向是对的，把它变成默认动作</b>——判断到了就执行，不和自己讨价还价。</p>
+      <p class="why">每一轮亏损里，最贵的往往不是判断错，是盘中临时改主意。</p>
+    </div>
+    <div class="adv">
+      <div class="h"><span class="idx">A5</span><span class="t">亏损期三条禁令</span></div>
+      <p>① <b>不摊薄加仓</b>（越跌越买 = 放大禀赋效应）；② <b>不换股追热点</b>（亏了急着翻本，最容易追快钱热钱）；③ <b>情绪上头不做大额决策</b>——难受的时候，"什么都不做"往往就是最优解。</p>
+      <p class="why">亏损期的目标不是回本，是别让亏损扩大。</p>
+    </div>
+    <div class="adv">
+      <div class="h"><span class="idx">A6</span><span class="t">每笔交易留痕，月末只算一个分</span></div>
+      <p>买入记四项：<b>逻辑 / 止损价 / 目标价 / 仓位理由</b>；卖出记一项：<b>触发了哪条纪律</b>。月末不打收益率的分，只打<b>纪律执行率</b>的分（按计划做的笔数 ÷ 总笔数）。</p>
+      <p class="why">收益率是市场给的，执行率是自己给的。执行率上去了，收益率是时间问题。</p>
+    </div>
+    <div class="adv">
+      <div class="h"><span class="idx">A7</span><span class="t">安全垫优先于一切收益</span></div>
+      <p>小七刚出生，<b>现金安全垫是家庭的底线资产</b>，不因行情波动挪用、不因"机会难得"进场。先保证生活不受投资影响，再谈收益。</p>
+      <p class="why">投资的目的是让生活更稳，不是让生活跟着行情坐过山车。</p>
+    </div>
+  </div>
+
+  <!-- ================= 月度复盘 ================= -->
+  <div class="section-head">
+    <span class="no">04</span>
+    <h2>本月复盘自查</h2>
+    <span class="hint" id="rev-month">—</span>
+  </div>
+
+  <div class="review">
+    <div class="rev-header">
+      <div class="rev-count">已完成 <b id="rev-ok">0</b> / <span id="rev-total">7</span></div>
+      <div class="rev-count" style="font-size:11px">勾选自动保存在本机浏览器 · 每月自动换新</div>
+    </div>
+    <div id="checklist"></div>
+    <div class="rev-foot">每月最后一天看一遍：全勾 = 这个月没白过；有没勾的，写下哪一笔、为什么——这就是下个月的改进项。</div>
+  </div>
+
+  <!-- ================= 日志 ================= -->
+  <div class="section-head">
+    <span class="no">05</span>
+    <h2>补充记录</h2>
+    <span class="hint">想到就补，随时更新</span>
+  </div>
+
+  <ul class="log-list">
+    <li><span class="d">2026-10-27</span><span>初版：四条纪律（止损止盈线 / 资金性质与持仓结构 / 杠杆单独管理 / 不做 T）+ 七条建议 + 止损计算器 + 月度自查清单。</span></li>
+  </ul>
+
+  <div class="foot">
+    EVERSTEAD PRIVATE · 投资纪律手册 · 只给家里人看<br>
+    纪律是写给情绪最差的那个自己看的
+  </div>
+</div>
+
+<script>
+/* ============ 止损计算器 ============ */
+(function(){
+  var cost = document.getElementById('cost');
+  var now = document.getElementById('now');
+  var qty = document.getElementById('qty');
+  var stop = document.getElementById('stop');
+  var outPnl = document.getElementById('out-pnl');
+  var outPnlPct = document.getElementById('out-pnl-pct');
+  var outStop = document.getElementById('out-stop');
+  var outStopSub = document.getElementById('out-stop-sub');
+  var outGap = document.getElementById('out-gap');
+  var verdict = document.getElementById('verdict');
+
+  function fmt(n, d){
+    d = d === undefined ? 2 : d;
+    return n.toLocaleString('zh-CN', {minimumFractionDigits:d, maximumFractionDigits:d});
+  }
+  function reset(){
+    [outPnl, outStop, outGap].forEach(function(el){
+      el.textContent = '—';
+      el.className = 'v neutral';
+    });
+    outPnlPct.textContent = '填完上面四项自动计算';
+    outStopSub.textContent = '按止损线从成本价折算';
+    verdict.className = 'calc-verdict idle';
+    verdict.textContent = '输入成本和现价后给出判断。';
+  }
+  function calc(){
+    var c = parseFloat(cost.value);
+    var n = parseFloat(now.value);
+    var q = parseFloat(qty.value);
+    var s = parseFloat(stop.value);
+    if (isNaN(s)) s = 12;
+    if (isNaN(c) || isNaN(n) || c <= 0 || n <= 0){ reset(); return; }
+
+    var pct = (n / c - 1) * 100;
+    var stopPrice = c * (1 - s / 100);
+    var gapPct = (n / stopPrice - 1) * 100;
+
+    if (!isNaN(q) && q > 0){
+      var pnl = (n - c) * q;
+      outPnl.textContent = (pnl >= 0 ? '+' : '') + fmt(pnl) + ' 元';
+      outPnl.className = 'v ' + (pnl > 0 ? 'up' : (pnl < 0 ? 'down' : 'neutral'));
+      outPnlPct.textContent = '浮动收益率 ' + (pct >= 0 ? '+' : '') + fmt(pct) + '% · 成本 ' + fmt(c) + ' → 现价 ' + fmt(n);
+    } else {
+      outPnl.textContent = (pct >= 0 ? '+' : '') + fmt(pct) + '%';
+      outPnl.className = 'v ' + (pct > 0 ? 'up' : (pct < 0 ? 'down' : 'neutral'));
+      outPnlPct.textContent = '未填数量，只算收益率';
+    }
+
+    outStop.textContent = fmt(stopPrice) + ' 元';
+    outStop.className = 'v ' + (n <= stopPrice ? 'down' : 'neutral');
+    outStopSub.textContent = '成本价 × (1 − ' + fmt(s, 1) + '%)';
+
+    if (n > stopPrice){
+      outGap.textContent = '+' + fmt(gapPct) + '%';
+      outGap.className = 'v neutral';
+    } else {
+      outGap.textContent = fmt(gapPct) + '%';
+      outGap.className = 'v down';
+    }
+
+    if (n <= stopPrice){
+      verdict.className = 'calc-verdict alarm';
+      verdict.innerHTML = '<b>已触发止损线。</b>按纪律执行，不再设"再等等"的例外。<br>止损线不是行情预测，是给自己留的退路。';
+    } else if (pct >= 0){
+      verdict.className = 'calc-verdict safe';
+      verdict.innerHTML = '<b>当前浮盈，未触发止损。</b>别忘了止盈线也提前写好——分批兑现，不追求卖在最高点。';
+    } else {
+      verdict.className = 'calc-verdict';
+      verdict.innerHTML = '<b>未触发止损线</b>，现价距触发价还有 ' + fmt(gapPct) + '% 空间。<br>做一次清仓测试：如果今天是空仓，我还会在现价买它吗？';
+    }
+  }
+
+  [cost, now, qty, stop].forEach(function(el){
+    el.addEventListener('input', calc);
+  });
+  reset();
+})();
+
+/* ============ 月度复盘清单 ============ */
+(function(){
+  var ITEMS = [
+    '本月每笔买入前，都写下了止损价、目标价和仓位理由',
+    '本月没有一笔单子扛过止损线（触线即执行）',
+    '本月没有做 T，没有"卖了再买回来"的操作',
+    '持仓没有超过事先定的单票上限 / 单行业上限',
+    '杠杆资金和其他资金分开记录，账目各自清楚',
+    '亏损时没有摊薄加仓、没有换股追热点',
+    '本月交易次数 ≤ 计划次数（没有手痒多下单）'
+  ];
+  var box = document.getElementById('checklist');
+  var okEl = document.getElementById('rev-ok');
+  var totalEl = document.getElementById('rev-total');
+  var monthEl = document.getElementById('rev-month');
+
+  var d = new Date();
+  var monthKey = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  var KEY = 'td_check_' + monthKey;
+  monthEl.textContent = monthKey;
+  totalEl.textContent = ITEMS.length;
+
+  var saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){ saved = {}; }
+
+  function refreshCount(){
+    var ok = document.querySelectorAll('#checklist input:checked').length;
+    okEl.textContent = ok;
+    okEl.style.color = ok === ITEMS.length ? 'var(--green)' : 'var(--cyan)';
+  }
+
+  ITEMS.forEach(function(text, i){
+    var label = document.createElement('label');
+    label.className = 'check-item';
+    var input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = !!saved[i];
+    input.addEventListener('change', function(){
+      saved[i] = input.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch(e){}
+      refreshCount();
+    });
+    var span = document.createElement('span');
+    span.textContent = text;
+    label.appendChild(input);
+    label.appendChild(span);
+    box.appendChild(label);
+  });
+  refreshCount();
+})();
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

@@ -31,6 +31,24 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 .wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 22px 70px}
 .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
 .pos{color:var(--terra)} .neg{color:var(--sage)} .flat{color:var(--muted)}
+/* ---- 密码门(与私人专区同密码) ---- */
+.gate{position:relative;z-index:3;max-width:420px;margin:80px auto 0;text-align:center;
+  background:rgba(255,253,248,.92);border:1px solid var(--line);border-radius:20px;
+  padding:44px 32px;box-shadow:var(--shadow)}
+.gate svg{width:40px;height:40px;margin:0 auto 14px;display:block;stroke:var(--terra);fill:none;stroke-width:1.8}
+.gate h2{font-family:var(--serif);font-size:20px;font-weight:600;letter-spacing:.08em;margin-bottom:8px}
+.gate p{font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.8}
+.gate input{width:100%;padding:12px 16px;font-family:var(--mono);font-size:16px;letter-spacing:.35em;
+  color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;outline:none;
+  text-align:center;transition:border-color .25s,box-shadow .25s}
+.gate input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.15)}
+.gate button{margin-top:16px;width:100%;padding:12px;font-size:14px;font-weight:600;letter-spacing:.2em;
+  color:#fff9ee;background:var(--ink);border-radius:10px;transition:transform .2s,opacity .2s}
+.gate button:hover{opacity:.9} .gate button:active{transform:scale(.98)}
+.gate.err{animation:shake .4s}
+.gate .err-msg{display:none;margin-top:12px;font-family:var(--mono);font-size:12px;color:var(--terra)}
+.gate.err .err-msg{display:block}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 .hero{padding:34px 0 14px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .kicker{font-size:12px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
 h1{font-family:var(--serif);font-size:clamp(30px,4.6vw,52px);line-height:1.18;font-weight:600;letter-spacing:.02em;text-wrap:balance}
@@ -120,7 +138,15 @@ tr:hover td{background:rgba(201,162,39,.06)}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="gate" id="gate">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+  <h2>近一年交易复盘</h2>
+  <p>私人交易数据<br>输入私人专区密码后查看</p>
+  <input type="password" id="pw" placeholder="••••••" maxlength="16" autocomplete="off" inputmode="numeric">
+  <button id="btn-unlock" type="button">解 锁</button>
+  <div class="err-msg" id="err">密码不对, 再试一次</div>
+</div>
+<div class="wrap" id="content" style="display:none">
   <div class="hero">
     <div>
       <div class="kicker">PRIVATE · TRADING REVIEW</div>
@@ -307,6 +333,28 @@ tr:hover td{background:rgba(201,162,39,.06)}
   <div class="foot"><span>EVERSTEAD PRIVATE · 交易复盘</span><span>生成于 2026-10-27 · 数据来自成交截图逐笔转录</span></div>
 </div>
 <script>
+(function(){
+  var HASH = 'a68afcaa33dc88de7217371b041b422543aa16e2958365dde8112487475e37cd';
+  var gate = document.getElementById('gate');
+  var content = document.getElementById('content');
+  var input = document.getElementById('pw');
+  function show(){ gate.style.display='none'; content.style.display='block'; }
+  async function sha256hex(str){
+    var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+  }
+  async function unlock(){
+    try {
+      var h = await sha256hex(input.value);
+      if (h === HASH){ sessionStorage.setItem('tr_ok','1'); show(); }
+      else { gate.classList.remove('err'); void gate.offsetWidth; gate.classList.add('err'); input.value=''; input.focus(); }
+    } catch(e){ alert('浏览器不支持密码校验，请用 Chrome / Edge / Safari 打开'); }
+  }
+  document.getElementById('btn-unlock').addEventListener('click', unlock);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+  if (sessionStorage.getItem('tr_ok') === '1') show();
+})();
+
 (function(){
   var tabs = document.querySelectorAll('.tab');
   tabs.forEach(function(t){

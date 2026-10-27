@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>持仓台账 · 私人存档</title>
+<style>
+/* ============================================================
+   持仓台账 PORTFOLIO · 2026-10-27
+   配合《投资纪律手册》使用 · 数据只存本机 localStorage
+   零外部依赖, 深空底 + 玻璃拟态, 与私人专区风格一致
+   ============================================================ */
+:root{
+  --bg:#03060c;
+  --panel:rgba(10,20,38,.55);
+  --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16);
+  --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --violet:#8b5cf6;
+  --rose:#f43f5e;
+  --red:#ef4444;
+  --green:#22c55e;
+  --amber:#f59e0b;
+  --text:#e2ecf7;
+  --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+a{text-decoration:none;color:inherit}
+h1,h2,h3{text-wrap:balance}
+p,li{text-wrap:pretty}
+.num{font-variant-numeric:tabular-nums}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(1100px 600px at 75% -10%, rgba(59,130,246,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(139,92,246,.12), transparent 60%),
+    linear-gradient(rgba(56,189,248,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,.045) 1px, transparent 1px),
+    var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+}
+.wrap{position:relative;z-index:3;max-width:1080px;margin:0 auto;padding:0 24px 64px}
+
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0;flex-wrap:wrap}
+.topbar .logo{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--violet));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:19px;color:#03101f;box-shadow:var(--glow);
+  font-family:var(--mono);
+}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.24em;font-size:15px}
+.topbar .back{
+  margin-left:auto;font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+  color:var(--muted);border:1px solid var(--line);border-radius:999px;
+  padding:6px 14px;transition:border-color .2s,color .2s;
+}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+
+.hero{padding:40px 0 4px}
+.hero .kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.34em;color:var(--cyan);
+  text-transform:uppercase;margin-bottom:12px;
+}
+.hero .kicker::before{content:'// ';opacity:.6}
+.hero h1{
+  font-size:clamp(28px,5vw,40px);line-height:1.15;font-weight:800;letter-spacing:.02em;
+  background:linear-gradient(92deg,#e8f6ff 8%,var(--cyan) 42%,var(--violet) 92%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero .sub{margin-top:12px;font-size:13.5px;color:var(--muted);line-height:1.9}
+.hero .sub a{color:var(--cyan);border-bottom:1px solid rgba(34,211,238,.35);transition:border-color .2s,color .2s}
+.hero .sub a:hover{color:#67e8f9;border-color:#67e8f9}
+
+/* ---- 警报 ---- */
+.alerts{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+.alert{
+  padding:13px 18px;border-radius:11px;font-size:14px;line-height:1.7;
+  border:1px solid rgba(239,68,68,.5);background:rgba(239,68,68,.09);color:#fca5a5;
+}
+.alert.warn{border-color:rgba(245,158,11,.45);background:rgba(245,158,11,.08);color:#fcd34d}
+.alert b{color:#fff}
+
+/* ---- 汇总 ---- */
+.summary{
+  margin-top:22px;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;
+}
+.sum-cell{
+  padding:18px 20px;border:1px solid var(--line);border-radius:13px;
+  background:var(--panel);backdrop-filter:blur(10px);
+}
+.sum-cell .k{font-size:11.5px;color:var(--muted);letter-spacing:.06em;margin-bottom:8px}
+.sum-cell .v{font-family:var(--mono);font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+.sum-cell .v.up{color:var(--green)}
+.sum-cell .v.down{color:var(--red)}
+.sum-cell .s{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.7}
+.sum-cell .s b{color:#cfe0f2;font-weight:600}
+
+/* ---- 工具栏 ---- */
+.toolbar{
+  margin-top:26px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.btn{
+  font-family:inherit;font-size:13.5px;font-weight:600;
+  padding:10px 18px;border-radius:10px;cursor:pointer;
+  border:1px solid var(--line-strong);background:rgba(10,20,38,.5);color:var(--text);
+  transition:border-color .2s,background-color .2s,transform .12s;
+}
+.btn:hover{border-color:var(--cyan);background:rgba(34,211,238,.08)}
+.btn:active{transform:scale(.97)}
+.btn.primary{
+  border:none;color:#03101f;
+  background:linear-gradient(90deg,var(--cyan),var(--violet));
+}
+.btn.primary:hover{box-shadow:var(--glow)}
+.toolbar .hint{
+  margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em;
+}
+
+/* ---- 卡片 ---- */
+.grid{
+  margin-top:20px;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;
+}
+.stock{
+  border:1px solid var(--line);border-radius:14px;background:var(--panel);
+  backdrop-filter:blur(10px);padding:20px 20px 16px;
+  transition:border-color .25s,background .25s;
+  display:flex;flex-direction:column;gap:0;
+}
+.stock:hover{border-color:var(--line-strong)}
+.stock.danger{border-color:rgba(239,68,68,.55);background:rgba(239,68,68,.05)}
+.stock.closed{opacity:.55}
+.stock.closed:hover{opacity:.8}
+.stock-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+.stock-name{font-size:16px;font-weight:700;line-height:1.4}
+.stock-code{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:2px}
+.stock-tags{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.tag{
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;font-weight:600;
+  padding:2px 7px;border-radius:4px;border:1px solid var(--line);
+}
+.tag.own{color:var(--cyan);border-color:rgba(34,211,238,.4)}
+.tag.lever{color:var(--amber);border-color:rgba(245,158,11,.45)}
+.tag.closed-tag{color:var(--muted)}
+.icon-btn{
+  font-family:inherit;font-size:12px;cursor:pointer;
+  width:26px;height:26px;border-radius:7px;
+  border:1px solid var(--line);background:transparent;color:var(--muted);
+  transition:border-color .2s,color .2s,background-color .2s;
+  display:flex;align-items:center;justify-content:center;padding:0;
+}
+.icon-btn:hover{border-color:var(--line-strong);color:var(--cyan);background:rgba(34,211,238,.06)}
+.icon-btn.del:hover{border-color:rgba(239,68,68,.6);color:#fca5a5;background:rgba(239,68,68,.08)}
+.icon-btn:active{transform:scale(.94)}
+
+.price-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:4px}
+.price-row .label{font-size:11px;color:var(--muted);margin-bottom:3px}
+.price-row .pv{font-family:var(--mono);font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.price-edit{display:flex;align-items:center;gap:6px}
+.price-edit input{
+  width:96px;padding:6px 9px;text-align:right;
+  font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums;
+  color:var(--text);background:rgba(3,6,12,.6);
+  border:1px solid var(--line);border-radius:8px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.price-edit input:focus{border-color:var(--line-strong);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
+
+.pnl{font-family:var(--mono);font-size:20px;font-weight:800;font-variant-numeric:tabular-nums;margin:6px 0 2px}
+.pnl.up{color:var(--green)}
+.pnl.down{color:var(--red)}
+.pnl-sub{font-size:12px;color:var(--muted);font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.range{margin:16px 0 6px}
+.range-track{
+  position:relative;height:7px;border-radius:999px;
+  background:linear-gradient(90deg, rgba(239,68,68,.45), rgba(125,146,173,.22) 45%, rgba(34,197,94,.4));
+}
+.range-fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:rgba(125,146,173,.18)}
+.range-mark{
+  position:absolute;top:50%;width:11px;height:11px;border-radius:50%;
+  transform:translate(-50%,-50%);border:2px solid var(--bg);
+}
+.range-mark.cost{background:#94a3b8}
+.range-mark.price{background:var(--cyan);box-shadow:0 0 0 3px rgba(34,211,238,.18)}
+.stock.danger .range-mark.price{background:var(--red);box-shadow:0 0 0 3px rgba(239,68,68,.22)}
+.range-cap{
+  display:flex;justify-content:space-between;margin-top:8px;
+  font-family:var(--mono);font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+}
+.range-cap .stop{color:#f87171}
+.range-cap .target{color:#4ade80}
+
+.meta{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.meta-row{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;line-height:1.6}
+.meta-row .mk{color:var(--muted)}
+.meta-row .mv{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.meta-row .mv.warn{color:var(--amber)}
+.meta-row .mv.bad{color:#fca5a5}
+
+.logic{
+  margin-top:12px;padding:10px 12px;border-radius:9px;
+  background:rgba(3,6,12,.4);border:1px dashed rgba(56,189,248,.18);
+  font-size:12.5px;line-height:1.75;color:#b9cbe0;
+}
+.logic .lk{font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:.1em;display:block;margin-bottom:4px}
+.note-line{margin-top:8px;font-size:12px;color:var(--muted);line-height:1.7}
+
+.test-row{margin-top:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.test-btn{
+  font-family:inherit;font-size:12px;cursor:pointer;
+  padding:6px 12px;border-radius:8px;
+  border:1px solid var(--line);background:transparent;color:var(--muted);
+  transition:border-color .2s,color .2s,background-color .2s;
+}
+.test-btn:hover{border-color:var(--line-strong);color:var(--cyan)}
+.test-btn:active{transform:scale(.97)}
+.test-btn.yes:hover{border-color:rgba(34,197,94,.5);color:#86efac}
+.test-btn.no:hover{border-color:rgba(245,158,11,.55);color:#fcd34d}
+.test-chip{
+  font-size:12px;padding:5px 10px;border-radius:8px;border:1px solid var(--line);
+  font-family:var(--mono);font-variant-numeric:tabular-nums;
+}
+.test-chip.yes{color:#86efac;border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.06)}
+.test-chip.no{color:#fcd34d;border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.07)}
+
+/* ---- 空状态 ---- */
+.empty{
+  margin-top:40px;padding:56px 24px;text-align:center;
+  border:1px dashed var(--line-strong);border-radius:16px;
+  color:var(--muted);font-size:14px;line-height:2;
+}
+.empty .big{font-size:34px;margin-bottom:12px}
+.empty b{color:#dbe7f5}
+
+.section-label{
+  margin:34px 0 4px;font-family:var(--mono);font-size:11px;letter-spacing:.24em;
+  color:var(--muted);display:flex;align-items:center;gap:12px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:var(--line)}
+
+/* ---- 对话框 ---- */
+dialog{
+  border:1px solid var(--line-strong);border-radius:16px;
+  background:#0a1424;color:var(--text);
+  padding:0;width:min(560px, calc(100vw - 32px));
+  max-height:calc(100vh - 60px);
+}
+dialog::backdrop{background:rgba(2,5,10,.72);backdrop-filter:blur(3px)}
+.dlg-body{padding:24px 26px}
+.dlg-body h3{font-size:17px;margin-bottom:18px}
+.form-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px 14px;
+}
+.f-field label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:5px}
+.f-field input,.f-field select{
+  width:100%;padding:9px 11px;font-family:var(--mono);font-size:14px;
+  font-variant-numeric:tabular-nums;
+  color:var(--text);background:rgba(3,6,12,.6);
+  border:1px solid var(--line);border-radius:9px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.f-field select{font-family:inherit}
+.f-field input:focus,.f-field select:focus,.f-full textarea:focus{
+  border-color:var(--line-strong);box-shadow:0 0 0 3px rgba(56,189,248,.12);
+}
+.f-full{margin-top:12px}
+.f-full label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:5px}
+.f-full textarea{
+  width:100%;padding:9px 11px;font-family:inherit;font-size:13.5px;line-height:1.7;
+  color:var(--text);background:rgba(3,6,12,.6);
+  border:1px solid var(--line);border-radius:9px;outline:none;resize:vertical;
+  transition:border-color .2s,box-shadow .2s;
+}
+.f-check{margin-top:14px;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
+.f-check input{width:16px;height:16px;accent-color:var(--cyan)}
+.dlg-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+
+.foot{
+  margin-top:56px;padding-top:16px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--muted);
+  text-align:center;line-height:2;
+}
+
+@media (max-width:520px){
+  .wrap{padding:0 16px 48px}
+  .summary{grid-template-columns:1fr 1fr}
+  .sum-cell{padding:14px 14px}
+  .sum-cell .v{font-size:17px}
+  .grid{grid-template-columns:1fr}
+  .toolbar .hint{display:none}
+  .dlg-body{padding:20px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">账</div>
+    <div class="brand">PORT<em style="font-style:normal;color:var(--cyan)">FOLIO</em></div>
+    <a class="back" href="../../private.html">← 返回私人专区</a>
+  </div>
+
+  <div class="hero">
+    <div class="kicker">Private Archive · 只给家里人看</div>
+    <h1>持仓台账</h1>
+    <p class="sub">每只票买之前，先把止损线、止盈线、仓位上限写下来——写不出来就不买。<br>
+    配套规矩见 <a href="index.html">投资纪律手册</a>。</p>
+  </div>
+
+  <div class="alerts" id="alerts"></div>
+  <div class="summary" id="summary"></div>
+
+  <div class="toolbar">
+    <button class="btn primary" id="btn-add" type="button">＋ 添加持仓</button>
+    <button class="btn" id="btn-export" type="button">导出备份</button>
+    <button class="btn" id="btn-import" type="button">导入备份</button>
+    <input type="file" id="file-import" accept=".json,application/json" hidden>
+    <span class="hint">数据只存本机浏览器 · 换设备或清缓存前先导出</span>
+  </div>
+
+  <div class="grid" id="cards"></div>
+  <div class="empty" id="empty">
+    <div class="big">📋</div>
+    <b>还没有持仓记录</b><br>
+    点「添加持仓」，把成本、止损线、仓位上限和买入逻辑写下来。<br>
+    设定项齐了，这只票才算开始。
+  </div>
+
+  <div class="foot">
+    EVERSTEAD PRIVATE · 持仓台账 · 数据保存在本机浏览器<br>
+    纪律是写给情绪最差的那个自己看的
+  </div>
+</div>
+
+<dialog id="dlg">
+  <form id="form" class="dlg-body">
+    <h3 id="dlg-title">添加持仓</h3>
+    <div class="form-grid">
+      <div class="f-field"><label for="f-name">股票名称 *</label><input id="f-name" maxlength="20" required autocomplete="off" placeholder="如 贵州茅台"></div>
+      <div class="f-field"><label for="f-code">代码</label><input id="f-code" maxlength="10" autocomplete="off" placeholder="如 600519" inputmode="numeric"></div>
+      <div class="f-field"><label for="f-fund">资金性质</label>
+        <select id="f-fund">
+          <option value="own">自有资金</option>
+          <option value="lever">杠杆资金</option>
+        </select>
+      </div>
+      <div class="f-field"><label for="f-date">买入日期</label><input type="date" id="f-date"></div>
+      <div class="f-field"><label for="f-cost">成本价（元）*</label><input type="number" id="f-cost" step="0.001" min="0" required inputmode="decimal" placeholder="10.00"></div>
+      <div class="f-field"><label for="f-qty">数量（股/份）*</label><input type="number" id="f-qty" step="1" min="0" required inputmode="numeric" placeholder="1000"></div>
+      <div class="f-field"><label for="f-price">最新价（元）</label><input type="number" id="f-price" step="0.001" min="0" inputmode="decimal" placeholder="留空=按成本价"></div>
+      <div class="f-field"><label for="f-stop">止损线（%）</label><input type="number" id="f-stop" step="0.5" min="0" max="99" value="12" inputmode="decimal"></div>
+      <div class="f-field"><label for="f-target">止盈线（%）</label><input type="number" id="f-target" step="1" min="0" value="30" inputmode="decimal"></div>
+      <div class="f-field"><label for="f-weight">仓位上限（%）</label><input type="number" id="f-weight" step="1" min="0" max="100" value="15" inputmode="decimal"></div>
+    </div>
+    <div class="f-full"><label for="f-logic">买入逻辑（清仓测试的依据）</label><textarea id="f-logic" rows="2" placeholder="为什么买？这条逻辑兑现了没有？"></textarea></div>
+    <div class="f-full"><label for="f-note">备注 / 复盘</label><textarea id="f-note" rows="2" placeholder="操作记录、想法、教训"></textarea></div>
+    <label class="f-check"><input type="checkbox" id="f-closed"> 已清仓（归档，不再计入汇总）</label>
+    <div class="dlg-actions">
+      <button class="btn" type="button" id="btn-cancel">取消</button>
+      <button class="btn primary" type="submit">保存</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function(){
+  'use strict';
+  var KEY = 'td_portfolio_v1';
+  var data = load();
+  var editingId = null;
+
+  function load(){
+    try {
+      var v = JSON.parse(localStorage.getItem(KEY) || '[]');
+      return Array.isArray(v) ? v : [];
+    } catch(e){ return []; }
+  }
+  function save(){
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){}
+  }
+  function today(){
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function esc(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function money(n){
+    var sign = n < 0 ? '-' : '';
+    return sign + Math.abs(n).toLocaleString('zh-CN',{minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function pct(n, d){
+    d = d === undefined ? 2 : d;
+    return (n >= 0 ? '+' : '') + n.toFixed(d) + '%';
+  }
+  function num(v, fallback){
+    var n = parseFloat(v);
+    return isNaN(n) ? (fallback === undefined ? 0 : fallback) : n;
+  }
+
+  function calc(s){
+    var cost = num(s.cost), qty = num(s.qty);
+    var price = num(s.price, cost) || cost;
+    var stopPct = num(s.stopPct, 0), targetPct = num(s.targetPct, 0);
+    var mv = price * qty;
+    var pnl = (price - cost) * qty;
+    var pnlPct = cost > 0 ? (price / cost - 1) * 100 : 0;
+    var stopPrice = cost * (1 - stopPct / 100);
+    var targetPrice = cost * (1 + targetPct / 100);
+    var toStop = stopPrice > 0 ? (price / stopPrice - 1) * 100 : null;
+    return {
+      cost: cost, qty: qty, price: price, mv: mv, pnl: pnl, pnlPct: pnlPct,
+      stopPrice: stopPrice, targetPrice: targetPrice, toStop: toStop,
+      triggered: stopPrice > 0 && price <= stopPrice,
+      hitTarget: targetPrice > 0 && price >= targetPrice
+    };
+  }
+
+  function renderSummary(open){
+    var totalMV = 0, totalCost = 0, totalPnl = 0;
+    var ownPnl = 0, ownMV = 0, leverPnl = 0, leverCost = 0, leverMV = 0;
+    var triggered = 0, overweight = 0;
+    open.forEach(function(s){
+      var c = calc(s);
+      totalMV += c.mv; totalCost += c.cost * c.qty; totalPnl += c.pnl;
+      if (s.fund === 'lever'){ leverPnl += c.pnl; leverCost += c.cost * c.qty; leverMV += c.mv; }
+      else { ownPnl += c.pnl; ownMV += c.mv; }
+      if (c.triggered) triggered++;
+    });
+    open.forEach(function(s){
+      var c = calc(s);
+      var w = totalMV > 0 ? c.mv / totalMV * 100 : 0;
+      if (num(s.maxWeight) > 0 && w > num(s.maxWeight)) overweight++;
+    });
+    var totalPct = totalCost > 0 ? totalPnl / totalCost * 100 : 0;
+
+    var h = '';
+    h += '<div class="sum-cell"><div class="k">持仓总览</div>' +
+         '<div class="v neutral">' + open.length + ' 只 · ¥' + money(totalMV) + '</div>' +
+         '<div class="s">成本合计 ¥' + money(totalCost) + '</div></div>';
+    h += '<div class="sum-cell"><div class="k">浮动盈亏（全部）</div>' +
+         '<div class="v ' + (totalPnl > 0 ? 'up' : (totalPnl < 0 ? 'down' : '')) + '">' +
+         (totalPnl >= 0 ? '+' : '') + '¥' + money(totalPnl) + '</div>' +
+         '<div class="s">合计收益率 <b>' + pct(totalPct) + '</b></div></div>';
+    h += '<div class="sum-cell"><div class="k">自有 / 杠杆 分账</div>' +
+         '<div class="v ' + (ownPnl > 0 ? 'up' : (ownPnl < 0 ? 'down' : '')) + '">' + (ownPnl >= 0 ? '+' : '') + '¥' + money(ownPnl) + '</div>' +
+         '<div class="s">自有 · 市值 ¥' + money(ownMV) + '<br>杠杆 · 市值 ¥' + money(leverMV) +
+         ' · 盈亏 <b>' + (leverPnl >= 0 ? '+' : '') + '¥' + money(leverPnl) + '</b></div></div>';
+
+    var leverProgress = leverCost > 0 ? (leverPnl / leverCost * 100) : 0;
+    var leverText;
+    if (leverCost > 0){
+      leverText = leverProgress >= 100
+        ? '<b style="color:#4ade80">已到一倍收益，按纪律清仓撤离</b>'
+        : '距一倍收益还差 <b>' + (100 - leverProgress).toFixed(1) + '</b> 个百分点';
+    } else {
+      leverText = '暂无杠杆持仓';
+    }
+    h += '<div class="sum-cell"><div class="k">纪律警报</div>' +
+         '<div class="v ' + (triggered > 0 ? 'down' : 'up') + '">' + triggered + ' 只触止损</div>' +
+         '<div class="s">超仓位上限 <b>' + overweight + '</b> 只<br>' + leverText + '</div></div>';
+
+    document.getElementById('summary').innerHTML = h;
+
+    var alerts = [];
+    var hit = open.filter(function(s){ return calc(s).triggered; });
+    if (hit.length){
+      alerts.push('<div class="alert"><b>⚠ ' + hit.length + ' 只已触发止损线：</b>' +
+        hit.map(function(s){ return esc(s.name || s.code || '未命名'); }).join('、') +
+        '。按纪律执行，不再设「再等等」的例外。</div>');
+    }
+    var over = open.filter(function(s){
+      var c = calc(s); var w = totalMV > 0 ? c.mv / totalMV * 100 : 0;
+      return num(s.maxWeight) > 0 && w > num(s.maxWeight);
+    });
+    if (over.length){
+      alerts.push('<div class="alert warn"><b>超出仓位上限：</b>' +
+        over.map(function(s){
+          var c = calc(s); var w = totalMV > 0 ? c.mv / totalMV * 100 : 0;
+          return esc(s.name || s.code || '未命名') + '（' + w.toFixed(1) + '% / 上限 ' + num(s.maxWeight) + '%）';
+        }).join('、') + '。考虑减仓。</div>');
+    }
+    var no = open.filter(function(s){ return s.test && s.test.a === 'no'; });
+    if (no.length){
+      alerts.push('<div class="alert warn"><b>清仓测试答「不会买」：</b>' +
+        no.map(function(s){ return esc(s.name || s.code || '未命名'); }).join('、') +
+        '。如果今天空仓都不会买它，就该减仓。</div>');
+    }
+    document.getElementById('alerts').innerHTML = alerts.join('');
+  }
+
+  function cardHtml(s){
+    var c = calc(s);
+    var danger = c.triggered ? ' danger' : '';
+    var closed = s.closed ? ' closed' : '';
+
+    var pos = 0;
+    if (c.targetPrice > c.stopPrice){
+      pos = (c.price - c.stopPrice) / (c.targetPrice - c.stopPrice) * 100;
+      pos = Math.max(0, Math.min(100, pos));
+    }
+    var costMark = 0;
+    if (c.targetPrice > c.stopPrice){
+      costMark = (c.cost - c.stopPrice) / (c.targetPrice - c.stopPrice) * 100;
+      costMark = Math.max(0, Math.min(100, costMark));
+    }
+
+    var testHtml = '';
+    if (s.test && s.test.a){
+      var yes = s.test.a === 'yes';
+      testHtml = '<span class="test-chip ' + (yes ? 'yes' : 'no') + '">清仓测试：' + (yes ? '会买' : '不会买') + ' · ' + esc(s.test.d || '') + '</span>' +
+                 '<button class="test-btn" type="button" data-act="retest" data-id="' + s.id + '">重测</button>';
+    } else {
+      testHtml = '<button class="test-btn" type="button" data-act="test" data-id="' + s.id + '">清仓测试：今天空仓还会买吗？</button>';
+    }
+
+    return '<div class="stock' + danger + closed + '" data-id="' + s.id + '">' +
+      '<div class="stock-head">' +
+        '<div><div class="stock-name">' + esc(s.name || '未命名') + '</div>' +
+        '<div class="stock-code">' + esc(s.code || '—') + (s.buyDate ? ' · ' + esc(s.buyDate) : '') + '</div></div>' +
+        '<div class="stock-tags">' +
+          (s.fund === 'lever' ? '<span class="tag lever">杠杆</span>' : '<span class="tag own">自有</span>') +
+          (s.closed ? '<span class="tag closed-tag">已清仓</span>' : '') +
+          '<button class="icon-btn" type="button" data-act="edit" data-id="' + s.id + '" title="编辑" aria-label="编辑">✎</button>' +
+          '<button class="icon-btn del" type="button" data-act="del" data-id="' + s.id + '" title="删除" aria-label="删除">✕</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="price-row">' +
+        '<div><div class="label">成本价</div><div class="pv">' + c.cost.toFixed(2) + '</div></div>' +
+        '<div class="price-edit"><div><div class="label" style="text-align:right">最新价</div>' +
+          '<input type="number" step="0.001" min="0" inputmode="decimal" class="price-input" data-id="' + s.id + '" value="' + c.price + '"></div></div>' +
+      '</div>' +
+      '<div class="pnl ' + (c.pnl > 0 ? 'up' : (c.pnl < 0 ? 'down' : '')) + '">' +
+        (c.pnl >= 0 ? '+' : '') + '¥' + money(c.pnl) + '</div>' +
+      '<div class="pnl-sub">' + pct(c.pnlPct) + ' · ' + c.qty.toLocaleString('zh-CN') + ' 股 · 市值 ¥' + money(c.mv) + '</div>' +
+      '<div class="range">' +
+        '<div class="range-track">' +
+          '<div class="range-mark cost" style="left:' + costMark.toFixed(2) + '%"></div>' +
+          '<div class="range-mark price" style="left:' + pos.toFixed(2) + '%"></div>' +
+        '</div>' +
+        '<div class="range-cap">' +
+          '<span class="stop">止损 ' + c.stopPrice.toFixed(2) + '（' + (c.toStop === null ? '—' : (c.toStop >= 0 ? '距 +' + c.toStop.toFixed(2) + '%' : '已破 ' + c.toStop.toFixed(2) + '%')) + '）</span>' +
+          '<span class="target">止盈 ' + c.targetPrice.toFixed(2) + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="meta" data-mv="' + c.mv + '">' +
+        '<div class="meta-row"><span class="mk">仓位 / 上限</span><span class="mv weight-cell">—</span></div>' +
+        '<div class="meta-row"><span class="mk">已跌穿止损</span><span class="mv ' + (c.triggered ? 'bad' : '') + '">' + (c.triggered ? '是 · 按纪律执行' : '否') + '</span></div>' +
+        (c.hitTarget ? '<div class="meta-row"><span class="mk">已到止盈线</span><span class="mv">可以考虑分批兑现</span></div>' : '') +
+      '</div>' +
+      (s.logic ? '<div class="logic"><span class="lk">买入逻辑</span>' + esc(s.logic) + '</div>' : '') +
+      (s.note ? '<div class="note-line">备注：' + esc(s.note) + '</div>' : '') +
+      '<div class="test-row">' + testHtml + '</div>' +
+    '</div>';
+  }
+
+  function render(){
+    var open = data.filter(function(s){ return !s.closed; });
+    var closed = data.filter(function(s){ return s.closed; });
+
+    open.sort(function(a, b){
+      var ca = calc(a), cb = calc(b);
+      var da = ca.toStop === null ? 1e9 : ca.toStop;
+      var db = cb.toStop === null ? 1e9 : cb.toStop;
+      return da - db;
+    });
+
+    renderSummary(open);
+
+    var box = document.getElementById('cards');
+    var html = open.map(cardHtml).join('');
+    if (closed.length){
+      html += '<div class="section-label" style="grid-column:1/-1">已清仓归档</div>';
+      html += closed.map(cardHtml).join('');
+    }
+    box.innerHTML = html;
+
+    document.getElementById('empty').style.display = (data.length === 0) ? 'block' : 'none';
+
+    // 仓位占比(占持仓总市值), 超上限标黄
+    var totalMV = 0;
+    open.forEach(function(s){ totalMV += calc(s).mv; });
+    box.querySelectorAll('.stock').forEach(function(el){
+      var id = el.getAttribute('data-id');
+      var s = data.find(function(x){ return x.id === id; });
+      if (!s) return;
+      var mv = num(calc(s).mv);
+      var w = totalMV > 0 && !s.closed ? mv / totalMV * 100 : 0;
+      var cell = el.querySelector('.weight-cell');
+      if (!cell) return;
+      var over = num(s.maxWeight) > 0 && w > num(s.maxWeight);
+      cell.textContent = (s.closed ? '已归档' : w.toFixed(1) + '% / ' + num(s.maxWeight) + '%');
+      if (over) cell.classList.add('warn');
+    });
+  }
+
+  /* ---- 表单 ---- */
+  var dlg = document.getElementById('dlg');
+  var form = document.getElementById('form');
+
+  function fillForm(s){
+    document.getElementById('f-name').value = s ? s.name : '';
+    document.getElementById('f-code').value = s ? s.code : '';
+    document.getElementById('f-fund').value = s ? s.fund : 'own';
+    document.getElementById('f-date').value = s ? s.buyDate : today();
+    document.getElementById('f-cost').value = s ? s.cost : '';
+    document.getElementById('f-qty').value = s ? s.qty : '';
+    document.getElementById('f-price').value = s ? (s.price || '') : '';
+    document.getElementById('f-stop').value = s ? (s.stopPct != null ? s.stopPct : 12) : 12;
+    document.getElementById('f-target').value = s ? (s.targetPct != null ? s.targetPct : 30) : 30;
+    document.getElementById('f-weight').value = s ? (s.maxWeight != null ? s.maxWeight : 15) : 15;
+    document.getElementById('f-logic').value = s ? s.logic : '';
+    document.getElementById('f-note').value = s ? s.note : '';
+    document.getElementById('f-closed').checked = s ? !!s.closed : false;
+    document.getElementById('dlg-title').textContent = s ? '编辑 · ' + (s.name || '未命名') : '添加持仓';
+  }
+
+  function openAdd(){
+    editingId = null;
+    fillForm(null);
+    dlg.showModal();
+    document.getElementById('f-name').focus();
+  }
+  function openEdit(id){
+    var s = data.find(function(x){ return x.id === id; });
+    if (!s) return;
+    editingId = id;
+    fillForm(s);
+    dlg.showModal();
+    document.getElementById('f-name').focus();
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = document.getElementById('f-name').value.trim();
+    var cost = num(document.getElementById('f-cost').value);
+    var qty = num(document.getElementById('f-qty').value);
+    if (!name){ alert('股票名称必填'); return; }
+    if (!(cost > 0)){ alert('成本价要大于 0'); return; }
+    if (!(qty > 0)){ alert('数量要大于 0'); return; }
+
+    var obj = {
+      name: name,
+      code: document.getElementById('f-code').value.trim(),
+      fund: document.getElementById('f-fund').value,
+      buyDate: document.getElementById('f-date').value || today(),
+      cost: cost,
+      qty: qty,
+      price: num(document.getElementById('f-price').value, 0) || cost,
+      stopPct: num(document.getElementById('f-stop').value, 12),
+      targetPct: num(document.getElementById('f-target').value, 30),
+      maxWeight: num(document.getElementById('f-weight').value, 15),
+      logic: document.getElementById('f-logic').value.trim(),
+      note: document.getElementById('f-note').value.trim(),
+      closed: document.getElementById('f-closed').checked
+    };
+
+    if (editingId){
+      var old = data.find(function(x){ return x.id === editingId; });
+      Object.keys(obj).forEach(function(k){ old[k] = obj[k]; });
+    } else {
+      obj.id = 's' + Date.now().toString(36) + Math.floor(Math.random()*1000);
+      obj.test = null;
+      data.push(obj);
+    }
+    save();
+    dlg.close();
+    render();
+  });
+
+  document.getElementById('btn-cancel').addEventListener('click', function(){ dlg.close(); });
+  document.getElementById('btn-add').addEventListener('click', openAdd);
+  document.getElementById('btn-export').addEventListener('click', function(){
+    if (!data.length){ alert('还没有数据可导出'); return; }
+    var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '持仓台账-' + today() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  });
+  document.getElementById('btn-import').addEventListener('click', function(){
+    document.getElementById('file-import').click();
+  });
+  document.getElementById('file-import').addEventListener('change', function(e){
+    var f = e.target.files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try {
+        var arr = JSON.parse(reader.result);
+        if (!Array.isArray(arr)) throw new Error('格式不对');
+        arr = arr.filter(function(x){ return x && x.name && num(x.cost) > 0; });
+        if (!arr.length) throw new Error('没有有效记录');
+        if (!confirm('导入将覆盖当前全部 ' + data.length + ' 条记录，确定？')) return;
+        data = arr;
+        data.forEach(function(x, i){ if (!x.id) x.id = 's' + Date.now().toString(36) + i; });
+        save();
+        render();
+      } catch(err){
+        alert('导入失败：' + err.message);
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(f);
+  });
+
+  /* ---- 卡片内操作(事件委托) ---- */
+  document.getElementById('cards').addEventListener('click', function(e){
+    var btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    var id = btn.getAttribute('data-id');
+    var act = btn.getAttribute('data-act');
+    var s = data.find(function(x){ return x.id === id; });
+    if (!s) return;
+
+    if (act === 'edit'){ openEdit(id); return; }
+    if (act === 'del'){
+      if (confirm('删除「' + (s.name || '未命名') + '」？删除后不可恢复。')) {
+        data = data.filter(function(x){ return x.id !== id; });
+        save(); render();
+      }
+      return;
+    }
+    if (act === 'test' || act === 'retest'){
+      var row = btn.closest('.test-row');
+      row.innerHTML = '<span style="font-size:12px;color:var(--muted)">今天空仓，还会在现价买它吗？</span>' +
+        '<button class="test-btn yes" type="button" data-act="test-yes" data-id="' + id + '">会买</button>' +
+        '<button class="test-btn no" type="button" data-act="test-no" data-id="' + id + '">不会买</button>';
+      return;
+    }
+    if (act === 'test-yes' || act === 'test-no'){
+      s.test = { a: act === 'test-yes' ? 'yes' : 'no', d: today() };
+      save(); render();
+      return;
+    }
+  });
+
+  /* ---- 现价更新(事件委托) ---- */
+  document.getElementById('cards').addEventListener('change', function(e){
+    var inp = e.target.closest('.price-input');
+    if (!inp) return;
+    var id = inp.getAttribute('data-id');
+    var s = data.find(function(x){ return x.id === id; });
+    if (!s) return;
+    var v = num(inp.value, 0);
+    if (v > 0){ s.price = v; save(); }
+    render();
+  });
+
+  render();
+})();
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

@@ -16,6 +16,8 @@ Disallow: /tools/scattered-private/
 Disallow: /tools/token-usage/
 Disallow: /tools/stats/
 Disallow: /tools/yuebing-travels/
+Disallow: /tools/growth/
+Disallow: /tools/growth-share/
 Disallow: /knowledge/iflyink-notes/
 Disallow: /knowledge/union-card-handbook-2026/
 Disallow: /radar-site/

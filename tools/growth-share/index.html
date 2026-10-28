@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#f6efe4">
+<title>双宝成长 · 家庭分享</title>
+<style>
+:root{
+  --paper:#f6efe4;
+  --paper-2:#efe5d6;
+  --card:#fffdf8;
+  --ink:#2b2119;
+  --ink-soft:#5b4a3a;
+  --muted:#8a7a68;
+  --line:#ddcfbc;
+  --line-soft:#eadfce;
+  --terra:#c96f4a;
+  --terra-soft:#f3ddd2;
+  --sage:#7c8b6f;
+  --sage-soft:#e2e8da;
+  --gold:#c9a227;
+  --shadow:0 10px 30px rgba(74,55,35,.10);
+  --shadow-sm:0 4px 14px rgba(74,55,35,.08);
+  --serif:'Songti SC','STSong','SimSun','Noto Serif SC',serif;
+  --sans:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  --kai:'Kaiti SC','KaiTi','STKaiti',serif;
+  --mono:'Cascadia Mono','Consolas','Courier New',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:
+    radial-gradient(1100px 560px at 82% -8%, rgba(201,162,39,.10), transparent 62%),
+    radial-gradient(900px 520px at -8% 108%, rgba(124,139,111,.12), transparent 62%),
+    linear-gradient(180deg,var(--paper),var(--paper-2));
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  line-height:1.6;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(90,70,45,.035) 0,rgba(90,70,45,.035) 1px,transparent 1px,transparent 3px),
+    repeating-linear-gradient(90deg,rgba(90,70,45,.025) 0,rgba(90,70,45,.025) 1px,transparent 1px,transparent 5px);
+  mask-image:radial-gradient(ellipse at 50% 0%,#000 45%,transparent 100%);
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+img{display:block;max-width:100%}
+.wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding:0 22px 70px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ---------- header ---------- */
+.hero{padding:34px 0 14px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.hero-left{max-width:640px}
+.kicker{font-size:12px;letter-spacing:.22em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+h1{font-family:var(--serif);font-size:clamp(30px,4.6vw,52px);line-height:1.18;font-weight:600;letter-spacing:.02em;text-wrap:balance}
+.sub{margin-top:8px;color:var(--ink-soft);font-size:14px}
+.sub .dot-sep{color:var(--line);margin:0 8px}
+.now{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.now-card{background:rgba(255,253,248,.7);border:1px solid var(--line-soft);border-radius:14px;padding:10px 14px;min-width:150px;box-shadow:var(--shadow-sm)}
+.now-card .who{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.now-card .age{font-family:var(--serif);font-size:20px;margin-top:2px}
+.now-card .since{font-size:11px;color:var(--muted);font-family:var(--mono)}
+.swatch{width:9px;height:9px;border-radius:50%;display:inline-block}
+.swatch.yb{background:var(--terra)}
+.swatch.yy{background:var(--sage)}
+.privacy{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.privacy::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 3px var(--sage-soft)}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:26px 0 18px;padding-bottom:14px;border-bottom:1px solid var(--line-soft)}
+.tab{padding:8px 16px;border-radius:999px;font-size:13px;color:var(--ink-soft);border:1px solid transparent;transition:background-color .18s,color .18s,border-color .18s,transform .18s}
+.tab:hover{background:rgba(255,253,248,.7);border-color:var(--line-soft)}
+.tab:active{transform:scale(.97)}
+.tab.active{background:var(--ink);color:#fff9ee;border-color:var(--ink)}
+.tab:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* ---------- section ---------- */
+.section{display:none}
+.section.active{display:block;animation:fadeUp .35s ease-out both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:6px 0 16px}
+.section-head h2{font-family:var(--serif);font-size:clamp(21px,2.6vw,28px);font-weight:600}
+.section-head .hint{font-size:12px;color:var(--muted)}
+
+/* ---------- ruler ---------- */
+.ruler-box{background:rgba(255,253,248,.72);border:1px solid var(--line-soft);border-radius:20px;padding:16px 18px 12px;box-shadow:var(--shadow-sm);margin-bottom:18px}
+.ruler{position:relative;height:118px;margin:0 4px}
+.ruler-track{position:absolute;left:0;right:0;top:42px;height:2px;background:linear-gradient(90deg,var(--line),var(--gold),var(--line))}
+.tick{position:absolute;top:36px;width:1px;height:14px;background:var(--line)}
+.tick.major{top:32px;height:22px;background:#c9b89f}
+.tick-label{position:absolute;top:8px;transform:translateX(-50%);font-size:10px;color:var(--muted);font-family:var(--mono);white-space:nowrap}
+.lane{position:absolute;left:0;right:0;display:flex;align-items:center;gap:8px;z-index:6}
+.lane.yb{lane-height:22px;top:58px}
+.lane.yy{top:86px}
+.lane-name{display:none}
+.lane-track{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line-soft)}
+.dot{position:absolute;top:50%;border-radius:50%;border:1.5px solid rgba(255,253,248,.95);box-shadow:0 1px 4px rgba(60,40,20,.18);transition:transform .16s,box-shadow .16s;z-index:5}
+.dot:hover{transform:scale(1.35);box-shadow:0 2px 10px rgba(60,40,20,.3)}
+.dot.yb{background:var(--terra)}
+.dot.yy{background:var(--sage)}
+.dot.sel{outline:2px solid var(--gold);outline-offset:2px}
+.cursor{position:absolute;top:26px;bottom:8px;width:2px;background:var(--gold);transform:translateX(-50%);pointer-events:none;z-index:2;transition:left .12s ease-out}
+.cursor::before{content:'';position:absolute;top:-7px;left:50%;transform:translateX(-50%);border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--gold)}
+.cursor-label{display:none}
+input[type=range].ruler-input{position:absolute;left:0;right:0;top:22px;width:100%;height:90px;opacity:0;cursor:ew-resize;z-index:4;margin:0}
+.ruler-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:6px;font-size:11px;color:var(--muted)}
+.legend{display:flex;gap:14px;align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* ---------- comparison ---------- */
+.cmp{border:1px solid var(--line-soft);background:rgba(255,253,248,.62);border-radius:22px;padding:18px;box-shadow:var(--shadow-sm)}
+.cmp-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.cmp-title h3{font-family:var(--serif);font-size:22px;font-weight:600}
+.cmp-title .cmp-sub{font-size:12px;color:var(--muted)}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cmp-card{background:var(--card);border:1px solid var(--line-soft);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;min-height:330px}
+.cmp-head{display:flex;align-items:center;gap:8px;padding:12px 14px 8px;font-size:13px}
+.cmp-head .name{font-weight:600}
+.cmp-head .age{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.cmp-photo{position:relative;aspect-ratio:4/3;background:var(--paper-2);overflow:hidden}
+.cmp-photo img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease-out}
+.cmp-card:hover .cmp-photo img{transform:scale(1.03)}
+.cmp-photo .badge{position:absolute;left:10px;bottom:10px;background:rgba(43,33,25,.72);color:#fff;font-size:10px;padding:3px 8px;border-radius:999px;backdrop-filter:blur(4px)}
+.cmp-body{padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.cmp-meta{font-size:12px;color:var(--muted)}
+.cmp-note{font-size:13px;color:var(--ink-soft);line-height:1.7;flex:1}
+.cmp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
+.mini-link{font-size:12px;color:var(--terra);border-bottom:1px solid transparent;transition:border-color .18s,color .18s}
+.mini-link:hover{border-color:var(--terra)}
+.cmp-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;height:100%;min-height:250px;border:1.5px dashed var(--line);border-radius:14px;margin:12px;color:var(--muted);padding:22px}
+.cmp-empty .big{font-family:var(--serif);font-size:20px;color:var(--ink-soft)}
+.cmp-empty .small{font-size:12px;max-width:260px;line-height:1.7}
+.cmp-empty .pulse{width:10px;height:10px;border-radius:50%;background:var(--sage);box-shadow:0 0 0 0 rgba(124,139,111,.4);animation:pulse 2.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(124,139,111,.35)}70%{box-shadow:0 0 0 14px rgba(124,139,111,0)}100%{box-shadow:0 0 0 0 rgba(124,139,111,0)}}
+
+/* ---------- timeline ---------- */
+.timeline-columns{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+#view-yuebing .timeline-columns,#view-yuanyi .timeline-columns{grid-template-columns:1fr;max-width:820px}
+.tl-col{position:relative}
+.tl-col::before{content:'';position:absolute;left:15px;top:8px;bottom:8px;width:1px;background:var(--line)}
+.tl-col.yb::before{background:linear-gradient(180deg,var(--terra-soft),var(--line))}
+.tl-col.yy::before{background:linear-gradient(180deg,var(--sage-soft),var(--line))}
+.tl-head{display:flex;align-items:center;gap:10px;padding:0 0 14px 40px}
+.tl-head .name{font-family:var(--serif);font-size:24px;font-weight:600}
+.tl-head .age{font-size:12px;color:var(--muted);margin-left:auto;font-family:var(--mono)}
+.tl-head .avatar{position:absolute;left:0;width:31px;height:31px;border-radius:50%;background:var(--card);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:13px;color:var(--ink-soft)}
+.tl-col.yb .tl-head .avatar{border-color:var(--terra-soft);color:var(--terra)}
+.tl-col.yy .tl-head .avatar{border-color:var(--sage-soft);color:var(--sage)}
+.year-block{margin-bottom:18px}
+.year-head{position:relative;padding:4px 0 8px 40px;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em}
+.year-head::before{content:'';position:absolute;left:11px;top:9px;width:9px;height:9px;border-radius:50%;background:var(--paper);border:2px solid var(--line)}
+.month-card{position:relative;margin:0 0 12px 40px;background:var(--card);border:1px solid var(--line-soft);border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .18s,box-shadow .18s,border-color .18s}
+.month-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#d6c2a8}
+.month-cover{aspect-ratio:16/9;background:var(--paper-2);overflow:hidden}
+.month-cover img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease-out}
+.month-card:hover .month-cover img{transform:scale(1.03)}
+.month-body{padding:12px 14px 14px}
+.month-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.age-badge{font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:999px;background:var(--terra-soft);color:#8d4327}
+.tl-col.yy .age-badge{background:var(--sage-soft);color:#4f5f45}
+.month-date{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto}
+.month-title{font-family:var(--serif);font-size:19px;font-weight:600;line-height:1.35;text-wrap:balance}
+.month-note{font-size:12px;color:var(--ink-soft);line-height:1.7;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.mini-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:10px}
+.mini-strip img{aspect-ratio:1;object-fit:cover;border-radius:6px;background:var(--paper-2)}
+.mini-strip .more{display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--paper-2);border-radius:6px}
+.month-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-size:11px;color:var(--muted)}
+.month-foot button{font-size:12px;color:var(--terra);border-bottom:1px solid transparent;transition:border-color .18s}
+.month-foot button:hover{border-color:var(--terra)}
+.before-card{border-style:dashed;background:rgba(255,253,248,.6)}
+
+/* ---------- drawer ---------- */
+.drawer{position:fixed;inset:0;z-index:40;display:none}
+.drawer.open{display:block}
+.drawer-backdrop{position:absolute;inset:0;background:rgba(35,26,18,.52);backdrop-filter:blur(3px)}
+.drawer-panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(1080px,calc(100vw - 28px));max-height:calc(100vh - 40px);overflow:auto;background:var(--paper);border-radius:20px;box-shadow:0 24px 80px rgba(30,20,10,.35);padding:24px}
+.drawer-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.drawer-top h3{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.3}
+.drawer-top .meta{font-size:12px;color:var(--muted);margin-top:4px}
+.close-x{margin-left:auto;width:36px;height:36px;border-radius:50%;background:rgba(255,253,248,.8);border:1px solid var(--line);font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background-color .18s,transform .18s}
+.close-x:hover{background:#fff}
+.close-x:active{transform:scale(.94)}
+.drawer-note{font-size:13px;color:var(--ink-soft);line-height:1.8;margin-bottom:14px;padding:12px 14px;background:rgba(255,253,248,.7);border-left:3px solid var(--gold);border-radius:0 10px 10px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.grid button{position:relative;aspect-ratio:1;border-radius:9px;overflow:hidden;background:var(--paper-2)}
+.grid img{width:100%;height:100%;object-fit:cover;transition:transform .25s ease-out}
+.grid button:hover img{transform:scale(1.05)}
+.grid .vid{position:absolute;left:6px;bottom:6px;background:rgba(43,33,25,.75);color:#fff;font-size:9px;padding:2px 6px;border-radius:999px}
+
+/* ---------- lightbox ---------- */
+.lightbox{position:fixed;inset:0;z-index:60;display:none;background:rgba(18,13,9,.94);color:#f7efe3}
+.lightbox.open{display:flex;flex-direction:column}
+.lb-top{display:flex;align-items:center;gap:12px;padding:12px 18px;font-size:12px;color:#cdbfae}
+.lb-top .lb-close{margin-left:auto;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.1);font-size:18px;display:flex;align-items:center;justify-content:center}
+.lb-main{flex:1;display:flex;align-items:center;justify-content:center;gap:14px;padding:0 16px;min-height:0}
+.lb-main img{max-width:min(1200px,86vw);max-height:76vh;object-fit:contain;border-radius:4px;box-shadow:0 18px 60px rgba(0,0,0,.5)}
+.lb-nav{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background-color .18s,transform .18s}
+.lb-nav:hover{background:rgba(255,255,255,.2)}
+.lb-nav:active{transform:scale(.94)}
+.lb-info{padding:10px 18px 20px;text-align:center;font-size:13px;color:#e5d8c8}
+.lb-info .cap{font-family:var(--kai);font-size:17px;margin-bottom:4px}
+.lb-info .meta{font-size:11px;color:#b8a894;font-family:var(--mono)}
+.lb-info .note{font-size:11px;color:#c9a227;margin-top:6px}
+
+/* ---------- report ---------- */
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.report-card{background:var(--card);border:1px solid var(--line-soft);border-radius:20px;padding:18px;box-shadow:var(--shadow-sm)}
+.report-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.report-head h3{font-family:var(--serif);font-size:24px;font-weight:600}
+.report-head .tag{font-family:var(--mono);font-size:10px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+.report-lead{font-size:13px;color:var(--ink-soft);line-height:1.8;margin-bottom:12px}
+.report-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.stat{background:rgba(246,239,228,.7);border:1px solid var(--line-soft);border-radius:12px;padding:9px 10px;text-align:center}
+.stat .v{font-family:var(--serif);font-size:18px}
+.stat .k{font-size:10px;color:var(--muted);margin-top:1px}
+.report-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.report-photos img{aspect-ratio:1;object-fit:cover;border-radius:7px;background:var(--paper-2)}
+.report-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;font-size:11px;color:var(--muted)}
+.btn-print{padding:7px 14px;border-radius:999px;background:var(--ink);color:#fff9ee;font-size:12px;transition:transform .18s,background-color .18s}
+.btn-print:active{transform:scale(.97)}
+.btn-print:hover{background:#3b2d22}
+.foot{margin-top:34px;padding-top:16px;border-top:1px solid var(--line-soft);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+
+/* ---------- gate ---------- */
+.gate{position:fixed;inset:0;z-index:90;background:var(--paper);display:flex;align-items:center;justify-content:center;padding:24px}
+.gate.hide{display:none}
+.gate-box{width:min(380px,100%);background:var(--card);border:1px solid var(--line-soft);border-radius:20px;padding:26px;box-shadow:var(--shadow);text-align:center}
+.gate-box h2{font-family:var(--serif);font-size:24px;margin-bottom:6px}
+.gate-box p{font-size:12px;color:var(--muted);margin-bottom:16px}
+.gate-box input{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;background:var(--paper);color:var(--ink);text-align:center;letter-spacing:.2em}
+.gate-box button{margin-top:10px;width:100%;padding:11px;border-radius:12px;background:var(--ink);color:#fff9ee;font-size:13px;transition:transform .18s}
+.gate-box button:active{transform:scale(.98)}
+.gate-err{color:var(--terra);font-size:12px;min-height:18px;margin-top:8px}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .cmp-grid,.timeline-columns,.report-grid{grid-template-columns:1fr}
+  .hero{padding-top:24px}
+  .now{width:100%}
+  .now-card{flex:1}
+  .ruler-box{overflow-x:auto}
+  .ruler{min-width:720px}
+  .mini-strip{grid-template-columns:repeat(6,1fr)}
+}
+@media (max-width:560px){
+  .wrap{padding:0 14px 50px}
+  .hero{gap:10px}
+  .tabs{gap:6px}
+  .tab{padding:7px 12px;font-size:12px}
+  .ruler-box{padding:12px 12px 8px}
+  .cmp{padding:12px}
+  .cmp-card{min-height:auto}
+  .drawer-panel{padding:16px;border-radius:16px;max-height:calc(100vh - 20px)}
+  .drawer-top h3{font-size:21px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:5px}
+  .report-photos{grid-template-columns:repeat(3,1fr)}
+  .month-card{margin-left:34px}
+  .tl-col::before{left:12px}
+  .year-head{padding-left:34px}
+  .year-head::before{left:8px}
+  .tl-head{padding-left:34px}
+  .tl-head .avatar{width:27px;height:27px}
+  .lb-main img{max-width:92vw;max-height:70vh}
+}
+@media print{
+  body{background:#fff}
+  .tabs,.now,.foot,.drawer,.lightbox,.gate,.section-head .hint,.btn-print{display:none!important}
+  .section{display:none!important}
+  .section#view-report{display:block!important}
+  .report-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .report-card{break-inside:avoid;box-shadow:none}
+  .wrap{max-width:none;padding:0}
+}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <form class="gate-box" id="gate-form">
+    <h2>双宝成长对照轴</h2>
+    <p>家庭分享 · 输入家庭密码</p>
+    <input type="password" id="gate-pw" placeholder="••••••" maxlength="16" autocomplete="current-password" aria-label="密码">
+    <button type="submit">进入</button>
+    <div class="gate-err" id="gate-err"></div>
+  </form>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-left">
+      <div class="kicker">Family Archive · 2023 —</div>
+      <h1>双宝成长对照轴</h1>
+      <div class="sub">王斯卯 <span class="dot-sep">·</span> 王元一 <span class="dot-sep">·</span> 按月龄把兄弟俩放在同一条尺子上</div>
+      <div class="now" id="now"></div>
+    </div>
+    <div class="privacy">家庭分享 · 请勿外传</div>
+  </header>
+
+  <nav class="tabs" aria-label="视图切换">
+    <button class="tab active" data-view="axis">对照轴</button>
+    <button class="tab" data-view="yuebing">月饼</button>
+    <button class="tab" data-view="yuanyi">小七</button>
+    <button class="tab" data-view="report">月报</button>
+  </nav>
+
+  <!-- 对照轴 -->
+  <section class="section active" id="view-axis">
+    <div class="ruler-box">
+      <div class="ruler" id="ruler">
+        <div class="ruler-track"></div>
+        <input type="range" class="ruler-input" id="ruler-input" min="0" max="48" value="0" step="1" aria-label="选择月龄">
+      </div>
+      <div class="ruler-foot">
+        <div class="legend">
+          <span><i style="background:var(--terra)"></i>月饼</span>
+          <span><i style="background:var(--sage)"></i>小七</span>
+          <span style="color:var(--muted)">圆点大小 = 当月照片数量</span>
+        </div>
+        <div id="ruler-now">当前：出生</div>
+      </div>
+    </div>
+
+    <div class="cmp">
+      <div class="cmp-title">
+        <h3 id="cmp-title">出生 · 同月龄对照</h3>
+        <div class="cmp-sub" id="cmp-sub"></div>
+      </div>
+      <div class="cmp-grid" id="cmp-grid"></div>
+    </div>
+  </section>
+
+  <!-- 月饼 -->
+  <section class="section" id="view-yuebing">
+    <div class="section-head">
+      <h2>月饼的成长时间轴</h2>
+      <div class="hint">2023.02.23 出生 · 按月龄归档</div>
+    </div>
+    <div class="timeline-columns">
+      <div class="tl-col yb" id="tl-yuebing"></div>
+    </div>
+  </section>
+
+  <!-- 小七 -->
+  <section class="section" id="view-yuanyi">
+    <div class="section-head">
+      <h2>小七的成长时间轴</h2>
+      <div class="hint">2026.10.20 出生 · 刚刚开始</div>
+    </div>
+    <div class="timeline-columns">
+      <div class="tl-col yy" id="tl-yuanyi"></div>
+    </div>
+  </section>
+
+  <!-- 月报 -->
+  <section class="section" id="view-report">
+    <div class="section-head">
+      <h2>成长月报</h2>
+      <div class="hint">每月 20 号后重建 · 当前手动</div>
+    </div>
+    <div class="report-grid" id="report-grid"></div>
+  </section>
+
+  <footer class="foot">
+    <div>数据：小米云相册原图 · 本地压缩后上站 · 原图不上传</div>
+    <div id="generated"></div>
+  </footer>
+</div>
+
+<!-- 月度抽屉 -->
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="月度照片">
+  <div class="drawer-backdrop" data-close-drawer></div>
+  <div class="drawer-panel">
+    <div class="drawer-top">
+      <div>
+        <h3 id="drawer-title"></h3>
+        <div class="meta" id="drawer-meta"></div>
+      </div>
+      <button class="close-x" id="drawer-close" aria-label="关闭">×</button>
+    </div>
+    <div class="drawer-note" id="drawer-note"></div>
+    <div class="grid" id="drawer-grid"></div>
+  </div>
+</div>
+
+<!-- 灯箱 -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="照片查看">
+  <div class="lb-top">
+    <div id="lb-pos"></div>
+    <button class="lb-close" id="lb-close" aria-label="关闭">×</button>
+  </div>
+  <div class="lb-main">
+    <button class="lb-nav" id="lb-prev" aria-label="上一张">‹</button>
+    <img id="lb-img" alt="">
+    <button class="lb-nav" id="lb-next" aria-label="下一张">›</button>
+  </div>
+  <div class="lb-info">
+    <div class="cap" id="lb-cap"></div>
+    <div class="meta" id="lb-meta"></div>
+    <div class="note" id="lb-note"></div>
+  </div>
+</div>
+
+<script>
+const PASSWORD_HASH = "3a1f3a792c23590ba762489cee3d189d35cc3ee9c900b7bec62d83d47f11aa8c";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const state = {
+  data: null,
+  photoMap: new Map(),
+  monthMap: { yuebing: new Map(), yuanyi: new Map() },
+  month: 0,
+  drawer: null,
+  lb: { list: [], index: 0 }
+};
+
+const fmtDate = (iso) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`;
+};
+const fmtDateShort = (iso) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,"0")}`;
+};
+const addMonths = (date, n) => {
+  const d = new Date(date.getTime());
+  const day = d.getDate();
+  d.setDate(1);
+  d.setMonth(d.getMonth() + n);
+  const last = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+  d.setDate(Math.min(day, last));
+  return d;
+};
+const ageParts = (birthStr, ref = new Date()) => {
+  const b = new Date(birthStr);
+  const midnight = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  let months = (ref.getFullYear()-b.getFullYear())*12 + (ref.getMonth()-b.getMonth());
+  if (ref.getDate() < b.getDate()) months--;
+  if (months < 0) {
+    const days = Math.max(0, Math.round((midnight(ref)-midnight(b))/86400000));
+    return { months: -1, days, label: `${days} 天` };
+  }
+  if (months < 1) {
+    const days = Math.max(0, Math.round((midnight(ref)-midnight(b))/86400000));
+    return { months: 0, days, label: `${days} 天` };
+  }
+  const anchor = addMonths(b, months);
+  const days = Math.max(0, Math.round((midnight(ref)-midnight(anchor))/86400000));
+  let label;
+  if (months < 24) label = `${months} 个月${days ? ` ${days} 天` : ""}`;
+  else {
+    const y = Math.floor(months/12), m = months%12;
+    label = `${y} 岁${m ? ` ${m} 个月` : ""}`;
+  }
+  return { months, days, label };
+};
+const monthLabel = (m) => {
+  if (m < 12) return `${m} 个月`;
+  const y = Math.floor(m/12), r = m%12;
+  return `${y} 岁${r ? ` ${r} 个月` : ""}`;
+};
+const pos = (m, max) => `calc(8px + (100% - 16px) * ${max ? m / max : 0})`;
+const escapeHtml = (s) => String(s || "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+async function sha256(text) {
+  const buf = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest("SHA-256", buf);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,"0")).join("");
+}
+async function initGate() {
+  const gate = $("#gate");
+  if (sessionStorage.getItem("growth_share_ok") === "1") { gate.classList.add("hide"); return; }
+  $("#gate-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const val = $("#gate-pw").value.trim();
+    if (!val) return;
+    const err = $("#gate-err");
+    err.textContent = "";
+    try {
+      if (await sha256(val) === PASSWORD_HASH) {
+        sessionStorage.setItem("growth_share_ok", "1");
+        gate.classList.add("hide");
+      } else {
+        err.textContent = "密码不对";
+      }
+    } catch (ex) {
+      err.textContent = "浏览器不支持校验，请从私人专区进入";
+    }
+  });
+}
+
+async function load() {
+  const res = await fetch("growth.json", { cache: "no-store" });
+  if (!res.ok) throw new Error("读取 growth.json 失败");
+  state.data = await res.json();
+  for (const child of state.data.children) {
+    for (const p of child.photos) state.photoMap.set(p.id, p);
+    const map = new Map();
+    for (const m of child.months) map.set(m.month, m);
+    state.monthMap[child.id] = map;
+  }
+  const max = state.data.comparison.max_month;
+  const input = $("#ruler-input");
+  input.max = max;
+  state.month = 0;
+  input.value = 0;
+  renderNow();
+  renderRuler();
+  renderComparison();
+  renderTimelines();
+  renderReport();
+  $("#generated").textContent = `数据更新 ${fmtDate(state.data.generated_at)}`;
+  preload();
+}
+
+function child(id) { return state.data.children.find(c => c.id === id); }
+function photosOf(childId, ids) { return ids.map(id => state.photoMap.get(id)).filter(Boolean); }
+function coverOf(childId, month) {
+  const m = state.monthMap[childId].get(month);
+  return m ? state.photoMap.get(m.cover_id) : null;
+}
+
+function renderNow() {
+  const wrap = $("#now");
+  wrap.innerHTML = state.data.children.map(c => {
+    const age = ageParts(c.birth);
+    return `<div class="now-card">
+      <div class="who"><i class="swatch ${c.id === "yuebing" ? "yb" : "yy"}"></i>${escapeHtml(c.nickname)} · ${escapeHtml(c.name)}</div>
+      <div class="age">${age.label}</div>
+      <div class="since">${escapeHtml(c.birth_note || "")}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderRuler() {
+  const ruler = $("#ruler");
+  const max = state.data.comparison.max_month;
+  $$(".tick,.tick-label,.lane,.cursor", ruler).forEach(el => el.remove());
+  for (let m = 0; m <= max; m += 6) {
+    const tick = document.createElement("div");
+    tick.className = "tick major";
+    tick.style.left = pos(m, max);
+    ruler.appendChild(tick);
+    const label = document.createElement("div");
+    label.className = "tick-label";
+    label.style.left = pos(m, max);
+    if (m === 0) label.style.transform = "none";
+    else if (m === max) label.style.transform = "translateX(-100%)";
+    label.textContent = m === 0 ? "出生" : monthLabel(m);
+    ruler.appendChild(label);
+  }
+  for (const c of state.data.children) {
+    const lane = document.createElement("div");
+    lane.className = `lane ${c.id === "yuebing" ? "yb" : "yy"}`;
+    const lt = document.createElement("div");
+    lt.className = "lane-track";
+    lane.appendChild(lt);
+    for (const m of c.months) {
+      const size = Math.max(7, Math.min(16, 6 + Math.sqrt(m.count) * 1.2));
+      const dot = document.createElement("button");
+      dot.className = `dot ${c.id === "yuebing" ? "yb" : "yy"}`;
+      dot.style.left = pos(m.month, max);
+      dot.style.width = size + "px";
+      dot.style.height = size + "px";
+      dot.style.marginLeft = (-size / 2) + "px";
+      dot.style.marginTop = (-size / 2) + "px";
+      dot.title = `${c.nickname} · ${m.label} · ${m.count} 张`;
+      dot.setAttribute("aria-label", dot.title);
+      dot.addEventListener("click", () => { setMonth(m.month); });
+      lt.appendChild(dot);
+    }
+    ruler.appendChild(lane);
+  }
+  const cursor = document.createElement("div");
+  cursor.className = "cursor";
+  cursor.id = "cursor";
+  const cl = document.createElement("div");
+  cl.className = "cursor-label";
+  cl.id = "cursor-label";
+  cursor.appendChild(cl);
+  ruler.appendChild(cursor);
+  syncCursor();
+}
+
+function syncCursor() {
+  const max = state.data.comparison.max_month;
+  const cursor = $("#cursor");
+  if (cursor) cursor.style.left = pos(state.month, max);
+  const label = $("#cursor-label");
+  if (label) label.textContent = state.month === 0 ? "出生" : monthLabel(state.month);
+  const now = $("#ruler-now");
+  if (now) now.textContent = "当前：" + (state.month === 0 ? "出生" : monthLabel(state.month));
+  $$(".dot").forEach(d => d.classList.remove("sel"));
+  for (const c of state.data.children) {
+    const m = state.monthMap[c.id].get(state.month);
+    if (!m) continue;
+    $$(`.dot.${c.id === "yuebing" ? "yb" : "yy"}`).forEach((dot, i) => {
+      if (c.months[i] && c.months[i].month === state.month) dot.classList.add("sel");
+    });
+  }
+}
+
+function setMonth(m) {
+  state.month = Math.max(0, Math.min(state.data.comparison.max_month, m));
+  $("#ruler-input").value = state.month;
+  syncCursor();
+  renderComparison();
+}
+
+function cmpCard(c, m) {
+  const hit = state.monthMap[c.id].get(m);
+  const isYb = c.id === "yuebing";
+  if (!hit) {
+    const nowM = c.current.months ?? 0;
+    if (m > nowM) {
+      const target = addMonths(new Date(c.birth), m);
+      const days = Math.max(0, Math.ceil((target - new Date()) / 86400000));
+      const mm = Math.floor(days / 30);
+      const dd = days % 30;
+      const wait = days > 0 ? `还有 ${mm ? mm + " 个月 " : ""}${dd} 天` : "就在这个月";
+      return `<div class="cmp-card">
+        <div class="cmp-head"><i class="swatch ${isYb ? "yb" : "yy"}"></i><span class="name">${escapeHtml(c.nickname)}</span><span class="age">${monthLabel(m)}</span></div>
+        <div class="cmp-empty"><div class="pulse"></div><div class="big">还没到这个月龄</div><div class="small">${wait}。到 ${fmtDateShort(target.toISOString())} 左右，这里会出现小七 ${monthLabel(m)} 的样子。</div></div>
+      </div>`;
+    }
+    return `<div class="cmp-card">
+      <div class="cmp-head"><i class="swatch ${isYb ? "yb" : "yy"}"></i><span class="name">${escapeHtml(c.nickname)}</span><span class="age">${monthLabel(m)}</span></div>
+      <div class="cmp-empty"><div class="big">这个月还没有照片</div><div class="small">${isYb ? "月饼 0-4 个月的照片还在小米云里，导出后这里会自动补上。" : "等小七长大到这个月龄，照片会自动归位。"}</div></div>
+    </div>`;
+  }
+  const cover = state.photoMap.get(hit.cover_id);
+  const note = hit.note || (hit.events || []).join(" · ");
+  const evts = (hit.events || []).filter((v, i, a) => a.indexOf(v) === i);
+  const evText = evts.includes("出生") ? "出生" : evts.slice(0, 2).join(" · ");
+  return `<div class="cmp-card">
+    <div class="cmp-head"><i class="swatch ${isYb ? "yb" : "yy"}"></i><span class="name">${escapeHtml(c.nickname)}</span><span class="age">${hit.label}</span></div>
+    <div class="cmp-photo">
+      ${cover ? `<img src="${cover.thumb}" alt="${escapeHtml(hit.label)}" loading="lazy">` : ""}
+      <span class="badge">${hit.count} 张${hit.video_count ? ` · ${hit.video_count} 视频` : ""}</span>
+    </div>
+    <div class="cmp-body">
+      <div class="cmp-meta">${escapeHtml(evText)} · ${fmtDateShort(monthStart(c, m).toISOString())}</div>
+      <p class="cmp-note">${escapeHtml(note || "这个月的照片")}</p>
+      <div class="cmp-foot"><span class="cmp-meta">${hit.count} 张</span><button class="mini-link" data-month-drawer="${c.id}:${m}">看这个月 →</button></div>
+    </div>
+  </div>`;
+}
+
+function monthStart(c, m) { return addMonths(new Date(c.birth), m); }
+
+function renderComparison() {
+  const m = state.month;
+  $("#cmp-title").textContent = m === 0 ? "出生 · 同月龄对照" : `${monthLabel(m)} · 同月龄对照`;
+  const rows = state.data.comparison.months[m];
+  const yb = state.monthMap.yuebing.get(m);
+  const yy = state.monthMap.yuanyi.get(m);
+  const bits = [];
+  if (yb) bits.push(`月饼这个月有 ${yb.count} 张`);
+  if (yy) bits.push(`小七这个月有 ${yy.count} 张`);
+  if (!yb && !yy) bits.push("这个月两边都还没有照片");
+  $("#cmp-sub").textContent = bits.join(" · ");
+  $("#cmp-grid").innerHTML = state.data.children.map(c => cmpCard(c, m)).join("");
+}
+
+function renderTimelines() {
+  for (const c of state.data.children) {
+    const el = $(`#tl-${c.id}`);
+    const isYb = c.id === "yuebing";
+    let html = `<div class="tl-head"><div class="avatar">${isYb ? "卯" : "七"}</div><div class="name">${escapeHtml(c.nickname)}</div><div class="age">${ageParts(c.birth).label}</div></div>`;
+    if (c.before) {
+      const beforeCover = c.before.photos.find(p => (p.event || "").includes("到来之前")) || c.before.photos[0];
+      html += `<div class="month-card before-card">
+        <div class="month-cover">${beforeCover ? `<img src="${beforeCover.thumb}" alt="到来之前" loading="lazy">` : ""}</div>
+        <div class="month-body">
+          <div class="month-top"><span class="age-badge">序章</span><span class="month-date">${fmtDateShort(beforeCover?.date) || "日期不可考"}</span></div>
+          <div class="month-title">${escapeHtml(c.before.label)}</div>
+          <p class="month-note">${isYb ? "在月饼出生之前，先有了这张验孕棒。日期已不可考，但故事从这里开始。" : "小七出生之前，家里的最后一段二人世界与三口之家。"}</p>
+          <div class="month-foot"><span>${c.before.count} 张</span><button data-before-drawer="${c.id}">看这些照片 →</button></div>
+        </div>
+      </div>`;
+    }
+    const groups = new Map();
+    for (const m of c.months) {
+      const start = monthStart(c, m.month);
+      const y = start.getFullYear();
+      if (!groups.has(y)) groups.set(y, []);
+      groups.get(y).push({ m, start });
+    }
+    for (const [year, items] of groups) {
+      html += `<div class="year-block"><div class="year-head">${year}</div>`;
+      for (const { m, start } of items) {
+        const cover = state.photoMap.get(m.cover_id);
+        const total = m.featured_ids.length;
+        const thumbs = photosOf(c.id, m.featured_ids).slice(0, total > 6 ? 5 : total);
+        const more = Math.max(0, total - thumbs.length);
+        const cols = Math.max(1, thumbs.length + (more ? 1 : 0));
+        html += `<article class="month-card">
+          <div class="month-cover">${cover ? `<img src="${cover.thumb}" alt="${escapeHtml(m.label)}" loading="lazy">` : ""}</div>
+          <div class="month-body">
+            <div class="month-top"><span class="age-badge">${m.label}</span><span class="month-date">${fmtDateShort(start.toISOString())}</span></div>
+            <div class="month-title">${escapeHtml(m.events.slice(0, 2).join(" · ") || m.label)}</div>
+            <p class="month-note">${escapeHtml(m.note || `${m.count} 张照片`)}</p>
+            <div class="mini-strip" style="grid-template-columns:repeat(${cols},1fr)">${thumbs.map(p => `<img src="${p.thumb}" alt="" loading="lazy">`).join("")}${more ? `<div class="more">+${more}</div>` : ""}</div>
+            <div class="month-foot"><span>${m.count} 张${m.video_count ? ` · ${m.video_count} 视频` : ""}</span><button data-month-drawer="${c.id}:${m.month}">查看全部 →</button></div>
+          </div>
+        </article>`;
+      }
+      html += `</div>`;
+    }
+    el.innerHTML = html;
+  }
+}
+
+function openDrawer(childId, month) {
+  const c = child(childId);
+  const m = state.monthMap[childId].get(month);
+  if (!m) return;
+  state.drawer = { childId, month, ids: m.photo_ids };
+  $("#drawer-title").textContent = `${c.nickname} · ${m.label}`;
+  $("#drawer-meta").textContent = `${fmtDateShort(monthStart(c, month).toISOString())} · ${m.count} 张照片${m.video_count ? ` · ${m.video_count} 段视频` : ""} · ${m.events.join(" / ")}`;
+  $("#drawer-note").textContent = m.note || "这个月的照片。";
+  $("#drawer-grid").innerHTML = photosOf(childId, m.photo_ids).map((p, i) => `
+    <button data-lb="${childId}:${month}:${i}" aria-label="${escapeHtml(p.age_label)}">
+      <img src="${p.thumb}" alt="" loading="lazy">
+      ${p.is_video ? `<span class="vid">视频</span>` : ""}
+    </button>`).join("");
+  $("#drawer").classList.add("open");
+}
+function openBeforeDrawer(childId) {
+  const c = child(childId);
+  if (!c.before) return;
+  state.drawer = { childId, month: "before", ids: c.before.photos.map(p => p.id) };
+  $("#drawer-title").textContent = `${c.nickname} · ${c.before.label}`;
+  $("#drawer-meta").textContent = `${c.before.count} 张照片`;
+  $("#drawer-note").textContent = childId === "yuebing" ? "在月饼出生之前，先有了这张验孕棒。日期已不可考，但故事从这里开始。" : "小七出生之前，家里的最后一段二人世界与三口之家。";
+  $("#drawer-grid").innerHTML = c.before.photos.map((p, i) => `
+    <button data-lb="${childId}:before:${i}" aria-label="${escapeHtml(p.event)}">
+      <img src="${p.thumb}" alt="" loading="lazy">
+      ${p.is_video ? `<span class="vid">视频</span>` : ""}
+    </button>`).join("");
+  $("#drawer").classList.add("open");
+}
+function closeDrawer() {
+  $("#drawer").classList.remove("open");
+  state.drawer = null;
+}
+
+function openLightbox(childId, month, index) {
+  const c = child(childId);
+  let list;
+  if (month === "before") list = c.before.photos;
+  else list = photosOf(childId, state.monthMap[childId].get(month).photo_ids);
+  if (!list.length) return;
+  state.lb.list = list;
+  state.lb.index = Math.max(0, Math.min(list.length - 1, index));
+  renderLightbox();
+  $("#lightbox").classList.add("open");
+}
+function renderLightbox() {
+  const p = state.lb.list[state.lb.index];
+  if (!p) return;
+  $("#lb-img").src = p.display;
+  $("#lb-img").alt = p.caption || p.event || "";
+  $("#lb-pos").textContent = `${state.lb.index + 1} / ${state.lb.list.length}`;
+  $("#lb-cap").textContent = p.caption || p.event || "";
+  const bits = [];
+  if (p.date) bits.push(fmtDate(p.date));
+  if (p.age_label) bits.push(p.age_label);
+  if (p.event) bits.push(p.event);
+  if (p.date_confidence === "medium" && p.date_note) bits.push("日期推定");
+  $("#lb-meta").textContent = bits.join(" · ");
+  $("#lb-note").textContent = p.is_video ? p.video_note : "";
+}
+function lbStep(d) {
+  if (!state.lb.list.length) return;
+  state.lb.index = (state.lb.index + d + state.lb.list.length) % state.lb.list.length;
+  renderLightbox();
+}
+function closeLightbox() { $("#lightbox").classList.remove("open"); }
+
+function renderReport() {
+  const grid = $("#report-grid");
+  grid.innerHTML = state.data.children.map(c => {
+    const latest = c.months[c.months.length - 1];
+    const cover = latest ? state.photoMap.get(latest.cover_id) : null;
+    const photos = latest ? photosOf(c.id, latest.featured_ids).slice(0, 9) : [];
+    const isYb = c.id === "yuebing";
+    return `<article class="report-card">
+      <div class="report-head"><h3>${escapeHtml(c.nickname)}</h3><span class="tag">最近有照片 · ${latest ? latest.label : "—"} · ${latest ? fmtDateShort(monthStart(c, latest.month).toISOString()) : ""}</span></div>
+      <p class="report-lead">${escapeHtml(latest?.note || c.intro || "")}</p>
+      <div class="report-stats">
+        <div class="stat"><div class="v">${c.total_photos}</div><div class="k">照片</div></div>
+        <div class="stat"><div class="v">${c.total_videos}</div><div class="k">视频</div></div>
+        <div class="stat"><div class="v">${c.months.length}</div><div class="k">月龄段</div></div>
+      </div>
+      <div class="report-photos">${photos.map(p => `<img src="${p.thumb}" alt="" loading="lazy">`).join("")}</div>
+      <div class="report-foot"><span>${escapeHtml(c.birth_note || "")}</span><button class="btn-print" data-print>打印 / 存 PDF</button></div>
+    </article>`;
+  }).join("");
+}
+
+function preload() {
+  const urls = [];
+  for (const c of state.data.children) {
+    const first = c.months[c.months.length - 1];
+    if (first) {
+      const p = state.photoMap.get(first.cover_id);
+      if (p) urls.push(p.thumb);
+    }
+  }
+  urls.forEach(u => { const img = new Image(); img.src = u; });
+}
+
+function bind() {
+  $$(".tab").forEach(tab => tab.addEventListener("click", () => {
+    const v = tab.dataset.view;
+    $$(".tab").forEach(t => t.classList.toggle("active", t === tab));
+    $$(".section").forEach(s => s.classList.toggle("active", s.id === `view-${v}`));
+    if (v === "axis") renderComparison();
+  }));
+  $("#ruler-input").addEventListener("input", (e) => setMonth(Number(e.target.value)));
+  document.addEventListener("click", (e) => {
+    const md = e.target.closest("[data-month-drawer]");
+    if (md) { const [c, m] = md.dataset.monthDrawer.split(":"); openDrawer(c, Number(m)); return; }
+    const bd = e.target.closest("[data-before-drawer]");
+    if (bd) { openBeforeDrawer(bd.dataset.beforeDrawer); return; }
+    const lb = e.target.closest("[data-lb]");
+    if (lb) { const [c, m, i] = lb.dataset.lb.split(":"); openLightbox(c, m === "before" ? "before" : Number(m), Number(i)); return; }
+    const pr = e.target.closest("[data-print]");
+    if (pr) { window.print(); return; }
+    if (e.target.closest("[data-close-drawer]")) closeDrawer();
+  });
+  $("#drawer-close").addEventListener("click", closeDrawer);
+  $("#lb-close").addEventListener("click", closeLightbox);
+  $("#lb-prev").addEventListener("click", () => lbStep(-1));
+  $("#lb-next").addEventListener("click", () => lbStep(1));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      if ($("#lightbox").classList.contains("open")) closeLightbox();
+      else if ($("#drawer").classList.contains("open")) closeDrawer();
+    }
+    if ($("#lightbox").classList.contains("open")) {
+      if (e.key === "ArrowLeft") lbStep(-1);
+      if (e.key === "ArrowRight") lbStep(1);
+    }
+  });
+}
+
+initGate();
+bind();
+load().catch(err => {
+  document.querySelector(".wrap").insertAdjacentHTML("beforeend", `<div style="margin-top:20px;padding:14px;border:1px solid #d9b;border-radius:12px;background:#fff4f0;color:#8d4327;font-size:13px">数据加载失败：${escapeHtml(err.message)}。请通过 http 服务器打开本页，不要直接双击 HTML。</div>`);
+});
+</script>
+</body>
+</html>

@@ -41,6 +41,8 @@ PRIVATE_PREFIXES = (
     "tools/baby-name-board/", "tools/naming/",
     "tools/scattered-private/",
     "tools/yuebing-travels/",
+    "tools/growth/",  # 双宝成长对照轴(私人档案, 2026-10-27)
+    "tools/growth-share/",  # 双宝成长家庭分享版(单独家庭密码, 2026-10-28)
     "tools/work-report/",
     "tools/combo-report/",  # 组合类产品业务发展报告(密码门, 2026-09-15)
     "tools/token-usage/",  # Token 用量展板(密码门, 2026-09-14)

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-28T18:55:50",
+ "generated_at": "2026-10-29T12:28:17",
  "title": "双宝成长 · 家庭分享",
  "subtitle": "王斯卯 · 王元一",
  "measurements": [
@@ -8,14 +8,14 @@
    "date": "2023-02-23",
    "weight_g": 3270,
    "length_cm": 50,
-   "note": "出生"
+   "note": "出生（出生证明）"
   },
   {
    "child": "yuanyi",
    "date": "2026-10-20",
-   "weight_g": 3250,
+   "weight_g": 3225,
    "length_cm": 50,
-   "note": "出生"
+   "note": "出生（出生证明；足印卡 3250g）"
   }
  ],
  "children": [
@@ -26,14 +26,14 @@
    "english": "Mooncake",
    "sex": "男",
    "birth": "2023-02-23T01:02:00",
-   "birth_place": "北京",
+   "birth_place": "北京 · 北京妇产医院",
    "birth_weight_g": 3270,
    "birth_length_cm": 50,
    "color": "#c96f4a",
-   "birth_note": "2023.02.23 01:02 出生 · 3270g · 50cm",
-   "intro": "哥哥。2023 年 2 月 23 日凌晨出生，3 岁半已经走过 34 个地方。",
+   "birth_note": "2023.02.23 01:02 · 3270g · 50cm · 北京妇产医院",
+   "intro": "哥哥。2023 年 2 月 23 日凌晨 01:02 出生，北京妇产医院，3 岁半已经走过 34 个地方。",
    "current": {
-    "days": 1342,
+    "days": 1344,
     "months": 44,
     "label": "3 岁 8 个月"
    },
@@ -64,7 +64,7 @@
      "events": [
       "月饼家小月饼"
      ],
-     "note": "2023.02.23 01:02 出生 · 3270g · 50cm"
+     "note": "2023.02.23 01:02 · 3270g · 50cm · 北京妇产医院"
     },
     {
      "month": 1,
@@ -4888,16 +4888,18 @@
    "english": "Seven",
    "sex": "男",
    "birth": "2026-10-20T21:46:00",
-   "birth_place": "北京 · 美中宜和",
-   "birth_weight_g": 3250,
+   "birth_place": "北京 · 北京宜和医院（美中宜和）",
+   "birth_weight_g": 3225,
    "birth_length_cm": 50,
+   "birth_weight_card_g": 3250,
+   "birth_weight_source": "出生证明 3225g；足印卡 3250g",
    "color": "#7c8b6f",
-   "birth_note": "2026.10.20 21:46 出生 · 3250g · 50cm",
-   "intro": "弟弟。2026 年 10 月 20 日 21:46 出生，3250g，50cm。",
+   "birth_note": "2026.10.20 21:46 · 3225g · 50cm · 北京宜和医院（美中宜和）",
+   "intro": "弟弟。2026 年 10 月 20 日 21:46 出生，3225g（出生证明），50cm，北京宜和医院（美中宜和）。",
    "current": {
-    "days": 7,
+    "days": 8,
     "months": 0,
-    "label": "7 天"
+    "label": "8 天"
    },
    "total_photos": 12,
    "total_videos": 0,
@@ -5436,7 +5438,7 @@
      "yuebing": {
       "count": 12,
       "cover_id": "yuebing_20230304_102231_dbc7ef9b",
-      "note": "2023.02.23 01:02 出生 · 3270g · 50cm",
+      "note": "2023.02.23 01:02 · 3270g · 50cm · 北京妇产医院",
       "reached": true
      },
      "yuanyi": {

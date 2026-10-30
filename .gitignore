@@ -20,3 +20,4 @@ tools/growth/
 
 # 加密脚本留下的明文备份, 绝对不能提交
 *.plain.html.bak
+_plain_backup/

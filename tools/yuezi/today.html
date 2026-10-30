@@ -26,6 +26,7 @@ body{
 @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .top{height:6px;background:linear-gradient(90deg,var(--rose),var(--gold),var(--sage))}
 .head{padding:30px 26px 22px;text-align:center;border-bottom:1px dashed var(--line)}
+.tomorrow{font-size:11px;letter-spacing:.24em;color:var(--gold);font-weight:700;margin-bottom:6px}
 .date{font-family:"Noto Serif SC","STSong","Songti SC","SimSun",serif;
   font-size:34px;font-weight:700;letter-spacing:.02em;font-variant-numeric:tabular-nums;
   text-wrap:balance}
@@ -97,8 +98,16 @@ function esc(s){
 const all = [];
 PLAN.weeks.forEach(w => w.days.forEach(d => all.push({...d, week: w.week, theme: w.theme})));
 
-const now = new Date();
-now.setHours(0,0,0,0);
+const params = new URLSearchParams(location.search);
+const qs = params.get('date');
+let now;
+if (qs && /^\d{4}-\d{2}-\d{2}$/.test(qs)) {
+  const p = qs.split('-').map(Number);
+  now = new Date(p[0], p[1] - 1, p[2]);
+} else {
+  now = new Date();
+  now.setHours(0,0,0,0);
+}
 const n = Math.round((now - START) / 86400000);
 
 const card = document.getElementById('card');
@@ -134,6 +143,7 @@ if (day) {
   card.innerHTML =
     '<div class="top"></div>' +
     '<div class="head">' +
+      (qs ? '<div class="tomorrow">明日餐单</div>' : '') +
       '<div class="date">' + ymd(now) + '</div>' +
       '<div class="dayno">产后第 ' + (n + 1) + ' 天</div>' +
       '<div class="stage">' + esc(stageLabel) + '</div>' +
@@ -148,5 +158,6 @@ if (day) {
     '</div>';
 }
 </script>
+<script src="../../nav-fab.js"></script>
 </body>
 </html>

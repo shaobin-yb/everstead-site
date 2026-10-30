@@ -14,3 +14,9 @@ product-panel/_probe_*.py
 product-panel/_capture_test/
 .nav_marks/
 tools/yuebing-travels/_hevc_backup/
+
+# 私人相册: 仓库是公开的, 106MB 家庭照片不上线(2026-10-30 老板拍板)
+tools/growth/
+
+# 加密脚本留下的明文备份, 绝对不能提交
+*.plain.html.bak

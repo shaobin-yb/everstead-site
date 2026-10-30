@@ -1,377 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<!-- 投票汇总台（老板专用统计端，2026-10-13） -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#0b0620">
-<title>投票汇总台 · 老二小名</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>私密页面</title>
 <style>
-:root {
-  --bg: #0b0620;
-  --ink: #f5f3ff;
-  --ink2: #c9c3ee;
-  --muted: #8f88b8;
-  --line: rgba(255,255,255,.14);
-  --glass: rgba(255,255,255,.065);
-  --gold: #ffd23f;
-  --cyan: #00d4ff;
-  --violet: #8b5cf6;
-  --rainbow: linear-gradient(90deg,#ff3d8b,#ff8a00,#ffd23f,#35e08a,#00d4ff,#8b5cf6);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { -webkit-text-size-adjust: 100%; }
-body {
-  background: var(--bg); color: var(--ink);
-  font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
-  line-height: 1.65; padding: 0 0 96px; overflow-x: hidden;
-}
-.wrap { position: relative; z-index: 1; max-width: 880px; margin: 0 auto; padding: 0 18px; }
-h1, h2 { text-wrap: balance; }
-.num { font-variant-numeric: tabular-nums; }
-
-header { padding: 44px 0 4px; }
-.title-row { display: flex; align-items: center; gap: 14px; }
-.seal {
-  width: 54px; height: 54px; flex: none;
-  background: var(--rainbow); background-size: 400% 100%;
-  color: #fff; display: grid; place-items: center;
-  font-size: 20px; font-weight: 800; line-height: 1.15;
-  border-radius: 14px; text-align: center;
-  box-shadow: 0 6px 24px rgba(255,61,139,.35);
-  text-shadow: 0 1px 4px rgba(0,0,0,.25);
-}
-h1 {
-  font-size: 26px; font-weight: 800;
-  background: var(--rainbow); background-size: 300% 100%;
-  -webkit-background-clip: text; background-clip: text;
-  -webkit-text-fill-color: transparent; color: transparent;
-}
-.sub { color: var(--ink2); margin-top: 6px; font-size: 14px; }
-
-.panel {
-  margin-top: 22px; border-radius: 16px; padding: 18px 18px 16px;
-  background: var(--glass); border: 1px solid var(--line);
-}
-.panel h2 { font-size: 16px; margin-bottom: 10px; }
-textarea {
-  width: 100%; border: 1px solid var(--line); border-radius: 12px;
-  padding: 12px; font-size: 14px; line-height: 1.7;
-  background: rgba(255,255,255,.06); color: var(--ink);
-  min-height: 140px; resize: vertical; font-family: inherit;
-}
-textarea::placeholder { color: var(--muted); }
-.toolbar { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
-.tbtn {
-  border: 1px solid var(--line); background: rgba(255,255,255,.08); color: var(--ink);
-  border-radius: 10px; padding: 10px 18px; min-height: 44px;
-  font-size: 14px; font-weight: 700; cursor: pointer;
-  transition: background-color .2s, border-color .2s, color .2s, transform .12s;
-}
-.tbtn:active { transform: scale(.97); }
-.tbtn.primary { background: linear-gradient(135deg, var(--cyan), var(--violet)); border-color: transparent; color: #fff; }
-.tbtn.done { background: linear-gradient(135deg, #35e08a, #0f9678); border-color: transparent; color: #fff; }
-
-.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 22px; }
-.stat { background: var(--glass); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
-.stat .num { font-size: 28px; font-weight: 800; }
-.stat .lbl { color: var(--ink2); font-size: 13px; }
-.stat.c1 .num { color: var(--cyan); }
-.stat.c2 .num { color: #ff8a00; }
-.stat.c3 .num { color: var(--muted); }
-
-.rankbox { margin-top: 24px; }
-.rankbox h2 { font-size: 18px; margin-bottom: 12px; }
-.bar-row { display: grid; grid-template-columns: 44px 84px 1fr 64px; align-items: center; gap: 10px; margin: 8px 0; }
-.bar-row .rk { font-family: Georgia, serif; font-weight: 700; color: var(--muted); font-size: 15px; }
-.bar-row.r1 .rk { color: var(--gold); }
-.bar-row.r2 .rk { color: #cfd6e6; }
-.bar-row.r3 .rk { color: #e0a06a; }
-.bar-row .nm { font-weight: 800; font-size: 16px; }
-.track { height: 16px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
-.fill { height: 100%; border-radius: 999px; width: 0; transition: width .5s ease-out; }
-.bar-row .ct { text-align: right; font-weight: 700; color: var(--ink2); }
-.zero-line { margin-top: 10px; color: var(--muted); font-size: 13px; }
-
-.detail { margin-top: 26px; }
-.detail h2 { font-size: 18px; margin-bottom: 10px; }
-table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
-th { color: var(--ink2); font-size: 13px; font-weight: 700; }
-td.who { font-weight: 700; white-space: nowrap; }
-td.picks { color: var(--ink); }
-td.msg { color: var(--ink2); font-size: 13px; }
-.badge { display: inline-block; font-size: 11px; border-radius: 999px; padding: 1px 8px; margin-left: 6px;
-  background: rgba(255,210,63,.15); border: 1px solid rgba(255,210,63,.5); color: var(--gold); }
-.warnbox { margin-top: 18px; border-radius: 12px; padding: 12px 14px; font-size: 13px;
-  background: rgba(255,86,120,.10); border: 1px solid rgba(255,86,120,.35); color: #ffb3c4; }
-.warnbox b { color: #ffd7e0; }
-footer { margin-top: 44px; color: var(--muted); font-size: 12.5px; line-height: 1.9; text-wrap: pretty; }
-footer b { color: var(--ink2); }
-@media (max-width: 620px) {
-  h1 { font-size: 21px; }
-  .bar-row { grid-template-columns: 34px 72px 1fr 54px; gap: 8px; }
-  th, td { padding: 8px 6px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; }
-}
+:root{--ink:#2b241c;--paper:#faf7f2;--line:#e6ded1;--gold:#c9a227}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 600px at 50% -10%,#fff 0%,var(--paper) 55%,#f2ece2 100%);
+color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+display:flex;align-items:center;justify-content:center;padding:24px}
+.gate{max-width:360px;width:100%;background:rgba(255,253,248,.92);border:1px solid var(--line);
+border-radius:22px;padding:40px 30px;text-align:center;box-shadow:0 18px 50px rgba(74,55,35,.10)}
+.lock{font-size:28px;margin-bottom:14px}
+h1{font-size:17px;font-weight:600;letter-spacing:.08em;margin:0 0 6px}
+p{font-size:12.5px;color:#8a7f6f;margin:0 0 22px;line-height:1.7}
+input{width:100%;padding:13px 16px;font-size:16px;letter-spacing:.3em;text-align:center;
+border:1px solid var(--line);border-radius:14px;background:#fff;outline:none;transition:border-color .25s,box-shadow .25s}
+input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.15)}
+button{width:100%;margin-top:12px;padding:13px;font-size:14.5px;font-weight:600;
+border:0;border-radius:14px;background:var(--ink);color:#fff;cursor:pointer;transition:opacity .2s}
+button:hover{opacity:.88}
+button[disabled]{opacity:.55;cursor:default}
+.err{animation:shake .4s}
+.msg{font-size:12px;color:#b4544a;height:16px;margin-top:10px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 </style>
 </head>
 <body>
-<div class="wrap">
-
-<header>
-  <div class="title-row">
-    <div class="seal">汇<br>总</div>
-    <div>
-      <h1>投票汇总台 · 老二小名</h1>
-      <div class="sub">把家庭群里家人的投票消息整段复制、粘贴到下面——自动出榜单。可增量粘贴，重复内容自动去重；数据只存在本机浏览器。</div>
-    </div>
-  </div>
-</header>
-
-<div class="panel">
-  <h2>粘贴区</h2>
-  <textarea id="src" placeholder="例：
-【老二小名投票】我是爷爷。我投：赤兔、小九九、小七。 想说的话：马年大吉 —— 2026 赤马年 · 全家给小马选小名
-（把群里所有投票消息一次全选复制进来即可，不用整理）"></textarea>
-  <div class="toolbar">
-    <button class="tbtn primary" id="sumBtn" type="button">汇总</button>
-    <button class="tbtn" id="demoBtn" type="button">填入示例</button>
-    <button class="tbtn" id="copySumBtn" type="button">复制小结文案</button>
-    <button class="tbtn" id="clearBtn" type="button">清空</button>
-  </div>
+<div class="gate" id="gate">
+  <div class="lock">🔒</div>
+  <h1>私密内容</h1>
+  <p>请输入访问密码</p>
+  <input type="password" id="pw" placeholder="••••••" autocomplete="off" inputmode="numeric">
+  <button id="btn">解锁</button>
+  <div class="msg" id="msg"></div>
 </div>
-
-<div class="stats">
-  <div class="stat c1"><div class="num" id="stVotes">0</div><div class="lbl">有效票数</div></div>
-  <div class="stat c2"><div class="num" id="stPpl">0</div><div class="lbl">参与人数</div></div>
-  <div class="stat c3"><div class="num" id="stDup">0</div><div class="lbl">自动去重</div></div>
-</div>
-
-<div class="rankbox" id="rankbox" hidden>
-  <h2>得票榜</h2>
-  <div id="bars"></div>
-  <div class="zero-line" id="zeroLine"></div>
-</div>
-
-<div class="detail" id="detail" hidden>
-  <h2>投票明细</h2>
-  <table>
-    <thead><tr><th>称呼</th><th>投了谁</th><th>留言</th></tr></thead>
-    <tbody id="vtbody"></tbody>
-  </table>
-</div>
-
-<div id="warnArea"></div>
-
-<footer>
-  <p><b>怎么用</b>：微信群 / 飞书群 → 多选家人的投票消息 → 复制（文本）→ 粘贴到上面 → 自动出榜。每有新票，重贴一次全部消息即可（重复的会被自动去掉）。</p>
-  <p><b>解析规则</b>：识别「【老二小名投票】我是X。我投：A、B、C。」格式——就是投票页「生成投票结果」的那段话。认不出的片段会单独列出来提醒。</p>
-  <p>铁蛋 · 2026-10-13 · 本页不公开、不索引</p>
-</footer>
-
-</div>
-
 <script>
-'use strict';
-/* 与投票页同一套名字与色相（hue = 序号 × 24） */
-const NAMES = ['赤兔','小葫芦','兔儿爷','嘚驾','雪饼','小七','蟹蟹','小九九','哒哒','大白兔','哇塞','团子','酥酥','嘚瑟','小皮蛋'];
-const NAME_IDX = {};
-NAMES.forEach(function (n, i) { NAME_IDX[n] = i; });
+(function(){
+  var SALT = Uint8Array.from(atob('2Jl1j7G1L6SjKnN7MkX/xA=='), function(c){return c.charCodeAt(0)});
+  var IV   = Uint8Array.from(atob('pCR+uvKBD7ChmTdO'),   function(c){return c.charCodeAt(0)});
+  var ITER = 600000;
+  var gate = document.getElementById('gate');
+  var input = document.getElementById('pw');
+  var btn = document.getElementById('btn');
+  var msg = document.getElementById('msg');
 
-var SAMPLE = [
-'【老二小名投票】我是爷爷。我投：赤兔、小九九、小七。 想说的话：马年大吉 —— 2026 赤马年 · 全家给小马选小名',
-'【老二小名投票】我是姥姥。我投：小葫芦、赤兔、兔儿爷。 —— 2026 赤马年 · 全家给小马选小名',
-'【老二小名投票】我是妈妈。我投：小七、哒哒、小葫芦。 想说的话：先投这三个，都好听 —— 2026 赤马年 · 全家给小马选小名'
-].join('\n');
-
-var LS_KEY = 'nickname-tally-v1';
-var src = document.getElementById('src');
-
-/* ── 解析 ── */
-function parseVotes(text) {
-  var chunks = text.split('【老二小名投票】');
-  chunks.shift();
-  var voters = [], seen = {}, deduped = 0;
-  var unknownLines = [];
-  chunks.forEach(function (chunk) {
-    var raw = chunk.replace(/\s+$/, '');
-    var whoM = chunk.match(/^我是([^。\n]+)/);
-    if (!whoM) { if (raw) unknownLines.push('【…】' + raw.slice(0, 40)); return; }
-    var seg = chunk.split(/我投[：:]/)[1];
-    if (seg === undefined) { unknownLines.push('【…】' + raw.slice(0, 40)); return; }
-    seg = seg.split(/[。\n]/)[0].split('想说的话')[0].split('——')[0];
-    var toks = seg.split(/[、，,\/]+/).map(function (s) { return s.replace(/[\s　]+/g, ''); }).filter(Boolean);
-    var names = [], invalid = [];
-    toks.forEach(function (t) {
-      if (NAME_IDX[t] !== undefined) names.push(t); else invalid.push(t);
-    });
-    var msgM = chunk.match(/想说的话[：:]\s*([^\n—]*)/);
-    var msg = msgM ? msgM[1].replace(/[\s　]+$/, '') : '';
-    var key = whoM[1] + '|' + names.join('+') + '|' + invalid.join('+') + '|' + msg;
-    if (seen[key]) { deduped++; return; }
-    seen[key] = 1;
-    voters.push({ who: whoM[1], names: names, invalid: invalid, msg: msg });
-  });
-  return { voters: voters, deduped: deduped, unknownLines: unknownLines };
-}
-
-/* ── 渲染 ── */
-function render() {
-  var res = parseVotes(src.value);
-  var voters = res.voters;
-
-  /* 统计 */
-  var counts = {}, pickers = {};
-  NAMES.forEach(function (n) { counts[n] = 0; });
-  voters.forEach(function (v) {
-    v.names.forEach(function (n) { counts[n]++; });
-  });
-  var whoCount = {};
-  voters.forEach(function (v) { whoCount[v.who] = (whoCount[v.who] || 0) + 1; });
-  var uniq = Object.keys(whoCount).length;
-
-  document.getElementById('stVotes').textContent = voters.length;
-  document.getElementById('stPpl').textContent = uniq;
-  document.getElementById('stDup').textContent = res.deduped;
-
-  /* 得票榜 */
-  var rankbox = document.getElementById('rankbox');
-  var bars = document.getElementById('bars');
-  var voted = NAMES.map(function (n, i) { return { n: n, i: i, c: counts[n] }; })
-    .filter(function (x) { return x.c > 0; })
-    .sort(function (a, b) { return b.c - a.c || a.i - b.i; });
-  if (voted.length) {
-    rankbox.hidden = false;
-    var max = voted[0].c;
-    bars.innerHTML = voted.map(function (x, r) {
-      var hue = (x.i * 24) % 360;
-      return '<div class="bar-row' + (r < 3 ? ' r' + (r + 1) : '') + '">' +
-        '<span class="rk">#' + (r + 1) + '</span>' +
-        '<span class="nm" style="color:hsl(' + hue + ',95%,78%)">' + x.n + '</span>' +
-        '<span class="track"><span class="fill" style="width:' + Math.round(x.c / max * 100) + '%;background:linear-gradient(90deg,hsl(' + hue + ',92%,58%),hsl(' + ((hue + 50) % 360) + ',92%,60%))"></span></span>' +
-        '<span class="ct num">' + x.c + ' 票</span>' +
-        '</div>';
-    }).join('');
-    var zeros = NAMES.filter(function (n) { return counts[n] === 0; });
-    document.getElementById('zeroLine').textContent = zeros.length ? '还没得票：' + zeros.join('、') : '';
-  } else {
-    rankbox.hidden = true;
+  function b64ToBytes(b64){
+    var bin = atob(b64), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
   }
 
-  /* 明细 */
-  var detail = document.getElementById('detail');
-  if (voters.length) {
-    detail.hidden = false;
-    document.getElementById('vtbody').innerHTML = voters.map(function (v) {
-      var dup = whoCount[v.who] > 1 ? '<span class="badge">重复称呼 ×' + whoCount[v.who] + '</span>' : '';
-      var picks = v.names.length ? v.names.join('、') : '<span style="color:#ffb3c4">（没有有效名字）</span>';
-      return '<tr><td class="who">' + v.who + dup + '</td><td class="picks">' + picks + '</td><td class="msg">' + (v.msg || '—') + '</td></tr>';
-    }).join('');
-  } else {
-    detail.hidden = true;
+  async function unlock(){
+    var pw = input.value;
+    if (!pw) return;
+    btn.disabled = true; msg.textContent = '';
+    try {
+      var km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+      var key = await crypto.subtle.deriveKey(
+        {name:'PBKDF2', salt:SALT, iterations:ITER, hash:'SHA-256'},
+        km, {name:'AES-GCM', length:256}, false, ['decrypt']);
+      var res = await fetch('tally.html.enc?_=' + Date.now(), {cache:'no-store'});
+      if (!res.ok) throw new Error('密文加载失败');
+      var buf = await res.arrayBuffer();
+      var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv:IV}, key, buf);
+      var html = new TextDecoder().decode(plain);
+      document.open('text/html', 'replace');
+      document.write(html);
+      document.close();
+    } catch(e) {
+      gate.classList.remove('err'); void gate.offsetWidth; gate.classList.add('err');
+      msg.textContent = '密码不对，或浏览器不支持';
+      input.value = ''; input.focus();
+      btn.disabled = false;
+    }
   }
 
-  /* 异常提醒 */
-  var warns = [];
-  var badToks = {};
-  voters.forEach(function (v) { v.invalid.forEach(function (t) { badToks[t] = (badToks[t] || 0) + 1; }); });
-  Object.keys(badToks).forEach(function (t) {
-    warns.push('不认识的名字「' + t + '」× ' + badToks[t] + '——可能是手打了错字，或不在 15 席里。');
-  });
-  if (res.unknownLines.length) {
-    warns.push('有 ' + res.unknownLines.length + ' 段内容认不出格式（比如被截断的消息）：<br>' +
-      res.unknownLines.map(function (x) { return '· ' + x.replace(/</g, '&lt;'); }).join('<br>'));
-  }
-  document.getElementById('warnArea').innerHTML = warns.length
-    ? '<div class="warnbox"><b>要人盯一眼：</b><br>' + warns.join('<br>') + '</div>'
-    : '';
-
-  return { voters: voters, counts: counts, voted: voted, uniq: uniq };
-}
-
-/* ── 小结文案 ── */
-var lastState = null;
-function buildSummary() {
-  var s = lastState || render();
-  if (!s.voters.length) return '';
-  var top = s.voted.map(function (x) { return x.n + ' ' + x.c + ' 票'; }).join('、');
-  var now = new Date();
-  var stamp = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') +
-    ' ' + String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
-  return '【小名投票·小结】已收到 ' + s.uniq + ' 位家人的 ' + s.voters.length + ' 票：' + top + '。（截至 ' + stamp + '，最终爸爸妈妈拍板）';
-}
-
-/* ── 事件 ── */
-document.getElementById('sumBtn').addEventListener('click', function () {
-  lastState = render();
-  if (lastState.voters.length) { toastInline('已汇总 ✓'); }
-});
-document.getElementById('demoBtn').addEventListener('click', function () {
-  src.value = SAMPLE;
-  lastState = render();
-  saveLS();
-});
-document.getElementById('clearBtn').addEventListener('click', function () {
-  src.value = '';
-  lastState = render();
-  saveLS();
-});
-document.getElementById('copySumBtn').addEventListener('click', function () {
-  var text = buildSummary();
-  if (!text) { toastInline('先粘点投票消息进来'); return; }
-  var btn = this;
-  function done(ok) {
-    if (ok) {
-      btn.textContent = '已复制 ✓'; btn.classList.add('done');
-      setTimeout(function () { btn.textContent = '复制小结文案'; btn.classList.remove('done'); }, 2200);
-    } else { toastInline('复制失败，可以手动选中下面的文字'); }
-  }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
-  } else { done(false); }
-  /* 兜底显示：把小结写进粘贴区上方一行，可长按复制 */
-  var tip = document.getElementById('sumTip') || (function () {
-    var d = document.createElement('div');
-    d.id = 'sumTip';
-    d.style.cssText = 'margin-top:10px;font-size:13.5px;color:var(--ink2);word-break:break-all';
-    src.parentNode.insertBefore(d, src.nextSibling);
-    return d;
-  })();
-  tip.textContent = text;
-});
-
-src.addEventListener('input', function () {
-  lastState = render();
-  saveLS();
-});
-
-/* 轻提示（页面内小条） */
-var tEl = null, tTimer = null;
-function toastInline(msg) {
-  if (!tEl) {
-    tEl = document.createElement('div');
-    tEl.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);background:rgba(22,12,46,.94);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:13.5px;font-weight:600;border-radius:999px;padding:9px 18px;opacity:0;transition:opacity .25s;z-index:1000';
-    document.body.appendChild(tEl);
-  }
-  tEl.textContent = msg;
-  tEl.style.opacity = '1';
-  clearTimeout(tTimer);
-  tTimer = setTimeout(function () { tEl.style.opacity = '0'; }, 1600);
-}
-
-/* 本机持久化 */
-function saveLS() { try { localStorage.setItem(LS_KEY, src.value); } catch (e) {} }
-try {
-  var saved = localStorage.getItem(LS_KEY);
-  if (saved) src.value = saved;
-} catch (e) {}
-
-lastState = render();
+  btn.addEventListener('click', unlock);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+  input.focus();
+})();
 </script>
-<script src="../../nav-fab.js"></script>
 </body>
 </html>

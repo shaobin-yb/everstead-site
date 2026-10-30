@@ -1,187 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>奔雷三十 · 粗犷奔放 · 王姓男孩</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>私密页面</title>
 <style>
-:root{
-  --surf:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
-  --line:#e1e0d9; --jiang:#C23B2E; --gold:#C79A2B;
-  --tai:#2d8f5f; --warn:#c07a1a; --blue:#2d5f8f;
-}
+:root{--ink:#2b241c;--paper:#faf7f2;--line:#e6ded1;--gold:#c9a227}
 *{box-sizing:border-box}
-body{margin:0;background:var(--page);color:var(--ink);
-  font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
-  -webkit-font-smoothing:antialiased;line-height:1.6}
-.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
-header{padding:30px 4px 22px;border-bottom:1px solid var(--line);margin-bottom:14px}
-h1{margin:0 0 8px;font-size:clamp(26px,4.6vw,40px);letter-spacing:.14em;
-  font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
-h1 .seal{display:inline-block;background:var(--jiang);color:#fff;font-size:.5em;
-  padding:.28em .5em;border-radius:4px;vertical-align:.62em;letter-spacing:.1em;
-  margin-left:14px;font-family:inherit}
-.sub{color:var(--ink2);font-size:14.5px;margin:2px 0 0}
-.sub b{color:var(--jiang)}
-.sub a{color:var(--blue);text-decoration:none;border-bottom:1px solid var(--blue)}
-.intro{font-size:13.5px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
-  border-left:3px solid var(--jiang);border-radius:10px;padding:14px 18px;margin:18px 0;
-  line-height:2}
-.intro b{color:var(--ink)}
-.ccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px}
-.ccard{background:var(--surf);border:1px solid var(--line);border-radius:11px;padding:11px 15px}
-.ctop{display:flex;align-items:baseline;gap:10px;margin-bottom:2px}
-.num{font-size:11.5px;color:var(--jiang);font-weight:700;font-variant-numeric:tabular-nums}
-.cnm{font-size:21px;font-weight:700;letter-spacing:.08em;
-  font-family:"Songti SC","STSong","SimSun",serif}
-.cnote{font-size:12.5px;color:var(--ink2);margin:0}
-footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);
-  font-size:12.5px;color:var(--muted);line-height:1.9}
-footer b{color:var(--ink2)}
-@media (max-width:560px){ .ccards{grid-template-columns:1fr} }
+html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 600px at 50% -10%,#fff 0%,var(--paper) 55%,#f2ece2 100%);
+color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+display:flex;align-items:center;justify-content:center;padding:24px}
+.gate{max-width:360px;width:100%;background:rgba(255,253,248,.92);border:1px solid var(--line);
+border-radius:22px;padding:40px 30px;text-align:center;box-shadow:0 18px 50px rgba(74,55,35,.10)}
+.lock{font-size:28px;margin-bottom:14px}
+h1{font-size:17px;font-weight:600;letter-spacing:.08em;margin:0 0 6px}
+p{font-size:12.5px;color:#8a7f6f;margin:0 0 22px;line-height:1.7}
+input{width:100%;padding:13px 16px;font-size:16px;letter-spacing:.3em;text-align:center;
+border:1px solid var(--line);border-radius:14px;background:#fff;outline:none;transition:border-color .25s,box-shadow .25s}
+input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.15)}
+button{width:100%;margin-top:12px;padding:13px;font-size:14.5px;font-weight:600;
+border:0;border-radius:14px;background:var(--ink);color:#fff;cursor:pointer;transition:opacity .2s}
+button:hover{opacity:.88}
+button[disabled]{opacity:.55;cursor:default}
+.err{animation:shake .4s}
+.msg{font-size:12px;color:#b4544a;height:16px;margin-top:10px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-  <h1>奔雷三十<span class="seal">王</span></h1>
-  <p class="sub">粗犷奔放豪气 30 名 · 太白/边塞/汉魏/项羽一路 · 已查重 · 出生后以真八字收网 &nbsp;|&nbsp; <a href="overview.html">总览</a> · <a href="yanggang.html">刚骨三十</a> · <a href="baiming.html">百名帖</a> · <a href="directions.html">起名方向</a></p>
-</header>
+<div class="gate" id="gate">
+  <div class="lock">🔒</div>
+  <h1>私密内容</h1>
+  <p>请输入访问密码</p>
+  <input type="password" id="pw" placeholder="••••••" autocomplete="off" inputmode="numeric">
+  <button id="btn">解锁</button>
+  <div class="msg" id="msg"></div>
+</div>
+<script>
+(function(){
+  var SALT = Uint8Array.from(atob('bR9jfvtyNVts2EDhC3Ad7w=='), function(c){return c.charCodeAt(0)});
+  var IV   = Uint8Array.from(atob('nF5KXEExYvF1GwgU'),   function(c){return c.charCodeAt(0)});
+  var ITER = 600000;
+  var gate = document.getElementById('gate');
+  var input = document.getElementById('pw');
+  var btn = document.getElementById('btn');
+  var msg = document.getElementById('msg');
 
-<p class="intro">刚骨三十取的是庙堂之骨，这三十个放的是<b>江湖山海的气</b>——太白的长风、边塞的关山、项羽的拔山扛鼎。<br>
-豪气不靠凶字，靠大景和动势；一样对过原文、过过查重，一样等出生后的真八字。</p>
+  function b64ToBytes(b64){
+    var bin = atob(b64), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
 
-<div class="ccards">
-<div class="ccard">
-  <div class="ctop"><span class="num">01</span><span class="cnm">王万里</span></div>
-  <p class="cnote">李白「长风万里送秋雁」与「万里写入胸怀间」——胸中装得下万里河山。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">02</span><span class="cnm">王千帆</span></div>
-  <p class="cnote">「沉舟侧畔千帆过」——千帆竞发，他自有一帆。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">03</span><span class="cnm">王沧海</span></div>
-  <p class="cnote">「直挂云帆济沧海」——沧海在前，云帆在后。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">04</span><span class="cnm">王破浪</span></div>
-  <p class="cnote">「长风破浪会有时」——风越大，浪越值得破。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">05</span><span class="cnm">王鹏举</span></div>
-  <p class="cnote">岳飞表字鹏举；庄子大鹏「一日同风起，扶摇直上九万里」。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">06</span><span class="cnm">王九万</span></div>
-  <p class="cnote">《庄子》「抟扶摇而上者九万里」——不是九万里，是志在九万里。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">07</span><span class="cnm">王龙城</span></div>
-  <p class="cnote">「但使龙城飞将在」——飞将守城，城里有他的名字。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">08</span><span class="cnm">王燕然</span></div>
-  <p class="cnote">窦宪破匈奴，勒石燕然——边功的最高处。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">09</span><span class="cnm">王长河</span></div>
-  <p class="cnote">王维「长河落日圆」——大漠之上，长河落日（长读 cháng）。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">10</span><span class="cnm">王关山</span></div>
-  <p class="cnote">「关山度若飞」——关山在前，脚步若飞。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">11</span><span class="cnm">王金戈</span></div>
-  <p class="cnote">辛弃疾「金戈铁马，气吞万里如虎」——金戈之响。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">12</span><span class="cnm">王冰河</span></div>
-  <p class="cnote">陆游「铁马冰河入梦来」——连梦里都是铁马冰河。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">13</span><span class="cnm">王千骑</span></div>
-  <p class="cnote">苏轼「千骑卷平冈」——千骑卷过山冈（骑字多音，名中读 qí）。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">14</span><span class="cnm">王擎苍</span></div>
-  <p class="cnote">苏轼「左牵黄，右擎苍」——臂上举鹰，眼里有长空。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">15</span><span class="cnm">王挽澜</span></div>
-  <p class="cnote">「挽狂澜于既倒」——风浪越大，越有人要站在前面。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">16</span><span class="cnm">王昆仑</span></div>
-  <p class="cnote">万山之祖——莽昆仑，横空出世。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">17</span><span class="cnm">王观海</span></div>
-  <p class="cnote">曹操「东临碣石，以观沧海」——站高处，看海。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">18</span><span class="cnm">王洪波</span></div>
-  <p class="cnote">曹操「秋风萧瑟，洪波涌起」——大波大浪，壮阔有声。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">19</span><span class="cnm">王拔山</span></div>
-  <p class="cnote">项羽「力拔山兮气盖世」——一个少年，敢拔山。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">20</span><span class="cnm">王扛鼎</span></div>
-  <p class="cnote">项羽「力能扛鼎」——扛鼎之力，从少年始。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">21</span><span class="cnm">王长风</span></div>
-  <p class="cnote">「长风破浪会有时」——长风起处，自有远航（长读 cháng）。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">22</span><span class="cnm">王长空</span></div>
-  <p class="cnote">「鹰击长空」——天空是用来击穿的（长读 cháng）。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">23</span><span class="cnm">王鹰扬</span></div>
-  <p class="cnote">《诗经》「维师尚父，时维鹰扬」——鹰扬之姿，牧野之勇。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">24</span><span class="cnm">王惊涛</span></div>
-  <p class="cnote">苏轼「惊涛拍岸，卷起千堆雪」——惊涛拍岸，气势自见。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">25</span><span class="cnm">王横海</span></div>
-  <p class="cnote">汉代「横海将军」——横绝沧海之志。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">26</span><span class="cnm">王鲸波</span></div>
-  <p class="cnote">鲸波怒浪——巨鲸过处，皆是波涛。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">27</span><span class="cnm">王莽苍</span></div>
-  <p class="cnote">《庄子》「适莽苍者」——苍茫原野，任他闯。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">28</span><span class="cnm">王朔风</span></div>
-  <p class="cnote">《木兰诗》「朔气传金柝」——塞北的风，硬。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">29</span><span class="cnm">王风雷</span></div>
-  <p class="cnote">《周易》「风雷，益」——风雷激荡，正宜大展。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">30</span><span class="cnm">王射潮</span></div>
-  <p class="cnote">吴越王钱镠「射潮」筑塘——潮头敢射，海塘始成。</p>
-</div>
+  async function unlock(){
+    var pw = input.value;
+    if (!pw) return;
+    btn.disabled = true; msg.textContent = '';
+    try {
+      var km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+      var key = await crypto.subtle.deriveKey(
+        {name:'PBKDF2', salt:SALT, iterations:ITER, hash:'SHA-256'},
+        km, {name:'AES-GCM', length:256}, false, ['decrypt']);
+      var res = await fetch('benlei.html.enc?_=' + Date.now(), {cache:'no-store'});
+      if (!res.ok) throw new Error('密文加载失败');
+      var buf = await res.arrayBuffer();
+      var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv:IV}, key, buf);
+      var html = new TextDecoder().decode(plain);
+      document.open('text/html', 'replace');
+      document.write(html);
+      document.close();
+    } catch(e) {
+      gate.classList.remove('err'); void gate.offsetWidth; gate.classList.add('err');
+      msg.textContent = '密码不对，或浏览器不支持';
+      input.value = ''; input.focus();
+      btn.disabled = false;
+    }
+  }
 
-</div>
-
-<footer>
-  <b>口径</b>：本页 30 个为叔叔命名草案（粗犷奔放向），未走五格评分；全部对 886 名占用集合查重通过；长(cháng)、骑(qí)为已标注多音。<br>
-  <b>红线</b>：所有名字均为候选；大名小名均未定，拟议名不得升格；出生后结合真八字收网。<br>
-  <b>生成</b>：2026-10-16 · 铁蛋 · naming/_benlei_build.py
-</footer>
-</div>
-<script src="naming-fx.js"></script>
-<script src="../../nav-fab.js"></script>
+  btn.addEventListener('click', unlock);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+  input.focus();
+})();
+</script>
 </body>
 </html>

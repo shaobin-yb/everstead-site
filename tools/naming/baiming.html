@@ -1,482 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>百名帖 · 铁蛋给二宝的一百个名字</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>私密页面</title>
 <style>
-:root{
-  --surf:#fcfcfb; --page:#f9f9f7; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
-  --line:#e1e0d9; --jiang:#C23B2E; --gold:#C79A2B;
-  --tai:#2d8f5f; --warn:#c07a1a; --blue:#2d5f8f;
-}
+:root{--ink:#2b241c;--paper:#faf7f2;--line:#e6ded1;--gold:#c9a227}
 *{box-sizing:border-box}
-body{margin:0;background:var(--page);color:var(--ink);
-  font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
-  -webkit-font-smoothing:antialiased;line-height:1.6}
-.wrap{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
-header{padding:30px 4px 22px;border-bottom:1px solid var(--line);margin-bottom:14px}
-h1{margin:0 0 8px;font-size:clamp(26px,4.6vw,40px);letter-spacing:.14em;
-  font-family:"Songti SC","STSong","SimSun",serif;font-weight:700}
-h1 .seal{display:inline-block;background:var(--jiang);color:#fff;font-size:.5em;
-  padding:.28em .5em;border-radius:4px;vertical-align:.62em;letter-spacing:.1em;
-  margin-left:14px;font-family:inherit}
-.sub{color:var(--ink2);font-size:14.5px;margin:2px 0 0}
-.sub b{color:var(--jiang)}
-.sub a{color:var(--blue);text-decoration:none;border-bottom:1px solid var(--blue)}
-.intro{font-size:13.5px;color:var(--ink2);background:var(--surf);border:1px solid var(--line);
-  border-left:3px solid var(--jiang);border-radius:10px;padding:14px 18px;margin:18px 0;
-  line-height:2}
-.intro b{color:var(--ink)}
-h3.gtitle{font-size:17px;letter-spacing:.1em;margin:28px 0 8px;padding-left:10px;
-  border-left:4px solid var(--gold);font-family:"Songti SC","STSong","SimSun",serif}
-.ccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px}
-.ccard{background:var(--surf);border:1px solid var(--line);border-radius:11px;padding:11px 15px}
-.ctop{display:flex;align-items:baseline;gap:10px;margin-bottom:2px}
-.num{font-size:11.5px;color:var(--jiang);font-weight:700;font-variant-numeric:tabular-nums}
-.cnm{font-size:21px;font-weight:700;letter-spacing:.08em;
-  font-family:"Songti SC","STSong","SimSun",serif}
-.cnote{font-size:12.5px;color:var(--ink2);margin:0}
-footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);
-  font-size:12.5px;color:var(--muted);line-height:1.9}
-footer b{color:var(--ink2)}
-@media (max-width:560px){ .ccards{grid-template-columns:1fr} }
+html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 600px at 50% -10%,#fff 0%,var(--paper) 55%,#f2ece2 100%);
+color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+display:flex;align-items:center;justify-content:center;padding:24px}
+.gate{max-width:360px;width:100%;background:rgba(255,253,248,.92);border:1px solid var(--line);
+border-radius:22px;padding:40px 30px;text-align:center;box-shadow:0 18px 50px rgba(74,55,35,.10)}
+.lock{font-size:28px;margin-bottom:14px}
+h1{font-size:17px;font-weight:600;letter-spacing:.08em;margin:0 0 6px}
+p{font-size:12.5px;color:#8a7f6f;margin:0 0 22px;line-height:1.7}
+input{width:100%;padding:13px 16px;font-size:16px;letter-spacing:.3em;text-align:center;
+border:1px solid var(--line);border-radius:14px;background:#fff;outline:none;transition:border-color .25s,box-shadow .25s}
+input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.15)}
+button{width:100%;margin-top:12px;padding:13px;font-size:14.5px;font-weight:600;
+border:0;border-radius:14px;background:var(--ink);color:#fff;cursor:pointer;transition:opacity .2s}
+button:hover{opacity:.88}
+button[disabled]{opacity:.55;cursor:default}
+.err{animation:shake .4s}
+.msg{font-size:12px;color:#b4544a;height:16px;margin-top:10px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-  <h1>百名帖<span class="seal">王</span></h1>
-  <p class="sub">铁蛋给二宝的<b>一百个名字</b> · 出生前逐个备好 · 出生后以真八字收网 &nbsp;|&nbsp; <a href="overview.html">总览</a> · <a href="directions.html">起名方向</a> · <a href="review-top100.html">前100卡片</a> · <a href="qingling.html">轻灵30</a></p>
-</header>
+<div class="gate" id="gate">
+  <div class="lock">🔒</div>
+  <h1>私密内容</h1>
+  <p>请输入访问密码</p>
+  <input type="password" id="pw" placeholder="••••••" autocomplete="off" inputmode="numeric">
+  <button id="btn">解锁</button>
+  <div class="msg" id="msg"></div>
+</div>
+<script>
+(function(){
+  var SALT = Uint8Array.from(atob('zFAu7HxAYaixL3VWm307Ew=='), function(c){return c.charCodeAt(0)});
+  var IV   = Uint8Array.from(atob('JjdWvgNAB3l+EKmI'),   function(c){return c.charCodeAt(0)});
+  var ITER = 600000;
+  var gate = document.getElementById('gate');
+  var input = document.getElementById('pw');
+  var btn = document.getElementById('btn');
+  var msg = document.getElementById('msg');
 
-<p class="intro">二宝还没动静，名字先替他张罗着——老板说这 100 个由叔叔来起，那我就把压箱底的都掏出来。<br>
-池子里已有的 756 个名字全部避开（连最舍不得的「月白」「清扬」都因为被人占了或联想里有别人，忍痛划掉）；每一条出处对了原文，网红字、高歧义多音、方言雷区都过了筛子。<br>
-<b>不敢说个个都好，但每一个都是把最好的眼力给了二宝。</b>等小家伙报到那天，拿真八字再收一遍网——这里总有几颗能留下。</p>
+  function b64ToBytes(b64){
+    var bin = atob(b64), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
 
-<h3 class="gtitle">陶然田园</h3>
-<div class="ccards"><div class="ccard">
-  <div class="ctop"><span class="num">001</span><span class="cnm">王守拙</span></div>
-  <p class="cnote">陶渊明「开荒南野际，守拙归园田」——大巧若拙的活法，一辈子用得上。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">002</span><span class="cnm">王东皋</span></div>
-  <p class="cnote">《归去来兮辞》「登东皋以舒啸」——东边高地，登高长啸的少年气象。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">003</span><span class="cnm">王栖迟</span></div>
-  <p class="cnote">《诗经》「衡门之下，可以栖迟」——安处自适，不慌不忙的从容。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">004</span><span class="cnm">王春及</span></div>
-  <p class="cnote">《归去来兮辞》「农人告余以春及」——春天的到来，名字自带节气。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">005</span><span class="cnm">王夕佳</span></div>
-  <p class="cnote">陶渊明「山气日夕佳，飞鸟相与还」——黄昏最好的一刻。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">006</span><span class="cnm">王问津</span></div>
-  <p class="cnote">《桃花源记》「后遂无问津者」——世上问路的人，愿你一直有求索的心。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">007</span><span class="cnm">王舒啸</span></div>
-  <p class="cnote">「登东皋以舒啸」——把胸中气象舒展开来。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">008</span><span class="cnm">王清渠</span></div>
-  <p class="cnote">朱熹「问渠那得清如许，为有源头活水来」——清澈源源不断。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">009</span><span class="cnm">王春信</span></div>
-  <p class="cnote">春天的信使——梅花初绽即春信；一字一暖。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">010</span><span class="cnm">王采萧</span></div>
-  <p class="cnote">《诗经·采葛》「彼采萧兮」——三千年前采香草的人，名字里有古意。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">011</span><span class="cnm">王苇杭</span></div>
-  <p class="cnote">《诗经·河广》「谁谓河广？一苇杭之」——杭即渡；一叶芦苇可渡大川。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">012</span><span class="cnm">王山月</span></div>
-  <p class="cnote">李白「山月随人归」——山间的月亮，安静又澄明。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">013</span><span class="cnm">王知还</span></div>
-  <p class="cnote">《归去来兮辞》「鸟倦飞而知还」——倦鸟知还，心安处即是家。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">014</span><span class="cnm">王溪亭</span></div>
-  <p class="cnote">李清照「常记溪亭日暮」——溪边小亭，像随手翻开的一页词。</p>
-</div>
-</div>
-<h3 class="gtitle">道风一卷</h3>
-<div class="ccards"><div class="ccard">
-  <div class="ctop"><span class="num">015</span><span class="cnm">王致虚</span></div>
-  <p class="cnote">《道德经》「致虚极，守静笃」——虚怀到底，静气入骨。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">016</span><span class="cnm">王玄览</span></div>
-  <p class="cnote">《道德经》「涤除玄览」——如镜的心，看得见万物本色。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">017</span><span class="cnm">王虚舟</span></div>
-  <p class="cnote">《庄子》「虚己以游世」——空船渡河，无争而自在。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">018</span><span class="cnm">王光尘</span></div>
-  <p class="cnote">《道德经》「和其光，同其尘」——有光而不耀，处世大智慧。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">019</span><span class="cnm">王守朴</span></div>
-  <p class="cnote">《道德经》「见素抱朴」——守住本色的朴（朴字多音，家中读 pǔ 或 pò 都可以）。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">020</span><span class="cnm">王天钧</span></div>
-  <p class="cnote">《庄子》「和之以天倪」——天钧者，自然的均衡与从容。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">021</span><span class="cnm">王常慈</span></div>
-  <p class="cnote">《道德经》「我有三宝：一曰慈」——心底常存柔软。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">022</span><span class="cnm">王凌虚</span></div>
-  <p class="cnote">苏轼《凌虚台记》——凌虚者，卓然于尘上而不傲。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">023</span><span class="cnm">王自牧</span></div>
-  <p class="cnote">《周易·谦卦》「谦谦君子，卑以自牧也」——自己修养自己。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">024</span><span class="cnm">王中孚</span></div>
-  <p class="cnote">《周易·中孚卦》——心中诚信，最古老的一个靠谱。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">025</span><span class="cnm">王履谦</span></div>
-  <p class="cnote">《周易·谦卦》——履者践行：把谦和走成脚下的路。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">026</span><span class="cnm">王敦复</span></div>
-  <p class="cnote">《周易·复卦》「敦复，无悔」——敦厚之人，总能回到正道上。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">027</span><span class="cnm">王养浩</span></div>
-  <p class="cnote">孟子「我善养吾浩然之气」——养一口气，顶天立地。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">028</span><span class="cnm">王见龙</span></div>
-  <p class="cnote">《周易·乾卦》「见龙在田，利见大人」——龙现田野，恰是少年初登场。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">029</span><span class="cnm">王素履</span></div>
-  <p class="cnote">《周易·履卦》「素履之往，独行愿也」——朴素地往前走，是一个人最难得的样子。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">030</span><span class="cnm">王濯缨</span></div>
-  <p class="cnote">《楚辞·渔父》「沧浪之水清兮，可以濯吾缨」——心清者，把自己洗得干干净净。</p>
-</div>
-</div>
-<h3 class="gtitle">经书雅正</h3>
-<div class="ccards"><div class="ccard">
-  <div class="ctop"><span class="num">031</span><span class="cnm">王温故</span></div>
-  <p class="cnote">《论语》「温故而知新」——最朴素也最管用的四字。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">032</span><span class="cnm">王知非</span></div>
-  <p class="cnote">「行年五十而知四十九年非」——自知的人走得远。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">033</span><span class="cnm">王慎独</span></div>
-  <p class="cnote">《中庸》「君子慎其独也」——独处时的分寸，是最高修养。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">034</span><span class="cnm">王穆清</span></div>
-  <p class="cnote">《诗经》「吉甫作诵，穆如清风」——如清风一样的和穆。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">035</span><span class="cnm">王九皋</span></div>
-  <p class="cnote">《诗经》「鹤鸣于九皋，声闻于天」——深泽之鹤，声自远闻。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">036</span><span class="cnm">王秉彝</span></div>
-  <p class="cnote">《诗经》「民之秉彝，好是懿德」——秉持常道。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">037</span><span class="cnm">王秉心</span></div>
-  <p class="cnote">《诗经》「秉心塞渊」——心里有深潭，沉静厚实。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">038</span><span class="cnm">王嘉卉</span></div>
-  <p class="cnote">《诗经》「山有嘉卉」——山里最好的草木，生机勃勃。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">039</span><span class="cnm">王维夏</span></div>
-  <p class="cnote">《诗经》「四月维夏」——生在盛夏的名字（若生辰在夏更贴）。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">040</span><span class="cnm">王介福</span></div>
-  <p class="cnote">《诗经》「介尔景福」——介者大也：大福之人。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">041</span><span class="cnm">王修远</span></div>
-  <p class="cnote">《离骚》「路漫漫其修远兮，吾将上下而求索」——一生求索。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">042</span><span class="cnm">王灵均</span></div>
-  <p class="cnote">《离骚》「字余曰灵均」——屈原的表字，楚地最美的名字之一。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">043</span><span class="cnm">王昭华</span></div>
-  <p class="cnote">楚辞「昭华之玉」——美玉之名，光华温润。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">044</span><span class="cnm">王世德</span></div>
-  <p class="cnote">《诗经》「世德作求」——代代修德，长辈最想看到的四个字。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">045</span><span class="cnm">王观澜</span></div>
-  <p class="cnote">《孟子》「观水有术，必观其澜」——看水要看波澜，看人要看气魄。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">046</span><span class="cnm">王守谦</span></div>
-  <p class="cnote">守住谦和——最朴素的两个字，最稳的一辈子。</p>
-</div>
-</div>
-<h3 class="gtitle">家族承启</h3>
-<div class="ccards"><div class="ccard">
-  <div class="ctop"><span class="num">047</span><span class="cnm">王斯年</span></div>
-  <p class="cnote">《诗经》「于万斯年，受天之祜」——与哥哥斯卯共一个斯字，万年的祝福。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">048</span><span class="cnm">王绍午</span></div>
-  <p class="cnote">绍者继承；午藏丙午马年——与哥哥的卯时对仗。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">049</span><span class="cnm">王午瞻</span></div>
-  <p class="cnote">午字辈结构加瞻望——马年望远方。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">050</span><span class="cnm">王嗣徽</span></div>
-  <p class="cnote">《诗经》「大姒嗣徽音」——承继美好的声音。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">051</span><span class="cnm">王承烈</span></div>
-  <p class="cnote">承继功烈——与驰元、斯卯同一套家族手法。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">052</span><span class="cnm">王元亮</span></div>
-  <p class="cnote">陶渊明的字——元系又一员：亮亮堂堂。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">053</span><span class="cnm">王潜之</span></div>
-  <p class="cnote">取陶潜之潜——潜龙在渊，蓄势待发。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">054</span><span class="cnm">王谦光</span></div>
-  <p class="cnote">《周易》「谦尊而光」——谦逊的人自有光芒。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">055</span><span class="cnm">王绍庭</span></div>
-  <p class="cnote">《诗经·周颂》「绍庭上下」——承继于庭，家宅兴旺。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">056</span><span class="cnm">王燕翼</span></div>
-  <p class="cnote">「燕翼诒谋」——燕子护雏之翼，长辈之心。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">057</span><span class="cnm">王作孚</span></div>
-  <p class="cnote">《诗经》「万邦作孚」——孚者信也：让人信服。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">058</span><span class="cnm">王笃生</span></div>
-  <p class="cnote">《诗经》「笃生武王」——笃实而生，厚重有福。</p>
-</div>
-</div>
-<h3 class="gtitle">山河草木</h3>
-<div class="ccards"><div class="ccard">
-  <div class="ctop"><span class="num">059</span><span class="cnm">王霁山</span></div>
-  <p class="cnote">雪霁之山——干净、明亮、清冽。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">060</span><span class="cnm">王霁川</span></div>
-  <p class="cnote">雨后晴川——洗过一遍的山河。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">061</span><span class="cnm">王映川</span></div>
-  <p class="cnote">光映川流——名字里有水面反光。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">062</span><span class="cnm">王青岚</span></div>
-  <p class="cnote">岚者山气——青青山间雾，清润有余味。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">063</span><span class="cnm">王星帆</span></div>
-  <p class="cnote">星河上的帆——少年启程的浪漫。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">064</span><span class="cnm">王碧霄</span></div>
-  <p class="cnote">刘禹锡「便引诗情到碧霄」——直到青云上去。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">065</span><span class="cnm">王云间</span></div>
-  <p class="cnote">「云间陆士龙」——古人以云间称高远之士。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">066</span><span class="cnm">王拂云</span></div>
-  <p class="cnote">「拂云百丈青松柯」——松枝拂云，挺拔高洁。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">067</span><span class="cnm">王砺之</span></div>
-  <p class="cnote">砺者磨刀石——玉不琢不成器，磨砺生光。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">068</span><span class="cnm">王慎微</span></div>
-  <p class="cnote">《中庸》「致广大而尽精微」——大事精微处见功夫。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">069</span><span class="cnm">王砚山</span></div>
-  <p class="cnote">砚台如山——书斋意象，沉静有骨。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">070</span><span class="cnm">王采蓝</span></div>
-  <p class="cnote">《诗经》「终朝采蓝」——三千年前的蓝草，清澈如洗。</p>
-</div>
-</div>
-<h3 class="gtitle">清夜明镜</h3>
-<div class="ccards"><div class="ccard">
-  <div class="ctop"><span class="num">071</span><span class="cnm">王印月</span></div>
-  <p class="cnote">「千江有水千江月」——月色印在水上，明澈见心。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">072</span><span class="cnm">王云深</span></div>
-  <p class="cnote">贾岛「云深不知处」——云深处有仙气，也有分寸。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">073</span><span class="cnm">王星汉</span></div>
-  <p class="cnote">曹操「星汉灿烂，若出其里」——大海一样的心胸与星汉。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">074</span><span class="cnm">王北溟</span></div>
-  <p class="cnote">《庄子》「北冥有鱼」——北溟之鱼化而为鹏，愿你也有那一天。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">075</span><span class="cnm">王观棋</span></div>
-  <p class="cnote">「胜固欣然，败亦可喜」——看棋的人，心里有一盘稳局。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">076</span><span class="cnm">王观复</span></div>
-  <p class="cnote">《道德经》「万物并作，吾以观复」——看万物生长，也看万物归根。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">077</span><span class="cnm">王游心</span></div>
-  <p class="cnote">《庄子》「游心于物之初」——心是自由的。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">078</span><span class="cnm">王问月</span></div>
-  <p class="cnote">李白《把酒问月》——对世界永远好奇。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">079</span><span class="cnm">王揽月</span></div>
-  <p class="cnote">「欲上青天揽明月」——少年心气，够得着月亮。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">080</span><span class="cnm">王拏云</span></div>
-  <p class="cnote">李贺「少年心事当拏云」——少年心事，当拿云。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">081</span><span class="cnm">王立雪</span></div>
-  <p class="cnote">程门立雪——尊师重道，静候雪停的诚意。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">082</span><span class="cnm">王听涛</span></div>
-  <p class="cnote">听海涛也好，听松涛也好——听得出声音里的气象。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">083</span><span class="cnm">王望岳</span></div>
-  <p class="cnote">杜甫《望岳》「会当凌绝顶，一览众山小」——先存一个顶峰的志向。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">084</span><span class="cnm">王雁回</span></div>
-  <p class="cnote">雁回——大雁北归带着春讯；名字里有归来的方向感。</p>
-</div>
-</div>
-<h3 class="gtitle">少年意气</h3>
-<div class="ccards"><div class="ccard">
-  <div class="ctop"><span class="num">085</span><span class="cnm">王清让</span></div>
-  <p class="cnote">清而能让——干净利落，又有家教。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">086</span><span class="cnm">王任真</span></div>
-  <p class="cnote">陶渊明「任真无所先」——活得真，是第一紧要。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">087</span><span class="cnm">王时雨</span></div>
-  <p class="cnote">「如时雨化之」——恰到好处的雨，润物无声。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">088</span><span class="cnm">王信潮</span></div>
-  <p class="cnote">潮水有信——守时的潮，像守信用的人。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">089</span><span class="cnm">王潮生</span></div>
-  <p class="cnote">「春江潮水连海平」——大江大海的开头。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">090</span><span class="cnm">王知秋</span></div>
-  <p class="cnote">一叶知秋——敏锐清明的早慧。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">091</span><span class="cnm">王遂初</span></div>
-  <p class="cnote">取「遂初」二字——遂其初心，愿你一生不违本心。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">092</span><span class="cnm">王温其</span></div>
-  <p class="cnote">《诗经》「言念君子，温其如玉」——温润如玉的君子。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">093</span><span class="cnm">王怀瑾</span></div>
-  <p class="cnote">楚辞「怀瑾握瑜」——怀里揣着美玉，人品即珍宝。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">094</span><span class="cnm">王德邻</span></div>
-  <p class="cnote">《论语》「德不孤，必有邻」——有德之人，走到哪儿都有朋友。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">095</span><span class="cnm">王润泽</span></div>
-  <p class="cnote">《礼记》「温润而泽」——玉的品质，也是人的品质。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">096</span><span class="cnm">王念兹</span></div>
-  <p class="cnote">「念兹在兹」——记得住来处的人，走不丢。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">097</span><span class="cnm">王介然</span></div>
-  <p class="cnote">「介然」——耿介而明亮，有棱角又不伤人。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">098</span><span class="cnm">王晓风</span></div>
-  <p class="cnote">「杨柳岸晓风残月」取一半的清亮——不取愁，只取晓风。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">099</span><span class="cnm">王振衣</span></div>
-  <p class="cnote">左思「振衣千仞冈，濯足万里流」——整一整衣袖，站上千仞山冈。</p>
-</div>
-<div class="ccard">
-  <div class="ctop"><span class="num">100</span><span class="cnm">王康时</span></div>
-  <p class="cnote">康时——愿他一生安康，也愿他有安时处顺的从容。</p>
-</div>
-</div>
+  async function unlock(){
+    var pw = input.value;
+    if (!pw) return;
+    btn.disabled = true; msg.textContent = '';
+    try {
+      var km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+      var key = await crypto.subtle.deriveKey(
+        {name:'PBKDF2', salt:SALT, iterations:ITER, hash:'SHA-256'},
+        km, {name:'AES-GCM', length:256}, false, ['decrypt']);
+      var res = await fetch('baiming.html.enc?_=' + Date.now(), {cache:'no-store'});
+      if (!res.ok) throw new Error('密文加载失败');
+      var buf = await res.arrayBuffer();
+      var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv:IV}, key, buf);
+      var html = new TextDecoder().decode(plain);
+      document.open('text/html', 'replace');
+      document.write(html);
+      document.close();
+    } catch(e) {
+      gate.classList.remove('err'); void gate.offsetWidth; gate.classList.add('err');
+      msg.textContent = '密码不对，或浏览器不支持';
+      input.value = ''; input.focus();
+      btn.disabled = false;
+    }
+  }
 
-
-<footer>
-  <b>口径</b>：本页 100 个为叔叔命名草案，未走五格评分；全部对 756 名占用集合查重通过；「朴」为已知多音字（家中读音自定）。<br>
-  <b>红线</b>：所有名字均为候选；大名小名均未定，拟议名不得升格；出生后结合真八字收网。<br>
-  <b>生成</b>：2026-10-16 · 铁蛋 · naming/_baiming_build.py
-</footer>
-</div>
-<script src="naming-fx.js"></script>
-<script src="../../nav-fab.js"></script>
+  btn.addEventListener('click', unlock);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+  input.focus();
+})();
+</script>
 </body>
 </html>

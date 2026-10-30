@@ -152,6 +152,26 @@ h1 span{color:var(--muted);font-weight:400}
 .gate-err{font-size:12px;color:#fca5a5;height:16px;margin-top:10px}
 .gate.shake{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.gen-grid{display:grid;gap:14px}
+.gen-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+.gen-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.gno{font-family:var(--mono);font-size:12px;color:var(--cyan)}
+.gen-head h3{font-size:17px;flex:1;min-width:180px}
+.gen-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.gen-col{border:1px solid var(--line);border-radius:12px;padding:12px;background:rgba(3,6,12,.35)}
+.gen-label{font-size:11px;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+.gen-col.y07 .gen-label{color:#94a3b8}
+.gen-col.y25 .gen-label{color:#93c5fd}
+.gen-col.y26 .gen-label{color:var(--cyan)}
+.gen-col p{margin:0;font-size:13px;line-height:1.65}
+.gen-note{font-size:13px;color:var(--amber);margin-top:12px}
+.gen-note b{color:var(--gold);margin-right:4px}
+.gen-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:8px 0 22px}
+.gen-step{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.gen-step .gy{font-size:12px;color:var(--cyan);font-family:var(--mono)}
+.gen-step .gt{font-size:14px;font-weight:600;margin-top:4px}
+.gen-step .gm{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.55}
+@media(max-width:980px){.gen-cols{grid-template-columns:1fr}}
 @media(max-width:760px){
   .ba,.cols{grid-template-columns:1fr}
   .wrap{padding:22px 14px 70px}
@@ -167,7 +187,7 @@ h1 span{color:var(--muted);font-weight:400}
   body{background:#fff;color:#111}
   .tabs,.controls,.hero-actions,.to-top,.toast,.kpis,.timeline{display:none!important}
   .panel[hidden]{display:none!important}
-  .change,.focus-card,.ins-card,.art,.num-card,.callout{border-color:#ddd;background:#fff;color:#111}
+  .change,.focus-card,.ins-card,.art,.num-card,.callout,.gen-card,.gen-step,.gen-col{border-color:#ddd;background:#fff;color:#111}
   .col,.ba-col{background:#fafafa;border-color:#ddd}
   .note,.impact,.ins-impact{color:#8a5a00}
   .art-sum{white-space:normal}
@@ -192,13 +212,14 @@ h1 span{color:var(--muted);font-weight:400}
 <header class="hero">
   <div class="eyebrow">监管研究 · 2026-10-30 · 铁蛋</div>
   <h1>《资产管理信托管理办法》<br><span>正式稿 vs 征求意见稿</span></h1>
-  <p class="lede">逐条比对 85 条 · 9 处重点变化 · 6 条监管主线 · 对保险资金/中邮资管的 4 点影响</p>
+  <p class="lede">逐条比对 85 条 · 三代对照 2007→2025→2026 · 9 处重点变化 · 6 条监管主线 · 险资影响 4 点</p>
   <div class="chips">
     <span class="chip">总局令 <b>2026年第5号</b></span>
     <span class="chip"><b>2027-01-01</b> 施行</span>
     <span class="chip">五章 <b>85</b> 条</span>
     <span class="chip">废止 <b>15</b> 件旧规</span>
     <span class="chip">对照基准：<b>2025-10-31</b> 征求意见稿</span>
+    <span class="chip">三代：<b>2007 → 2025 → 2026</b></span>
   </div>
   <div class="hero-actions">
     <button class="btn primary" type="button" id="copyBtn">复制要点</button>
@@ -228,6 +249,7 @@ h1 span{color:var(--muted);font-weight:400}
   <button class="tab" role="tab" id="tab-changes" aria-controls="panel-changes" aria-selected="false" data-tab="changes">9 处重点变化</button>
   <button class="tab" role="tab" id="tab-focus" aria-controls="panel-focus" aria-selected="false" data-tab="focus">监管重点</button>
   <button class="tab" role="tab" id="tab-insurance" aria-controls="panel-insurance" aria-selected="false" data-tab="insurance">险资影响</button>
+  <button class="tab" role="tab" id="tab-generations" aria-controls="panel-generations" aria-selected="false" data-tab="generations">三代对照</button>
   <button class="tab" role="tab" id="tab-articles" aria-controls="panel-articles" aria-selected="false" data-tab="articles">逐条对照</button>
 </nav>
 
@@ -370,6 +392,192 @@ h1 span{color:var(--muted);font-weight:400}
   <div class="callout" style="margin-top:18px">
     <div class="ck">⚠️ 口径提示</div>
     <p>本页“险资影响”为基于条款的分析推断，具体适用以监管口径、公司合规意见和产品合同约定为准；涉及代销资质、集中度豁免的，需逐项核对。</p>
+  </div>
+</section>
+
+<section class="panel" id="panel-generations" role="tabpanel" aria-labelledby="tab-generations" hidden>
+  <div class="section-head"><span class="no">GENERATIONS</span><h2>三代对照 · 2007 → 2025 → 2026</h2></div>
+  <div class="callout">
+    <div class="ck">一句话</div>
+    <p>2007 年是“资金信托 1.0”：类信贷、保本刚兑、银行代销、无净值；2025/2026 是“资管新规版”：私募资管、净值化、去通道、非标严管。正式稿比征求意见稿更硬。</p>
+  </div>
+  <div class="gen-strip">
+    <div class="gen-step"><div class="gy">2007</div><div class="gt">9 章 55 条</div><div class="gm">2007-03-01 施行 · 2009 年修订两处 · 自然人 50 人 / 起投 100 万 / 期限 1 年</div></div>
+    <div class="gen-step"><div class="gy">2025</div><div class="gt">5 章 85 条</div><div class="gm">2025-10-31 征求意见 · 私募资管定位 · 200 人 / 30-40-100 万 / 净值化</div></div>
+    <div class="gen-step"><div class="gy">2026</div><div class="gt">5 章 85 条</div><div class="gm">2027-01-01 施行 · 废止 15 件旧规 · 非标封闭 / 25% 净资产 / 60% 报酬上限 / 2029 整改</div></div>
+  </div>
+  <div class="gen-grid">
+<article class="gen-card">
+<div class="gen-head"><span class="gno">01</span><h3>监管定位</h3><span class="badge amber">升级</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第2条：集合资金信托计划，信托公司任受托人，两个以上委托人交付资金集中管理；本质是“资金信托业务”。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>定位为基于信托法律关系的私募资产管理产品，应遵守资管新规（第2条）；禁保本、禁预期收益、禁资金池（第4条）。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>维持私募资管定位；明确不得为融资方募资提供投行服务、不得为违法违规提供便利、不得转委托（第4条）。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“集合资金信托计划”升级为“资产管理信托”，纳入资管新规统一框架；监管口径从“资金信托”切换到“私募资管产品”。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">02</span><h3>合格投资者</h3><span class="badge red">收紧</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第6条三选一：单笔≥100万；个人/家庭金融资产≥100万+证明；最近三年年收入&gt;20万或夫妻合计&gt;30万+证明。法人/其他组织只需单笔≥100万，无净资产要求。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第8条：2年以上投资经历+家庭金融净资产≥300万/家庭金融资产≥500万/近三年本人年均收入≥40万；境内法人或其他组织净资产≥1000万；养老基金、公益基金、受监管机构资管产品、资产服务信托等。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左，但法人改为“境内法人单位”，删除“其他组织”；其余门槛一致。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 自然人门槛大幅提高（100万资产→300万净资产/500万金融资产/40万年收入+2年经历）；法人新增1000万净资产要求；“其他组织”被删。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">03</span><h3>人数与起投</h3><span class="badge red">重构</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第5条(三)：自然人≤50人；单笔≥300万自然人和合格机构不限数量。第6条：起投统一100万。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第8条：单产品投资者≤200人（含机构）；第11条：固收30万/混合40万/权益·商品·非标100万。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左；第10条穿透识别实际投资者和资金来源，但不合并计算上层资管产品的投资者数量。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“自然人50人、机构不限”改为“总数200人”；起投从统一100万改为按产品类型30/40/100万；上层资管产品按1户计算，留了口子。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">04</span><h3>期限与流动性</h3><span class="badge amber">有松有紧</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第5条(四)：信托期限不少于1年。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第61条：封闭式≥90天，开放式开放周期≥7天；第46条：非标不禁止开放式，但要求公允定价。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>第61条同左；第46条：直接/间接投非标一律封闭式+期限匹配；开放式不得投非标；第53条杠杆140%/200%。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 标准资产产品期限可短至90天；非标反而更严（封闭+匹配）；开放式装非标的口子被彻底堵死。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">05</span><h3>投资范围</h3><span class="badge amber">重塑</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第26条：债权、股权、物权及其他可行方式；第27条(二)：信托贷款≤所有信托计划实收余额30%。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第44条正面清单（国债、地方债、央票、金融债、存款、大额存单、同业存单、信用债、ABS、其他债权、股票、存托凭证、其他权益、公募基金、商品及金融衍生品等）；第56条禁止直接投资商业银行信贷资产。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左；新增“涉及其他业务主管部门规定的须满足资质要求”；无30%信托贷款额度，改为非标限额。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“负面清单+贷款额度”改为“正面清单+非标限额”；信托贷款口子收窄。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">06</span><h3>非标投资</h3><span class="badge red">最严</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>允许；无封闭式/期限匹配要求；仅受第27条(二)贷款30%和第27条(六)不同信托计划不得投同一项目约束。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>允许开放式产品投非标，但要求合理确定申赎价格、不得分离定价；非标部分到期可现金分配。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>直接或间接投非标一律封闭式；非标终止日/退出日不得晚于产品终止日；间接投资的资管产品也须封闭式且到期不晚于信托；非标部分到期可现金或原状分配；禁止开放式投非标。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 三代中最严；彻底堵期限错配和开放式资金池装非标。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">07</span><h3>组合投资与集中度</h3><span class="badge amber">限额化</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>无25%单资产、300亿同一资产、30%单一股票、50%非标等资管新规式限额；仅有第27条(二)信托贷款≤实收余额30%、第27条(六)不同信托计划不得投同一项目。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第48条单产品同一资产/同一资管产品≤实收信托25%；第59条全部信托产品同一资产≤300亿、含自然人产品非标≤全部信托净资产50%；第9条单投资者≤50%、机构及关联企业≤80%。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>25%基数改为净资产；豁免清单调整（删除90%标准化单只资管产品，新增临近到期封闭式产品，指数产品纳入）；单一上市公司股票≤可流通市值30%（草案在第45条，正式稿移至第59条）；新增被动超限不得新增；第9条基数改为信托单位合计。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“一刀切禁止同一项目”改为“限额管理”；单一项目可由多产品投，但受25%/300亿约束；同时新增投资者集中度限制。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">08</span><h3>结构化与杠杆</h3><span class="badge gold">新增</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>办法本身未规定结构化；2010年银监通〔2010〕2号另行规范（本次废止）。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第11条封闭式可结构化、开放式未禁；第51条分级比例3:1/1:1/2:1；第52条禁止利益相关人作劣后、禁止嵌套分级、禁止对优先级保本；第53条杠杆140%/200%。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>第11条新增“开放式信托产品不得设计为结构化信托产品”；其余同左；中间级计入优先级；劣后级单笔≥100万。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 首次在部门规章层面系统规定结构化和杠杆；正式稿补上“开放式不得结构化”，与资管新规一致。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">09</span><h3>通道与主动管理</h3><span class="badge red">去通道</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>无“通道”概念；第27条仅禁止股东关联方投资、固有财产交易、不同信托财产交易、同一项目多计划。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第4条不得转委托/让渡管理职责；第56条列6项禁止（含通道服务）；第54条投合机构资质；投顾建议须信托公司审查。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>第56条单列“四项禁止”：通道服务；投资者/第三方/投顾自行尽调、投资运作、投后管理；投资者/第三方下指令或给具体标的；投顾代决策/下单/执行/划拨；并明确不得转委托。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“没有通道概念”到“四项禁止+投顾边界”；去通道是本次核心。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">10</span><h3>销售渠道与适当性</h3><span class="badge amber">先扩后收</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第8条禁止公开营销、禁止委托非金融机构推介；第16条可委托商业银行代理收付、代为推介（仅银行）。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>信托、银行、理财公司、保险、保险资管、证券；第19/20/36/40条风险评级、适当性、销售行为禁止。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>信托、银行、保险、证券 + 总局规定其他机构（删除理财公司、保险资管）；第19条风险等级1—5级、代销孰高；第20条12个月重评；第36条营业场所双录；第40条禁止行为。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 代销渠道先扩后收；适当性从原则到全流程留痕。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">11</span><h3>托管</h3><span class="badge amber">强化</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第19-22条资金保管制，选择经营稳健商业银行；保管账户与信托财产专户同一账户；保管人发现违规立即书面通知，重大违法报告银监会。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第41-43条独立托管；托管账户为信托财产专户；托管人职责含安全保管、分别设账、确认执行指令、核算净值、监督投资、拒绝执行/报告。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左；新增信托公司须为托管人履职提供信息支持；明确托管人核算净值、拒绝执行/报告职责。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“保管”到“托管+监督”，托管人责任加重；净值核算纳入托管人职责。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">12</span><h3>净值化与审计</h3><span class="badge red">新增</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>无净值化管理要求；第36条按季信托资金管理报告、运用及收益情况表；第31条清算报告经审计后披露（可不审计）。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第31条建立净值管理体系，不得分离定价；第32条非标债权+未上市股权、直接投资者含自然人的产品每年外部审计；第27条清算报告10个工作日内披露（文件约定可不审计）。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左；审计范围扩为“非标准化资产”（含受益权）；存续不足一年也须至少审计一次；清算报告需审计的须同步披露审计意见；无法按期清算的披露安排。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“收益报告”到“净值化管理+外部审计”；审计范围扩大。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">13</span><h3>信息披露</h3><span class="badge amber">细化</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第34-38条按季报告；重大事项3个工作日内披露+7个工作日内书面应对；第39条保存15年。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第64-68条按季信托产品财产管理报告（含净值、风险、诉讼等）；第67条临时披露列5个工作日清单（重大损失/净值大幅下滑/资金使用方恶化/担保失效等）；第68条保存15年。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左，但第67条改为“按照总局关于资产管理产品信息披露管理的规定加强临时披露”，不再单列5个工作日清单。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 2007 是“3个工作日披露+7个工作日书面应对”；2025 草案改为5个工作日清单；2026 正式稿改为衔接资管产品信息披露制度。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">14</span><h3>关联交易</h3><span class="badge amber">关后门开正门</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第27条(三)不得将信托资金直接/间接用于股东及关联人，但资金全部来源于股东/关联人的除外；(四)不得固有财产与信托财产交易；(五)不得不同信托财产相互交易；(六)不得不同信托计划投同一项目。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第50条全面识别关联方；不得与严重失信/重大违法关联方交易；价格不得优于非关联方；信托资金不得投本公司关联方（资金全部来源于股东/关联企业除外），并须公开市场/事前同意/按季披露；第49条禁止与固有/公益慈善信托财产交易，资产服务信托可按公允价交易；第76条关联交易报告。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左，但新增“股东/关联企业资金投关联方可豁免第9条80%集中度”；重大关联交易须经关联交易控制委员会审查后提交董事会批准；删除资产服务信托“公允价交易”例外，原则上禁止（总局另有规定除外）。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“股东关联方禁令”到“全面关联交易管理+穿透+披露”；正式稿开了“股东资金投关联方”的正门（豁免80%），同时关掉资产服务信托交易的后门。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">15</span><h3>费用与业绩报酬</h3><span class="badge red">设上限</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第5条(七)信托合同约定受托人报酬；除合理报酬外不得牟利；无业绩报酬上限。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第22条固定报酬/业绩报酬；业绩报酬从退出资金/清算资金提取；60%上限。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>60%上限保留；现金分红提取仅限无投顾产品、每6个月最多一次；投顾费非固定部分60%上限；禁止平滑净值、禁止回补返还；费用需真实交易基础/公允价格。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“约定+不得牟利”到“比例上限+提取方式+禁止套利”。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">16</span><h3>受益权转让</h3><span class="badge amber">有松有紧</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第29条受益人可向合格投资者转让；拆分转让受让人不得为自然人；机构持有的受益权不得向自然人转让或拆分转让。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第26条存续期可向合格投资者转让；不得突破合格投资者资质和数量限制；单个信托单位不得拆分；集中交易须开立受益权账户。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左；受让人须重新履行合格投资者评估、风险告知、签署文件；合法继承除外。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 放开“机构受益权不得向自然人转让”的限制，但强化受让人合格投资者审查；拆分转让仍禁止。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">17</span><h3>受益人大会</h3><span class="badge blue">延续</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第41-46条10%自行召集；提前10个工作日公告；50%出席；2/3通过；更换受托人/改变运用方式/提前终止需全体通过。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第69-74条结构基本一致；提前10个工作日公告；未提前告知事项不得表决。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左，但改为“告知全体投资者或者公告”，并新增全体投资者一致同意的例外（可豁免提前告知、可就未告知事项表决）。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 基本延续；正式稿增加“告知全体投资者”和全体一致同意例外。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">18</span><h3>处罚与监管</h3><span class="badge red">扩围</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>第47-51条具体罚款（10-30万、20-50万、违法所得1-5倍等）；第40条暂停业务、限制股东权利。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第80条责令改正、监管措施、行政处罚；第79条监管评级、限制业务；第78条非现场监管/现场检查。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>同左，但第78条新增“加强行为监管和穿透式监管”；处罚对象扩至托管人、代销机构、上层资管产品管理人；可记录不良行为并通报主管部门。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 处罚对象扩展；监管手段从“罚款”转向“评级+限制业务+穿透”；具体罚款金额不再单列。</div>
+</article>
+<article class="gen-card">
+<div class="gen-head"><span class="gno">19</span><h3>过渡期</h3><span class="badge gold">硬约束</span></div>
+<div class="gen-cols">
+<div class="gen-col y07"><div class="gen-label">2007（2009修订）</div><p>无过渡期，2007-03-01直接施行；第55条废止2002年7号令。</p></div>
+<div class="gen-col y25"><div class="gen-label">2025 征求意见稿</div><p>第85条新老划断、制定整改计划、锁定规模、有序压降（原则性）。</p></div>
+<div class="gen-col y26"><div class="gen-label">2026 正式稿</div><p>第85条逐项整改方式（第9/48条不新增投资者/资产；第46条不新增非标；第54条不新增产品规模；第61条自然到期），开放式产品开放周期整改不晚于2029年底。</p></div>
+</div>
+<div class="gen-note"><b>变化</b> 从“无过渡”到“新老划断+逐项整改+2029硬期限”。</div>
+</article>
   </div>
 </section>
 
@@ -899,8 +1107,8 @@ h1 span{color:var(--muted);font-weight:400}
 </main>
 
 <footer class="foot">
-  <p><b>数据来源</b>：《资产管理信托管理办法》正式稿（国家金融监督管理总局令2026年第5号，2026-10-17公布，2027-01-01施行）；《资产管理信托管理办法（征求意见稿）》（2025-10-31发布，2025-12-01反馈截止）；金融监管总局有关司局负责人答记者问（2026-10-30）；银保监办发〔2019〕144号。</p>
-  <p>逐条比对方法：以两版“第X条”对齐，去除页眉页脚与标点后计算相似度；相似度低于0.90标记为“实质差异”，0.90—0.995标记为“文字调整”。</p>
+  <p><b>数据来源</b>：《资产管理信托管理办法》正式稿（国家金融监督管理总局令2026年第5号，2026-10-17公布，2027-01-01施行）；《资产管理信托管理办法（征求意见稿）》（2025-10-31发布，2025-12-01反馈截止）；《信托公司集合资金信托计划管理办法》（银监会令2007年第3号，2009年修订）；金融监管总局有关司局负责人答记者问（2026-10-30）；银保监办发〔2019〕144号。</p>
+  <p>逐条比对方法：2025/2026 两版以“第X条”对齐，去除页眉页脚与标点后计算相似度；相似度低于0.90标记为“实质差异”，0.90—0.995标记为“文字调整”。2007 年旧规与新版条号无法一一对应，三代对照按主题归并，条文序号均为原文标注。</p>
   <p>本页为内部研究材料，不构成法律意见或投资建议。· 铁蛋 · 2026-10-30</p>
 </footer>
 </div>
@@ -954,7 +1162,7 @@ function sha256(ascii) {
 <script>
 (function(){
   var tabs=[].slice.call(document.querySelectorAll('.tab'));
-  var panels={overview:document.getElementById('panel-overview'),changes:document.getElementById('panel-changes'),focus:document.getElementById('panel-focus'),insurance:document.getElementById('panel-insurance'),articles:document.getElementById('panel-articles')};
+  var panels={overview:document.getElementById('panel-overview'),changes:document.getElementById('panel-changes'),focus:document.getElementById('panel-focus'),insurance:document.getElementById('panel-insurance'),generations:document.getElementById('panel-generations'),articles:document.getElementById('panel-articles')};
   function show(name){
     tabs.forEach(function(t){t.setAttribute('aria-selected',t.dataset.tab===name?'true':'false');});
     Object.keys(panels).forEach(function(k){panels[k].hidden=(k!==name);});

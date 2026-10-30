@@ -57,6 +57,7 @@ PRIVATE_PREFIXES = (
     "tools/trading-discipline/",  # 投资纪律手册(私人专区, 2026-10-27)
     "tools/trading-review/",      # 近一年交易复盘(私人专区, 2026-10-27)
     "tools/cs15/",         # CS 1.5 单机人机版(私人专区, 2026-10-30)
+    "tools/reg-trust/",    # 资产管理信托新规对照(内部材料, 工作密码门, 2026-10-30)
     "knowledge/alm-interpretation/",  # 《办法》深度解读(内部材料, 含产品策略, 密码门, 2026-09-24)
 )
 SKIP_FILES = {"index.html", "index-template.html", "kb.html", "search.json"}

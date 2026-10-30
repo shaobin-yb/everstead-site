@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Counter-Strike 1.5 · 单机人机版</title>
+<style>
+:root{
+  --orange:#ff7a1a;
+  --orange2:#ffb066;
+  --green:#8dff5a;
+  --blue:#5aa8ff;
+  --red:#ff4b4b;
+  --panel:rgba(10,12,13,.86);
+  --line:rgba(255,255,255,.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;color:#e9e4d8;
+  font-family:"Microsoft YaHei","PingFang SC","Segoe UI",Arial,sans-serif;user-select:none;-webkit-user-select:none;}
+canvas#game{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:crosshair;}
+body.buyopen canvas#game{cursor:default;}
+.hidden{display:none !important;}
+
+/* ================= HUD ================= */
+#hud{position:fixed;inset:0;z-index:20;pointer-events:none;opacity:0;transition:opacity .25s;}
+body.playing #hud{opacity:1;}
+#radarBox{position:absolute;left:14px;top:14px;background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.18);
+  border-radius:4px;padding:3px;box-shadow:0 2px 10px rgba(0,0,0,.5);}
+#radar{display:block;width:140px;height:auto;border-radius:2px;}
+#roundInfo{position:absolute;top:16px;left:50%;transform:translateX(-50%);text-align:center;
+  background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:6px 18px 5px;
+  text-shadow:0 1px 2px #000;}
+#roundTitle{font-size:15px;letter-spacing:3px;font-weight:800;color:#f3e6c8;}
+#roundSub{font-size:11px;letter-spacing:1px;color:#c9b98f;margin-top:2px;}
+
+#killfeed{position:absolute;right:16px;top:16px;display:flex;flex-direction:column;gap:5px;align-items:flex-end;}
+.kf{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);border-radius:3px;
+  padding:4px 10px;font-size:12.5px;letter-spacing:.5px;display:flex;gap:7px;align-items:center;
+  animation:kfIn .18s ease-out;transition:opacity .7s;}
+.kf.fade{opacity:0;}
+.kf b{font-weight:800;}
+.kf .k{color:#eee;}
+.kf .w{color:#b9ab86;font-size:11.5px;}
+.kf .v{color:#ff9a3c;}
+.kf .v.ct{color:var(--blue);}
+.kf .v.you{color:var(--red);}
+@keyframes kfIn{from{transform:translateX(14px);opacity:0;}to{transform:none;opacity:1;}}
+
+#crosshair{position:absolute;left:50%;top:50%;width:0;height:0;--gap:5px;}
+#crosshair .ch{position:absolute;background:#67ff63;box-shadow:0 0 0 1px rgba(0,0,0,.45);}
+#crosshair .ch-t{width:2px;height:8px;left:-1px;top:calc(-1 * var(--gap) - 8px);}
+#crosshair .ch-b{width:2px;height:8px;left:-1px;top:var(--gap);}
+#crosshair .ch-l{height:2px;width:8px;top:-1px;left:calc(-1 * var(--gap) - 8px);}
+#crosshair .ch-r{height:2px;width:8px;top:-1px;left:var(--gap);}
+#chDot{position:absolute;width:2px;height:2px;left:-1px;top:-1px;background:#67ff63;box-shadow:0 0 0 1px rgba(0,0,0,.4);}
+body.scoped #crosshair{display:none;}
+
+#hitmarker{position:absolute;left:50%;top:50%;width:18px;height:18px;margin:-9px 0 0 -9px;opacity:0;}
+#hitmarker::before,#hitmarker::after{content:"";position:absolute;left:8px;top:-3px;width:2px;height:24px;
+  background:#fff;box-shadow:0 0 3px rgba(0,0,0,.9);transform:rotate(45deg);}
+#hitmarker::after{transform:rotate(-45deg);}
+#hitmarker.show{opacity:1;}
+#hitmarker.kill::before,#hitmarker.kill::after{background:#ff3b3b;}
+
+#rewards{position:absolute;left:50%;top:56%;width:0;height:0;}
+.reward{position:absolute;left:50%;top:0;transform:translateX(-50%);color:#9dff5e;font-weight:800;
+  font-size:16px;text-shadow:0 1px 3px #000;animation:rewardUp 1s ease-out forwards;white-space:nowrap;}
+@keyframes rewardUp{0%{opacity:0;transform:translate(-50%,8px);}15%{opacity:1;}100%{opacity:0;transform:translate(-50%,-34px);}}
+
+#hint{position:absolute;left:50%;bottom:104px;transform:translateX(-50%);font-size:12px;letter-spacing:2px;
+  color:#d9c893;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);border-radius:3px;
+  padding:4px 12px;transition:opacity 1s;}
+#hint.off{opacity:0;}
+
+.hud-bl{position:absolute;left:18px;bottom:16px;text-shadow:0 2px 4px rgba(0,0,0,.85);}
+.hud-stat{display:flex;align-items:center;gap:9px;margin-bottom:4px;}
+.hud-stat span{font-size:30px;font-weight:800;letter-spacing:1px;color:#f2efe6;line-height:1;
+  font-variant-numeric:tabular-nums;}
+.ico{display:inline-block;width:22px;height:22px;position:relative;flex:none;}
+.ico-hp::before,.ico-hp::after{content:"";position:absolute;background:#8dff5a;border-radius:2px;box-shadow:0 0 4px rgba(0,0,0,.6);}
+.ico-hp::before{left:8px;top:1px;width:6px;height:20px;}
+.ico-hp::after{top:8px;left:1px;height:6px;width:20px;}
+.ico-ar{background:var(--blue);clip-path:polygon(50% 0,94% 16%,87% 66%,50% 98%,13% 66%,6% 16%);
+  filter:drop-shadow(0 0 2px rgba(0,0,0,.6));}
+#moneyVal{margin-top:6px;font-size:22px;font-weight:800;color:#8dff5a;letter-spacing:1px;
+  font-variant-numeric:tabular-nums;text-shadow:0 2px 4px rgba(0,0,0,.85);}
+
+.hud-br{position:absolute;right:20px;bottom:14px;text-align:right;text-shadow:0 2px 4px rgba(0,0,0,.85);}
+#wName{font-size:12px;letter-spacing:2px;color:#cfc39d;margin-bottom:2px;}
+#ammoLine{font-size:30px;font-weight:800;letter-spacing:.5px;color:#f4f1e8;line-height:1;
+  font-variant-numeric:tabular-nums;}
+#ammoLine .sep{color:#8f8568;margin:0 3px;font-weight:600;}
+#ammoLine #ammoRes{font-size:20px;color:#bdb493;}
+#reloadTip{height:14px;font-size:11px;color:#ffcf6b;letter-spacing:2px;margin-top:3px;}
+
+#vignette{position:absolute;inset:0;box-shadow:inset 0 0 140px rgba(0,0,0,.35);}
+#dmgflash{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(190,20,20,0) 40%,rgba(180,16,16,.55) 100%);
+  opacity:0;transition:opacity .08s;}
+#banner{position:absolute;left:0;right:0;top:26%;text-align:center;opacity:0;pointer-events:none;}
+#banner.show{animation:bannerPop 2.6s ease-out forwards;}
+#banner .b-main{font-size:clamp(30px,4vw,46px);font-weight:900;letter-spacing:10px;color:#ffd27a;
+  text-shadow:0 3px 0 rgba(0,0,0,.55),0 0 30px rgba(255,150,40,.35);}
+#banner .b-sub{margin-top:8px;font-size:14px;letter-spacing:4px;color:#e8dcc0;text-shadow:0 2px 3px #000;}
+@keyframes bannerPop{0%{opacity:0;transform:scale(1.08) translateY(6px);}10%{opacity:1;transform:none;}
+  78%{opacity:1;}100%{opacity:0;transform:translateY(-8px);}}
+
+/* ================= 倍镜 ================= */
+#scope{position:fixed;inset:0;z-index:18;pointer-events:none;display:none;
+  background:radial-gradient(circle at 50% 50%,transparent 0 33vmin,#000 33.5vmin 100%);}
+body.scoped #scope{display:block;}
+#scope::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(0,0,0,.85);}
+#scope::after{content:"";position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(0,0,0,.85);}
+
+/* ================= 主菜单 ================= */
+#menu{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 30%,rgba(16,12,6,.10),rgba(3,4,5,.72) 75%),
+             linear-gradient(180deg,rgba(6,7,8,.30),rgba(4,5,6,.66));
+  padding:24px;overflow:auto;}
+#menu::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.012) 3px 4px);}
+.menu-inner{position:relative;z-index:1;width:min(960px,94vw);}
+.menu-head{text-align:center;margin-bottom:22px;}
+.cs-logo{font-family:"Arial Black",Impact,"Microsoft YaHei",sans-serif;font-size:clamp(38px,6vw,66px);
+  letter-spacing:3px;color:#f4ead6;transform:skewX(-6deg);
+  text-shadow:0 3px 0 #4c2c0c,0 0 42px rgba(255,122,26,.28);line-height:1.02;}
+.cs-logo span{color:var(--orange);padding:0 2px;}
+.cs-sub{margin-top:10px;font-size:13px;letter-spacing:3px;color:#c8bb9c;display:flex;gap:10px;
+  align-items:center;justify-content:center;flex-wrap:wrap;}
+.cs-sub .ver{background:linear-gradient(180deg,#ff9636,#e55f00);color:#1b0d02;font-size:12px;font-weight:900;
+  padding:2px 8px;border-radius:3px;letter-spacing:1px;}
+.cs-sub .dot{width:3px;height:3px;border-radius:50%;background:#7c705a;}
+.menu-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;margin-bottom:20px;}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 18px 18px;
+  backdrop-filter:blur(3px);box-shadow:0 10px 30px rgba(0,0,0,.45);}
+.panel-title{font-size:11px;letter-spacing:3px;color:#a8997395;color:#a89973;margin:2px 0 10px;font-weight:700;}
+.panel-title:not(:first-child){margin-top:16px;}
+.teams{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.team-card{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.10);border-radius:5px;padding:10px 12px;cursor:pointer;
+  color:inherit;font:inherit;text-align:left;transition:.15s;}
+.team-card:hover{background:rgba(255,255,255,.06);}
+.team-card.active{border-color:var(--orange);background:rgba(255,122,26,.10);
+  box-shadow:0 0 0 1px rgba(255,122,26,.35),0 0 18px rgba(255,122,26,.12) inset;}
+.team-card[data-team="ct"].active{border-color:#4f93e8;background:rgba(79,147,232,.10);
+  box-shadow:0 0 0 1px rgba(79,147,232,.35),0 0 18px rgba(79,147,232,.10) inset;}
+.badge{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;
+  font-size:21px;font-weight:900;border-radius:4px;letter-spacing:0;}
+.badge.t{background:linear-gradient(160deg,#5a3a1c,#2a1a0c);color:#ffb35c;border:1px solid #8a5a26;}
+.badge.ct{background:linear-gradient(160deg,#1c2c42,#0c141f);color:#7fb6ff;border:1px solid #2f5580;}
+.team-meta{display:flex;flex-direction:column;gap:3px;}
+.team-meta b{font-size:15px;letter-spacing:2px;}
+.team-meta i{font-size:11px;font-style:normal;color:#9d9178;letter-spacing:1px;}
+.segs{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(255,255,255,.10);border-radius:5px;overflow:hidden;}
+.segs button{background:transparent;border:0;border-right:1px solid rgba(255,255,255,.08);color:#bdb193;
+  padding:9px 0;font-size:13px;letter-spacing:2px;cursor:pointer;font-family:inherit;transition:.12s;}
+.segs button:last-child{border-right:0;}
+.segs button:hover{background:rgba(255,255,255,.05);}
+.segs button.active{background:rgba(255,122,26,.16);color:#ffc27c;font-weight:800;}
+.slider-row{display:flex;align-items:center;gap:12px;margin-top:12px;font-size:12px;color:#b9ad90;}
+.slider-row label{width:82px;letter-spacing:1px;flex:none;}
+.slider-row input[type=range]{flex:1;accent-color:var(--orange);height:4px;cursor:pointer;}
+.slider-row b{width:42px;text-align:right;color:#e8dcc0;font-variant-numeric:tabular-nums;font-size:12px;}
+.keys{list-style:none;display:flex;flex-direction:column;gap:9px;font-size:12.5px;color:#c9bda1;letter-spacing:.5px;}
+.keys b{display:inline-block;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-bottom-width:2px;border-radius:3px;padding:1px 6px;font-size:11.5px;color:#f0e8d4;margin-right:3px;}
+.keys em{display:inline-block;width:14px;text-align:center;color:#6e6552;font-style:normal;}
+.brief{margin-top:14px;border-top:1px dashed rgba(255,255,255,.10);padding-top:12px;font-size:12px;
+  color:#a99d82;line-height:1.9;letter-spacing:.5px;}
+.brief b{color:#e6d9b8;}
+.brief .warn{color:#8a7f68;font-size:11px;margin-top:6px;}
+#startBtn{display:block;width:100%;padding:15px 0;border:0;border-radius:5px;cursor:pointer;
+  font-family:inherit;font-size:22px;font-weight:900;letter-spacing:12px;text-indent:12px;color:#1c0e02;
+  background:linear-gradient(180deg,#ffa23e,#f06a00 55%,#d85a00);
+  box-shadow:0 8px 26px rgba(255,110,0,.28),inset 0 1px 0 rgba(255,255,255,.4);
+  transition:filter .15s,transform .06s;}
+#startBtn:hover{filter:brightness(1.08);}
+#startBtn:active{transform:translateY(1px);}
+.menu-foot{margin-top:12px;text-align:center;font-size:11px;color:#7e7461;letter-spacing:2px;}
+
+/* ================= 通用覆盖层 ================= */
+.overlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+  background:rgba(3,4,5,.62);backdrop-filter:blur(2px);}
+.overlay-card{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+  padding:30px 40px;min-width:320px;text-align:center;box-shadow:0 24px 70px rgba(0,0,0,.6);}
+.ov-title{font-size:26px;font-weight:900;letter-spacing:8px;color:#f0e6cf;}
+.ov-title.red{color:#ff5f4d;}
+.ov-sub{font-size:12.5px;color:#a99d82;letter-spacing:2px;margin-top:8px;}
+.btn{display:block;width:100%;margin-top:12px;padding:11px 0;border-radius:4px;border:1px solid transparent;
+  font-family:inherit;font-size:14px;font-weight:800;letter-spacing:4px;cursor:pointer;transition:.15s;}
+.btn.primary{background:linear-gradient(180deg,#ff9c36,#e86400);color:#1c0e02;}
+.btn.primary:hover{filter:brightness(1.08);}
+.btn.ghost{background:transparent;border-color:rgba(255,255,255,.16);color:#b6a98c;}
+.btn.ghost:hover{background:rgba(255,255,255,.05);}
+.death-card{border-color:rgba(255,80,60,.25);box-shadow:0 24px 80px rgba(120,0,0,.35);}
+.death-stats{margin-top:14px;font-size:12.5px;color:#c4b79a;letter-spacing:1px;line-height:1.9;
+  border-top:1px dashed rgba(255,255,255,.10);padding-top:12px;}
+
+/* ================= 购买菜单 ================= */
+#buy{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:40;width:308px;
+  background:rgba(9,11,12,.93);border:1px solid rgba(255,255,255,.13);border-radius:6px;
+  padding:12px 14px 12px;box-shadow:0 24px 70px rgba(0,0,0,.65);pointer-events:auto;}
+.buy-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px;
+  padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.08);}
+.buy-head b{font-size:14px;letter-spacing:3px;color:#f0e4c7;}
+.buy-head span{font-size:10px;color:#83785f;letter-spacing:1px;}
+#buyList{display:flex;flex-direction:column;gap:4px;}
+.buy-row{display:flex;align-items:center;gap:10px;width:100%;padding:7px 8px;background:transparent;
+  border:1px solid transparent;border-radius:4px;color:#ddd3ba;cursor:pointer;font:inherit;text-align:left;
+  transition:.12s;}
+.buy-row:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10);}
+.buy-row .bk{width:18px;height:18px;flex:none;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,122,26,.15);border:1px solid rgba(255,122,26,.35);color:#ffb877;font-size:10.5px;
+  border-radius:3px;font-weight:800;}
+.buy-row .bn{flex:1;font-size:13px;letter-spacing:1px;}
+.buy-row .bp{font-size:12px;color:#8dff5a;font-variant-numeric:tabular-nums;letter-spacing:.5px;}
+.buy-row.cant{opacity:.42;cursor:not-allowed;}
+.buy-row.cant .bp{color:#ff6b5e;}
+.buy-row.deny{animation:denyShake .3s;}
+@keyframes denyShake{0%,100%{transform:none;}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+.buy-foot{margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08);
+  font-size:11px;color:#8e8368;letter-spacing:2px;display:flex;justify-content:space-between;}
+.buy-foot b{color:#8dff5a;font-size:14px;letter-spacing:0;font-variant-numeric:tabular-nums;}
+
+/* ================= 战绩 ================= */
+#score{pointer-events:none;background:rgba(3,4,5,.55);}
+.score-card{background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:22px 30px;
+  min-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.score-title{font-size:14px;letter-spacing:6px;color:#cbbd98;text-align:center;margin-bottom:14px;}
+.score-table{width:100%;border-collapse:collapse;font-size:13px;}
+.score-table th{font-size:10.5px;letter-spacing:2px;color:#8b7f64;font-weight:600;padding:6px 10px;
+  border-bottom:1px solid rgba(255,255,255,.10);text-align:right;}
+.score-table th:first-child{text-align:left;}
+.score-table td{padding:8px 10px;text-align:right;color:#e6dcc4;font-variant-numeric:tabular-nums;
+  border-bottom:1px solid rgba(255,255,255,.05);}
+.score-table td:first-child{text-align:left;font-weight:800;letter-spacing:1px;}
+.score-table .team-tag{font-size:10px;padding:1px 5px;border-radius:2px;margin-left:6px;
+  background:rgba(255,122,26,.15);color:#ffb35c;border:1px solid rgba(255,122,26,.3);}
+.score-table .team-tag.ct{background:rgba(90,168,255,.12);color:#8fc2ff;border-color:rgba(90,168,255,.3);}
+
+/* ================= 私人密码门（仅站点生效，本地自动跳过） ================= */
+#csgate{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 30%,rgba(30,20,8,.35),rgba(3,4,5,.95) 70%);
+  backdrop-filter:blur(6px);padding:24px;}
+#csgate .gate-box{width:min(360px,92vw);background:rgba(10,12,13,.92);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:34px 32px 30px;text-align:center;box-shadow:0 28px 80px rgba(0,0,0,.7);}
+#csgate .gate-tag{font-size:10px;letter-spacing:4px;color:#a89973;margin-bottom:14px;}
+#csgate h1{font-family:"Arial Black",Impact,sans-serif;font-size:24px;letter-spacing:2px;color:#f4ead6;margin-bottom:8px;}
+#csgate h1 span{color:var(--orange);}
+#csgate p{font-size:12px;letter-spacing:2px;color:#8f846c;margin-bottom:20px;}
+#csgate input{width:100%;padding:12px 14px;font-size:17px;letter-spacing:.35em;text-align:center;
+  background:#0d1011;border:1px solid rgba(255,255,255,.14);border-radius:5px;color:#f0e8d4;outline:none;
+  transition:border-color .2s;}
+#csgate input:focus{border-color:var(--orange);}
+#csgate button{width:100%;margin-top:12px;padding:12px;font-family:inherit;font-size:14px;font-weight:800;
+  letter-spacing:6px;text-indent:6px;border:0;border-radius:5px;cursor:pointer;color:#1c0e02;
+  background:linear-gradient(180deg,#ffa23e,#e86400);}
+#csgate button:hover{filter:brightness(1.07);}
+#gateErr{height:16px;margin-top:10px;font-size:11.5px;letter-spacing:1px;color:#ff6b5e;}
+
+/* 小屏 */
+@media (max-width:760px){
+  .menu-grid{grid-template-columns:1fr;}
+  .keys{font-size:12px;}
+  #buy{width:270px;}
+  .hud-stat span{font-size:24px;}
+  #ammoLine{font-size:24px;}
+}
+</style>
+</head>
+<body>
+<div id="csgate">
+  <div class="gate-box">
+    <div class="gate-tag">PRIVATE · 私人娱乐</div>
+    <h1>CS<span>·</span>1.5 单机版</h1>
+    <p>输入密码进入游戏</p>
+    <input type="password" id="gatePw" maxlength="16" autocomplete="off" placeholder="••••••">
+    <button id="gateBtn">进 入</button>
+    <div id="gateErr"></div>
+  </div>
+</div>
+
+<canvas id="game"></canvas>
+<div id="scope"></div>
+
+<div id="hud">
+  <div id="radarBox"><canvas id="radar" width="168" height="140"></canvas></div>
+  <div id="roundInfo"><div id="roundTitle">回合 1</div><div id="roundSub">—</div></div>
+  <div id="killfeed"></div>
+  <div id="crosshair">
+    <span class="ch ch-t"></span><span class="ch ch-b"></span>
+    <span class="ch ch-l"></span><span class="ch ch-r"></span>
+    <span id="chDot"></span>
+  </div>
+  <div id="hitmarker"></div>
+  <div id="rewards"></div>
+  <div id="hint">B 购买装备</div>
+  <div class="hud-bl">
+    <div class="hud-stat"><i class="ico ico-hp"></i><span id="hpVal">100</span></div>
+    <div class="hud-stat"><i class="ico ico-ar"></i><span id="arVal">0</span></div>
+    <div id="moneyVal">$800</div>
+  </div>
+  <div class="hud-br">
+    <div id="wName">GLOCK-18</div>
+    <div id="ammoLine"><span id="ammoMag">20</span><span class="sep">/</span><span id="ammoRes">120</span></div>
+    <div id="reloadTip"></div>
+  </div>
+  <div id="vignette"></div>
+  <div id="dmgflash"></div>
+  <div id="banner"></div>
+</div>
+
+<div id="menu">
+  <div class="menu-inner">
+    <div class="menu-head">
+      <div class="cs-logo">COUNTER<span>·</span>STRIKE</div>
+      <div class="cs-sub">
+        <b class="ver">1.5</b><span>单机人机版</span><span class="dot"></span>
+        <span>de_dust</span><span class="dot"></span><span>浏览器复刻</span>
+      </div>
+    </div>
+    <div class="menu-grid">
+      <div class="panel">
+        <div class="panel-title">选择阵营</div>
+        <div class="teams">
+          <button class="team-card active" data-team="t">
+            <span class="badge t">匪</span>
+            <span class="team-meta"><b>匪徒</b><i>AK-47 / 格洛克</i></span>
+          </button>
+          <button class="team-card" data-team="ct">
+            <span class="badge ct">警</span>
+            <span class="team-meta"><b>特警</b><i>M4A1 / USP</i></span>
+          </button>
+        </div>
+        <div class="panel-title">难度</div>
+        <div class="segs" id="diffSegs">
+          <button data-diff="rookie">新兵</button>
+          <button data-diff="vet" class="active">老兵</button>
+          <button data-diff="elite">精英</button>
+        </div>
+        <div class="slider-row">
+          <label>鼠标灵敏度</label>
+          <input id="sens" type="range" min="20" max="300" step="5" value="100">
+          <b id="sensVal">1.00</b>
+        </div>
+        <div class="slider-row">
+          <label>音量</label>
+          <input id="vol" type="range" min="0" max="100" step="5" value="70">
+          <b id="volVal">70</b>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">作战规程</div>
+        <ul class="keys">
+          <li><b>WASD</b> 移动<em>·</em><b>Shift</b> 静步<em>·</em><b>Ctrl</b> 下蹲<em>·</em><b>空格</b> 跳跃</li>
+          <li><b>左键</b> 射击<em>·</em><b>右键</b> AWP 开镜<em>·</em><b>R</b> 换弹<em>·</em><b>1 / 2</b> 换枪</li>
+          <li><b>B</b> 购买菜单（鼠标或数字键选购）<em>·</em><b>TAB</b> 战绩<em>·</em><b>ESC</b> 暂停</li>
+        </ul>
+        <div class="brief">
+          <p><b>回合制人机对战：</b>每回合开局有 8 秒购买时间，清空全部敌人即获胜。</p>
+          <p>击杀 <b>+$300</b><em>·</em>回合获胜 <b>+$3250</b><em>·</em>阵亡后可重新开始本回合。</p>
+          <p class="warn">非官方浏览器复刻，仅供娱乐，无联网功能。</p>
+        </div>
+      </div>
+    </div>
+    <button id="startBtn">开 始 游 戏</button>
+    <div class="menu-foot">建议全屏 F11 · 点击画面锁定鼠标 · 按 ESC 释放鼠标</div>
+  </div>
+</div>
+
+<div id="pause" class="overlay hidden">
+  <div class="overlay-card">
+    <div class="ov-title">已暂停</div>
+    <div class="ov-sub">鼠标已释放 · 呼吸一下</div>
+    <button id="resumeBtn" class="btn primary">继 续 游 戏</button>
+    <button id="quitBtn" class="btn ghost">返 回 主 菜 单</button>
+  </div>
+</div>
+
+<div id="death" class="overlay hidden">
+  <div class="overlay-card death-card">
+    <div class="ov-title red">你 阵 亡 了</div>
+    <div class="ov-sub" id="deathSub">—</div>
+    <div class="death-stats" id="deathStats"></div>
+    <button id="respawnBtn" class="btn primary">重 新 开 始 回 合</button>
+    <button id="deathMenuBtn" class="btn ghost">返 回 主 菜 单</button>
+  </div>
+</div>
+
+<div id="buy" class="hidden">
+  <div class="buy-head"><b>购买装备</b><span>数字键 / 点击 · B 关闭</span></div>
+  <div id="buyList"></div>
+  <div class="buy-foot"><span>余额</span><b id="buyMoney">$800</b></div>
+</div>
+
+<div id="score" class="overlay hidden">
+  <div class="score-card">
+    <div class="score-title">战 绩 统 计</div>
+    <table class="score-table">
+      <thead><tr><th>玩家</th><th>回合</th><th>击杀</th><th>阵亡</th><th>爆头</th><th>命中率</th><th>资金</th></tr></thead>
+      <tbody id="scoreBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="three.min.js"></script>
+<script src="game.js"></script>
+</body>
+</html>

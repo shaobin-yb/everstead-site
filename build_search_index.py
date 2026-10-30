@@ -55,6 +55,8 @@ PRIVATE_PREFIXES = (
     "tools/maternity/",    # 给月饼妈妈的待产手账(私人专区, 2026-10-11)
     "tools/baby-nickname/",  # 老二小名参考+全家投票(私人专区, 2026-10-13)
     "tools/trading-discipline/",  # 投资纪律手册(私人专区, 2026-10-27)
+    "tools/trading-review/",      # 近一年交易复盘(私人专区, 2026-10-27)
+    "tools/cs15/",         # CS 1.5 单机人机版(私人专区, 2026-10-30)
     "knowledge/alm-interpretation/",  # 《办法》深度解读(内部材料, 含产品策略, 密码门, 2026-09-24)
 )
 SKIP_FILES = {"index.html", "index-template.html", "kb.html", "search.json"}

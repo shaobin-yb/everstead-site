@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>简笔画教室 · 一笔一笔跟我画</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "YouYuan", "幼圆", "Microsoft YaHei", "PingFang SC", sans-serif;
+    color: #5b4636;
+    background: #fbf3e4;
+    background-image: radial-gradient(rgba(197,160,102,.22) 1.5px, transparent 1.5px);
+    background-size: 26px 26px;
+    min-height: 100vh;
+    padding: 26px 16px 46px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  .hero { text-align: center; margin-bottom: 20px; }
+  h1 {
+    font-size: 40px;
+    letter-spacing: 6px;
+    color: #e8712f;
+    margin: 0;
+    text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(232,113,47,.14);
+  }
+  .hero p { margin: 8px 0 0; color: #9b7f5f; font-size: 15px; letter-spacing: 1px; }
+
+  .app { display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 20px; align-items: start; }
+
+  .menu {
+    background: #fffdf7;
+    border: 2px solid #f1e2c9;
+    border-radius: 22px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 8px 20px rgba(160,120,60,.08);
+  }
+  .card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 8px;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    transition: background .18s, border-color .18s, box-shadow .18s;
+  }
+  .card:hover { background: #fff8ea; }
+  .card.active { background: #fff2dc; border-color: #f2b375; box-shadow: 0 4px 12px rgba(232,113,47,.15); }
+  .thumb {
+    width: 64px; height: 52px; flex: none;
+    border-radius: 10px;
+    background: #fffcf5;
+    border: 1px solid #f3e6cf;
+    display: grid; place-items: center;
+    overflow: hidden;
+  }
+  .thumb svg { width: 92%; height: 92%; display: block; }
+  .nm { font-size: 16px; letter-spacing: 1px; }
+
+  .stage {
+    background: #fffdf7;
+    border: 2px solid #f1e2c9;
+    border-radius: 24px;
+    padding: 16px;
+    box-shadow: 0 10px 26px rgba(160,120,60,.10);
+  }
+
+  .paper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 400 / 320;
+    border-radius: 18px;
+    background: #fffef9;
+    background-image: radial-gradient(#ecdfc8 1.3px, transparent 1.3px);
+    background-size: 24px 24px;
+    border: 1.5px solid #f3e7d2;
+    overflow: hidden;
+  }
+  #board { position: absolute; inset: 0; width: 100%; height: 100%; color: #4b3a2e; }
+  #doodle {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    pointer-events: none; touch-action: none;
+  }
+  .paper.trace #board { opacity: .16; }
+  .paper.trace #doodle { pointer-events: auto; cursor: crosshair; }
+
+  .hud { margin-top: 14px; }
+  .hud-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .dots { display: flex; gap: 7px; flex-wrap: wrap; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #efe2cb; transition: background .25s, box-shadow .25s; }
+  .dot.on { background: #f0913c; }
+  .dot.now { box-shadow: 0 0 0 4px rgba(240,145,60,.22); }
+  .count { font-size: 13px; color: #a98c67; font-variant-numeric: tabular-nums; }
+
+  .tip {
+    margin: 10px 0 12px;
+    min-height: 28px;
+    font-size: 19px;
+    line-height: 1.55;
+    color: #6b5340;
+    letter-spacing: .5px;
+  }
+
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn {
+    font: inherit;
+    font-size: 15px;
+    border: 2px solid #eddcbf;
+    background: #fffaf0;
+    color: #6b5340;
+    border-radius: 999px;
+    padding: 9px 16px;
+    cursor: pointer;
+    transition: transform .16s, background .16s, border-color .16s;
+    letter-spacing: 1px;
+  }
+  .btn:hover:not(:disabled) { transform: translateY(-1px); border-color: #f2b375; background: #fff4e2; }
+  .btn:disabled { opacity: .4; cursor: default; }
+  .btn.primary { background: #f0913c; border-color: #f0913c; color: #fff; box-shadow: 0 6px 14px rgba(240,145,60,.28); }
+  .btn.primary:hover:not(:disabled) { background: #ec8226; border-color: #ec8226; }
+  .btn.ghost { border-style: dashed; }
+  .btn.on { background: #e8f4ea; border-color: #66a96b; color: #3f7d45; }
+  .btn.small { padding: 7px 14px; font-size: 14px; }
+
+  .doodle-bar { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+  .doodle-bar[hidden] { display: none; }
+  .swatches {
+    display: flex; gap: 8px; align-items: center;
+    padding: 4px 10px;
+    background: #fffaf0;
+    border: 2px solid #eddcbf;
+    border-radius: 999px;
+  }
+  .swatch {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: var(--c);
+    box-shadow: 0 0 0 2px transparent;
+    cursor: pointer;
+    padding: 0;
+  }
+  .swatch.on { box-shadow: 0 0 0 2px #6b5340; }
+
+  .done {
+    position: absolute;
+    left: 50%; top: 16px;
+    transform: translate(-50%, -8px) scale(.7);
+    opacity: 0;
+    background: #fff4d6;
+    border: 2px solid #f3c96a;
+    color: #a86a12;
+    border-radius: 999px;
+    padding: 7px 18px;
+    font-size: 16px;
+    letter-spacing: 2px;
+    box-shadow: 0 8px 18px rgba(200,150,50,.2);
+    pointer-events: none;
+    z-index: 3;
+  }
+  .done.show { animation: pop .55s cubic-bezier(.2,1.6,.4,1) forwards; }
+  @keyframes pop {
+    0% { opacity: 0; transform: translate(-50%, -8px) scale(.7); }
+    60% { opacity: 1; transform: translate(-50%, 0) scale(1.06); }
+    100% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+  }
+
+  .confetti {
+    position: absolute;
+    top: -16px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 4;
+    animation: confetti-fall 1.4s ease-in forwards;
+  }
+  @keyframes confetti-fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(430px) rotate(620deg); opacity: 0; }
+  }
+
+  .foot { text-align: center; margin-top: 22px; font-size: 13px; color: #b39a78; letter-spacing: 1px; }
+
+  @media (max-width: 820px) {
+    body { padding: 18px 10px 36px; }
+    h1 { font-size: 30px; letter-spacing: 3px; }
+    .app { grid-template-columns: 1fr; gap: 12px; }
+    .menu {
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 6px;
+      padding: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .card { flex-direction: column; gap: 4px; min-width: 84px; padding: 6px; }
+    .thumb { width: 58px; height: 46px; }
+    .nm { font-size: 13px; }
+    .tip { font-size: 17px; }
+    .btn { font-size: 14px; padding: 8px 13px; }
+  }
+</style>
+<script>
+var _hmt=_hmt||[];
+(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?1d958a32a6588643ee6e67da344c7693";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>简笔画教室</h1>
+    <p>选一个图案 · 一笔一笔，慢慢跟着画</p>
+  </header>
+
+  <div class="app">
+    <aside class="menu" id="menu" aria-label="选择图案"></aside>
+
+    <section class="stage">
+      <div class="paper" id="paper">
+        <svg id="board" viewBox="0 0 400 320" aria-hidden="true"></svg>
+        <canvas id="doodle"></canvas>
+        <div class="done" id="done">画好啦！</div>
+      </div>
+
+      <div class="hud">
+        <div class="hud-top">
+          <div class="dots" id="dots"></div>
+          <div class="count" id="count">0 / 0</div>
+        </div>
+        <div class="tip" id="tip"></div>
+        <div class="btns">
+          <button id="btnPlay" class="btn primary" type="button">▶ 自动播放</button>
+          <button id="btnPrev" class="btn" type="button">◀ 上一步</button>
+          <button id="btnNext" class="btn" type="button">下一步 ▶</button>
+          <button id="btnReset" class="btn" type="button">↺ 重画</button>
+          <button id="btnDoodle" class="btn ghost" type="button">我来画</button>
+        </div>
+        <div class="doodle-bar" id="doodleBar" hidden>
+          <span class="swatches" id="swatches">
+            <button class="swatch on" type="button" data-c="#e0584f" style="--c:#e0584f" aria-label="红色"></button>
+            <button class="swatch" type="button" data-c="#3f7dbe" style="--c:#3f7dbe" aria-label="蓝色"></button>
+            <button class="swatch" type="button" data-c="#3f8f4a" style="--c:#3f8f4a" aria-label="绿色"></button>
+            <button class="swatch" type="button" data-c="#4b3a2e" style="--c:#4b3a2e" aria-label="黑色"></button>
+          </span>
+          <button id="btnClear" class="btn small" type="button">清空重来</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <p class="foot">空格 播放 / 暂停　　← → 一步一步画</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var INK = '#4b3a2e';
+
+  var LESSONS = [
+    {
+      name: '太阳',
+      steps: [
+        { c: '#ef8a3c', d: 'M 200 100 A 60 60 0 1 1 200 220 A 60 60 0 1 1 200 100', tip: '先画一个大大的圆，这是太阳公公的脸。' },
+        { c: '#f2a24b', d: 'M 275 160 L 302 160 M 253 213 L 272 232 M 200 235 L 200 262 M 147 213 L 128 232 M 125 160 L 98 160 M 147 107 L 128 88 M 200 85 L 200 58 M 253 107 L 272 88', tip: '围着圆画八条短线，是暖暖的光芒。' },
+        { c: '#4b3a2e', d: 'M 178 143 A 5 5 0 1 1 178 153 A 5 5 0 1 1 178 143 M 222 143 A 5 5 0 1 1 222 153 A 5 5 0 1 1 222 143', tip: '给太阳点上两只圆圆的小眼睛。' },
+        { c: '#4b3a2e', d: 'M 175 185 Q 200 205 225 185', tip: '再画一道弯弯的笑，太阳公公笑啦。' }
+      ]
+    },
+    {
+      name: '小鱼',
+      steps: [
+        { c: '#ef8a3c', d: 'M 150 160 C 175 112 255 112 288 160 C 255 208 175 208 150 160 Z', tip: '先画一个胖胖的鱼身子，右边是脑袋。' },
+        { c: '#f2a24b', d: 'M 150 160 L 95 120 L 112 160 L 95 200 Z', tip: '左边加一个三角形，是小鱼的尾巴。' },
+        { c: '#f2a24b', d: 'M 190 128 L 204 104 L 222 119 M 200 197 L 213 221 L 232 203', tip: '背上和肚子下面各画一片鱼鳍。' },
+        { c: '#4b3a2e', d: 'M 242 132 Q 232 160 242 188 M 264 144 A 6 6 0 1 1 264 156 A 6 6 0 1 1 264 144', tip: '画一条鳃线，再点上圆圆的鱼眼睛。' },
+        { c: '#4b3a2e', d: 'M 286 168 Q 276 177 264 173', tip: '最后添一个小嘴巴，小鱼就活啦。' }
+      ]
+    },
+    {
+      name: '小猫',
+      steps: [
+        { c: '#4b3a2e', d: 'M 200 93 A 72 72 0 1 1 200 237 A 72 72 0 1 1 200 93', tip: '画一个大大的圆，是小猫的脸。' },
+        { c: '#4b3a2e', d: 'M 149 114 L 132 55 L 164 103 M 251 114 L 268 55 L 236 103', tip: '头顶画两只尖尖的耳朵。' },
+        { c: '#4b3a2e', d: 'M 174 145 A 7 7 0 1 1 174 159 A 7 7 0 1 1 174 145 M 226 145 A 7 7 0 1 1 226 159 A 7 7 0 1 1 226 145', tip: '中间点上两只圆眼睛。' },
+        { c: '#4b3a2e', d: 'M 192 176 L 208 176 L 200 187 Z M 200 187 Q 186 198 178 189 M 200 187 Q 214 198 222 189', tip: '下面画小鼻子和弯弯的嘴巴。' },
+        { c: '#4b3a2e', d: 'M 142 170 L 105 162 M 140 182 L 102 182 M 144 194 L 108 206 M 258 170 L 295 162 M 260 182 L 298 182 M 256 194 L 292 206', tip: '两边各添三根胡须，小猫神气啦。' }
+      ]
+    },
+    {
+      name: '小房子',
+      steps: [
+        { c: '#c9614e', d: 'M 115 165 L 200 85 L 285 165', tip: '先用两条斜线画一个大屋顶。' },
+        { c: '#8a6a4f', d: 'M 130 165 L 130 262 L 270 262 L 270 165', tip: '屋顶下面画两面墙。' },
+        { c: '#b5824f', d: 'M 182 262 L 182 206 L 218 206 L 218 262 M 210 233 A 3 3 0 1 1 210 239 A 3 3 0 1 1 210 233', tip: '中间开一扇小门，门上画个圆门把。' },
+        { c: '#4a95b8', d: 'M 232 186 L 232 222 L 266 222 L 266 186 Z M 249 186 L 249 222 M 232 204 L 266 204', tip: '右边开一扇窗，再画上十字窗格。' },
+        { c: '#c9614e', d: 'M 232 115 L 232 96 L 256 96 L 256 138', tip: '屋顶上添一个小烟囱。' },
+        { c: '#6aa347', d: 'M 92 266 L 308 266', tip: '脚下画一条地面线，房子站得稳稳的。' }
+      ]
+    },
+    {
+      name: '苹果',
+      steps: [
+        { c: '#d9534f', d: 'M 200 122 C 238 96 294 124 286 184 C 279 232 242 262 200 254 C 158 262 121 232 114 184 C 106 124 162 96 200 122 Z', tip: '画一个圆圆胖胖的苹果身子。' },
+        { c: '#7d5836', d: 'M 200 120 C 202 100 208 86 224 78', tip: '头顶画一根细细的果柄。' },
+        { c: '#6aa347', d: 'M 206 102 C 226 80 252 80 262 94 C 246 110 222 112 206 102 Z', tip: '果柄旁边长出一片叶子。' },
+        { c: '#f2b3a8', d: 'M 150 158 Q 146 184 160 206', tip: '身上画一道亮亮的反光。' }
+      ]
+    },
+    {
+      name: '小花',
+      steps: [
+        { c: '#5a9e46', d: 'M 200 268 C 198 232 202 200 200 168', tip: '先画一根直直的花茎。' },
+        { c: '#6ab04c', d: 'M 200 228 C 176 224 158 204 152 182 C 178 182 196 202 200 228 Z M 200 210 C 224 206 242 186 248 164 C 222 164 204 184 200 210 Z', tip: '茎的两边长出两片叶子。' },
+        { c: '#e97fa5', d: 'M 200 79 A 22 22 0 1 1 200 123 A 22 22 0 1 1 200 79 M 232.3 102.5 A 22 22 0 1 1 232.3 146.5 A 22 22 0 1 1 232.3 102.5 M 220 140.5 A 22 22 0 1 1 220 184.5 A 22 22 0 1 1 220 140.5 M 180 140.5 A 22 22 0 1 1 180 184.5 A 22 22 0 1 1 180 140.5 M 167.7 102.5 A 22 22 0 1 1 167.7 146.5 A 22 22 0 1 1 167.7 102.5', tip: '花心周围画五片圆花瓣。' },
+        { c: '#f0b73f', d: 'M 200 121 A 14 14 0 1 1 200 149 A 14 14 0 1 1 200 121', tip: '中间点上圆圆的花心。' }
+      ]
+    },
+    {
+      name: '小汽车',
+      steps: [
+        { c: '#4a8fc0', d: 'M 96 222 L 96 188 Q 96 174 112 174 L 140 174 L 167 133 Q 175 121 194 121 L 240 121 Q 258 121 266 133 L 294 174 L 302 174 Q 314 176 314 190 L 314 222 Z', tip: '先画车身，前面翘一点当车头。' },
+        { c: '#9cc9e4', d: 'M 208 174 L 208 143 Q 208 135 217 135 L 243 135 Q 252 135 258 145 L 272 174 Z', tip: '车顶开一扇窗户。' },
+        { c: '#4b3a2e', d: 'M 150 200 A 24 24 0 1 1 150 248 A 24 24 0 1 1 150 200 M 258 200 A 24 24 0 1 1 258 248 A 24 24 0 1 1 258 200', tip: '下面装两个大轮子。' },
+        { c: '#8a6a4f', d: 'M 150 215 A 9 9 0 1 1 150 233 A 9 9 0 1 1 150 215 M 258 215 A 9 9 0 1 1 258 233 A 9 9 0 1 1 258 215', tip: '轮子里再画两个小圈当轮毂。' }
+      ]
+    },
+    {
+      name: '雨伞',
+      steps: [
+        { c: '#d9534f', d: 'M 110 186 Q 110 96 200 92 Q 290 96 290 186 Q 267 168 245 186 Q 223 168 201 186 Q 179 168 157 186 Q 135 168 110 186 Z', tip: '画一个大伞面，边边像波浪。' },
+        { c: '#7d5836', d: 'M 200 186 L 200 252 Q 200 272 180 272 Q 162 272 162 254', tip: '伞中间竖一根伞柄，底下弯个钩。' },
+        { c: '#7d5836', d: 'M 200 92 L 200 74', tip: '伞尖上添一个小尖头。' },
+        { c: '#6aaed6', d: 'M 120 224 L 114 242 M 292 230 L 286 248 M 98 264 L 92 282 M 306 278 L 300 296', tip: '旁边下几滴小雨，嘀嗒嘀嗒。' }
+      ]
+    },
+    {
+      name: '小船',
+      steps: [
+        { c: '#8a5a3b', d: 'M 100 210 L 300 210 L 258 252 L 142 252 Z', tip: '先画一只小船，像弯弯的月牙。' },
+        { c: '#8a5a3b', d: 'M 200 210 L 200 104', tip: '船中间竖一根高高的桅杆。' },
+        { c: '#ef8a3c', d: 'M 192 116 L 192 198 L 136 198 Z M 208 130 L 208 198 L 262 198 Z', tip: '两边挂上三角形的帆。' },
+        { c: '#d9534f', d: 'M 200 104 L 230 112 L 200 120 Z', tip: '桅杆顶上飘一面小旗。' },
+        { c: '#4a8fc0', d: 'M 82 270 Q 102 258 122 270 T 162 270 T 202 270 T 242 270 T 282 270 T 318 270', tip: '船下面画一排小浪花。' }
+      ]
+    },
+    {
+      name: '大树',
+      steps: [
+        { c: '#8a5a3b', d: 'M 186 266 L 186 168 M 214 266 L 214 168', tip: '先画两条竖线，是树干。' },
+        { c: '#5aa04a', d: 'M 200 66 A 46 46 0 1 1 200 158 A 46 46 0 1 1 200 66 M 150 112 A 36 36 0 1 1 150 184 A 36 36 0 1 1 150 112 M 250 112 A 36 36 0 1 1 250 184 A 36 36 0 1 1 250 112', tip: '用三个圆圆的云朵拼出树冠。' },
+        { c: '#d9534f', d: 'M 172 90 A 8 8 0 1 1 172 106 A 8 8 0 1 1 172 90 M 214 76 A 8 8 0 1 1 214 92 A 8 8 0 1 1 214 76 M 226 120 A 8 8 0 1 1 226 136 A 8 8 0 1 1 226 120', tip: '树冠上添三个红红的小果子。' },
+        { c: '#6aa347', d: 'M 148 270 L 252 270 M 158 270 L 164 260 M 158 270 L 152 260 M 242 270 L 248 260 M 242 270 L 236 260', tip: '脚下画一条草地线。' }
+      ]
+    }
+  ];
+
+  var board = document.getElementById('board');
+  var menuEl = document.getElementById('menu');
+  var tipEl = document.getElementById('tip');
+  var dotsEl = document.getElementById('dots');
+  var countEl = document.getElementById('count');
+  var paper = document.getElementById('paper');
+  var doneEl = document.getElementById('done');
+  var btnPlay = document.getElementById('btnPlay');
+  var btnPrev = document.getElementById('btnPrev');
+  var btnNext = document.getElementById('btnNext');
+  var btnReset = document.getElementById('btnReset');
+  var btnDoodle = document.getElementById('btnDoodle');
+  var doodleBar = document.getElementById('doodleBar');
+  var swatchesEl = document.getElementById('swatches');
+  var btnClear = document.getElementById('btnClear');
+  var cv = document.getElementById('doodle');
+  var ctx = cv.getContext('2d');
+
+  var lessonIdx = 0;
+  var paths = [];
+  var shown = 0;
+  var busy = false;
+  var playing = false;
+  var autoToken = 0;
+  var drawToken = 0;
+
+  var wait = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+
+  function buildMenu() {
+    menuEl.innerHTML = LESSONS.map(function (L, i) {
+      var inner = L.steps.map(function (s) {
+        return '<path d="' + s.d + '" fill="none" stroke="' + (s.c || INK) + '" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>';
+      }).join('');
+      return '<button class="card' + (i === lessonIdx ? ' active' : '') + '" data-i="' + i + '" type="button">' +
+        '<span class="thumb"><svg viewBox="0 0 400 320" aria-hidden="true">' + inner + '</svg></span>' +
+        '<span class="nm">' + L.name + '</span></button>';
+    }).join('');
+    menuEl.querySelectorAll('.card').forEach(function (b) {
+      b.addEventListener('click', function () { loadLesson(+b.dataset.i); });
+    });
+  }
+
+  function updateMenuActive() {
+    menuEl.querySelectorAll('.card').forEach(function (b, i) {
+      b.classList.toggle('active', i === lessonIdx);
+    });
+  }
+
+  function loadLesson(i) {
+    playing = false;
+    autoToken++;
+    drawToken++;
+    paths.forEach(function (p) {
+      p.getAnimations().forEach(function (a) { a.cancel(); });
+    });
+    lessonIdx = i;
+    var L = LESSONS[i];
+    board.innerHTML = '';
+    paths = L.steps.map(function (s) {
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', s.d);
+      p.setAttribute('fill', 'none');
+      p.setAttribute('stroke', s.c || INK);
+      p.setAttribute('stroke-width', '6');
+      p.setAttribute('stroke-linecap', 'round');
+      p.setAttribute('stroke-linejoin', 'round');
+      board.appendChild(p);
+      var len = p.getTotalLength();
+      p.dataset.len = len;
+      p.style.strokeDasharray = len + 'px';
+      p.style.strokeDashoffset = len + 'px';
+      return p;
+    });
+    shown = 0;
+    busy = false;
+    doneEl.classList.remove('show');
+    clearDoodle();
+    updateMenuActive();
+    if (doodleOn) {
+      showGuides(true);
+      updateHud();
+      setTip('新图案准备好啦：' + L.name + '。淡淡地描着画吧。');
+    } else {
+      updateHud();
+      setTip('选好啦：' + L.name + '。点「下一步」一步一步画，也可以点「自动播放」看它自己长出来。');
+    }
+  }
+
+  function drawStep(k) {
+    return new Promise(function (resolve) {
+      var p = paths[k];
+      if (!p) { resolve(); return; }
+      var len = +p.dataset.len;
+      var dur = Math.min(1400, Math.max(430, len * 2.4));
+      var a = p.animate(
+        [{ strokeDashoffset: len + 'px' }, { strokeDashoffset: '0px' }],
+        { duration: dur, easing: 'linear', fill: 'forwards' }
+      );
+      var settled = false;
+      var done = function () {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
+      a.finished.then(done, done);
+    });
+  }
+
+  function stopAuto() {
+    playing = false;
+    autoToken++;
+    updateHud();
+  }
+
+  function finishStrokeNow() {
+    drawToken++;
+    busy = false;
+    var p = paths[shown - 1];
+    if (!p) return;
+    p.getAnimations().forEach(function (a) {
+      try { a.finish(); } catch (e) { a.cancel(); }
+    });
+  }
+
+  async function nextStep() {
+    if (shown >= paths.length) return;
+    stopAuto();
+    if (busy) finishStrokeNow();
+    var k = shown;
+    shown = k + 1;
+    busy = true;
+    var my = ++drawToken;
+    updateHud();
+    setTip(LESSONS[lessonIdx].steps[k].tip);
+    await drawStep(k);
+    if (my !== drawToken) return;
+    busy = false;
+    updateHud();
+    if (shown >= paths.length) celebrate();
+  }
+
+  function prevStep() {
+    stopAuto();
+    if (busy) finishStrokeNow();
+    if (shown === 0) return;
+    var p = paths[shown - 1];
+    p.getAnimations().forEach(function (a) { a.cancel(); });
+    p.style.strokeDashoffset = p.dataset.len + 'px';
+    shown -= 1;
+    doneEl.classList.remove('show');
+    updateHud();
+    var L = LESSONS[lessonIdx];
+    if (shown === 0) setTip('回到起点，「' + L.name + '」还没开始画哦。');
+    else setTip('退回第 ' + shown + ' 步：' + L.steps[shown - 1].tip);
+  }
+
+  function resetDrawing(msg) {
+    stopAuto();
+    drawToken++;
+    busy = false;
+    paths.forEach(function (p) {
+      p.getAnimations().forEach(function (a) { a.cancel(); });
+      p.style.strokeDashoffset = p.dataset.len + 'px';
+    });
+    shown = 0;
+    doneEl.classList.remove('show');
+    updateHud();
+    setTip(msg || ('重新开始画「' + LESSONS[lessonIdx].name + '」，点「下一步」或「自动播放」。'));
+  }
+
+  async function autoPlay() {
+    if (playing) { stopAuto(); return; }
+    if (shown >= paths.length) resetDrawing('再来一遍吧，这次慢慢看。');
+    playing = true;
+    var my = ++autoToken;
+    updateHud();
+    while (playing && my === autoToken && shown < paths.length) {
+      if (busy) finishStrokeNow();
+      var k = shown;
+      shown = k + 1;
+      busy = true;
+      var myDraw = ++drawToken;
+      updateHud();
+      setTip(LESSONS[lessonIdx].steps[k].tip);
+      await drawStep(k);
+      if (myDraw === drawToken) busy = false;
+      if (my !== autoToken) return;
+      updateHud();
+      if (shown >= paths.length) break;
+      await wait(560);
+    }
+    if (my !== autoToken) return;
+    playing = false;
+    updateHud();
+    if (shown >= paths.length) celebrate();
+  }
+
+  function updateHud() {
+    var steps = LESSONS[lessonIdx].steps;
+    var n = steps.length;
+    var html = '';
+    for (var i = 0; i < n; i++) {
+      var cls = 'dot';
+      if (i < shown) cls += ' on';
+      if (i === shown - 1 && busy) cls += ' now';
+      html += '<span class="' + cls + '"></span>';
+    }
+    dotsEl.innerHTML = html;
+    countEl.textContent = Math.min(shown, n) + ' / ' + n;
+    btnPrev.disabled = doodleOn || shown === 0;
+    btnNext.disabled = doodleOn || shown >= n;
+    btnReset.disabled = doodleOn || shown === 0;
+    btnPlay.disabled = doodleOn;
+    btnPlay.textContent = playing ? '暂停' : (shown >= n ? '↺ 再看一遍' : '▶ 自动播放');
+  }
+
+  function setTip(t) { tipEl.textContent = t; }
+
+  function celebrate() {
+    doneEl.classList.remove('show');
+    void doneEl.offsetWidth;
+    doneEl.classList.add('show');
+    setTip('太棒啦！' + LESSONS[lessonIdx].name + '画好了，自己也来试试吧。');
+    var colors = ['#ef8a3c', '#5aa04a', '#4a8fc0', '#e97fa5', '#f0b73f', '#d9534f'];
+    for (var i = 0; i < 26; i++) {
+      (function (i) {
+        var s = document.createElement('span');
+        s.className = 'confetti';
+        s.style.left = (6 + Math.random() * 88) + '%';
+        s.style.background = colors[i % colors.length];
+        s.style.width = (6 + Math.random() * 6) + 'px';
+        s.style.height = (8 + Math.random() * 8) + 'px';
+        s.style.animationDelay = (Math.random() * 0.3) + 's';
+        s.style.animationDuration = (1.1 + Math.random() * 0.6) + 's';
+        paper.appendChild(s);
+        setTimeout(function () { s.remove(); }, 2200);
+      })(i);
+    }
+  }
+
+  /* ---------- 我来画（描红画布） ---------- */
+  var doodleOn = false;
+  var drawing = false;
+  var lastPt = null;
+  var inkColor = '#e0584f';
+
+  function setCanvasSize() {
+    var r = cv.getBoundingClientRect();
+    if (!r.width) return;
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    var snapshot = null;
+    if (cv.width && cv.height) {
+      snapshot = document.createElement('canvas');
+      snapshot.width = cv.width;
+      snapshot.height = cv.height;
+      snapshot.getContext('2d').drawImage(cv, 0, 0);
+    }
+    cv.width = Math.round(r.width * dpr);
+    cv.height = Math.round(r.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    if (snapshot) ctx.drawImage(snapshot, 0, 0, snapshot.width, snapshot.height, 0, 0, r.width, r.height);
+  }
+
+  function pointerPt(e) {
+    var r = cv.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  function clearDoodle() {
+    ctx.clearRect(0, 0, cv.width, cv.height);
+  }
+
+  cv.addEventListener('pointerdown', function (e) {
+    if (!doodleOn) return;
+    e.preventDefault();
+    drawing = true;
+    if (cv.setPointerCapture) cv.setPointerCapture(e.pointerId);
+    lastPt = pointerPt(e);
+    ctx.strokeStyle = inkColor;
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(lastPt.x, lastPt.y);
+    ctx.lineTo(lastPt.x + 0.1, lastPt.y + 0.1);
+    ctx.stroke();
+  });
+
+  cv.addEventListener('pointermove', function (e) {
+    if (!drawing) return;
+    var p = pointerPt(e);
+    ctx.beginPath();
+    ctx.moveTo(lastPt.x, lastPt.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lastPt = p;
+  });
+
+  window.addEventListener('pointerup', function () { drawing = false; });
+  window.addEventListener('pointercancel', function () { drawing = false; });
+
+  function showGuides(full) {
+    paths.forEach(function (p, i) {
+      p.getAnimations().forEach(function (a) { a.cancel(); });
+      var hidden = !full && i >= shown;
+      p.style.strokeDashoffset = hidden ? p.dataset.len + 'px' : '0px';
+    });
+  }
+
+  function setTrace(on) {
+    doodleOn = on;
+    paper.classList.toggle('trace', on);
+    doodleBar.hidden = !on;
+    btnDoodle.classList.toggle('on', on);
+    btnDoodle.textContent = on ? '收起画笔' : '我来画';
+    if (on) {
+      stopAuto();
+      if (busy) finishStrokeNow();
+      showGuides(true);
+      setCanvasSize();
+    } else {
+      showGuides(false);
+    }
+    updateHud();
+    if (on) setTip('描着淡淡的线，自己动手画一遍吧！可以换颜色，也可以清空重来。');
+    else setTip('画笔收起来啦，继续用按钮一步一步画吧。');
+  }
+
+  btnDoodle.addEventListener('click', function () { setTrace(!doodleOn); });
+
+  swatchesEl.addEventListener('click', function (e) {
+    var b = e.target.closest('.swatch');
+    if (!b) return;
+    inkColor = b.dataset.c;
+    swatchesEl.querySelectorAll('.swatch').forEach(function (s) {
+      s.classList.toggle('on', s === b);
+    });
+  });
+
+  btnClear.addEventListener('click', clearDoodle);
+
+  new ResizeObserver(function () {
+    if (doodleOn) setCanvasSize();
+  }).observe(paper);
+
+  /* ---------- 按钮与键盘 ---------- */
+  btnPlay.addEventListener('click', function () { autoPlay(); });
+  btnNext.addEventListener('click', function () { nextStep(); });
+  btnPrev.addEventListener('click', prevStep);
+  btnReset.addEventListener('click', function () { resetDrawing(); });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'Escape' && doodleOn) {
+      setTrace(false);
+      return;
+    }
+    if (doodleOn) return;
+    if (e.code === 'Space') {
+      e.preventDefault();
+      autoPlay();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      nextStep();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevStep();
+    }
+  });
+
+  buildMenu();
+  loadLesson(0);
+})();
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

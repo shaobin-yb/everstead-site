@@ -568,8 +568,8 @@
         <div class="tl-dot">0-2</div>
         <div class="tl-body">
           <div style="flex:1">
-            <h3>神秘袋 + 遥控器约定</h3>
-            <p>摇沙锤让孩子猜；请 1-2 个孩子摸；练 3 次大声 / 小声 / 静音。</p>
+            <h3>开场 + 遥控器约定</h3>
+            <p>点沙锤按钮让孩子听；练 3 次大声 / 小声 / 静音。</p>
           </div>
           <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
         </div>
@@ -740,23 +740,21 @@
       <div class="scene-head">
         <div class="scene-no">00</div>
         <div>
-          <h3>开场 · 神秘袋</h3>
+          <h3>开场 · 声音遥控器</h3>
           <div class="scene-time">0:00–0:02 · 2 分钟</div>
         </div>
         <span class="scene-sound">沙沙沙</span>
       </div>
       <div class="scene-body">
-        <p class="cue prop">【道具】神秘袋、沙锤</p>
+        <p class="cue prop">【道具】沙锤（或直接点页面上的“沙锤”按钮）</p>
         <p class="line q">“小朋友们，早上好！今天老师给你们带来一个特别吵的故事。”</p>
-        <p class="line q">“我先请你们听一个声音——（摇袋子）听！是什么？”</p>
-        <p class="line q">“谁想来摸一摸？只能摸，不能看哦。”</p>
-        <p class="line q">“你摸到了什么？圆圆的身体，细细的把手——是沙锤！”</p>
+        <p class="line q">“先听一个声音——（点“沙锤 沙沙沙”按钮）沙沙沙，沙沙沙。这是什么声音？对，沙锤！”</p>
         <p class="line q">“沙锤唱歌，是这样——沙沙沙，沙沙沙。大家一起——沙沙沙！”</p>
         <p class="line q">“今天的故事叫《世界上最吵的乐队》。听名字就知道，它特别吵。可是我们的教室现在很安静，怎么办呢？”</p>
         <p class="line q">“我们来约一个‘声音遥控器’。看老师的手：手举高、五指张开——大声！手放低——小声。手握拳——静音，一点声音都没有。”</p>
         <p class="line q">“我们来试试：大声——沙沙沙！小声——沙沙沙。静音——（握拳）嘘——”</p>
         <p class="line q">“太棒了！乐队，出发！”</p>
-        <p class="cue action">【动作】请 1-2 个孩子摸袋子，别让全班排队。遥控器练 2 轮就够，不要练太久。</p>
+        <p class="cue action">【动作】遥控器练 2 轮就够，不要练太久。</p>
         <p class="micro">小班提醒：如果孩子已经兴奋，先把“静音”练好再翻封面。</p>
         <div class="scene-sounds">
           <span class="ss-label">本场发声</span>
@@ -1113,7 +1111,7 @@
     <div class="sec-head">
       <div class="sec-no">07</div>
       <h2>素材清单</h2>
-      <div class="hint">装一个袋子，出门前看一眼</div>
+      <div class="hint">出门前看一眼</div>
     </div>
     <div class="card">
       <div class="mat-group">
@@ -1121,7 +1119,6 @@
         <ul class="mat-list">
           <li><span class="dot"></span>绘本《世界上最吵的乐队》</li>
           <li><span class="dot"></span>沙锤 1 对（或铃鼓 / 三角铁 / 小鼓，任选 1-2 样）</li>
-          <li><span class="dot"></span>神秘袋 1 个（不透明）</li>
           <li><span class="dot"></span>贴纸 / 小印章（每人 1 份，提前确认）</li>
           <li><span class="dot"></span>手机 / 平板 / 电脑（打开本页，播放声音按钮）</li>
           <li><span class="dot"></span>水、湿巾</li>
@@ -1311,9 +1308,16 @@
     }
     ctx = new AC();
     master = ctx.createGain();
-    master.gain.value = 0.5;
-    master.connect(ctx.destination);
-    var len = Math.floor(ctx.sampleRate * 2);
+    master.gain.value = 0.55;
+    var comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -16;
+    comp.knee.value = 18;
+    comp.ratio.value = 5;
+    comp.attack.value = 0.003;
+    comp.release.value = 0.25;
+    master.connect(comp);
+    comp.connect(ctx.destination);
+    var len = Math.floor(ctx.sampleRate * 4);
     noiseBuf = ctx.createBuffer(1, len, ctx.sampleRate);
     var d = noiseBuf.getChannelData(0);
     for(var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
@@ -1335,221 +1339,322 @@
     return g;
   }
 
+  function osc(type, freq, t, dur){
+    var o = ctx.createOscillator();
+    o.type = type;
+    o.frequency.value = freq;
+    o.start(t);
+    o.stop(t + dur);
+    return o;
+  }
+
+  function bq(type, freq, q){
+    var f = ctx.createBiquadFilter();
+    f.type = type;
+    f.frequency.value = freq;
+    if(q != null) f.Q.value = q;
+    return f;
+  }
+
   var sounds = {
     shaker: function(t){
-      for(var i = 0; i < 4; i++){
-        var st = t + i * 0.15;
-        var n = noise(st, 0.08);
-        var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 3200;
-        var g = env(st, 0.22, 0.008, 0.07);
+      for(var i = 0; i < 6; i++){
+        var st = t + i * 0.26;
+        var n = noise(st, 0.16);
+        var f = bq('bandpass', 5200, 0.9);
+        var g = env(st, 0.18, 0.012, 0.13);
         n.connect(f).connect(g).connect(master);
       }
     },
     drum: function(t){
       for(var i = 0; i < 3; i++){
-        var st = t + i * 0.18;
-        var o = ctx.createOscillator(); o.type = 'sine';
+        var st = t + i * 0.5;
+        var o = osc('sine', 150, st, 0.55);
         o.frequency.setValueAtTime(150, st);
-        o.frequency.exponentialRampToValueAtTime(55, st + 0.18);
-        var g = env(st, 0.4, 0.005, 0.18);
-        o.connect(g).connect(master); o.start(st); o.stop(st + 0.22);
-        var n = noise(st, 0.05);
-        var nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 1200;
-        var ng = env(st, 0.12, 0.003, 0.05);
+        o.frequency.exponentialRampToValueAtTime(48, st + 0.4);
+        var g = env(st, 0.42, 0.004, 0.45);
+        o.connect(g).connect(master);
+        var n = noise(st, 0.08);
+        var nf = bq('lowpass', 1400);
+        var ng = env(st, 0.12, 0.003, 0.07);
         n.connect(nf).connect(ng).connect(master);
       }
     },
     step: function(t){
-      for(var i = 0; i < 3; i++){
-        var st = t + i * 0.2;
-        var o = ctx.createOscillator(); o.type = 'sine';
-        o.frequency.setValueAtTime(120, st);
-        o.frequency.exponentialRampToValueAtTime(60, st + 0.1);
-        var g = env(st, 0.22, 0.004, 0.1);
-        o.connect(g).connect(master); o.start(st); o.stop(st + 0.13);
-        var n = noise(st, 0.04);
-        var nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 800;
-        var ng = env(st, 0.08, 0.003, 0.04);
+      for(var i = 0; i < 4; i++){
+        var st = t + i * 0.45;
+        var o = osc('sine', 130, st, 0.25);
+        o.frequency.setValueAtTime(130, st);
+        o.frequency.exponentialRampToValueAtTime(58, st + 0.18);
+        var g = env(st, 0.2, 0.004, 0.18);
+        o.connect(g).connect(master);
+        var n = noise(st, 0.06);
+        var nf = bq('lowpass', 900);
+        var ng = env(st, 0.07, 0.003, 0.05);
         n.connect(nf).connect(ng).connect(master);
       }
     },
     trumpet: function(t){
-      var notes = [392, 523, 659, 523];
+      var notes = [392, 523, 659, 784, 659];
       for(var i = 0; i < notes.length; i++){
-        var st = t + i * 0.17;
-        var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = notes[i];
-        var o2 = ctx.createOscillator(); o2.type = 'square'; o2.frequency.value = notes[i] * 1.006;
-        var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1700;
-        var g = env(st, 0.16, 0.02, 0.15);
+        var st = t + i * 0.34;
+        var dur = 0.32;
+        var o = osc('sawtooth', notes[i], st, dur);
+        var o2 = osc('square', notes[i] * 1.004, st, dur);
+        var f = bq('lowpass', 1200);
+        f.frequency.setValueAtTime(900, st);
+        f.frequency.exponentialRampToValueAtTime(2800, st + 0.06);
+        f.frequency.exponentialRampToValueAtTime(1800, st + dur);
+        var g = env(st, 0.14, 0.025, 0.28);
         o.connect(f); o2.connect(f); f.connect(g).connect(master);
-        o.start(st); o2.start(st); o.stop(st + 0.18); o2.stop(st + 0.18);
+        var lfo = osc('sine', 5.5, st, dur);
+        var lg = ctx.createGain(); lg.gain.value = 5.5;
+        lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
       }
     },
     recorder: function(t){
-      var notes = [880, 988, 1047];
+      var notes = [880, 988, 1047, 988, 1047];
       for(var i = 0; i < notes.length; i++){
-        var st = t + i * 0.14;
-        var o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = notes[i];
-        var g = env(st, 0.14, 0.01, 0.12);
-        o.connect(g).connect(master); o.start(st); o.stop(st + 0.14);
+        var st = t + i * 0.3;
+        var dur = 0.28;
+        var o = osc('sine', notes[i], st, dur);
+        var o2 = osc('triangle', notes[i] * 2, st, dur);
+        var f = bq('lowpass', 4200);
+        var g = env(st, 0.12, 0.02, 0.24);
+        var o2g = ctx.createGain(); o2g.gain.value = 0.25;
+        o.connect(f); o2.connect(o2g).connect(f); f.connect(g).connect(master);
+        var n = noise(st, 0.04);
+        var nf = bq('highpass', 3000);
+        var ng = env(st, 0.025, 0.002, 0.03);
+        n.connect(nf).connect(ng).connect(master);
       }
     },
     hammer: function(t){
       for(var i = 0; i < 3; i++){
-        var st = t + i * 0.22;
-        var o = ctx.createOscillator(); o.type = 'sine';
-        o.frequency.setValueAtTime(180, st);
-        o.frequency.exponentialRampToValueAtTime(80, st + 0.08);
-        var g = env(st, 0.3, 0.003, 0.1);
-        o.connect(g).connect(master); o.start(st); o.stop(st + 0.12);
-        var n = noise(st, 0.03);
-        var nf = ctx.createBiquadFilter(); nf.type = 'highpass'; nf.frequency.value = 1500;
-        var ng = env(st, 0.12, 0.002, 0.04);
+        var st = t + i * 0.6;
+        var o = osc('sine', 190, st, 0.25);
+        o.frequency.setValueAtTime(190, st);
+        o.frequency.exponentialRampToValueAtTime(75, st + 0.12);
+        var g = env(st, 0.32, 0.003, 0.2);
+        o.connect(g).connect(master);
+        var n = noise(st, 0.05);
+        var nf = bq('highpass', 1700);
+        var ng = env(st, 0.13, 0.002, 0.04);
         n.connect(nf).connect(ng).connect(master);
       }
     },
     drill: function(t){
-      var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 220;
-      var lfo = ctx.createOscillator(); lfo.type = 'square'; lfo.frequency.value = 18;
-      var lg = ctx.createGain(); lg.gain.value = 55; lfo.connect(lg).connect(o.frequency);
-      var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1200; f.Q.value = 1.4;
+      var dur = 1.8;
+      var o = osc('sawtooth', 220, t, dur);
+      var o2 = osc('sawtooth', 330, t, dur);
+      var lfo = osc('square', 16, t, dur);
+      var lg = ctx.createGain(); lg.gain.value = 45;
+      lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
+      var f = bq('bandpass', 1100, 1.2);
       var g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.14, t + 0.05);
-      g.gain.setValueAtTime(0.14, t + 0.65);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.8);
-      o.connect(f).connect(g).connect(master);
-      o.start(t); lfo.start(t); o.stop(t + 0.82); lfo.stop(t + 0.82);
+      g.gain.exponentialRampToValueAtTime(0.12, t + 0.06);
+      g.gain.setValueAtTime(0.12, t + 1.5);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
+      o.connect(f); o2.connect(f); f.connect(g).connect(master);
     },
     tambourine: function(t){
-      for(var i = 0; i < 3; i++){
-        var st = t + i * 0.13;
-        var n = noise(st, 0.2);
-        var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 4800;
-        var g = env(st, 0.18, 0.005, 0.18);
+      for(var i = 0; i < 5; i++){
+        var st = t + i * 0.3;
+        var n = noise(st, 0.3);
+        var f = bq('highpass', 5000);
+        var g = env(st, 0.16, 0.005, 0.26);
         n.connect(f).connect(g).connect(master);
-        var o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = 5200;
-        var og = env(st, 0.05, 0.005, 0.22);
-        o.connect(og).connect(master); o.start(st); o.stop(st + 0.24);
+        for(var j = 0; j < 3; j++){
+          var o = osc('sine', 4200 + j * 1400, st, 0.3);
+          var og = env(st, 0.025, 0.003, 0.28);
+          o.connect(og).connect(master);
+        }
       }
     },
     wave: function(t){
-      var n = noise(t, 1.6);
-      var f = ctx.createBiquadFilter(); f.type = 'lowpass';
-      f.frequency.setValueAtTime(400, t);
-      f.frequency.linearRampToValueAtTime(1100, t + 0.7);
-      f.frequency.linearRampToValueAtTime(300, t + 1.5);
-      var g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.16, t + 0.4);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.5);
-      n.connect(f).connect(g).connect(master);
+      var n1 = noise(t, 2.6);
+      var f1 = bq('lowpass', 400);
+      f1.frequency.setValueAtTime(350, t);
+      f1.frequency.linearRampToValueAtTime(1200, t + 1.1);
+      f1.frequency.linearRampToValueAtTime(300, t + 2.4);
+      var g1 = ctx.createGain();
+      g1.gain.setValueAtTime(0.0001, t);
+      g1.gain.exponentialRampToValueAtTime(0.12, t + 0.7);
+      g1.gain.exponentialRampToValueAtTime(0.0001, t + 2.4);
+      n1.connect(f1).connect(g1).connect(master);
+      var n2 = noise(t + 0.5, 2.0);
+      var f2 = bq('bandpass', 700, 0.7);
+      f2.frequency.setValueAtTime(800, t + 0.5);
+      f2.frequency.linearRampToValueAtTime(400, t + 1.6);
+      f2.frequency.linearRampToValueAtTime(900, t + 2.4);
+      var g2 = ctx.createGain();
+      g2.gain.setValueAtTime(0.0001, t + 0.5);
+      g2.gain.exponentialRampToValueAtTime(0.05, t + 1.0);
+      g2.gain.exponentialRampToValueAtTime(0.0001, t + 2.4);
+      n2.connect(f2).connect(g2).connect(master);
     },
     bubble: function(t){
-      for(var i = 0; i < 6; i++){
-        var st = t + i * 0.1;
-        var o = ctx.createOscillator(); o.type = 'sine';
-        o.frequency.setValueAtTime(400 + i * 80, st);
-        o.frequency.exponentialRampToValueAtTime(900 + i * 100, st + 0.08);
-        var g = env(st, 0.1, 0.005, 0.08);
-        o.connect(g).connect(master); o.start(st); o.stop(st + 0.1);
+      for(var i = 0; i < 9; i++){
+        var st = t + i * 0.18;
+        var o = osc('sine', 350 + i * 70, st, 0.12);
+        o.frequency.setValueAtTime(350 + i * 70, st);
+        o.frequency.exponentialRampToValueAtTime(900 + i * 80, st + 0.1);
+        var g = env(st, 0.08, 0.004, 0.1);
+        o.connect(g).connect(master);
+        var n = noise(st, 0.02);
+        var nf = bq('highpass', 2200);
+        var ng = env(st, 0.015, 0.001, 0.02);
+        n.connect(nf).connect(ng).connect(master);
       }
     },
     triangle: function(t){
-      var freqs = [2500, 3700, 5200];
-      for(var i = 0; i < freqs.length; i++){
-        for(var j = 0; j < 2; j++){
-          var st = t + j * 0.35;
-          var o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = freqs[i];
+      var freqs = [2400, 3700, 5200, 6800];
+      for(var j = 0; j < 2; j++){
+        var st = t + j * 0.7;
+        for(var i = 0; i < freqs.length; i++){
+          var o = osc('sine', freqs[i] * (1 + (Math.random() - 0.5) * 0.01), st, 1.7);
           var g = ctx.createGain();
-          g.gain.setValueAtTime(0.08 / (i + 1) / (j + 1), st);
-          g.gain.exponentialRampToValueAtTime(0.0001, st + 1.1);
-          o.connect(g).connect(master); o.start(st); o.stop(st + 1.2);
+          var peak = 0.07 / (i + 1) / (j + 1);
+          g.gain.setValueAtTime(peak, st);
+          g.gain.exponentialRampToValueAtTime(0.0001, st + 1.6);
+          o.connect(g).connect(master);
         }
       }
     },
     bird: function(t){
-      for(var i = 0; i < 3; i++){
-        var st = t + i * 0.22;
-        var o = ctx.createOscillator(); o.type = 'sine';
+      for(var i = 0; i < 5; i++){
+        var st = t + i * 0.38;
+        var o = osc('sine', 1800, st, 0.2);
         o.frequency.setValueAtTime(1800, st);
-        o.frequency.exponentialRampToValueAtTime(2800, st + 0.06);
-        o.frequency.exponentialRampToValueAtTime(2200, st + 0.12);
-        var g = env(st, 0.1, 0.01, 0.12);
-        o.connect(g).connect(master); o.start(st); o.stop(st + 0.15);
+        o.frequency.exponentialRampToValueAtTime(3000, st + 0.06);
+        o.frequency.exponentialRampToValueAtTime(2200, st + 0.14);
+        var lfo = osc('sine', 45, st, 0.14);
+        var lg = ctx.createGain(); lg.gain.value = 120;
+        lfo.connect(lg).connect(o.frequency);
+        var g = env(st, 0.09, 0.01, 0.15);
+        o.connect(g).connect(master);
+        var o2 = osc('sine', 3600, st, 0.14);
+        var g2 = env(st, 0.02, 0.005, 0.1);
+        o2.connect(g2).connect(master);
       }
     },
     snake: function(t){
-      var n = noise(t, 0.7);
-      var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 3800;
+      var n = noise(t, 1.8);
+      var f = bq('bandpass', 3800, 0.6);
       var g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.12, t + 0.1);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.65);
+      g.gain.exponentialRampToValueAtTime(0.1, t + 0.2);
+      g.gain.setValueAtTime(0.1, t + 1.3);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
       n.connect(f).connect(g).connect(master);
+      var n2 = noise(t, 1.8);
+      var f2 = bq('highpass', 2500);
+      var g2 = ctx.createGain();
+      g2.gain.setValueAtTime(0.0001, t);
+      g2.gain.exponentialRampToValueAtTime(0.04, t + 0.3);
+      g2.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
+      n2.connect(f2).connect(g2).connect(master);
     },
     tuba: function(t){
-      var o = ctx.createOscillator(); o.type = 'sawtooth';
-      o.frequency.setValueAtTime(98, t);
-      o.frequency.linearRampToValueAtTime(87, t + 0.75);
-      var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 480;
-      var g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.22, t + 0.08);
-      g.gain.setValueAtTime(0.22, t + 0.55);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
-      o.connect(f).connect(g).connect(master); o.start(t); o.stop(t + 0.95);
+      var notes = [98, 87];
+      for(var i = 0; i < notes.length; i++){
+        var st = t + i * 0.9;
+        var dur = 0.8;
+        var o = osc('sawtooth', notes[i], st, dur);
+        var o2 = osc('sine', notes[i] / 2, st, dur);
+        var f = bq('lowpass', 400);
+        f.frequency.setValueAtTime(250, st);
+        f.frequency.exponentialRampToValueAtTime(700, st + 0.1);
+        f.frequency.exponentialRampToValueAtTime(350, st + dur);
+        var g = ctx.createGain();
+        g.gain.setValueAtTime(0.0001, st);
+        g.gain.exponentialRampToValueAtTime(0.22, st + 0.08);
+        g.gain.setValueAtTime(0.22, st + 0.55);
+        g.gain.exponentialRampToValueAtTime(0.0001, st + 0.85);
+        o.connect(f); o2.connect(f); f.connect(g).connect(master);
+        var lfo = osc('sine', 4.5, st, dur);
+        var lg = ctx.createGain(); lg.gain.value = 2;
+        lfo.connect(lg).connect(o.frequency);
+      }
     },
     wind: function(t){
-      var n = noise(t, 1.4);
-      var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 0.8;
-      f.frequency.setValueAtTime(600, t);
-      f.frequency.linearRampToValueAtTime(1200, t + 0.7);
-      f.frequency.linearRampToValueAtTime(500, t + 1.3);
+      var n = noise(t, 2.6);
+      var f = bq('lowpass', 600, 0.5);
+      f.frequency.setValueAtTime(400, t);
+      f.frequency.linearRampToValueAtTime(900, t + 1.2);
+      f.frequency.linearRampToValueAtTime(350, t + 2.4);
       var g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.13, t + 0.5);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.3);
+      g.gain.exponentialRampToValueAtTime(0.1, t + 0.7);
+      g.gain.linearRampToValueAtTime(0.06, t + 1.4);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 2.5);
       n.connect(f).connect(g).connect(master);
+      var n2 = noise(t + 0.8, 1.6);
+      var f2 = bq('bandpass', 900, 0.6);
+      f2.frequency.setValueAtTime(1000, t + 0.8);
+      f2.frequency.linearRampToValueAtTime(600, t + 2.2);
+      var g2 = ctx.createGain();
+      g2.gain.setValueAtTime(0.0001, t + 0.8);
+      g2.gain.exponentialRampToValueAtTime(0.04, t + 1.2);
+      g2.gain.exponentialRampToValueAtTime(0.0001, t + 2.4);
+      n2.connect(f2).connect(g2).connect(master);
     },
     mic: function(t){
-      var notes = [[523, 0], [587, 0.18], [659, 0.36], [523, 0.6]];
+      var notes = [[523, 0], [587, 0.35], [659, 0.7], [784, 1.05], [659, 1.4]];
       for(var i = 0; i < notes.length; i++){
+        var f0 = notes[i][0];
         var st = t + notes[i][1];
-        var o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = notes[i][0];
-        var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1200; f.Q.value = 1.8;
-        var g = env(st, 0.16, 0.02, 0.15);
-        o.connect(f).connect(g).connect(master); o.start(st); o.stop(st + 0.18);
+        var dur = 0.32;
+        var o = osc('sawtooth', f0, st, dur);
+        var o2 = osc('sine', f0, st, dur);
+        var f1 = bq('bandpass', 800, 2.5);
+        var f2 = bq('bandpass', 1200, 3.5);
+        var g = env(st, 0.12, 0.025, 0.28);
+        var g2 = ctx.createGain(); g2.gain.value = 0.35;
+        o.connect(f1); o.connect(f2); o2.connect(g2);
+        f1.connect(g); f2.connect(g); g2.connect(g); g.connect(master);
+        var lfo = osc('sine', 5, st, dur);
+        var lg = ctx.createGain(); lg.gain.value = 6;
+        lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
       }
     },
     whoosh: function(t){
-      var n = noise(t, 0.9);
-      var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.2;
-      f.frequency.setValueAtTime(300, t);
-      f.frequency.exponentialRampToValueAtTime(3000, t + 0.5);
-      f.frequency.exponentialRampToValueAtTime(500, t + 0.85);
+      var n = noise(t, 1.9);
+      var f = bq('bandpass', 300, 1.0);
+      f.frequency.setValueAtTime(250, t);
+      f.frequency.exponentialRampToValueAtTime(3000, t + 0.9);
+      f.frequency.exponentialRampToValueAtTime(400, t + 1.8);
       var g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.16, t + 0.3);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+      g.gain.exponentialRampToValueAtTime(0.14, t + 0.5);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
       n.connect(f).connect(g).connect(master);
+      var n2 = noise(t, 1.9);
+      var f2 = bq('lowpass', 800);
+      var g2 = ctx.createGain();
+      g2.gain.setValueAtTime(0.0001, t);
+      g2.gain.exponentialRampToValueAtTime(0.05, t + 0.6);
+      g2.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
+      n2.connect(f2).connect(g2).connect(master);
     },
     shh: function(t){
-      var n = noise(t, 0.9);
-      var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 2200;
+      var n = noise(t, 1.8);
+      var f = bq('bandpass', 3200, 0.6);
       var g = ctx.createGain();
       g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.09, t + 0.15);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+      g.gain.exponentialRampToValueAtTime(0.07, t + 0.25);
+      g.gain.setValueAtTime(0.07, t + 1.2);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
       n.connect(f).connect(g).connect(master);
     },
     band: function(t){
       sounds.trumpet(t);
-      sounds.drum(t + 0.06);
-      sounds.tambourine(t + 0.12);
-      sounds.triangle(t + 0.22);
-      sounds.tuba(t + 0.3);
-      sounds.mic(t + 0.5);
+      sounds.drum(t + 0.08);
+      sounds.tambourine(t + 0.18);
+      sounds.triangle(t + 0.3);
+      sounds.tuba(t + 0.38);
+      sounds.mic(t + 0.95);
     }
   };
 
@@ -1567,7 +1672,7 @@
     btn.classList.remove('playing');
     void btn.offsetWidth;
     btn.classList.add('playing');
-    setTimeout(function(){ btn.classList.remove('playing'); }, 450);
+    setTimeout(function(){ btn.classList.remove('playing'); }, 1800);
   });
 })();
 </script>

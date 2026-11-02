@@ -1339,6 +1339,16 @@
     return g;
   }
 
+  function holdEnv(st, dur, peak, attack, release){
+    var g = ctx.createGain();
+    var p = Math.max(peak, 0.0002);
+    g.gain.setValueAtTime(0.0001, st);
+    g.gain.exponentialRampToValueAtTime(p, st + attack);
+    g.gain.setValueAtTime(p, st + Math.max(attack + 0.01, dur - release));
+    g.gain.exponentialRampToValueAtTime(0.0001, st + dur);
+    return g;
+  }
+
   function osc(type, freq, t, dur){
     var o = ctx.createOscillator();
     o.type = type;
@@ -1397,36 +1407,72 @@
     trumpet: function(t){
       var notes = [392, 523, 659, 784, 659];
       for(var i = 0; i < notes.length; i++){
+        var f0 = notes[i];
         var st = t + i * 0.34;
-        var dur = 0.32;
-        var o = osc('sawtooth', notes[i], st, dur);
-        var o2 = osc('square', notes[i] * 1.004, st, dur);
-        var f = bq('lowpass', 1200);
-        f.frequency.setValueAtTime(900, st);
-        f.frequency.exponentialRampToValueAtTime(2800, st + 0.06);
-        f.frequency.exponentialRampToValueAtTime(1800, st + dur);
-        var g = env(st, 0.14, 0.025, 0.28);
-        o.connect(f); o2.connect(f); f.connect(g).connect(master);
-        var lfo = osc('sine', 5.5, st, dur);
-        var lg = ctx.createGain(); lg.gain.value = 5.5;
-        lfo.connect(lg); lg.connect(o.frequency); lg.connect(o2.frequency);
+        var dur = 0.36;
+        var o1 = osc('sawtooth', f0, st, dur);
+        var o2 = osc('sawtooth', f0 * 1.003, st, dur);
+        o1.frequency.setValueAtTime(f0 * 0.965, st);
+        o1.frequency.exponentialRampToValueAtTime(f0, st + 0.045);
+        o2.frequency.setValueAtTime(f0 * 0.965 * 1.003, st);
+        o2.frequency.exponentialRampToValueAtTime(f0 * 1.003, st + 0.045);
+        var hp = bq('highpass', 180, 0.7);
+        var pk = bq('peaking', 1200, 1.1);
+        pk.gain.value = 7;
+        var lp = bq('lowpass', 1200, 0.8);
+        lp.frequency.setValueAtTime(700, st);
+        lp.frequency.exponentialRampToValueAtTime(3600, st + 0.06);
+        lp.frequency.exponentialRampToValueAtTime(2400, st + dur);
+        var g = holdEnv(st, dur, 0.11, 0.02, 0.08);
+        o1.connect(hp); o2.connect(hp);
+        hp.connect(pk); pk.connect(lp); lp.connect(g).connect(master);
+        var lfo = osc('sine', 5.2, st, dur);
+        var lg = ctx.createGain();
+        lg.gain.setValueAtTime(0, st);
+        lg.gain.linearRampToValueAtTime(1.6, st + 0.15);
+        lfo.connect(lg); lg.connect(o1.frequency); lg.connect(o2.frequency);
+        var n = noise(st, 0.08);
+        var nf = bq('bandpass', 1600, 0.8);
+        var ng = env(st, 0.03, 0.004, 0.06);
+        n.connect(nf).connect(ng).connect(master);
       }
     },
     recorder: function(t){
-      var notes = [880, 988, 1047, 988, 1047];
+      var notes = [523, 587, 659, 587, 523];
       for(var i = 0; i < notes.length; i++){
-        var st = t + i * 0.3;
-        var dur = 0.28;
-        var o = osc('sine', notes[i], st, dur);
-        var o2 = osc('triangle', notes[i] * 2, st, dur);
+        var f0 = notes[i];
+        var st = t + i * 0.34;
+        var dur = 0.34;
+        var o1 = osc('sine', f0, st, dur);
+        var o2 = osc('sine', f0 * 2, st, dur);
+        var o3 = osc('sine', f0 * 3, st, dur);
+        var g1 = ctx.createGain(); g1.gain.value = 0.75;
+        var g2 = ctx.createGain(); g2.gain.value = 0.18;
+        var g3 = ctx.createGain(); g3.gain.value = 0.06;
+        var mix = ctx.createGain();
+        o1.connect(g1).connect(mix);
+        o2.connect(g2).connect(mix);
+        o3.connect(g3).connect(mix);
         var f = bq('lowpass', 4200);
-        var g = env(st, 0.12, 0.02, 0.24);
-        var o2g = ctx.createGain(); o2g.gain.value = 0.25;
-        o.connect(f); o2.connect(o2g).connect(f); f.connect(g).connect(master);
-        var n = noise(st, 0.04);
-        var nf = bq('highpass', 3000);
-        var ng = env(st, 0.025, 0.002, 0.03);
+        var g = holdEnv(st, dur, 0.11, 0.03, 0.09);
+        mix.connect(f).connect(g).connect(master);
+        var n = noise(st, dur);
+        var nf = bq('bandpass', 2800, 0.8);
+        var ng = ctx.createGain();
+        ng.gain.setValueAtTime(0.0001, st);
+        ng.gain.exponentialRampToValueAtTime(0.018, st + 0.04);
+        ng.gain.setValueAtTime(0.018, st + dur - 0.08);
+        ng.gain.exponentialRampToValueAtTime(0.0001, st + dur);
         n.connect(nf).connect(ng).connect(master);
+        var n2 = noise(st, 0.06);
+        var nf2 = bq('highpass', 3000);
+        var ng2 = env(st, 0.03, 0.003, 0.05);
+        n2.connect(nf2).connect(ng2).connect(master);
+        var lfo = osc('sine', 4.8, st, dur);
+        var lg = ctx.createGain();
+        lg.gain.setValueAtTime(0, st);
+        lg.gain.linearRampToValueAtTime(1.2, st + 0.15);
+        lfo.connect(lg); lg.connect(o1.frequency); lg.connect(o2.frequency); lg.connect(o3.frequency);
       }
     },
     hammer: function(t){

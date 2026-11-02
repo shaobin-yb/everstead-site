@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>《世界上最吵的乐队》讲读手册 · 小班 20 分钟</title>
+<title>《世界上最吵的乐队》教师讲读手册 · 小班 20 分钟</title>
 <meta name="robots" content="noindex, nofollow">
 <style>
   :root{
@@ -93,6 +93,7 @@
   .chips li:nth-child(2){background:var(--orange)}
   .chips li:nth-child(3){background:var(--green)}
   .chips li:nth-child(4){background:var(--blue)}
+  .chips li:nth-child(5){background:var(--purple)}
   .hero-art{flex:0 0 320px;position:relative;z-index:1}
   .hero-art svg{width:100%;height:auto;display:block}
 
@@ -123,13 +124,23 @@
     background:var(--card);border:4px solid var(--line);border-radius:24px;
     padding:18px 20px;box-shadow:var(--shadow);
   }
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
   .callout{
     background:#FFF6D9;border:2px dashed #E8C87E;border-radius:16px;
     padding:11px 15px;font-size:15px;color:#7A5B2E;
   }
   .callout b{color:#C2531F}
+  .callout.blue{background:#EAF6FF;border-color:#9CC9E8;color:#3F6A88}
+  .callout.blue b{color:#2F6A93}
+
+  /* ---------- 音频提示 ---------- */
+  .audio-hint{
+    display:flex;gap:11px;align-items:flex-start;
+    margin-top:12px;padding:11px 15px;
+    background:#EAF6FF;border:2px dashed #9CC9E8;border-radius:18px;
+    font-size:14px;color:#3F6A88;line-height:1.65;
+  }
+  .audio-hint .ico{font-size:21px;line-height:1.2}
+  .audio-hint b{color:#2F6A93}
 
   /* ---------- 三个抓手 ---------- */
   .grip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
@@ -242,6 +253,35 @@
   .scene:nth-of-type(4n+3) .scene-no{background:var(--blue)}
   .scene:nth-of-type(4n+4) .scene-no{background:var(--purple)}
 
+  /* ---------- 本场发声 ---------- */
+  .scene-sounds{
+    display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+    margin-top:11px;padding:9px 12px;
+    background:#F3F9FF;border:2px dashed #BFD9E8;border-radius:14px;
+  }
+  .ss-label{font-size:12px;font-weight:700;color:#5B7A93;letter-spacing:1px;margin-right:2px}
+  .snd{
+    display:inline-flex;align-items:center;gap:5px;
+    border:2px solid #BFD9E8;background:#fff;color:#2F5D7A;
+    font-family:inherit;font-size:13.5px;font-weight:700;
+    padding:4px 10px;border-radius:999px;cursor:pointer;
+    box-shadow:0 2px 0 rgba(120,160,190,.15);
+    transition:transform .12s ease, background .12s ease;
+    line-height:1.4;text-align:left;
+  }
+  .snd:hover{background:#EAF6FF;transform:translateY(-1px)}
+  .snd:active{transform:translateY(1px);box-shadow:none}
+  .snd .snd-ico{font-size:14px}
+  .snd .snd-ono{font-weight:400;color:#6B8CA3;font-size:12.5px}
+  .snd.playing{background:#FFE9CF;border-color:#F0A35E;color:#B4551A;animation:sndPulse .35s ease}
+  @keyframes sndPulse{0%{transform:scale(1)}50%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .sound-lab{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .sound-lab .snd{justify-content:center;padding:7px 8px}
+  .sound-group{margin-bottom:16px}
+  .sound-group:last-of-type{margin-bottom:0}
+  .sound-group h3{font-size:16px;color:var(--orange);margin-bottom:7px}
+  .sound-note{font-size:13px;color:var(--ink-faint);margin-top:10px;line-height:1.65}
+
   /* ---------- 遥控器 ---------- */
   .remote-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
   .remote{
@@ -301,7 +341,8 @@
     .hero{flex-direction:column;padding:20px 18px 16px;gap:14px}
     h1{font-size:34px;letter-spacing:1px}
     .hero-art{flex:0 0 auto;width:100%;max-width:330px}
-    .grip,.grid2,.grid3,.skills,.remote-grid,.rescue,.extras,.mat-list{grid-template-columns:1fr}
+    .grip,.skills,.remote-grid,.rescue,.extras,.mat-list{grid-template-columns:1fr}
+    .sound-lab{grid-template-columns:1fr 1fr}
     .sec-head h2{font-size:23px}
     .sec-head .hint{display:none}
     .topbar{gap:6px;padding:7px 9px}
@@ -316,7 +357,7 @@
   /* ---------- 打印 ---------- */
   @page{size:A4;margin:12mm}
   @media print{
-    .topbar,.quicknav,.no-print,.check{display:none!important}
+    .topbar,.quicknav,.no-print,.check,.audio-hint{display:none!important}
     body{background:#fff;padding:0;font-size:11.5pt;line-height:1.55}
     .poster{max-width:none}
     .hero{border-width:3px;box-shadow:none;break-inside:avoid;padding:14px 18px}
@@ -331,7 +372,7 @@
     .sec-no{width:30px;height:30px;font-size:14px;border-radius:9px}
     .sec-head h2{font-size:17pt}
     .card,.scene,.remote,.tl-body{box-shadow:none}
-    .grip,.grid2,.grid3,.skills,.remote-grid,.rescue,.extras,.mat-list{grid-template-columns:1fr 1fr}
+    .grip,.skills,.remote-grid,.rescue,.extras,.mat-list{grid-template-columns:1fr 1fr}
     .scene{break-inside:avoid;margin-bottom:8px}
     .scene-head{padding:7px 12px}
     .scene-body{padding:8px 12px 9px}
@@ -344,6 +385,13 @@
     .remote{padding:10px 8px}
     .remote h3{font-size:13pt}
     .remote p{font-size:9pt}
+    #materials{break-before:page}
+    .scene-sounds{background:#fff;border:1px solid #ccc;padding:5px 8px;margin-top:5px}
+    .ss-label{font-size:8.5pt}
+    .snd{box-shadow:none;border:1px solid #bbb;padding:1px 6px;font-size:8.5pt;background:#fff}
+    .snd .snd-ico{display:none}
+    .snd .snd-ono{font-size:8pt}
+    .sound-lab{grid-template-columns:repeat(3,1fr)}
     .page-break{break-before:page}
     .vol-chart{height:80px}
     footer{margin-top:14px;font-size:8.5pt}
@@ -366,15 +414,16 @@
   <!-- ================= 头部 ================= -->
   <header class="hero">
     <div class="hero-text">
-      <div class="kicker">芽三班 · 家长进课堂</div>
+      <div class="kicker">幼儿园绘本讲读参考</div>
       <h1>世界上最吵的乐队</h1>
-      <div class="sub">绘本讲读手册 · 小班 3-4 岁 · 20 分钟</div>
-      <p class="lead">一支乐队，走过城市、工地、沙滩、海底、丛林、高山，一直走到太空。每走一站，就多一位演奏家；最后，十个人一起回家，一个一个说晚安。</p>
+      <div class="sub">教师讲读手册 · 小班 3-4 岁 · 20 分钟</div>
+      <p class="lead">一支乐队，走过城市、工地、沙滩、海底、丛林、高山，一直走到太空。每走一站，就多一位演奏家；最后，十个人一起回家，一个一个说晚安。每个场景都配有可点击的发声按钮。</p>
       <ul class="chips">
         <li>小班 3-4 岁</li>
         <li>20 分钟</li>
         <li>7 站旅程</li>
         <li>10 位演奏家</li>
+        <li>点击发声</li>
       </ul>
     </div>
     <div class="hero-art" aria-hidden="true">
@@ -454,10 +503,16 @@
     <a href="#skills">8 个技巧</a>
     <a href="#script">逐场景台词</a>
     <a href="#remote">声音遥控器</a>
+    <a href="#soundlab">声音试听台</a>
     <a href="#materials">素材清单</a>
     <a href="#rescue">救场</a>
-    <a href="#extras">给老师</a>
+    <a href="#extras">教师提示</a>
   </nav>
+
+  <div class="audio-hint no-print">
+    <span class="ico">🔊</span>
+    <div><b>声音按钮怎么用：</b>每个场景卡下面有“本场发声”按钮，点一下就能听到对应乐器/环境声的<b>合成示意音</b>（不是原书配套音频）。上课前先点一遍，确认音量；一节课挑 3-5 个关键声音即可，不用全点。</div>
+  </div>
 
   <!-- ================= 01 一图看懂 ================= -->
   <section id="grip">
@@ -482,6 +537,9 @@
         <h3>你只须记住 3 件事</h3>
         <p>① 声音遥控器：大声 / 小声 / 静音。<br>② 每页只找一个东西。<br>③ 结尾一定要静下来，用耳语说晚安。</p>
       </div>
+    </div>
+    <div class="callout blue no-print" style="margin-top:14px">
+      <b>声音按钮 + 手势 = 双通道：</b>先点按钮让孩子听，再做手势让孩子模仿；听—做—说，三遍就记住了。每个场景不用全点，挑最像的那个声音。
     </div>
   </section>
 
@@ -591,7 +649,7 @@
         <div class="tl-body">
           <div style="flex:1">
             <h3>贴纸 + 收尾</h3>
-            <p>发贴纸、击掌、谢谢老师、帮忙收椅子。留 3 分钟缓冲。</p>
+            <p>发贴纸、击掌、谢谢配班老师、帮忙收椅子。留 3 分钟缓冲。</p>
           </div>
           <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
         </div>
@@ -675,7 +733,7 @@
       <div class="hint">照着念也行，改成自己的话也行</div>
     </div>
     <div class="callout" style="margin-bottom:14px">
-      <b>先看这一句：</b>下面是“讲读骨架”。书上的押韵句子和重复句优先，按你手上的中文版念；我写的口令和台词是补在书页之间的“胶水”，不用逐字背。
+      <b>先看这一句：</b>下面是“讲读骨架”。书上的押韵句子和重复句优先，按你手上的中文版念；我写的口令和台词是补在书页之间的“胶水”，不用逐字背。每个场景卡下面的“本场发声”按钮，可以先点给孩子听，再念台词。
     </div>
 
     <article class="scene">
@@ -689,17 +747,21 @@
       </div>
       <div class="scene-body">
         <p class="cue prop">【道具】神秘袋、沙锤</p>
-        <p class="line q">“小朋友们，早上好！我是王斯卯的爸爸，你们可以叫我月饼爸爸。”</p>
-        <p class="line q">“今天我来的时候，听到一个奇怪的声音——（摇袋子）听！是什么？”</p>
+        <p class="line q">“小朋友们，早上好！今天老师给你们带来一个特别吵的故事。”</p>
+        <p class="line q">“我先请你们听一个声音——（摇袋子）听！是什么？”</p>
         <p class="line q">“谁想来摸一摸？只能摸，不能看哦。”</p>
         <p class="line q">“你摸到了什么？圆圆的身体，细细的把手——是沙锤！”</p>
         <p class="line q">“沙锤唱歌，是这样——沙沙沙，沙沙沙。大家一起——沙沙沙！”</p>
         <p class="line q">“今天的故事叫《世界上最吵的乐队》。听名字就知道，它特别吵。可是我们的教室现在很安静，怎么办呢？”</p>
-        <p class="line q">“我们来约一个‘声音遥控器’。看我的手：手举高、五指张开——大声！手放低——小声。手握拳——静音，一点声音都没有。”</p>
+        <p class="line q">“我们来约一个‘声音遥控器’。看老师的手：手举高、五指张开——大声！手放低——小声。手握拳——静音，一点声音都没有。”</p>
         <p class="line q">“我们来试试：大声——沙沙沙！小声——沙沙沙。静音——（握拳）嘘——”</p>
         <p class="line q">“太棒了！乐队，出发！”</p>
         <p class="cue action">【动作】请 1-2 个孩子摸袋子，别让全班排队。遥控器练 2 轮就够，不要练太久。</p>
         <p class="micro">小班提醒：如果孩子已经兴奋，先把“静音”练好再翻封面。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="shaker"><span class="snd-ico">🔊</span><span>沙锤</span><span class="snd-ono">沙沙沙</span></button>
+        </div>
       </div>
     </article>
 
@@ -718,6 +780,12 @@
         <p class="line q">“他们要走到哪里去呢？我们跟着他们，一起走！”</p>
         <p class="cue action">【动作】手指画面，让孩子指；不要求数对，一起数 1、2、3 就好。</p>
         <p class="micro">封面停留不超过 2 分钟，小班的耐心从这里开始计时。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="band"><span class="snd-ico">🔊</span><span>乐队合奏</span><span class="snd-ono">哇——</span></button>
+          <button type="button" class="snd" data-snd="trumpet"><span class="snd-ico">🔊</span><span>小号</span><span class="snd-ono">嘟嘟嘟</span></button>
+          <button type="button" class="snd" data-snd="drum"><span class="snd-ico">🔊</span><span>鼓</span><span class="snd-ono">咚咚咚</span></button>
+        </div>
       </div>
     </article>
 
@@ -737,6 +805,12 @@
         <p class="line q">“我们一起，一边踏步一边演奏：咚-咚-咚，嘟-嘟-嘟！”</p>
         <p class="line q">“城市里的人都跑出来看：哇，好吵的乐队呀！”</p>
         <p class="cue action">【动作】站起来踏步 3 秒，拍腿打鼓，手做小号。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="trumpet"><span class="snd-ico">🔊</span><span>小号</span><span class="snd-ono">嘟嘟嘟</span></button>
+          <button type="button" class="snd" data-snd="drum"><span class="snd-ico">🔊</span><span>鼓</span><span class="snd-ono">咚咚咚</span></button>
+          <button type="button" class="snd" data-snd="step"><span class="snd-ico">🔊</span><span>踏步</span><span class="snd-ono">咚-咚-咚</span></button>
+        </div>
       </div>
     </article>
 
@@ -756,6 +830,12 @@
         <p class="line q">“我们一起学：咚-咚-咚，嗡——”</p>
         <p class="cue action">【动作】拍腿当锤子；食指钻手心当电钻。</p>
         <p class="micro">如果孩子对工地兴奋，立刻用“静音”收一次，再翻页。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="recorder"><span class="snd-ico">🔊</span><span>竖笛</span><span class="snd-ono">嘀嘀嘀</span></button>
+          <button type="button" class="snd" data-snd="hammer"><span class="snd-ico">🔊</span><span>锤子</span><span class="snd-ono">咚咚咚</span></button>
+          <button type="button" class="snd" data-snd="drill"><span class="snd-ico">🔊</span><span>电钻</span><span class="snd-ono">嗡嗡嗡</span></button>
+        </div>
       </div>
     </article>
 
@@ -774,6 +854,11 @@
         <p class="line q">“海浪也来伴奏——哗——。我们用手做海浪：哗——，哗——。”</p>
         <p class="line q">“看，沙堡上有一只小螃蟹，它在跟我们招手呢！在哪里？指给我看！”</p>
         <p class="cue action">【动作】双手做波浪；让孩子指螃蟹，指到就夸“你眼睛真亮”。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="tambourine"><span class="snd-ico">🔊</span><span>铃鼓</span><span class="snd-ono">铃铃铃</span></button>
+          <button type="button" class="snd" data-snd="wave"><span class="snd-ico">🔊</span><span>海浪</span><span class="snd-ono">哗——</span></button>
+        </div>
       </div>
     </article>
 
@@ -793,6 +878,12 @@
         <p class="line q">“嘘——海底不能太吵，会吓到小鱼。我们‘静音’，只做动作：沙——沙——沙——”</p>
         <p class="cue action">【动作】手指放嘴边；只做口型不出声。这是全场第一次“静音”，一定要做。</p>
         <p class="cue warn">【控场】做完静音，停 3 秒再翻页。这 3 秒是整场的“刹车”。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="shaker"><span class="snd-ico">🔊</span><span>沙锤</span><span class="snd-ono">沙沙沙</span></button>
+          <button type="button" class="snd" data-snd="bubble"><span class="snd-ico">🔊</span><span>泡泡</span><span class="snd-ono">咕噜咕噜</span></button>
+          <button type="button" class="snd" data-snd="shh"><span class="snd-ico">🔊</span><span>静音</span><span class="snd-ono">嘘——</span></button>
+        </div>
       </div>
     </article>
 
@@ -811,6 +902,12 @@
         <p class="line q">“丛林里还有谁？听，啾啾啾；看，一条蛇——嘶——”</p>
         <p class="line q">“我们一起学巨嘴鸟：叮——”</p>
         <p class="cue action">【动作】食指敲手心当三角铁；小手做 S 形当蛇。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="triangle"><span class="snd-ico">🔊</span><span>三角铁</span><span class="snd-ono">叮——</span></button>
+          <button type="button" class="snd" data-snd="bird"><span class="snd-ico">🔊</span><span>鸟</span><span class="snd-ono">啾啾啾</span></button>
+          <button type="button" class="snd" data-snd="snake"><span class="snd-ico">🔊</span><span>蛇</span><span class="snd-ono">嘶——</span></button>
+        </div>
       </div>
     </article>
 
@@ -829,6 +926,12 @@
         <p class="line q">“一位探险家加入了乐队，他背着一个大大的乐器，像一个大蜗牛——这是大号！大号唱歌：嗡——嗡——”</p>
         <p class="line q">“我们一起：嗡——嗡——”</p>
         <p class="cue action">【动作】搓手、跺脚、双手圈嘴做大号。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="tuba"><span class="snd-ico">🔊</span><span>大号</span><span class="snd-ono">嗡——</span></button>
+          <button type="button" class="snd" data-snd="wind"><span class="snd-ico">🔊</span><span>风</span><span class="snd-ono">呼——</span></button>
+          <button type="button" class="snd" data-snd="step"><span class="snd-ico">🔊</span><span>跺脚</span><span class="snd-ono">咚-咚-咚</span></button>
+        </div>
       </div>
     </article>
 
@@ -849,6 +952,11 @@
         <p class="line q">“十位！世界上最吵的乐队，满员啦！”</p>
         <p class="cue action">【动作】飘；伸手指一起数；数到 10 鼓掌。</p>
         <p class="micro">这是全场最高点。数完 10，立刻进入“回家”，不要再加游戏。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="whoosh"><span class="snd-ico">🔊</span><span>飞船</span><span class="snd-ono">嗖——</span></button>
+          <button type="button" class="snd" data-snd="mic"><span class="snd-ico">🔊</span><span>麦克风</span><span class="snd-ono">啦啦啦</span></button>
+        </div>
       </div>
     </article>
 
@@ -868,7 +976,12 @@
         <p class="line q">“乐队回到家，钻进被窝，呼呼呼，睡着了。”</p>
         <p class="line q">“我们的故事，也讲完啦。”</p>
         <p class="cue action">【动作】声音逐句变轻；最后一句用耳语；挥手。</p>
-        <p class="cue warn">【控场】这里必须真的小声。你一小声，孩子就会跟着小声。</p>
+        <p class="cue warn">【控场】这一页不要点小号/鼓，保持安静；最多点“嘘”和三角铁。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="shh"><span class="snd-ico">🔊</span><span>嘘 / 晚安</span><span class="snd-ono">嘘——</span></button>
+          <button type="button" class="snd" data-snd="triangle"><span class="snd-ico">🔊</span><span>三角铁</span><span class="snd-ono">叮——</span></button>
+        </div>
       </div>
     </article>
 
@@ -888,7 +1001,12 @@
         <p class="line q">“每个人都有自己的声音。大声，很好听；小声，也很好听。只要是你自己的声音，就很好听。”</p>
         <p class="line q">“最后，我们来做一次‘最小声的乐队’。我们一起，用最小的声音说：沙——沙——沙——”</p>
         <p class="line q">“演出结束！谢谢大家！”</p>
-        <p class="cue action">【动作】三个问题各只问一次，不追问。最后用耳语收尾，自然过渡到老师。</p>
+        <p class="cue action">【动作】三个问题各只问一次，不追问。最后用耳语收尾，自然过渡到配班老师。</p>
+        <div class="scene-sounds">
+          <span class="ss-label">本场发声</span>
+          <button type="button" class="snd" data-snd="shaker"><span class="snd-ico">🔊</span><span>沙锤</span><span class="snd-ono">沙——沙——</span></button>
+          <button type="button" class="snd" data-snd="shh"><span class="snd-ico">🔊</span><span>嘘</span><span class="snd-ono">嘘——</span></button>
+        </div>
       </div>
     </article>
 
@@ -949,10 +1067,51 @@
     </div>
   </section>
 
-  <!-- ================= 06 素材 ================= -->
-  <section id="materials">
+  <!-- ================= 06 声音试听台 ================= -->
+  <section id="soundlab">
     <div class="sec-head">
       <div class="sec-no">06</div>
+      <h2>声音试听台</h2>
+      <div class="hint">上课前先点一遍，确认音量和音色</div>
+    </div>
+    <div class="card">
+      <div class="sound-group">
+        <h3>乐器</h3>
+        <div class="sound-lab">
+          <button type="button" class="snd" data-snd="trumpet"><span class="snd-ico">🔊</span><span>小号</span><span class="snd-ono">嘟嘟嘟</span></button>
+          <button type="button" class="snd" data-snd="drum"><span class="snd-ico">🔊</span><span>鼓</span><span class="snd-ono">咚咚咚</span></button>
+          <button type="button" class="snd" data-snd="tambourine"><span class="snd-ico">🔊</span><span>铃鼓</span><span class="snd-ono">铃铃铃</span></button>
+          <button type="button" class="snd" data-snd="triangle"><span class="snd-ico">🔊</span><span>三角铁</span><span class="snd-ono">叮——</span></button>
+          <button type="button" class="snd" data-snd="tuba"><span class="snd-ico">🔊</span><span>大号</span><span class="snd-ono">嗡——</span></button>
+          <button type="button" class="snd" data-snd="shaker"><span class="snd-ico">🔊</span><span>沙锤</span><span class="snd-ono">沙沙沙</span></button>
+          <button type="button" class="snd" data-snd="recorder"><span class="snd-ico">🔊</span><span>竖笛</span><span class="snd-ono">嘀嘀嘀</span></button>
+          <button type="button" class="snd" data-snd="mic"><span class="snd-ico">🔊</span><span>麦克风</span><span class="snd-ono">啦啦啦</span></button>
+          <button type="button" class="snd" data-snd="band"><span class="snd-ico">🔊</span><span>乐队合奏</span><span class="snd-ono">哇——</span></button>
+        </div>
+      </div>
+      <div class="sound-group">
+        <h3>环境与动作</h3>
+        <div class="sound-lab">
+          <button type="button" class="snd" data-snd="step"><span class="snd-ico">🔊</span><span>踏步</span><span class="snd-ono">咚-咚-咚</span></button>
+          <button type="button" class="snd" data-snd="hammer"><span class="snd-ico">🔊</span><span>锤子</span><span class="snd-ono">咚咚咚</span></button>
+          <button type="button" class="snd" data-snd="drill"><span class="snd-ico">🔊</span><span>电钻</span><span class="snd-ono">嗡嗡嗡</span></button>
+          <button type="button" class="snd" data-snd="wave"><span class="snd-ico">🔊</span><span>海浪</span><span class="snd-ono">哗——</span></button>
+          <button type="button" class="snd" data-snd="bubble"><span class="snd-ico">🔊</span><span>泡泡</span><span class="snd-ono">咕噜咕噜</span></button>
+          <button type="button" class="snd" data-snd="bird"><span class="snd-ico">🔊</span><span>鸟</span><span class="snd-ono">啾啾啾</span></button>
+          <button type="button" class="snd" data-snd="snake"><span class="snd-ico">🔊</span><span>蛇</span><span class="snd-ono">嘶——</span></button>
+          <button type="button" class="snd" data-snd="wind"><span class="snd-ico">🔊</span><span>风</span><span class="snd-ono">呼——</span></button>
+          <button type="button" class="snd" data-snd="whoosh"><span class="snd-ico">🔊</span><span>飞船</span><span class="snd-ono">嗖——</span></button>
+          <button type="button" class="snd" data-snd="shh"><span class="snd-ico">🔊</span><span>嘘 / 晚安</span><span class="snd-ono">嘘——</span></button>
+        </div>
+      </div>
+      <p class="sound-note">所有声音由浏览器实时合成，是“示意音”，不是原书配套音频；音色只求可辨认，方便孩子听辨和模仿。</p>
+    </div>
+  </section>
+
+  <!-- ================= 07 素材 ================= -->
+  <section id="materials">
+    <div class="sec-head">
+      <div class="sec-no">07</div>
       <h2>素材清单</h2>
       <div class="hint">装一个袋子，出门前看一眼</div>
     </div>
@@ -963,35 +1122,36 @@
           <li><span class="dot"></span>绘本《世界上最吵的乐队》</li>
           <li><span class="dot"></span>沙锤 1 对（或铃鼓 / 三角铁 / 小鼓，任选 1-2 样）</li>
           <li><span class="dot"></span>神秘袋 1 个（不透明）</li>
-          <li><span class="dot"></span>贴纸 / 小印章（每人 1 份，提前问老师）</li>
-          <li><span class="dot"></span>水（讲 20 分钟嗓子会干）</li>
-          <li><span class="dot"></span>湿巾（发贴纸 / 和小朋友握手后擦手）</li>
+          <li><span class="dot"></span>贴纸 / 小印章（每人 1 份，提前确认）</li>
+          <li><span class="dot"></span>手机 / 平板 / 电脑（打开本页，播放声音按钮）</li>
+          <li><span class="dot"></span>水、湿巾</li>
         </ul>
       </div>
       <div class="mat-group">
         <h3>可选（有就带，没有不影响）</h3>
         <ul class="mat-list">
-          <li class="opt"><span class="dot"></span>小音箱 + 进行曲（入场 / 踏步）</li>
+          <li class="opt"><span class="dot"></span>小音箱（连接本页，声音更清楚）</li>
           <li class="opt"><span class="dot"></span>泡泡水（海底场景；注意地面湿滑）</li>
           <li class="opt"><span class="dot"></span>打印的声音遥控器卡（A5，1 张）</li>
           <li class="opt"><span class="dot"></span>乐器图卡 / 乐队成员卡（如果做了）</li>
         </ul>
       </div>
       <div class="mat-group" style="margin-bottom:0">
-        <h3>给老师的三句话</h3>
+        <h3>课堂准备（4 件事）</h3>
         <ul class="mat-list">
-          <li><span class="dot"></span>“我大概讲 20 分钟，前面会约一个声音遥控器的手势。”</li>
-          <li><span class="dot"></span>“麻烦您坐在能看到全班的位置，我手势收不回来时帮我一起做静音。”</li>
-          <li><span class="dot"></span>“有没有孩子对贴纸过敏，或者家长介意？我换成击掌 / 盖章。”</li>
+          <li><span class="dot"></span>提前 10 分钟到，点一遍声音按钮，确认音量。</li>
+          <li><span class="dot"></span>请配班老师坐在能看到全班的位置。</li>
+          <li><span class="dot"></span>贴纸 / 印章提前确认过敏与家长意见。</li>
+          <li><span class="dot"></span>讲完留 2 分钟交接，帮忙收椅子。</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <!-- ================= 07 救场 ================= -->
+  <!-- ================= 08 救场 ================= -->
   <section id="rescue">
     <div class="sec-head">
-      <div class="sec-no">07</div>
+      <div class="sec-no">08</div>
       <h2>救场预案</h2>
       <div class="hint">小班现场，计划赶不上变化</div>
     </div>
@@ -1006,7 +1166,7 @@
       </div>
       <div class="card">
         <div class="if">孩子哭 / 害怕（海底、外星人）</div>
-        <div class="then">请老师接手，不强行哄；你继续用小声讲，给其他孩子安全感。提前说一句“这都是我们想象的”。</div>
+        <div class="then">请配班老师接手，不强行哄；你继续用小声讲，给其他孩子安全感。提前说一句“这都是我们想象的”。</div>
       </div>
       <div class="card">
         <div class="if">时间不够</div>
@@ -1022,27 +1182,27 @@
       </div>
       <div class="card">
         <div class="if">贴纸过敏 / 家长介意</div>
-        <div class="then">提前问老师；现场改用击掌、盖章，或者“点个赞”贴在手背。</div>
+        <div class="then">提前确认；现场改用击掌、盖章，或者“点个赞”贴在手背。</div>
       </div>
       <div class="card">
-        <div class="if">设备 / 音乐出问题</div>
-        <div class="then">不用音乐也能讲：踏步、拍腿、拍手就是节奏。音乐只是加分项。</div>
+        <div class="if">设备 / 声音按钮出问题</div>
+        <div class="then">不用按钮也能讲：踏步、拍腿、拍手就是节奏。声音按钮只是加分项。</div>
       </div>
     </div>
   </section>
 
-  <!-- ================= 08 给老师 / 延伸 ================= -->
+  <!-- ================= 09 教师提示 / 延伸 ================= -->
   <section id="extras">
     <div class="sec-head">
-      <div class="sec-no">08</div>
-      <h2>给老师 &amp; 延伸</h2>
+      <div class="sec-no">09</div>
+      <h2>教师提示 &amp; 延伸</h2>
       <div class="hint">讲完不要立刻走，留 2 分钟交接</div>
     </div>
     <div class="extras">
       <div class="card">
-        <h3>给老师的话（可照念）</h3>
+        <h3>和配班老师怎么配合</h3>
         <div class="quote">
-          “老师您好，我今天讲《世界上最吵的乐队》，大概 20 分钟。前面 2 分钟会和小朋友约定一个‘声音遥控器’：大声、小声、静音三个手势。麻烦您坐在能看到全班的位置，如果我手势收不回来，帮我一起做‘静音’。需要拍照您随时拍，不用问我。讲完我帮忙收椅子，谢谢老师！”
+          “今天讲《世界上最吵的乐队》，大概 20 分钟。前面会约一个‘声音遥控器’的手势：大声、小声、静音。麻烦您坐在能看到全班的位置，如果我手势收不回来，帮我一起做‘静音’。需要拍照您随时拍，不用问我。讲完我帮忙收椅子，谢谢！”
         </div>
       </div>
       <div class="card">
@@ -1055,22 +1215,22 @@
       </div>
     </div>
     <div class="card" style="margin-top:14px">
-      <h3 style="font-size:19px;color:var(--orange);margin-bottom:5px">家长进课堂 · 4 个小提醒</h3>
+      <h3 style="font-size:19px;color:var(--orange);margin-bottom:5px">教师课堂提示 · 4 条</h3>
       <p style="font-size:15px;color:var(--ink-soft);line-height:1.75">
-        ① 提前 10 分钟到，试话筒 / 音乐，确认座位。<br>
-        ② 穿方便蹲下 / 坐地上的裤子，不穿高跟鞋。<br>
-        ③ 不喷浓香水（孩子敏感），手机静音。<br>
-        ④ 不讲“我孩子多厉害”，讲“每个小朋友都可以加入乐队”。
+        ① 提前 10 分钟到，试声音按钮 / 小音箱，确认音量。<br>
+        ② 请配班老师坐在能看到全班的位置，手势收不回来时一起做静音。<br>
+        ③ 贴纸 / 印章提前确认过敏与家长意见，不行就改用击掌。<br>
+        ④ 讲完留 2 分钟交接，帮忙收椅子，别把道具落在教室。
       </p>
     </div>
     <div class="bookinfo">
       <b>关于这本书：</b>中文版《世界上最吵的乐队》，作者〔英〕凯尔·图德，绘者〔英〕凯特·辛德雷，译者小砂，中信出版集团 2025 年 8 月版，ISBN 978-7-5217-7557-0。原版为 <i>Marching Band</i>（Kael Tudor 文 / Kate Hindley 图，Nosy Crow，2025），32 页押韵绘本；乐队从城市出发，途经工地、沙滩、海底、丛林、高山、太空，成员逐个加入至 10 位，最后回家道晚安。适读年龄 3 岁+。<br>
-      <b>说明：</b>本页台词为讲读骨架，书上的押韵句子和重复句请以你手上的中文版为准；拟声词和互动口令可以自由替换。
+      <b>说明：</b>本页台词为讲读骨架，书上的押韵句子和重复句请以你手上的中文版为准；拟声词和互动口令可以自由替换。页面内所有声音为浏览器合成的示意音，不是原书配套音频。
     </div>
   </section>
 
   <footer>
-    铁蛋制作 · 2026-11-02 · 芽三班家长进课堂 · 仅私人使用
+    幼儿园绘本讲读参考 · 2026-11-02 · 可打印
   </footer>
 </main>
 
@@ -1101,14 +1261,15 @@
       clearInterval(id); id = null;
       startBtn.textContent = '开始';
       try {
-        var ctx = new (window.AudioContext || window.webkitAudioContext)();
-        var o = ctx.createOscillator();
-        var g = ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        var c = new Ctx();
+        var o = c.createOscillator();
+        var g = c.createGain();
+        o.connect(g); g.connect(c.destination);
         o.frequency.value = 660;
-        g.gain.setValueAtTime(0.12, ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
-        o.start(); o.stop(ctx.currentTime + 1.2);
+        g.gain.setValueAtTime(0.12, c.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + 1.2);
+        o.start(); o.stop(c.currentTime + 1.2);
       } catch(e) {}
     }
   }
@@ -1135,6 +1296,279 @@
     });
   });
   paint();
+})();
+
+/* ============ 声音引擎（浏览器合成示意音） ============ */
+(function(){
+  var AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return;
+  var ctx = null, master = null, noiseBuf = null;
+
+  function init(){
+    if(ctx){
+      if(ctx.state === 'suspended') ctx.resume();
+      return;
+    }
+    ctx = new AC();
+    master = ctx.createGain();
+    master.gain.value = 0.5;
+    master.connect(ctx.destination);
+    var len = Math.floor(ctx.sampleRate * 2);
+    noiseBuf = ctx.createBuffer(1, len, ctx.sampleRate);
+    var d = noiseBuf.getChannelData(0);
+    for(var i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  }
+
+  function noise(t, dur){
+    var s = ctx.createBufferSource();
+    s.buffer = noiseBuf;
+    s.start(t);
+    s.stop(t + dur);
+    return s;
+  }
+
+  function env(t, peak, attack, decay){
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(Math.max(peak, 0.0002), t + attack);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay);
+    return g;
+  }
+
+  var sounds = {
+    shaker: function(t){
+      for(var i = 0; i < 4; i++){
+        var st = t + i * 0.15;
+        var n = noise(st, 0.08);
+        var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 3200;
+        var g = env(st, 0.22, 0.008, 0.07);
+        n.connect(f).connect(g).connect(master);
+      }
+    },
+    drum: function(t){
+      for(var i = 0; i < 3; i++){
+        var st = t + i * 0.18;
+        var o = ctx.createOscillator(); o.type = 'sine';
+        o.frequency.setValueAtTime(150, st);
+        o.frequency.exponentialRampToValueAtTime(55, st + 0.18);
+        var g = env(st, 0.4, 0.005, 0.18);
+        o.connect(g).connect(master); o.start(st); o.stop(st + 0.22);
+        var n = noise(st, 0.05);
+        var nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 1200;
+        var ng = env(st, 0.12, 0.003, 0.05);
+        n.connect(nf).connect(ng).connect(master);
+      }
+    },
+    step: function(t){
+      for(var i = 0; i < 3; i++){
+        var st = t + i * 0.2;
+        var o = ctx.createOscillator(); o.type = 'sine';
+        o.frequency.setValueAtTime(120, st);
+        o.frequency.exponentialRampToValueAtTime(60, st + 0.1);
+        var g = env(st, 0.22, 0.004, 0.1);
+        o.connect(g).connect(master); o.start(st); o.stop(st + 0.13);
+        var n = noise(st, 0.04);
+        var nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 800;
+        var ng = env(st, 0.08, 0.003, 0.04);
+        n.connect(nf).connect(ng).connect(master);
+      }
+    },
+    trumpet: function(t){
+      var notes = [392, 523, 659, 523];
+      for(var i = 0; i < notes.length; i++){
+        var st = t + i * 0.17;
+        var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = notes[i];
+        var o2 = ctx.createOscillator(); o2.type = 'square'; o2.frequency.value = notes[i] * 1.006;
+        var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 1700;
+        var g = env(st, 0.16, 0.02, 0.15);
+        o.connect(f); o2.connect(f); f.connect(g).connect(master);
+        o.start(st); o2.start(st); o.stop(st + 0.18); o2.stop(st + 0.18);
+      }
+    },
+    recorder: function(t){
+      var notes = [880, 988, 1047];
+      for(var i = 0; i < notes.length; i++){
+        var st = t + i * 0.14;
+        var o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = notes[i];
+        var g = env(st, 0.14, 0.01, 0.12);
+        o.connect(g).connect(master); o.start(st); o.stop(st + 0.14);
+      }
+    },
+    hammer: function(t){
+      for(var i = 0; i < 3; i++){
+        var st = t + i * 0.22;
+        var o = ctx.createOscillator(); o.type = 'sine';
+        o.frequency.setValueAtTime(180, st);
+        o.frequency.exponentialRampToValueAtTime(80, st + 0.08);
+        var g = env(st, 0.3, 0.003, 0.1);
+        o.connect(g).connect(master); o.start(st); o.stop(st + 0.12);
+        var n = noise(st, 0.03);
+        var nf = ctx.createBiquadFilter(); nf.type = 'highpass'; nf.frequency.value = 1500;
+        var ng = env(st, 0.12, 0.002, 0.04);
+        n.connect(nf).connect(ng).connect(master);
+      }
+    },
+    drill: function(t){
+      var o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 220;
+      var lfo = ctx.createOscillator(); lfo.type = 'square'; lfo.frequency.value = 18;
+      var lg = ctx.createGain(); lg.gain.value = 55; lfo.connect(lg).connect(o.frequency);
+      var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1200; f.Q.value = 1.4;
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.14, t + 0.05);
+      g.gain.setValueAtTime(0.14, t + 0.65);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.8);
+      o.connect(f).connect(g).connect(master);
+      o.start(t); lfo.start(t); o.stop(t + 0.82); lfo.stop(t + 0.82);
+    },
+    tambourine: function(t){
+      for(var i = 0; i < 3; i++){
+        var st = t + i * 0.13;
+        var n = noise(st, 0.2);
+        var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 4800;
+        var g = env(st, 0.18, 0.005, 0.18);
+        n.connect(f).connect(g).connect(master);
+        var o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = 5200;
+        var og = env(st, 0.05, 0.005, 0.22);
+        o.connect(og).connect(master); o.start(st); o.stop(st + 0.24);
+      }
+    },
+    wave: function(t){
+      var n = noise(t, 1.6);
+      var f = ctx.createBiquadFilter(); f.type = 'lowpass';
+      f.frequency.setValueAtTime(400, t);
+      f.frequency.linearRampToValueAtTime(1100, t + 0.7);
+      f.frequency.linearRampToValueAtTime(300, t + 1.5);
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.16, t + 0.4);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.5);
+      n.connect(f).connect(g).connect(master);
+    },
+    bubble: function(t){
+      for(var i = 0; i < 6; i++){
+        var st = t + i * 0.1;
+        var o = ctx.createOscillator(); o.type = 'sine';
+        o.frequency.setValueAtTime(400 + i * 80, st);
+        o.frequency.exponentialRampToValueAtTime(900 + i * 100, st + 0.08);
+        var g = env(st, 0.1, 0.005, 0.08);
+        o.connect(g).connect(master); o.start(st); o.stop(st + 0.1);
+      }
+    },
+    triangle: function(t){
+      var freqs = [2500, 3700, 5200];
+      for(var i = 0; i < freqs.length; i++){
+        for(var j = 0; j < 2; j++){
+          var st = t + j * 0.35;
+          var o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = freqs[i];
+          var g = ctx.createGain();
+          g.gain.setValueAtTime(0.08 / (i + 1) / (j + 1), st);
+          g.gain.exponentialRampToValueAtTime(0.0001, st + 1.1);
+          o.connect(g).connect(master); o.start(st); o.stop(st + 1.2);
+        }
+      }
+    },
+    bird: function(t){
+      for(var i = 0; i < 3; i++){
+        var st = t + i * 0.22;
+        var o = ctx.createOscillator(); o.type = 'sine';
+        o.frequency.setValueAtTime(1800, st);
+        o.frequency.exponentialRampToValueAtTime(2800, st + 0.06);
+        o.frequency.exponentialRampToValueAtTime(2200, st + 0.12);
+        var g = env(st, 0.1, 0.01, 0.12);
+        o.connect(g).connect(master); o.start(st); o.stop(st + 0.15);
+      }
+    },
+    snake: function(t){
+      var n = noise(t, 0.7);
+      var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 3800;
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.12, t + 0.1);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.65);
+      n.connect(f).connect(g).connect(master);
+    },
+    tuba: function(t){
+      var o = ctx.createOscillator(); o.type = 'sawtooth';
+      o.frequency.setValueAtTime(98, t);
+      o.frequency.linearRampToValueAtTime(87, t + 0.75);
+      var f = ctx.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 480;
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.22, t + 0.08);
+      g.gain.setValueAtTime(0.22, t + 0.55);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+      o.connect(f).connect(g).connect(master); o.start(t); o.stop(t + 0.95);
+    },
+    wind: function(t){
+      var n = noise(t, 1.4);
+      var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 0.8;
+      f.frequency.setValueAtTime(600, t);
+      f.frequency.linearRampToValueAtTime(1200, t + 0.7);
+      f.frequency.linearRampToValueAtTime(500, t + 1.3);
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.13, t + 0.5);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.3);
+      n.connect(f).connect(g).connect(master);
+    },
+    mic: function(t){
+      var notes = [[523, 0], [587, 0.18], [659, 0.36], [523, 0.6]];
+      for(var i = 0; i < notes.length; i++){
+        var st = t + notes[i][1];
+        var o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = notes[i][0];
+        var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1200; f.Q.value = 1.8;
+        var g = env(st, 0.16, 0.02, 0.15);
+        o.connect(f).connect(g).connect(master); o.start(st); o.stop(st + 0.18);
+      }
+    },
+    whoosh: function(t){
+      var n = noise(t, 0.9);
+      var f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 1.2;
+      f.frequency.setValueAtTime(300, t);
+      f.frequency.exponentialRampToValueAtTime(3000, t + 0.5);
+      f.frequency.exponentialRampToValueAtTime(500, t + 0.85);
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.16, t + 0.3);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+      n.connect(f).connect(g).connect(master);
+    },
+    shh: function(t){
+      var n = noise(t, 0.9);
+      var f = ctx.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 2200;
+      var g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.09, t + 0.15);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+      n.connect(f).connect(g).connect(master);
+    },
+    band: function(t){
+      sounds.trumpet(t);
+      sounds.drum(t + 0.06);
+      sounds.tambourine(t + 0.12);
+      sounds.triangle(t + 0.22);
+      sounds.tuba(t + 0.3);
+      sounds.mic(t + 0.5);
+    }
+  };
+
+  function play(name){
+    init();
+    var fn = sounds[name];
+    if(!fn) return;
+    fn(ctx.currentTime + 0.03);
+  }
+
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest ? e.target.closest('.snd') : null;
+    if(!btn) return;
+    play(btn.getAttribute('data-snd'));
+    btn.classList.remove('playing');
+    void btn.offsetWidth;
+    btn.classList.add('playing');
+    setTimeout(function(){ btn.classList.remove('playing'); }, 450);
+  });
 })();
 </script>
 </body>

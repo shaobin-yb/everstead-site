@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>《世界上最吵的乐队》讲读手册 · 小班 20 分钟</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --ink:#4A3B2F; --ink-soft:#806952; --ink-faint:#A89073;
+    --cream:#FFF8E9; --card:#FFFFFF; --line:#EAD9B8; --line-soft:#F3E7CF;
+    --orange:#F27B35; --red:#E85D5D; --yellow:#F2C14E;
+    --green:#6FBF73; --blue:#4FA8E0; --purple:#9B7EDE; --pink:#F49AC1;
+    --shadow:0 6px 0 rgba(190,150,90,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"YouYuan","幼圆","Microsoft YaHei","PingFang SC",sans-serif;
+    color:var(--ink);
+    background-color:var(--cream);
+    background-image:radial-gradient(circle, rgba(210,170,105,.18) 1.6px, transparent 1.6px);
+    background-size:26px 26px;
+    padding:74px 14px 54px;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    line-height:1.75;
+  }
+  .poster{max-width:920px;margin:0 auto}
+
+  /* ---------- 顶栏 ---------- */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;gap:10px;
+    padding:9px 16px;
+    background:rgba(255,248,233,.92);
+    backdrop-filter:blur(10px);
+    border-bottom:2px solid var(--line);
+    box-shadow:0 2px 14px rgba(120,90,50,.08);
+  }
+  .timer{
+    font-family:"Cascadia Mono","Consolas",monospace;
+    font-size:26px;font-weight:700;letter-spacing:1px;
+    color:var(--ink);min-width:96px;text-align:center;
+    background:#fff;border:3px solid var(--line);border-radius:14px;
+    padding:1px 10px;line-height:1.3;
+  }
+  .timer.warn{color:#B36A00;border-color:#F2C14E;background:#FFF6D9}
+  .timer.danger{color:#C62828;border-color:#E85D5D;background:#FFE9E9;animation:pulse .9s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+  .btn{
+    border:3px solid var(--line);background:#fff;color:var(--ink);
+    font-family:inherit;font-size:15px;font-weight:700;
+    padding:7px 14px;border-radius:999px;cursor:pointer;
+    box-shadow:0 3px 0 rgba(190,150,90,.16);
+    transition:transform .12s ease, box-shadow .12s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{transform:translateY(-1px);box-shadow:0 4px 0 rgba(190,150,90,.2)}
+  .btn:active{transform:translateY(1px);box-shadow:0 1px 0 rgba(190,150,90,.16)}
+  .btn.primary{background:var(--orange);border-color:#D96628;color:#fff}
+  .btn.spacer{margin-left:auto}
+
+  /* ---------- 头部 ---------- */
+  .hero{
+    display:flex;align-items:center;gap:24px;
+    background:linear-gradient(180deg,#FFFDF7,#FFF3D6);
+    border:5px solid var(--line);border-radius:34px;
+    padding:24px 28px 22px;box-shadow:var(--shadow);
+    position:relative;overflow:hidden;
+  }
+  .hero::after{
+    content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;
+    border-radius:50%;background:rgba(242,193,78,.18);
+  }
+  .hero-text{flex:1;min-width:0;position:relative;z-index:1}
+  .kicker{
+    display:inline-block;font-size:14px;letter-spacing:3px;color:#fff;
+    background:var(--green);padding:3px 14px;border-radius:999px;margin-bottom:10px;
+  }
+  h1{
+    font-size:46px;line-height:1.14;letter-spacing:3px;color:#E8682F;
+    text-shadow:2px 2px 0 #fff,4px 4px 0 rgba(232,104,47,.16);
+  }
+  .sub{margin-top:8px;font-size:17px;color:var(--ink-soft);letter-spacing:1px}
+  .lead{
+    margin-top:13px;font-size:17px;line-height:1.7;color:var(--ink);
+    background:#FFF9E6;border:2px dashed #E8C87E;border-radius:16px;
+    padding:9px 15px;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px;list-style:none}
+  .chips li{font-size:14px;color:#fff;padding:3px 14px;border-radius:999px;letter-spacing:1px}
+  .chips li:nth-child(1){background:var(--red)}
+  .chips li:nth-child(2){background:var(--orange)}
+  .chips li:nth-child(3){background:var(--green)}
+  .chips li:nth-child(4){background:var(--blue)}
+  .hero-art{flex:0 0 320px;position:relative;z-index:1}
+  .hero-art svg{width:100%;height:auto;display:block}
+
+  /* ---------- 快速导航 ---------- */
+  .quicknav{
+    display:flex;gap:8px;overflow-x:auto;padding:6px 2px 10px;
+    margin-top:16px;scrollbar-width:none;
+  }
+  .quicknav::-webkit-scrollbar{display:none}
+  .quicknav a{
+    flex:0 0 auto;text-decoration:none;color:var(--ink);
+    background:#fff;border:2px solid var(--line);border-radius:999px;
+    padding:5px 14px;font-size:14px;font-weight:700;
+  }
+  .quicknav a:hover{border-color:var(--orange);color:var(--orange)}
+
+  /* ---------- 通用区块 ---------- */
+  section{margin-top:26px}
+  .sec-head{display:flex;align-items:center;gap:12px;margin:0 0 14px}
+  .sec-no{
+    flex:0 0 auto;width:44px;height:44px;border-radius:14px;
+    display:grid;place-items:center;font-size:21px;font-weight:700;color:#fff;
+    background:var(--orange);box-shadow:0 4px 0 rgba(210,110,45,.25);
+  }
+  .sec-head h2{font-size:27px;letter-spacing:2px;line-height:1.2}
+  .sec-head .hint{font-size:14px;color:var(--ink-faint);margin-left:auto;text-align:right}
+  .card{
+    background:var(--card);border:4px solid var(--line);border-radius:24px;
+    padding:18px 20px;box-shadow:var(--shadow);
+  }
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .callout{
+    background:#FFF6D9;border:2px dashed #E8C87E;border-radius:16px;
+    padding:11px 15px;font-size:15px;color:#7A5B2E;
+  }
+  .callout b{color:#C2531F}
+
+  /* ---------- 三个抓手 ---------- */
+  .grip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .grip .card{position:relative;padding-top:46px}
+  .grip .ico{
+    position:absolute;top:14px;left:18px;width:38px;height:38px;border-radius:12px;
+    display:grid;place-items:center;font-size:21px;background:#FFF1D6;
+  }
+  .grip h3{font-size:19px;margin-bottom:5px}
+  .grip p{font-size:15px;color:var(--ink-soft);line-height:1.65}
+
+  /* ---------- 时间轴 ---------- */
+  .timeline{list-style:none;position:relative;margin-left:6px}
+  .timeline::before{
+    content:"";position:absolute;left:22px;top:8px;bottom:8px;width:4px;
+    background:linear-gradient(var(--yellow),var(--orange),var(--purple));border-radius:4px;
+  }
+  .tl{
+    position:relative;display:flex;gap:14px;align-items:flex-start;
+    padding:0 0 13px 0;
+  }
+  .tl-dot{
+    flex:0 0 auto;width:46px;height:46px;border-radius:50%;z-index:1;
+    background:#fff;border:4px solid var(--orange);
+    display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--orange);
+  }
+  .tl-body{
+    flex:1;background:#fff;border:3px solid var(--line);border-radius:18px;
+    padding:10px 15px;box-shadow:0 3px 0 rgba(190,150,90,.1);
+    display:flex;align-items:flex-start;gap:10px;
+  }
+  .tl-body h3{font-size:17px;margin-bottom:2px}
+  .tl-body p{font-size:14px;color:var(--ink-soft);line-height:1.55}
+  .tl-time{font-family:"Cascadia Mono","Consolas",monospace;font-size:13px;color:#C2531F;font-weight:700}
+  .check{
+    flex:0 0 auto;margin-top:3px;cursor:pointer;user-select:none;
+  }
+  .check input{display:none}
+  .check .box{
+    display:block;width:24px;height:24px;border-radius:8px;
+    border:3px solid var(--line);background:#fff;position:relative;
+  }
+  .check input:checked + .box{background:var(--green);border-color:#4F9F53}
+  .check input:checked + .box::after{
+    content:"";position:absolute;left:6px;top:1px;width:7px;height:13px;
+    border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg);
+  }
+  .tl.done .tl-body{opacity:.5;text-decoration:line-through}
+
+  /* ---------- 声音曲线 ---------- */
+  .vol-card{margin-top:6px;padding:16px 18px 12px}
+  .vol-title{font-size:15px;color:var(--ink-soft);margin-bottom:10px}
+  .vol-chart{display:flex;align-items:flex-end;gap:8px;height:120px;padding:0 4px}
+  .vol-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .vol-bar{width:100%;max-width:44px;border-radius:9px 9px 4px 4px;background:var(--blue);min-height:8px}
+  .vol-label{font-size:12px;color:var(--ink-soft);margin-top:5px;white-space:nowrap}
+  .vol-value{font-size:11px;color:var(--ink-faint);margin-bottom:3px}
+  .vol-col:nth-child(1) .vol-bar{background:#8FD0F0}
+  .vol-col:nth-child(2) .vol-bar{background:#6FBF73}
+  .vol-col:nth-child(3) .vol-bar{background:#F2C14E}
+  .vol-col:nth-child(4) .vol-bar{background:#BFD9E8}
+  .vol-col:nth-child(5) .vol-bar{background:#F2C14E}
+  .vol-col:nth-child(6) .vol-bar{background:#F27B35}
+  .vol-col:nth-child(7) .vol-bar{background:#E85D5D}
+  .vol-col:nth-child(8) .vol-bar{background:#BFD9E8}
+
+  /* ---------- 技巧卡 ---------- */
+  .skills{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .skill{position:relative;padding:16px 18px 14px 60px}
+  .skill .num{
+    position:absolute;left:16px;top:16px;width:32px;height:32px;border-radius:10px;
+    display:grid;place-items:center;font-weight:700;font-size:16px;color:#fff;
+    background:var(--blue);
+  }
+  .skill:nth-child(2n) .num{background:var(--orange)}
+  .skill h3{font-size:18px;margin-bottom:4px}
+  .skill p{font-size:14.5px;color:var(--ink-soft);line-height:1.62}
+  .skill .tip{display:block;margin-top:6px;font-size:13.5px;color:#B36A00;background:#FFF6D9;border-radius:10px;padding:5px 9px}
+
+  /* ---------- 逐场景台词 ---------- */
+  .scene{
+    background:#fff;border:4px solid var(--line);border-radius:24px;
+    overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow);
+  }
+  .scene-head{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 18px;background:#FFF9EA;border-bottom:3px dashed var(--line);
+  }
+  .scene-no{
+    flex:0 0 auto;width:40px;height:40px;border-radius:12px;
+    display:grid;place-items:center;font-family:"Cascadia Mono","Consolas",monospace;
+    font-size:15px;font-weight:700;color:#fff;background:var(--orange);
+  }
+  .scene-head h3{font-size:20px;line-height:1.2}
+  .scene-time{font-size:13px;color:var(--ink-faint)}
+  .scene-sound{
+    margin-left:auto;font-size:14px;font-weight:700;color:#C2531F;
+    background:#FFE9CF;border-radius:999px;padding:3px 12px;white-space:nowrap;
+  }
+  .scene-body{padding:14px 18px 16px}
+  .line{font-size:17px;line-height:1.8;margin:6px 0;color:var(--ink)}
+  .line.q{background:#FFFDF6;border-left:5px solid var(--yellow);padding:6px 12px;border-radius:0 12px 12px 0}
+  .cue{font-size:14px;color:var(--blue);margin:8px 0 2px;font-weight:700}
+  .cue.action{color:var(--green)}
+  .cue.prop{color:var(--purple)}
+  .cue.warn{color:var(--red)}
+  .micro{font-size:13.5px;color:var(--ink-faint);margin-top:7px}
+  .scene:nth-of-type(4n+1) .scene-no{background:var(--orange)}
+  .scene:nth-of-type(4n+2) .scene-no{background:var(--green)}
+  .scene:nth-of-type(4n+3) .scene-no{background:var(--blue)}
+  .scene:nth-of-type(4n+4) .scene-no{background:var(--purple)}
+
+  /* ---------- 遥控器 ---------- */
+  .remote-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .remote{
+    text-align:center;padding:18px 12px 16px;border-radius:24px;
+    border:4px solid var(--line);background:#fff;box-shadow:var(--shadow);
+  }
+  .remote svg{width:84px;height:84px;margin:0 auto 6px;display:block}
+  .remote h3{font-size:20px;margin-bottom:2px}
+  .remote p{font-size:14px;color:var(--ink-soft);line-height:1.5}
+  .remote.loud{border-color:#F4B6B6;background:#FFF7F7}
+  .remote.soft{border-color:#F2D9A0;background:#FFFCF2}
+  .remote.mute{border-color:#BFD9E8;background:#F7FBFE}
+  .remote-card{
+    margin-top:14px;border:4px dashed var(--line);border-radius:24px;
+    background:#FFFDF7;padding:16px 18px;
+  }
+  .remote-card h3{font-size:18px;margin-bottom:6px;color:#C2531F}
+  .remote-card p{font-size:14.5px;color:var(--ink-soft);line-height:1.7}
+
+  /* ---------- 素材 / 救场 ---------- */
+  .mat-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px 18px}
+  .mat-list li{display:flex;align-items:flex-start;gap:9px;font-size:15px;line-height:1.55}
+  .mat-list .dot{
+    flex:0 0 auto;width:18px;height:18px;border-radius:6px;border:2.5px solid var(--line);
+    margin-top:3px;background:#fff;
+  }
+  .mat-list li.opt .dot{border-style:dashed}
+  .mat-group{margin-bottom:14px}
+  .mat-group h3{font-size:17px;margin-bottom:7px;color:var(--orange)}
+  .rescue{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .rescue .card{padding:14px 16px}
+  .rescue .if{font-size:15px;font-weight:700;color:var(--red);margin-bottom:3px}
+  .rescue .then{font-size:14.5px;color:var(--ink-soft);line-height:1.6}
+  .quote{
+    background:#F3F9FF;border-left:6px solid var(--blue);border-radius:0 18px 18px 0;
+    padding:13px 16px;font-size:15px;line-height:1.75;color:#3F5C73;
+  }
+  .extras{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .extras .card h3{font-size:18px;margin-bottom:5px;color:var(--orange)}
+  .extras .card p,.extras .card li{font-size:14.5px;color:var(--ink-soft);line-height:1.7}
+  .extras .card ul{padding-left:20px}
+  .bookinfo{
+    margin-top:14px;font-size:12.5px;color:var(--ink-faint);line-height:1.7;
+    border-top:2px dashed var(--line);padding-top:10px;
+  }
+  .bookinfo b{color:var(--ink-soft)}
+  footer{
+    margin-top:30px;text-align:center;font-size:13px;color:var(--ink-faint);
+    border-top:2px dashed var(--line);padding-top:14px;
+  }
+  .big .line{font-size:20px}
+  .big .skill p,.big .rescue .then,.big .grip p{font-size:16.5px}
+
+  /* ---------- 手机 ---------- */
+  @media (max-width:760px){
+    body{padding:70px 10px 44px}
+    .hero{flex-direction:column;padding:20px 18px 16px;gap:14px}
+    h1{font-size:34px;letter-spacing:1px}
+    .hero-art{flex:0 0 auto;width:100%;max-width:330px}
+    .grip,.grid2,.grid3,.skills,.remote-grid,.rescue,.extras,.mat-list{grid-template-columns:1fr}
+    .sec-head h2{font-size:23px}
+    .sec-head .hint{display:none}
+    .topbar{gap:6px;padding:7px 9px}
+    .timer{font-size:21px;min-width:80px;padding:2px 7px}
+    .btn{font-size:13px;padding:6px 10px}
+    .btn.spacer{margin-left:0}
+    .line{font-size:16px}
+    .vol-label{font-size:10px}
+    .scene-sound{display:none}
+  }
+
+  /* ---------- 打印 ---------- */
+  @page{size:A4;margin:12mm}
+  @media print{
+    .topbar,.quicknav,.no-print,.check{display:none!important}
+    body{background:#fff;padding:0;font-size:11.5pt;line-height:1.55}
+    .poster{max-width:none}
+    .hero{border-width:3px;box-shadow:none;break-inside:avoid;padding:14px 18px}
+    .sec-head{break-after:avoid}
+    .card,.vol-card,.skill,.remote,.remote-card,.mat-group,.tl,.rescue>div,.extras>div,.grip>div{break-inside:avoid}
+    .scene-head{break-after:avoid}
+    h1{font-size:30pt}
+    .lead{font-size:10.5pt}
+    .hero-art{flex:0 0 230px}
+    section{margin-top:14px}
+    .sec-head{margin-bottom:8px}
+    .sec-no{width:30px;height:30px;font-size:14px;border-radius:9px}
+    .sec-head h2{font-size:17pt}
+    .card,.scene,.remote,.tl-body{box-shadow:none}
+    .grip,.grid2,.grid3,.skills,.remote-grid,.rescue,.extras,.mat-list{grid-template-columns:1fr 1fr}
+    .scene{break-inside:avoid;margin-bottom:8px}
+    .scene-head{padding:7px 12px}
+    .scene-body{padding:8px 12px 9px}
+    .line{font-size:10.5pt;line-height:1.6;margin:3px 0}
+    .cue{font-size:9.5pt;margin:5px 0 1px}
+    .skill{padding:10px 12px 9px 48px}
+    .skill .num{left:12px;top:11px;width:26px;height:26px;font-size:13px}
+    .skill p{font-size:9.5pt}
+    .remote svg{width:60px;height:60px}
+    .remote{padding:10px 8px}
+    .remote h3{font-size:13pt}
+    .remote p{font-size:9pt}
+    .page-break{break-before:page}
+    .vol-chart{height:80px}
+    footer{margin-top:14px;font-size:8.5pt}
+    a{color:inherit;text-decoration:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar no-print">
+  <div class="timer" id="timer">20:00</div>
+  <button class="btn primary" id="startBtn">开始</button>
+  <button class="btn" id="resetBtn">重置</button>
+  <button class="btn spacer" id="fontBtn">大字</button>
+  <button class="btn" id="printBtn">打印</button>
+</div>
+
+<main class="poster">
+
+  <!-- ================= 头部 ================= -->
+  <header class="hero">
+    <div class="hero-text">
+      <div class="kicker">芽三班 · 家长进课堂</div>
+      <h1>世界上最吵的乐队</h1>
+      <div class="sub">绘本讲读手册 · 小班 3-4 岁 · 20 分钟</div>
+      <p class="lead">一支乐队，走过城市、工地、沙滩、海底、丛林、高山，一直走到太空。每走一站，就多一位演奏家；最后，十个人一起回家，一个一个说晚安。</p>
+      <ul class="chips">
+        <li>小班 3-4 岁</li>
+        <li>20 分钟</li>
+        <li>7 站旅程</li>
+        <li>10 位演奏家</li>
+      </ul>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 460 230" role="img">
+        <ellipse cx="230" cy="205" rx="200" ry="13" fill="#EAD9B8" opacity=".65"/>
+        <!-- 小孩 -->
+        <g transform="translate(78,100)">
+          <path d="M-23 -10 Q-26 -30 -8 -27 Q0 -37 10 -28 Q25 -31 22 -11" fill="#6B4A32" stroke="#4A3B2F" stroke-width="3" stroke-linejoin="round"/>
+          <circle cx="0" cy="0" r="24" fill="#FFD9B3" stroke="#4A3B2F" stroke-width="3"/>
+          <circle cx="-8" cy="-4" r="3.6" fill="#4A3B2F"/><circle cx="8" cy="-4" r="3.6" fill="#4A3B2F"/>
+          <path d="M-9 8 Q0 15 9 8" fill="none" stroke="#4A3B2F" stroke-width="3" stroke-linecap="round"/>
+          <rect x="-16" y="27" width="32" height="43" rx="14" fill="#F27B35" stroke="#4A3B2F" stroke-width="3"/>
+          <line x1="-10" y1="70" x2="-13" y2="94" stroke="#4A3B2F" stroke-width="8" stroke-linecap="round"/>
+          <line x1="10" y1="70" x2="13" y2="94" stroke="#4A3B2F" stroke-width="8" stroke-linecap="round"/>
+          <rect x="-29" y="46" width="58" height="15" rx="4" fill="#F2C14E" stroke="#4A3B2F" stroke-width="3"/>
+          <ellipse cx="0" cy="61" rx="29" ry="10" fill="#FFE29A" stroke="#4A3B2F" stroke-width="3"/>
+          <line x1="-19" y1="46" x2="-13" y2="30" stroke="#4A3B2F" stroke-width="3"/>
+          <line x1="19" y1="46" x2="13" y2="30" stroke="#4A3B2F" stroke-width="3"/>
+        </g>
+        <!-- 猫 + 小号 -->
+        <g transform="translate(196,112)">
+          <path d="M-23 -12 L-17 -40 L0 -24 L17 -40 L23 -12 Z" fill="#F49AC1" stroke="#4A3B2F" stroke-width="3" stroke-linejoin="round"/>
+          <circle cx="0" cy="0" r="23" fill="#F49AC1" stroke="#4A3B2F" stroke-width="3"/>
+          <circle cx="-8" cy="-4" r="3.4" fill="#4A3B2F"/><circle cx="8" cy="-4" r="3.4" fill="#4A3B2F"/>
+          <path d="M-7 7 Q0 13 7 7" fill="none" stroke="#4A3B2F" stroke-width="3" stroke-linecap="round"/>
+          <rect x="-14" y="24" width="28" height="36" rx="12" fill="#9B7EDE" stroke="#4A3B2F" stroke-width="3"/>
+          <line x1="18" y1="8" x2="60" y2="-8" stroke="#F2C14E" stroke-width="9" stroke-linecap="round"/>
+          <path d="M56 -16 L76 -22 L70 -4 Z" fill="#F2C14E" stroke="#4A3B2F" stroke-width="3" stroke-linejoin="round"/>
+          <line x1="-8" y1="60" x2="-10" y2="80" stroke="#4A3B2F" stroke-width="7" stroke-linecap="round"/>
+          <line x1="8" y1="60" x2="10" y2="80" stroke="#4A3B2F" stroke-width="7" stroke-linecap="round"/>
+          <path d="M-22 44 Q-30 50 -24 58" fill="none" stroke="#4A3B2F" stroke-width="6" stroke-linecap="round"/>
+        </g>
+        <!-- 乌鸦 + 三角铁 -->
+        <g transform="translate(320,106)">
+          <ellipse cx="0" cy="0" rx="24" ry="21" fill="#5B6B7C" stroke="#4A3B2F" stroke-width="3"/>
+          <circle cx="-8" cy="-4" r="5" fill="#fff" stroke="#4A3B2F" stroke-width="2"/>
+          <circle cx="2" cy="-4" r="5" fill="#fff" stroke="#4A3B2F" stroke-width="2"/>
+          <circle cx="-7" cy="-4" r="2.3" fill="#4A3B2F"/><circle cx="3" cy="-4" r="2.3" fill="#4A3B2F"/>
+          <path d="M16 0 L36 5 L16 10 Z" fill="#F2C14E" stroke="#4A3B2F" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M-14 18 L0 43 L14 18" fill="none" stroke="#F2C14E" stroke-width="5" stroke-linecap="round"/>
+          <line x1="0" y1="43" x2="0" y2="55" stroke="#4A3B2F" stroke-width="4" stroke-linecap="round"/>
+          <line x1="-8" y1="55" x2="8" y2="55" stroke="#4A3B2F" stroke-width="4" stroke-linecap="round"/>
+          <path d="M-20 14 Q-32 22 -30 34" fill="none" stroke="#4A3B2F" stroke-width="6" stroke-linecap="round"/>
+        </g>
+        <!-- 熊 + 铃鼓 -->
+        <g transform="translate(408,116)">
+          <circle cx="-17" cy="-20" r="10" fill="#C89B6A" stroke="#4A3B2F" stroke-width="3"/>
+          <circle cx="17" cy="-20" r="10" fill="#C89B6A" stroke="#4A3B2F" stroke-width="3"/>
+          <circle cx="0" cy="0" r="24" fill="#C89B6A" stroke="#4A3B2F" stroke-width="3"/>
+          <circle cx="-8" cy="-5" r="3.4" fill="#4A3B2F"/><circle cx="8" cy="-5" r="3.4" fill="#4A3B2F"/>
+          <ellipse cx="0" cy="7" rx="8" ry="6" fill="#E8C9A0" stroke="#4A3B2F" stroke-width="2.5"/>
+          <rect x="-15" y="25" width="30" height="37" rx="12" fill="#6FBF73" stroke="#4A3B2F" stroke-width="3"/>
+          <circle cx="0" cy="64" r="20" fill="#FFE7A8" stroke="#4A3B2F" stroke-width="3"/>
+          <circle cx="0" cy="64" r="13" fill="none" stroke="#4A3B2F" stroke-width="2" stroke-dasharray="3 3"/>
+          <line x1="-10" y1="60" x2="-18" y2="52" stroke="#4A3B2F" stroke-width="4" stroke-linecap="round"/>
+          <line x1="10" y1="60" x2="18" y2="52" stroke="#4A3B2F" stroke-width="4" stroke-linecap="round"/>
+          <line x1="-10" y1="61" x2="-12" y2="84" stroke="#4A3B2F" stroke-width="7" stroke-linecap="round"/>
+          <line x1="10" y1="61" x2="12" y2="84" stroke="#4A3B2F" stroke-width="7" stroke-linecap="round"/>
+        </g>
+        <!-- 音符 -->
+        <g fill="#E8682F">
+          <circle cx="132" cy="48" r="6"/><line x1="137" y1="48" x2="137" y2="22" stroke="#E8682F" stroke-width="3"/>
+          <circle cx="258" cy="40" r="5"/><line x1="262" y1="40" x2="262" y2="18" stroke="#E8682F" stroke-width="3"/>
+          <circle cx="360" cy="52" r="6"/><line x1="365" y1="52" x2="365" y2="26" stroke="#E8682F" stroke-width="3"/>
+        </g>
+        <g stroke="#F2C14E" stroke-width="4" stroke-linecap="round">
+          <line x1="118" y1="150" x2="102" y2="150"/><line x1="290" y1="152" x2="274" y2="152"/>
+          <line x1="158" y1="168" x2="146" y2="168"/>
+        </g>
+      </svg>
+    </div>
+  </header>
+
+  <nav class="quicknav no-print">
+    <a href="#grip">一图看懂</a>
+    <a href="#timeline">20 分钟流程</a>
+    <a href="#skills">8 个技巧</a>
+    <a href="#script">逐场景台词</a>
+    <a href="#remote">声音遥控器</a>
+    <a href="#materials">素材清单</a>
+    <a href="#rescue">救场</a>
+    <a href="#extras">给老师</a>
+  </nav>
+
+  <!-- ================= 01 一图看懂 ================= -->
+  <section id="grip">
+    <div class="sec-head">
+      <div class="sec-no">01</div>
+      <h2>一图看懂</h2>
+      <div class="hint">先记住这 3 件事，其他都是锦上添花</div>
+    </div>
+    <div class="grip">
+      <div class="card">
+        <div class="ico">🎺</div>
+        <h3>这本书讲什么</h3>
+        <p>一支不断壮大的乐队，走过城市、工地、沙滩、海底、丛林、高山、太空，每站加入一位新成员，最后十个人一起回家睡觉。</p>
+      </div>
+      <div class="card">
+        <div class="ico">🧒</div>
+        <h3>为什么适合小班</h3>
+        <p>重复句好跟、拟声词好模仿、成员可以数数、画面可以找细节。3-4 岁吃这一套：短句、动作、声音、重复。</p>
+      </div>
+      <div class="card">
+        <div class="ico">🎛️</div>
+        <h3>你只须记住 3 件事</h3>
+        <p>① 声音遥控器：大声 / 小声 / 静音。<br>② 每页只找一个东西。<br>③ 结尾一定要静下来，用耳语说晚安。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 02 时间轴 ================= -->
+  <section id="timeline">
+    <div class="sec-head">
+      <div class="sec-no">02</div>
+      <h2>20 分钟流程</h2>
+      <div class="hint">点方框可以打勾；顶部计时器按“开始”</div>
+    </div>
+    <div class="card vol-card" style="margin-bottom:14px">
+      <div class="vol-title">全场声音曲线：吵 → 更吵 → 最吵 → 突然安静 → 晚安</div>
+      <div class="vol-chart">
+        <div class="vol-col"><span class="vol-value">2</span><div class="vol-bar" style="height:28%"></div><span class="vol-label">城市</span></div>
+        <div class="vol-col"><span class="vol-value">3</span><div class="vol-bar" style="height:42%"></div><span class="vol-label">工地</span></div>
+        <div class="vol-col"><span class="vol-value">3</span><div class="vol-bar" style="height:42%"></div><span class="vol-label">沙滩</span></div>
+        <div class="vol-col"><span class="vol-value">1</span><div class="vol-bar" style="height:14%"></div><span class="vol-label">海底</span></div>
+        <div class="vol-col"><span class="vol-value">3</span><div class="vol-bar" style="height:42%"></div><span class="vol-label">丛林</span></div>
+        <div class="vol-col"><span class="vol-value">4</span><div class="vol-bar" style="height:58%"></div><span class="vol-label">高山</span></div>
+        <div class="vol-col"><span class="vol-value">5</span><div class="vol-bar" style="height:74%"></div><span class="vol-label">太空</span></div>
+        <div class="vol-col"><span class="vol-value">1</span><div class="vol-bar" style="height:14%"></div><span class="vol-label">回家</span></div>
+      </div>
+    </div>
+    <ol class="timeline">
+      <li class="tl">
+        <div class="tl-dot">0-2</div>
+        <div class="tl-body">
+          <div style="flex:1">
+            <h3>神秘袋 + 遥控器约定</h3>
+            <p>摇沙锤让孩子猜；请 1-2 个孩子摸；练 3 次大声 / 小声 / 静音。</p>
+          </div>
+          <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
+        </div>
+      </li>
+      <li class="tl">
+        <div class="tl-dot">2-4</div>
+        <div class="tl-body">
+          <div style="flex:1">
+            <h3>封面观察</h3>
+            <p>数成员、找乐器、猜他们要去哪。不要求数对，一起数 1、2、3 就好。</p>
+          </div>
+          <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
+        </div>
+      </li>
+      <li class="tl">
+        <div class="tl-dot">4-6</div>
+        <div class="tl-body">
+          <div style="flex:1">
+            <h3>城市 + 工地</h3>
+            <p>踏步、小号“嘟嘟嘟”、鼓“咚咚咚”；工地加入叔叔，锤子“咚咚咚”、电钻“嗡嗡嗡”。</p>
+          </div>
+          <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
+        </div>
+      </li>
+      <li class="tl">
+        <div class="tl-dot">6-8</div>
+        <div class="tl-body">
+          <div style="flex:1">
+            <h3>沙滩 + 海底</h3>
+            <p>海浪“哗——”、找螃蟹；海底做第一次“静音”，只做口型“沙——沙——”。</p>
+          </div>
+          <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
+        </div>
+      </li>
+      <li class="tl">
+        <div class="tl-dot">8-10</div>
+        <div class="tl-body">
+          <div style="flex:1">
+            <h3>丛林 + 高山</h3>
+            <p>三角铁“叮——”、蛇“嘶——”；搓手跺脚、大号“嗡——”。</p>
+          </div>
+          <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
+        </div>
+      </li>
+      <li class="tl">
+        <div class="tl-dot">10-12</div>
+        <div class="tl-body">
+          <div style="flex:1">
+            <h3>太空</h3>
+            <p>飘一飘、外星人麦克风“啦啦啦”；一起数 1-10，乐队满员。</p>
+          </div>
+          <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
+        </div>
+      </li>
+      <li class="tl">
+        <div class="tl-dot">12-14</div>
+        <div class="tl-body">
+          <div style="flex:1">
+            <h3>回家 + 晚安</h3>
+            <p>声音越来越小；挨个说晚安；最后用耳语“呼呼呼，睡着了”。</p>
+          </div>
+          <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
+        </div>
+      </li>
+      <li class="tl">
+        <div class="tl-dot">14-17</div>
+        <div class="tl-body">
+          <div style="flex:1">
+            <h3>三个问题 + 最小声乐队</h3>
+            <p>去了哪些地方？最喜欢哪个乐器？为什么开心？最后用最小声演一次。</p>
+          </div>
+          <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
+        </div>
+      </li>
+      <li class="tl">
+        <div class="tl-dot">17-20</div>
+        <div class="tl-body">
+          <div style="flex:1">
+            <h3>贴纸 + 收尾</h3>
+            <p>发贴纸、击掌、谢谢老师、帮忙收椅子。留 3 分钟缓冲。</p>
+          </div>
+          <label class="check no-print"><input type="checkbox"><span class="box"></span></label>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ================= 03 技巧 ================= -->
+  <section id="skills">
+    <div class="sec-head">
+      <div class="sec-no">03</div>
+      <h2>8 个讲读技巧</h2>
+      <div class="hint">小班的关键不是“讲完”，是“收得住”</div>
+    </div>
+    <div class="skills">
+      <div class="card skill">
+        <div class="num">1</div>
+        <h3>声音遥控器（核心）</h3>
+        <p>五指张开 = 大声；手放低 = 小声；握拳 = 静音。每场只喊一次，喊完立刻收回。</p>
+        <span class="tip">静音时你自己先不说话，等 3 秒，孩子会跟着你停。</span>
+      </div>
+      <div class="card skill">
+        <div class="num">2</div>
+        <h3>重复句跟读</h3>
+        <p>书上的重复句念两遍，第二遍留半句给孩子。例：“乐队走呀走——”（孩子）“乐队走呀走！”</p>
+        <span class="tip">书上原文优先，不要硬套我写的词。</span>
+      </div>
+      <div class="card skill">
+        <div class="num">3</div>
+        <h3>身体打击乐</h3>
+        <p>拍腿 = 鼓；拍手 = 镲；摇手腕 = 沙锤；食指敲手心 = 三角铁。没有道具也能演。</p>
+        <span class="tip">让孩子站起来做 3 秒就坐下，不要一直站。</span>
+      </div>
+      <div class="card skill">
+        <div class="num">4</div>
+        <h3>拟声词要有高低快慢</h3>
+        <p>小号“嘟嘟嘟”短促；大号“嗡——”低沉；三角铁“叮——”清脆。你的声音就是乐器的音色。</p>
+        <span class="tip">夸张一点，孩子笑的点就在这些声音里。</span>
+      </div>
+      <div class="card skill">
+        <div class="num">5</div>
+        <h3>每页只找一个</h3>
+        <p>小班注意力短，每页只给一个任务：“螃蟹在哪里？”找到就翻页，不拖。</p>
+        <span class="tip">不要问“还看到了什么”，会收不回来。</span>
+      </div>
+      <div class="card skill">
+        <div class="num">6</div>
+        <h3>数数参与</h3>
+        <p>乐队每站加一人，最后 1-10。让孩子伸手指，不纠正对错，一起数。</p>
+        <span class="tip">数到 10 就鼓掌，给孩子一个完成的仪式感。</span>
+      </div>
+      <div class="card skill">
+        <div class="num">7</div>
+        <h3>动静交替</h3>
+        <p>海底和结尾做“静音 / 耳语”。每兴奋 2 分钟，收 1 次。</p>
+        <span class="tip">这是 20 分钟不失控的关键，不是孩子乖，是节奏对。</span>
+      </div>
+      <div class="card skill">
+        <div class="num">8</div>
+        <h3>提问要“指一指 / 是不是 / 谁来了”</h3>
+        <p>不问“为什么”，小班答不上来会冷场。问完等 3 秒，答不上就自己接。</p>
+        <span class="tip">封闭式问题 + 手指画面，参与度最高。</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3 style="font-size:19px;margin-bottom:6px;color:var(--orange)">开讲前 3 个站位动作</h3>
+      <p style="font-size:15px;color:var(--ink-soft);line-height:1.7">
+        ① 书举到胸口以上，书朝外，自己侧身站，别挡住画面。<br>
+        ② 每页停 2-3 秒再开口，让孩子先看。<br>
+        ③ 手指着画面说话，孩子的视线会跟着你的手指走。
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= 04 逐场景台词 ================= -->
+  <section id="script">
+    <div class="sec-head">
+      <div class="sec-no">04</div>
+      <h2>逐场景讲读稿</h2>
+      <div class="hint">照着念也行，改成自己的话也行</div>
+    </div>
+    <div class="callout" style="margin-bottom:14px">
+      <b>先看这一句：</b>下面是“讲读骨架”。书上的押韵句子和重复句优先，按你手上的中文版念；我写的口令和台词是补在书页之间的“胶水”，不用逐字背。
+    </div>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">00</div>
+        <div>
+          <h3>开场 · 神秘袋</h3>
+          <div class="scene-time">0:00–0:02 · 2 分钟</div>
+        </div>
+        <span class="scene-sound">沙沙沙</span>
+      </div>
+      <div class="scene-body">
+        <p class="cue prop">【道具】神秘袋、沙锤</p>
+        <p class="line q">“小朋友们，早上好！我是王斯卯的爸爸，你们可以叫我月饼爸爸。”</p>
+        <p class="line q">“今天我来的时候，听到一个奇怪的声音——（摇袋子）听！是什么？”</p>
+        <p class="line q">“谁想来摸一摸？只能摸，不能看哦。”</p>
+        <p class="line q">“你摸到了什么？圆圆的身体，细细的把手——是沙锤！”</p>
+        <p class="line q">“沙锤唱歌，是这样——沙沙沙，沙沙沙。大家一起——沙沙沙！”</p>
+        <p class="line q">“今天的故事叫《世界上最吵的乐队》。听名字就知道，它特别吵。可是我们的教室现在很安静，怎么办呢？”</p>
+        <p class="line q">“我们来约一个‘声音遥控器’。看我的手：手举高、五指张开——大声！手放低——小声。手握拳——静音，一点声音都没有。”</p>
+        <p class="line q">“我们来试试：大声——沙沙沙！小声——沙沙沙。静音——（握拳）嘘——”</p>
+        <p class="line q">“太棒了！乐队，出发！”</p>
+        <p class="cue action">【动作】请 1-2 个孩子摸袋子，别让全班排队。遥控器练 2 轮就够，不要练太久。</p>
+        <p class="micro">小班提醒：如果孩子已经兴奋，先把“静音”练好再翻封面。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">01</div>
+        <div>
+          <h3>封面 · 数一数</h3>
+          <div class="scene-time">0:02–0:04 · 2 分钟</div>
+        </div>
+        <span class="scene-sound">哇——</span>
+      </div>
+      <div class="scene-body">
+        <p class="line q">“看，这就是那支乐队。数一数，有几位演奏家？还有谁？对，一只猫，一只乌鸦。”</p>
+        <p class="line q">“他们拿着什么？这个圆圆的是什么？对，鼓！”</p>
+        <p class="line q">“他们要走到哪里去呢？我们跟着他们，一起走！”</p>
+        <p class="cue action">【动作】手指画面，让孩子指；不要求数对，一起数 1、2、3 就好。</p>
+        <p class="micro">封面停留不超过 2 分钟，小班的耐心从这里开始计时。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">02</div>
+        <div>
+          <h3>城市 · 乐队出发</h3>
+          <div class="scene-time">0:04–0:05 · 1 分钟</div>
+        </div>
+        <span class="scene-sound">嘟嘟嘟 · 咚咚咚</span>
+      </div>
+      <div class="scene-body">
+        <p class="cue">【念】书上的重复句，念两遍；第二遍留半句给孩子。</p>
+        <p class="line q">“乐队走呀走，乐队走呀走！”<span style="font-size:13px;color:var(--ink-faint)">（自编口令，可换成书上的句子）</span></p>
+        <p class="line q">“听，小号响了——嘟嘟嘟！鼓也响了——咚咚咚！”</p>
+        <p class="line q">“我们一起，一边踏步一边演奏：咚-咚-咚，嘟-嘟-嘟！”</p>
+        <p class="line q">“城市里的人都跑出来看：哇，好吵的乐队呀！”</p>
+        <p class="cue action">【动作】站起来踏步 3 秒，拍腿打鼓，手做小号。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">03</div>
+        <div>
+          <h3>工地 · 叔叔加入</h3>
+          <div class="scene-time">0:05–0:06 · 1 分钟</div>
+        </div>
+        <span class="scene-sound">咚咚咚 · 嗡嗡嗡</span>
+      </div>
+      <div class="scene-body">
+        <p class="line q">“走呀走，乐队走到了哪里？看，安全帽，吊车——是工地！”</p>
+        <p class="line q">“工地上的叔叔也加入了乐队。他手里拿的是什么？对，像一根小棍子，能吹出声音——嘀嘀嘀！”</p>
+        <p class="line q">“工地有什么声音？锤子——咚咚咚！电钻——嗡嗡嗡！”</p>
+        <p class="line q">“我们一起学：咚-咚-咚，嗡——”</p>
+        <p class="cue action">【动作】拍腿当锤子；食指钻手心当电钻。</p>
+        <p class="micro">如果孩子对工地兴奋，立刻用“静音”收一次，再翻页。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">04</div>
+        <div>
+          <h3>沙滩 · 找螃蟹</h3>
+          <div class="scene-time">0:06–0:07 · 1 分钟</div>
+        </div>
+        <span class="scene-sound">哗—— · 铃铃铃</span>
+      </div>
+      <div class="scene-body">
+        <p class="line q">“走呀走，前面亮亮的，是什么地方？对，沙滩！”</p>
+        <p class="line q">“沙滩上有一只大熊，它拿着什么？铃鼓！摇一摇——铃铃铃，沙沙沙。”</p>
+        <p class="line q">“海浪也来伴奏——哗——。我们用手做海浪：哗——，哗——。”</p>
+        <p class="line q">“看，沙堡上有一只小螃蟹，它在跟我们招手呢！在哪里？指给我看！”</p>
+        <p class="cue action">【动作】双手做波浪；让孩子指螃蟹，指到就夸“你眼睛真亮”。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">05</div>
+        <div>
+          <h3>海底 · 第一次静音</h3>
+          <div class="scene-time">0:07–0:08 · 1 分钟</div>
+        </div>
+        <span class="scene-sound">咕噜咕噜</span>
+      </div>
+      <div class="scene-body">
+        <p class="line q">“乐队扑通扑通，跳进了海里！哇，海底世界！”</p>
+        <p class="line q">“在海底，声音变得怎么样啦？变小了。我们试试‘小声’——咕噜咕噜，咕噜咕噜。”</p>
+        <p class="line q">“一条鱼游过来了，潜水员也来了，他拿着沙锤——沙沙沙。”</p>
+        <p class="line q">“嘘——海底不能太吵，会吓到小鱼。我们‘静音’，只做动作：沙——沙——沙——”</p>
+        <p class="cue action">【动作】手指放嘴边；只做口型不出声。这是全场第一次“静音”，一定要做。</p>
+        <p class="cue warn">【控场】做完静音，停 3 秒再翻页。这 3 秒是整场的“刹车”。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">06</div>
+        <div>
+          <h3>丛林 · 三角铁</h3>
+          <div class="scene-time">0:08–0:09 · 1 分钟</div>
+        </div>
+        <span class="scene-sound">叮—— · 嘶——</span>
+      </div>
+      <div class="scene-body">
+        <p class="line q">“乐队从海里出来，走进了哪里？好多树，好多叶子——是丛林！”</p>
+        <p class="line q">“一只巨嘴鸟飞来了，它拿着三角铁——叮——叮——”</p>
+        <p class="line q">“丛林里还有谁？听，啾啾啾；看，一条蛇——嘶——”</p>
+        <p class="line q">“我们一起学巨嘴鸟：叮——”</p>
+        <p class="cue action">【动作】食指敲手心当三角铁；小手做 S 形当蛇。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">07</div>
+        <div>
+          <h3>高山 · 大号</h3>
+          <div class="scene-time">0:09–0:10 · 1 分钟</div>
+        </div>
+        <span class="scene-sound">嗡——嗡——</span>
+      </div>
+      <div class="scene-body">
+        <p class="line q">“走呀走，前面高高的，白白的——是高山！”</p>
+        <p class="line q">“好冷呀，我们搓搓手，跺跺脚。”</p>
+        <p class="line q">“一位探险家加入了乐队，他背着一个大大的乐器，像一个大蜗牛——这是大号！大号唱歌：嗡——嗡——”</p>
+        <p class="line q">“我们一起：嗡——嗡——”</p>
+        <p class="cue action">【动作】搓手、跺脚、双手圈嘴做大号。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">08</div>
+        <div>
+          <h3>太空 · 数到 10</h3>
+          <div class="scene-time">0:10–0:12 · 2 分钟</div>
+        </div>
+        <span class="scene-sound">嗖—— · 啦啦啦</span>
+      </div>
+      <div class="scene-body">
+        <p class="line q">“乐队越走越高，越走越高……嗖——他们飞到了哪里？对，太空！”</p>
+        <p class="line q">“在太空里，大家都飘起来了。我们也飘一飘——（慢慢摇手臂）”</p>
+        <p class="line q">“一个外星人飞过来，拿着麦克风——啦啦啦！”</p>
+        <p class="line q">“现在，乐队有几位演奏家啦？我们一起数：1、2、3、4、5、6、7、8、9、10！”</p>
+        <p class="line q">“十位！世界上最吵的乐队，满员啦！”</p>
+        <p class="cue action">【动作】飘；伸手指一起数；数到 10 鼓掌。</p>
+        <p class="micro">这是全场最高点。数完 10，立刻进入“回家”，不要再加游戏。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">09</div>
+        <div>
+          <h3>回家 · 晚安</h3>
+          <div class="scene-time">0:12–0:14 · 2 分钟</div>
+        </div>
+        <span class="scene-sound">嘘——</span>
+      </div>
+      <div class="scene-body">
+        <p class="line q">“走呀走，乐队要回家了。声音越来越小，越来越小……”</p>
+        <p class="line q">“小号说：晚安。鼓说：晚安。三角铁说：晚安。”</p>
+        <p class="line q">“我们挥挥手，小声说：晚安——”</p>
+        <p class="line q">“乐队回到家，钻进被窝，呼呼呼，睡着了。”</p>
+        <p class="line q">“我们的故事，也讲完啦。”</p>
+        <p class="cue action">【动作】声音逐句变轻；最后一句用耳语；挥手。</p>
+        <p class="cue warn">【控场】这里必须真的小声。你一小声，孩子就会跟着小声。</p>
+      </div>
+    </article>
+
+    <article class="scene">
+      <div class="scene-head">
+        <div class="scene-no">10</div>
+        <div>
+          <h3>结尾 · 三个问题</h3>
+          <div class="scene-time">0:14–0:17 · 3 分钟</div>
+        </div>
+        <span class="scene-sound">沙——沙——沙——</span>
+      </div>
+      <div class="scene-body">
+        <p class="line q">“小朋友们，乐队今天去了哪些地方？”<span style="font-size:13px;color:var(--ink-faint)">（孩子答：城市、工地、沙滩、海底、丛林、高山、太空）</span></p>
+        <p class="line q">“你最喜欢哪个乐器？”</p>
+        <p class="line q">“乐队为什么这么开心呀？因为他们一起走，一起演奏，还把快乐送给了路上遇到的每一个人。”</p>
+        <p class="line q">“每个人都有自己的声音。大声，很好听；小声，也很好听。只要是你自己的声音，就很好听。”</p>
+        <p class="line q">“最后，我们来做一次‘最小声的乐队’。我们一起，用最小的声音说：沙——沙——沙——”</p>
+        <p class="line q">“演出结束！谢谢大家！”</p>
+        <p class="cue action">【动作】三个问题各只问一次，不追问。最后用耳语收尾，自然过渡到老师。</p>
+      </div>
+    </article>
+
+    <div class="card" style="margin-top:4px;background:#FFFDF6">
+      <h3 style="font-size:18px;color:#C2531F;margin-bottom:4px">如果时间不够 / 时间多了</h3>
+      <p style="font-size:15px;color:var(--ink-soft);line-height:1.7">
+        <b>不够：</b>砍掉“丛林”和“高山”，保留城市 → 工地 → 沙滩 → 海底 → 太空 → 回家，故事线仍然完整。<br>
+        <b>多了：</b>加“身体乐队”——把孩子分成拍腿组、拍手组、摇手腕组，你当指挥，大声 / 小声 / 静音各来一遍。
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= 05 遥控器 ================= -->
+  <section id="remote">
+    <div class="sec-head">
+      <div class="sec-no">05</div>
+      <h2>声音遥控器</h2>
+      <div class="hint">打印出来贴在书上，或直接用手势</div>
+    </div>
+    <div class="remote-grid">
+      <div class="remote loud">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M22 82 Q18 58 24 40 L30 24 Q31 19 36 20 Q41 21 39 27 L36 38 L62 38 Q68 38 68 44 Q68 50 62 50 L58 50 Q64 51 64 57 Q64 62 58 62 L55 62 Q61 63 61 69 Q61 74 55 74 L52 74 Q57 76 55 81 Q53 86 47 86 L30 86 Q24 86 22 82 Z" fill="#FFD9B3" stroke="#4A3B2F" stroke-width="3.5" stroke-linejoin="round"/>
+          <path d="M78 30 Q86 38 86 50 Q86 62 78 70" fill="none" stroke="#E85D5D" stroke-width="5" stroke-linecap="round"/>
+          <path d="M88 22 Q98 34 98 50 Q98 66 88 78" fill="none" stroke="#E85D5D" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <h3>大声</h3>
+        <p>五指张开，手举高<br>“沙沙沙——！”</p>
+      </div>
+      <div class="remote soft">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M28 82 Q24 60 30 44 L36 28 Q38 23 43 25 Q48 27 45 33 L41 44 L60 44 Q66 44 66 50 Q66 56 60 56 L57 56 Q62 58 61 63 Q60 68 54 68 L51 68 Q56 70 54 75 Q52 80 46 80 L34 80 Q30 80 28 82 Z" fill="#FFD9B3" stroke="#4A3B2F" stroke-width="3.5" stroke-linejoin="round"/>
+          <path d="M78 40 Q84 46 84 54 Q84 62 78 68" fill="none" stroke="#F2C14E" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <h3>小声</h3>
+        <p>手放低，声音收小<br>“沙沙沙。”</p>
+      </div>
+      <div class="remote mute">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M32 84 Q28 66 34 50 L40 34 Q42 29 47 31 Q52 33 49 39 L46 50 L62 50 Q68 50 68 56 Q68 62 62 62 L59 62 Q64 64 63 69 Q62 74 56 74 L53 74 Q57 77 55 81 Q53 86 47 86 L38 86 Q34 86 32 84 Z" fill="#FFD9B3" stroke="#4A3B2F" stroke-width="3.5" stroke-linejoin="round"/>
+          <circle cx="72" cy="30" r="14" fill="#fff" stroke="#4A3B2F" stroke-width="3"/>
+          <line x1="62" y1="20" x2="82" y2="40" stroke="#E85D5D" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <h3>静音</h3>
+        <p>握拳 / 食指放嘴边<br>“嘘——一点声音都没有”</p>
+      </div>
+    </div>
+    <div class="remote-card">
+      <h3>现场只须喊这 6 句</h3>
+      <p>
+        ① “乐队，出发！”<br>
+        ② “大声——沙沙沙！”<br>
+        ③ “小声——沙沙沙。”<br>
+        ④ “静音——嘘。”<br>
+        ⑤ “数一数，几位演奏家？”<br>
+        ⑥ “晚安——”
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= 06 素材 ================= -->
+  <section id="materials">
+    <div class="sec-head">
+      <div class="sec-no">06</div>
+      <h2>素材清单</h2>
+      <div class="hint">装一个袋子，出门前看一眼</div>
+    </div>
+    <div class="card">
+      <div class="mat-group">
+        <h3>必带</h3>
+        <ul class="mat-list">
+          <li><span class="dot"></span>绘本《世界上最吵的乐队》</li>
+          <li><span class="dot"></span>沙锤 1 对（或铃鼓 / 三角铁 / 小鼓，任选 1-2 样）</li>
+          <li><span class="dot"></span>神秘袋 1 个（不透明）</li>
+          <li><span class="dot"></span>贴纸 / 小印章（每人 1 份，提前问老师）</li>
+          <li><span class="dot"></span>水（讲 20 分钟嗓子会干）</li>
+          <li><span class="dot"></span>湿巾（发贴纸 / 和小朋友握手后擦手）</li>
+        </ul>
+      </div>
+      <div class="mat-group">
+        <h3>可选（有就带，没有不影响）</h3>
+        <ul class="mat-list">
+          <li class="opt"><span class="dot"></span>小音箱 + 进行曲（入场 / 踏步）</li>
+          <li class="opt"><span class="dot"></span>泡泡水（海底场景；注意地面湿滑）</li>
+          <li class="opt"><span class="dot"></span>打印的声音遥控器卡（A5，1 张）</li>
+          <li class="opt"><span class="dot"></span>乐器图卡 / 乐队成员卡（如果做了）</li>
+        </ul>
+      </div>
+      <div class="mat-group" style="margin-bottom:0">
+        <h3>给老师的三句话</h3>
+        <ul class="mat-list">
+          <li><span class="dot"></span>“我大概讲 20 分钟，前面会约一个声音遥控器的手势。”</li>
+          <li><span class="dot"></span>“麻烦您坐在能看到全班的位置，我手势收不回来时帮我一起做静音。”</li>
+          <li><span class="dot"></span>“有没有孩子对贴纸过敏，或者家长介意？我换成击掌 / 盖章。”</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 07 救场 ================= -->
+  <section id="rescue">
+    <div class="sec-head">
+      <div class="sec-no">07</div>
+      <h2>救场预案</h2>
+      <div class="hint">小班现场，计划赶不上变化</div>
+    </div>
+    <div class="rescue">
+      <div class="card">
+        <div class="if">全场太吵，收不回来</div>
+        <div class="then">举拳“静音”，你自己先不说话，等 3 秒；然后耳语：“乐队要听指挥。”不要喊“安静”。</div>
+      </div>
+      <div class="card">
+        <div class="if">孩子抢着说 / 抢答</div>
+        <div class="then">蹲下看着他：“你先大声，等会儿请你当小指挥。”给他一个角色，比制止有效。</div>
+      </div>
+      <div class="card">
+        <div class="if">孩子哭 / 害怕（海底、外星人）</div>
+        <div class="then">请老师接手，不强行哄；你继续用小声讲，给其他孩子安全感。提前说一句“这都是我们想象的”。</div>
+      </div>
+      <div class="card">
+        <div class="if">时间不够</div>
+        <div class="then">砍“丛林”和“高山”，保留城市 → 工地 → 沙滩 → 海底 → 太空 → 回家。</div>
+      </div>
+      <div class="card">
+        <div class="if">时间多了 / 孩子还想玩</div>
+        <div class="then">加“身体乐队”：拍腿组、拍手组、摇手腕组，你当指挥，大声 / 小声 / 静音各一遍。</div>
+      </div>
+      <div class="card">
+        <div class="if">孩子一直走动</div>
+        <div class="then">请他当“小指挥”站你旁边，帮你翻页 / 举遥控器。给他任务，不要推回座位。</div>
+      </div>
+      <div class="card">
+        <div class="if">贴纸过敏 / 家长介意</div>
+        <div class="then">提前问老师；现场改用击掌、盖章，或者“点个赞”贴在手背。</div>
+      </div>
+      <div class="card">
+        <div class="if">设备 / 音乐出问题</div>
+        <div class="then">不用音乐也能讲：踏步、拍腿、拍手就是节奏。音乐只是加分项。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 08 给老师 / 延伸 ================= -->
+  <section id="extras">
+    <div class="sec-head">
+      <div class="sec-no">08</div>
+      <h2>给老师 &amp; 延伸</h2>
+      <div class="hint">讲完不要立刻走，留 2 分钟交接</div>
+    </div>
+    <div class="extras">
+      <div class="card">
+        <h3>给老师的话（可照念）</h3>
+        <div class="quote">
+          “老师您好，我今天讲《世界上最吵的乐队》，大概 20 分钟。前面 2 分钟会和小朋友约定一个‘声音遥控器’：大声、小声、静音三个手势。麻烦您坐在能看到全班的位置，如果我手势收不回来，帮我一起做‘静音’。需要拍照您随时拍，不用问我。讲完我帮忙收椅子，谢谢老师！”
+        </div>
+      </div>
+      <div class="card">
+        <h3>回家可以接着玩</h3>
+        <ul>
+          <li><b>家庭乐队：</b>锅盖 = 镲，塑料盒 = 鼓，米粒瓶 = 沙锤。</li>
+          <li><b>画一画：</b>“我的乐器”——随便画，不用像。</li>
+          <li><b>口令游戏：</b>你说“大声”，孩子拍手；你说“小声”，孩子拍腿；你说“静音”，孩子不动。</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="font-size:19px;color:var(--orange);margin-bottom:5px">家长进课堂 · 4 个小提醒</h3>
+      <p style="font-size:15px;color:var(--ink-soft);line-height:1.75">
+        ① 提前 10 分钟到，试话筒 / 音乐，确认座位。<br>
+        ② 穿方便蹲下 / 坐地上的裤子，不穿高跟鞋。<br>
+        ③ 不喷浓香水（孩子敏感），手机静音。<br>
+        ④ 不讲“我孩子多厉害”，讲“每个小朋友都可以加入乐队”。
+      </p>
+    </div>
+    <div class="bookinfo">
+      <b>关于这本书：</b>中文版《世界上最吵的乐队》，作者〔英〕凯尔·图德，绘者〔英〕凯特·辛德雷，译者小砂，中信出版集团 2025 年 8 月版，ISBN 978-7-5217-7557-0。原版为 <i>Marching Band</i>（Kael Tudor 文 / Kate Hindley 图，Nosy Crow，2025），32 页押韵绘本；乐队从城市出发，途经工地、沙滩、海底、丛林、高山、太空，成员逐个加入至 10 位，最后回家道晚安。适读年龄 3 岁+。<br>
+      <b>说明：</b>本页台词为讲读骨架，书上的押韵句子和重复句请以你手上的中文版为准；拟声词和互动口令可以自由替换。
+    </div>
+  </section>
+
+  <footer>
+    铁蛋制作 · 2026-11-02 · 芽三班家长进课堂 · 仅私人使用
+  </footer>
+</main>
+
+<script>
+(function(){
+  var total = 20 * 60;
+  var left = total;
+  var id = null;
+  var timerEl = document.getElementById('timer');
+  var startBtn = document.getElementById('startBtn');
+  var resetBtn = document.getElementById('resetBtn');
+  var printBtn = document.getElementById('printBtn');
+  var fontBtn = document.getElementById('fontBtn');
+
+  function fmt(s){
+    var m = Math.floor(s / 60);
+    var sec = s % 60;
+    return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+  function paint(){
+    timerEl.textContent = fmt(left);
+    timerEl.classList.toggle('warn', left <= 300 && left > 60);
+    timerEl.classList.toggle('danger', left <= 60);
+  }
+  function tick(){
+    if(left > 0){ left--; paint(); }
+    if(left === 0){
+      clearInterval(id); id = null;
+      startBtn.textContent = '开始';
+      try {
+        var ctx = new (window.AudioContext || window.webkitAudioContext)();
+        var o = ctx.createOscillator();
+        var g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = 660;
+        g.gain.setValueAtTime(0.12, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+        o.start(); o.stop(ctx.currentTime + 1.2);
+      } catch(e) {}
+    }
+  }
+  startBtn.addEventListener('click', function(){
+    if(id){ clearInterval(id); id = null; startBtn.textContent = '继续'; }
+    else {
+      if(left === 0) left = total;
+      id = setInterval(tick, 1000);
+      startBtn.textContent = '暂停';
+    }
+  });
+  resetBtn.addEventListener('click', function(){
+    if(id){ clearInterval(id); id = null; }
+    left = total; paint(); startBtn.textContent = '开始';
+  });
+  printBtn.addEventListener('click', function(){ window.print(); });
+  fontBtn.addEventListener('click', function(){
+    document.body.classList.toggle('big');
+    fontBtn.textContent = document.body.classList.contains('big') ? '正常' : '大字';
+  });
+  document.querySelectorAll('.check input').forEach(function(cb){
+    cb.addEventListener('change', function(){
+      cb.closest('.tl').classList.toggle('done', cb.checked);
+    });
+  });
+  paint();
+})();
+</script>
+</body>
+</html>

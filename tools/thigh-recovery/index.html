@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>大腿外侧 + 膝盖内侧 · 7 天恢复计划</title>
+<style>
+:root{
+  --bg:#03060c;--panel:rgba(10,20,38,.55);--panel2:rgba(8,16,30,.78);
+  --line:rgba(56,189,248,.16);--line2:rgba(56,189,248,.34);
+  --text:#e2ecf7;--muted:#7d92ad;--cyan:#22d3ee;--blue:#3b82f6;--violet:#8b5cf6;
+  --coral:#fb7185;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:16px;line-height:1.65;
+  background:
+    radial-gradient(900px 540px at 10% -8%,rgba(59,130,246,.16),transparent 62%),
+    radial-gradient(820px 520px at 94% 6%,rgba(139,92,246,.13),transparent 60%),
+    var(--bg);
+  background-attachment:fixed;
+  text-wrap:pretty;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(56,189,248,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,.04) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse at 50% 0%,#000 0%,transparent 72%);
+}
+body.no-scroll{overflow:hidden}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+a{color:inherit}
+::selection{background:rgba(34,211,238,.3)}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:6px}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(3,6,12,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar-in{max-width:1100px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:16px}
+.brand{font-size:14px;font-weight:700;letter-spacing:.06em;white-space:nowrap}
+.brand b{color:var(--cyan)}
+.navlinks{margin-left:auto;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;min-width:0;flex:1;justify-content:flex-end}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:999px;white-space:nowrap;transition:color .18s,background-color .18s}
+.navlinks a:hover{color:var(--text);background:rgba(56,189,248,.08)}
+
+/* ---------- layout ---------- */
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:0 20px}
+.hero{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-size:clamp(30px,5.4vw,48px);line-height:1.18;letter-spacing:-.01em;font-weight:800}
+.hero h1 em{font-style:normal;background:linear-gradient(100deg,#22d3ee,#60a5fa 55%,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .sub{margin-top:16px;max-width:640px;color:#a9bdd2;font-size:15px;line-height:1.75}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.chip{font-size:12.5px;color:#b7c9dc;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.chip b{color:var(--cyan);font-weight:600}
+.hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;align-items:center}
+.hint{font-size:12.5px;color:var(--muted);margin-top:12px}
+
+/* ---------- buttons ---------- */
+.btn{font:inherit;font-size:14px;cursor:pointer;border-radius:999px;padding:11px 20px;border:1px solid var(--line2);background:rgba(34,211,238,.08);color:var(--text);transition:transform .16s,background-color .18s,border-color .18s,color .18s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:rgba(34,211,238,.15);border-color:var(--cyan)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:linear-gradient(135deg,#0e9fb2,#22d3ee);border-color:transparent;color:#03202a;font-weight:700}
+.btn.primary:hover{background:linear-gradient(135deg,#15b3c7,#4fe3f7)}
+.btn.quiet{background:transparent;border-color:var(--line)}
+.btn[disabled]{opacity:.45;cursor:default;transform:none}
+.btn-sm{font-size:12.5px;padding:7px 13px}
+
+/* ---------- blocks ---------- */
+.block{padding:46px 0;border-bottom:1px solid var(--line);scroll-margin-top:64px}
+.block-head{margin-bottom:24px}
+.block-head .no{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--cyan);display:block;margin-bottom:8px}
+.block-head h2{font-size:clamp(22px,3.2vw,29px);letter-spacing:-.01em}
+.block-head p{margin-top:8px;color:var(--muted);font-size:13.5px;line-height:1.7;max-width:720px}
+
+/* ---------- triage ---------- */
+.callout{display:flex;gap:10px;align-items:flex-start;background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.24);border-radius:14px;padding:12px 14px;font-size:13.5px;line-height:1.7;color:#b9d7e6;margin-bottom:20px}
+.callout b{color:#9fe8f5}
+.triage{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:20px;align-items:start}
+.bodyfig{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:10px 10px 4px}
+.bodyfig svg{display:block;width:100%;height:auto}
+.zone{cursor:pointer}
+.zone .hit{fill:transparent}
+.zone .ring{fill:rgba(34,211,238,.10);stroke:#22d3ee;stroke-width:1.8;transition:fill .18s,stroke .18s}
+.zone .num{fill:#9fe8f5;font-family:var(--mono);font-size:14px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.zone:hover .ring{fill:rgba(34,211,238,.22)}
+.zone.on .ring{fill:rgba(251,113,133,.24);stroke:var(--coral);stroke-width:3}
+.zone.on .num{fill:#ffd4da}
+.figcap{font-size:11.5px;color:var(--muted);text-align:center;padding:4px 0 8px}
+.triage-side{display:grid;gap:10px}
+.zone-btn{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;font:inherit;font-size:14px;color:#cdddec;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px 14px;cursor:pointer;transition:border-color .18s,background-color .18s,transform .16s}
+.zone-btn:hover{border-color:var(--line2);background:rgba(14,28,50,.72)}
+.zone-btn:active{transform:scale(.985)}
+.zone-btn.on{border-color:rgba(251,113,133,.55);background:rgba(251,113,133,.07)}
+.zone-btn .zn{flex:0 0 24px;height:24px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:12px;background:rgba(34,211,238,.12);color:var(--cyan);margin-top:1px}
+.zone-btn.on .zn{background:rgba(251,113,133,.18);color:#ffc7d0}
+.zone-btn .zt b{display:block;font-weight:600;line-height:1.45}
+.zone-btn .zt span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.zone-info{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:16px 18px;min-height:150px}
+.zone-info .zi-k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--coral);margin-bottom:6px}
+.zone-info h3{font-size:17px;margin-bottom:8px}
+.zone-info p{font-size:13.5px;line-height:1.75;color:#b3c6d9}
+.zone-info .zi-do{margin-top:10px;font-size:13.5px;line-height:1.75;color:#9fe8f5;border-left:2px solid rgba(34,211,238,.45);padding-left:11px}
+.zone-warn{margin-top:12px;font-size:12.5px;line-height:1.7;color:#ffbcc5;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.28);border-radius:10px;padding:9px 11px}
+
+/* ---------- principles ---------- */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px}
+.pcard .pic{font-size:20px;line-height:1;margin-bottom:10px}
+.pcard h3{font-size:15.5px;margin-bottom:6px}
+.pcard p{font-size:13px;color:var(--muted);line-height:1.7}
+
+/* ---------- plan ---------- */
+.days{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.day-btn{font:inherit;font-size:13px;cursor:pointer;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(10,20,38,.5);color:var(--muted);transition:color .18s,border-color .18s,background-color .18s,transform .16s}
+.day-btn:hover{color:var(--text);border-color:var(--line2)}
+.day-btn:active{transform:scale(.97)}
+.day-btn.on{color:#03202a;background:var(--cyan);border-color:var(--cyan);font-weight:700}
+.day-btn small{display:block;font-size:10.5px;font-weight:400;opacity:.8;line-height:1.2;margin-top:1px}
+.plan-panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px}
+.plan-top{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.plan-top h3{font-size:19px}
+.plan-note{font-size:13px;color:var(--muted);line-height:1.7;margin:4px 0 16px;max-width:680px}
+.task-list{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.task{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:rgba(3,6,12,.35)}
+.task .t-ico{flex:0 0 22px;text-align:center;font-size:15px;line-height:1}
+.task .t-txt{min-width:0;flex:1}
+.task .t-txt b{display:block;font-size:14px;font-weight:600;line-height:1.45}
+.task .t-txt b .t-side{font-size:11px;font-weight:400;color:var(--cyan);margin-left:7px;border:1px solid rgba(34,211,238,.25);border-radius:6px;padding:0 5px}
+.task .t-txt span{display:block;font-size:12px;color:var(--muted);line-height:1.5}
+.task .t-link{font-size:12px;color:var(--cyan);text-decoration:none;white-space:nowrap;border:1px solid rgba(34,211,238,.28);border-radius:999px;padding:4px 10px;transition:background-color .18s}
+.task .t-link:hover{background:rgba(34,211,238,.12)}
+.plan-actions{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* ---------- moves ---------- */
+.moves-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.move{background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;scroll-margin-top:72px;transition:border-color .25s,box-shadow .25s}
+.move.hl{border-color:rgba(34,211,238,.65);box-shadow:0 0 0 3px rgba(34,211,238,.13)}
+.fig-wrap{background:radial-gradient(80% 90% at 50% 10%,rgba(56,189,248,.08),rgba(3,6,12,.15));border-bottom:1px solid var(--line);padding:8px 10px}
+.fig{display:block;width:100%;height:auto}
+.fig .bone{fill:none;stroke:#cfe9f5;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.fig .bone2{fill:none;stroke:#8fb6c9;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.fig .ghost{fill:none;stroke:#5f7f93;stroke-width:3;stroke-dasharray:6 7;stroke-linecap:round;stroke-linejoin:round}
+.fig .ground{stroke:rgba(56,189,248,.25);stroke-width:2;stroke-dasharray:2 7;fill:none}
+.fig .arrow{fill:none;stroke:#22d3ee;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.fig .arrowhead{fill:#22d3ee}
+.fig .hot{fill:rgba(251,113,133,.18);stroke:#fb7185;stroke-width:2.2;stroke-dasharray:5 4}
+.fig .roller{fill:#0d2a3c;stroke:#22d3ee;stroke-width:2.4}
+.fig .label{fill:#8aa3b8;font-size:11px;font-family:"Microsoft YaHei",sans-serif}
+.fig .label2{fill:#9fe8f5;font-size:11px;font-family:"Microsoft YaHei",sans-serif}
+.fig .flow{stroke-dasharray:8 8;animation:dashflow 1.2s linear infinite}
+@keyframes dashflow{to{stroke-dashoffset:-16}}
+.fig .roller-g{animation:rollx 3.2s ease-in-out infinite alternate}
+@keyframes rollx{from{transform:translateX(-12px)}to{transform:translateX(16px)}}
+.fig .legraise{transform-box:view-box;transform-origin:136px 138px;animation:legrotation 3.2s ease-in-out infinite alternate}
+@keyframes legrotation{from{transform:rotate(0)}to{transform:rotate(-25deg)}}
+.move-body{padding:18px 20px 20px}
+.move-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:2px}
+.move-no{font-family:var(--mono);font-size:12px;color:var(--cyan);letter-spacing:.08em}
+.move-tag{font-size:11.5px;color:#ffc2cb;border:1px solid rgba(251,113,133,.35);background:rgba(251,113,133,.08);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.move h3{font-size:19px;margin-top:2px}
+.move-sub{font-size:12.5px;color:var(--muted);margin:4px 0 12px}
+.dose{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:13px}
+.dose span{font-family:var(--mono);font-size:12px;color:var(--cyan);background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:3px 8px;font-variant-numeric:tabular-nums}
+.steps{list-style:none;counter-reset:s;padding:0;margin:0 0 13px;display:grid;gap:7px}
+.steps li{counter-increment:s;display:flex;gap:9px;font-size:13.5px;line-height:1.65;color:#c8d9ea}
+.steps li::before{content:counter(s);flex:0 0 20px;height:20px;border-radius:50%;background:rgba(34,211,238,.12);color:var(--cyan);font-size:11px;display:grid;place-items:center;font-family:var(--mono);margin-top:3px}
+.cue{font-size:12.5px;line-height:1.7;color:var(--muted);border-left:2px solid rgba(34,211,238,.4);padding-left:11px}
+.cue b{color:#9fe8f5;font-weight:600}
+.mistake{margin-top:9px;font-size:12.5px;line-height:1.65;color:#e8a1ab}
+.solo{margin-top:14px}
+
+/* ---------- red flags ---------- */
+.red-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:18px;align-items:start}
+.red-card{background:rgba(251,113,133,.05);border:1px solid rgba(251,113,133,.25);border-radius:20px;padding:20px}
+.red-card h3{font-size:16px;color:#ffc7d0;margin-bottom:10px}
+.red-list{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+.red-list li{display:flex;gap:9px;font-size:13.5px;line-height:1.65;color:#dcc7cc}
+.red-list li::before{content:"!";flex:0 0 18px;height:18px;border-radius:50%;background:rgba(251,113,133,.2);color:#ffbcc5;font-size:11px;font-weight:700;display:grid;place-items:center;margin-top:3px}
+.back-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px}
+.back-card h3{font-size:16px;margin-bottom:10px}
+.back-list{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+.back-list li{display:flex;gap:9px;font-size:13.5px;line-height:1.65;color:#c2d3e4}
+.back-list li::before{content:"✓";flex:0 0 18px;height:18px;border-radius:50%;background:rgba(34,211,238,.14);color:var(--cyan);font-size:11px;font-weight:700;display:grid;place-items:center;margin-top:3px}
+.back-note{font-size:12.5px;color:var(--muted);line-height:1.7;margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+
+/* ---------- footer ---------- */
+footer{padding:32px 0 56px;color:var(--muted);font-size:12.5px;line-height:1.8}
+footer b{color:#9fb4c9;font-weight:600}
+
+/* ---------- player ---------- */
+.player{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:18px;background:rgba(2,5,10,.84);backdrop-filter:blur(8px)}
+.player[hidden]{display:none}
+.player-card{width:min(520px,100%);background:#07101f;border:1px solid var(--line2);border-radius:24px;padding:24px;text-align:center;box-shadow:0 28px 90px rgba(0,0,0,.65)}
+.p-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.p-tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--cyan)}
+.icon-btn{font:inherit;font-size:16px;line-height:1;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;transition:color .18s,border-color .18s,transform .16s}
+.icon-btn:hover{color:var(--text);border-color:var(--line2)}
+.icon-btn:active{transform:scale(.94)}
+.p-prog{margin-top:16px;font-family:var(--mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.player-card h3{font-size:21px;margin-top:6px}
+.p-side{font-size:13px;color:var(--cyan);margin-top:2px;min-height:20px}
+.p-time{font-family:var(--mono);font-size:clamp(56px,13vw,78px);line-height:1.05;font-variant-numeric:tabular-nums;letter-spacing:.01em;margin:14px 0 12px}
+.p-bar{height:6px;border-radius:999px;background:rgba(56,189,248,.12);overflow:hidden}
+.p-bar i{display:block;height:100%;width:100%;border-radius:999px;background:linear-gradient(90deg,#22d3ee,#60a5fa);transition:width .25s linear}
+.p-bar i.low{background:linear-gradient(90deg,#fb7185,#f59e0b)}
+.p-cue{font-size:13px;line-height:1.7;color:#9fb4c9;margin:16px auto 0;max-width:400px;min-height:44px}
+.p-actions{display:flex;gap:9px;justify-content:center;margin-top:20px}
+.p-actions .btn{min-width:96px;justify-content:center}
+
+/* ---------- responsive ---------- */
+@media (max-width:840px){
+  .triage{grid-template-columns:1fr}
+  .moves-grid{grid-template-columns:1fr}
+  .red-wrap{grid-template-columns:1fr}
+  .bodyfig{max-width:420px;margin:0 auto;width:100%}
+}
+@media (max-width:520px){
+  .hero{padding:40px 0 30px}
+  .block{padding:36px 0}
+  .brand{font-size:12.5px}
+  .navlinks{justify-content:flex-start;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 20px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 20px),transparent)}
+  .navlinks a{font-size:12px;padding:5px 8px}
+  .plan-panel{padding:16px}
+  .move-body{padding:16px}
+  .p-actions{flex-wrap:wrap}
+  .p-actions .btn{flex:1 1 30%;min-width:0;padding:10px 12px;font-size:13px}
+}
+@media (max-width:400px){
+  .wrap{padding:0 14px}
+  .topbar-in{padding:9px 14px;gap:8px}
+  .day-btn{padding:7px 11px;font-size:12px}
+  .hero h1{font-size:27px}
+  .chip{font-size:11.5px;padding:5px 10px}
+  .task .t-link{padding:4px 8px;font-size:11px}
+  .player-card{padding:18px 16px}
+  .p-time{font-size:52px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">稳稳 · <b>私人专区</b></div>
+    <nav class="navlinks" aria-label="页面导航">
+      <a href="#triage">自测</a>
+      <a href="#principles">原则</a>
+      <a href="#plan">7 天计划</a>
+      <a href="#moves">动作图解</a>
+      <a href="#redflags">红线</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow">Recovery Protocol · 篮球后恢复</div>
+    <h1>大腿外侧 + 膝盖内侧<br><em>7 天恢复计划</em></h1>
+    <p class="sub">针对延迟性肌肉酸痛（DOMS）、髂胫束 / 臀中肌劳损，以及你补充的膝盖内侧上方酸胀。7 个动作都有图示、步骤和常见错误，配跟练计时器，照做就行。</p>
+    <div class="chips">
+      <span class="chip"><b>①</b> 股四头肌 DOMS</span>
+      <span class="chip"><b>②</b> 髂胫束 / 臀中肌</span>
+      <span class="chip"><b>③</b> 大转子周围</span>
+      <span class="chip"><b>④</b> 股内侧肌 / 内收肌</span>
+    </div>
+    <div class="hero-cta">
+      <button class="btn primary" id="heroStart" type="button">从 D3 开始跟练</button>
+      <a class="btn quiet" href="#moves">先看动作图解</a>
+    </div>
+    <p class="hint">你现在大概在第 3 天，直接点左边。如果确实还在 48 小时内，从 D1 开始。</p>
+  </section>
+
+  <!-- ================= 自测 ================= -->
+  <section class="block" id="triage">
+    <div class="block-head">
+      <span class="no">01 / SELF CHECK</span>
+      <h2>先摸清楚：你疼的是哪一层</h2>
+      <p>点身体上的编号，或者点右边的条目。四种可以同时存在，处理重点不一样。</p>
+    </div>
+
+    <div class="callout">
+      <span>🎯</span>
+      <div><b>你的情况：① + ② + ④。</b>大腿前外侧酸胀、髋外侧到膝外侧一条线、膝盖内侧上方按压酸。④ 先用手指分清：是软软的肌肉酸，还是关节缝里的疼——前者按 DOMS 处理，后者别自己练。</div>
+    </div>
+
+    <div class="triage">
+      <div class="bodyfig">
+        <svg class="fig" viewBox="0 0 260 280" role="img" aria-label="人体正面示意图，标出四个常见酸痛区域">
+          <line class="ground" x1="30" y1="262" x2="230" y2="262"/>
+          <!-- 身体 -->
+          <circle class="bone" cx="130" cy="40" r="16"/>
+          <line class="bone" x1="130" y1="57" x2="130" y2="66"/>
+          <line class="bone" x1="94" y1="73" x2="166" y2="73"/>
+          <line class="bone" x1="94" y1="73" x2="108" y2="158"/>
+          <line class="bone" x1="166" y1="73" x2="152" y2="158"/>
+          <line class="bone" x1="108" y1="158" x2="152" y2="158"/>
+          <!-- 手臂 -->
+          <line class="bone2" x1="96" y1="76" x2="76" y2="118"/>
+          <line class="bone2" x1="76" y1="118" x2="86" y2="156"/>
+          <line class="bone2" x1="164" y1="76" x2="184" y2="118"/>
+          <line class="bone2" x1="184" y1="118" x2="174" y2="156"/>
+          <!-- 腿 -->
+          <line class="bone" x1="116" y1="158" x2="110" y2="206"/>
+          <line class="bone" x1="110" y1="206" x2="108" y2="250"/>
+          <line class="bone2" x1="98" y1="254" x2="119" y2="254"/>
+          <line class="bone" x1="144" y1="158" x2="150" y2="206"/>
+          <line class="bone" x1="150" y1="206" x2="152" y2="250"/>
+          <line class="bone2" x1="141" y1="254" x2="162" y2="254"/>
+          <!-- 区域 1 -->
+          <g class="zone" data-zone="a" tabindex="0" role="button" aria-label="大腿前外侧酸胀">
+            <circle class="hit" cx="146" cy="180" r="18"/>
+            <circle class="ring" cx="146" cy="180" r="13"/>
+            <text class="num" x="146" y="180">1</text>
+          </g>
+          <!-- 区域 2 -->
+          <g class="zone" data-zone="b" tabindex="0" role="button" aria-label="髋外侧到膝外侧一条线">
+            <circle class="hit" cx="176" cy="208" r="17"/>
+            <circle class="ring" cx="176" cy="208" r="12"/>
+            <text class="num" x="176" y="208">2</text>
+          </g>
+          <!-- 区域 3 -->
+          <g class="zone" data-zone="c" tabindex="0" role="button" aria-label="大转子周围按压痛">
+            <circle class="hit" cx="169" cy="143" r="17"/>
+            <circle class="ring" cx="169" cy="143" r="12"/>
+            <text class="num" x="169" y="143">3</text>
+          </g>
+          <!-- 区域 4 -->
+          <g class="zone" data-zone="d" tabindex="0" role="button" aria-label="膝盖内侧上方酸胀">
+            <circle class="hit" cx="114" cy="198" r="18"/>
+            <circle class="ring" cx="114" cy="198" r="13"/>
+            <text class="num" x="114" y="198">4</text>
+          </g>
+          <!-- 提示线 -->
+          <text class="label" x="130" y="272" text-anchor="middle">左右镜像 · 按实际疼的位置对应</text>
+        </svg>
+        <div class="figcap">正面示意 · 点编号看说明</div>
+      </div>
+
+      <div class="triage-side">
+        <div id="zoneBtns"></div>
+        <div class="zone-info" id="zoneInfo" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 原则 ================= -->
+  <section class="block" id="principles">
+    <div class="block-head">
+      <span class="no">02 / PRINCIPLES</span>
+      <h2>四句话先记住</h2>
+    </div>
+    <div class="pgrid">
+      <div class="pcard">
+        <div class="pic">🪵</div>
+        <h3>别直接滚那条“带子”</h3>
+        <p>髂胫束是筋膜，不是肌肉，硬压只会更疼。要滚的是股四头肌、臀部外侧和大腿内侧周边，把张力从两头松开。</p>
+      </div>
+      <div class="pcard">
+        <div class="pic">🔥</div>
+        <h3>48 小时后改热敷</h3>
+        <p>热水袋或热毛巾 15–20 分钟，隔一层布。冰只在刚打完、有急性刺痛或发热时用，现在不需要。</p>
+      </div>
+      <div class="pcard">
+        <div class="pic">🚶</div>
+        <h3>别完全躺平</h3>
+        <p>快走、慢骑车 20–30 分钟，让血流把代谢废物带走，比静养恢复快。疼感控制在 4/10 以内。</p>
+      </div>
+      <div class="pcard">
+        <div class="pic">💪</div>
+        <h3>臀中肌是根子</h3>
+        <p>外侧疼的底层原因常是臀中肌撑不住，阔筋膜张肌和髂胫束替它干活。蚌式、侧卧抬腿、单腿臀桥要练起来。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 计划 ================= -->
+  <section class="block" id="plan">
+    <div class="block-head">
+      <span class="no">03 / 7-DAY PLAN</span>
+      <h2>7 天怎么排</h2>
+      <p>DOMS 在第 2–3 天最重，第 4 天开始加力量。按你现在的进度，直接看 D3。</p>
+    </div>
+
+    <div class="days" id="days" role="tablist" aria-label="选择天数"></div>
+
+    <div class="plan-panel">
+      <div class="plan-top">
+        <h3 id="planTitle">第 3 天</h3>
+        <span class="chip" id="planTime">约 8 分钟</span>
+      </div>
+      <p class="plan-note" id="planNote"></p>
+      <ul class="task-list" id="planList"></ul>
+      <div class="plan-actions">
+        <button class="btn primary" id="startBtn" type="button">按这个计划跟练</button>
+        <span class="hint" style="margin:0">计时器会按顺序自动切换左右侧，3-2-1 有提示音。</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 动作 ================= -->
+  <section class="block" id="moves">
+    <div class="block-head">
+      <span class="no">04 / MOVES</span>
+      <h2>7 个动作，照着做</h2>
+      <p>图解里：实线是身体位置，虚线是起始位置，青色箭头是发力/移动方向，粉色虚线圈是重点区域。每个动作下面都能单独计时。</p>
+    </div>
+
+    <div class="moves-grid">
+
+      <!-- 1 股四头肌 -->
+      <article class="move" id="move-quad">
+        <div class="fig-wrap">
+          <svg class="fig" viewBox="0 0 340 220" role="img" aria-label="俯卧，泡沫轴放在大腿下方，前后滚动">
+            <line class="ground" x1="18" y1="196" x2="322" y2="196"/>
+            <g class="roller-g"><ellipse class="roller" cx="186" cy="184" rx="14" ry="11"/></g>
+            <circle class="bone" cx="58" cy="140" r="14"/>
+            <line class="bone" x1="72" y1="150" x2="150" y2="162"/>
+            <line class="bone2" x1="72" y1="150" x2="62" y2="177"/>
+            <line class="bone2" x1="62" y1="178" x2="94" y2="190"/>
+            <line class="bone" x1="150" y1="162" x2="218" y2="175"/>
+            <line class="bone" x1="218" y1="175" x2="266" y2="186"/>
+            <line class="bone2" x1="266" y1="186" x2="280" y2="191"/>
+            <path class="arrow flow" d="M158 136 H238"/>
+            <path class="arrow" d="M158 136 l8 -5 M158 136 l8 5"/>
+            <path class="arrow" d="M238 136 l-8 -5 M238 136 l-8 5"/>
+            <text class="label2" x="160" y="124">来回慢滚 60–90 秒</text>
+            <text class="label" x="205" y="212">泡沫轴 · 大腿中段</text>
+          </svg>
+        </div>
+        <div class="move-body">
+          <div class="move-head"><span class="move-no">01 / ROLL</span><span class="move-tag">外侧 · 前侧</span></div>
+          <h3>泡沫轴 · 股四头肌</h3>
+          <p class="move-sub">大腿前外侧一大片酸胀的主战场</p>
+          <div class="dose"><span>60–90 秒 / 侧</span><span>1–2 轮</span><span>疼感 ≤ 6/10</span></div>
+          <ol class="steps">
+            <li>俯卧，泡沫轴横放大腿中段下方，双前臂撑地。</li>
+            <li>把体重压上去，沿大腿前侧从髋下方慢滚到膝盖上方。</li>
+            <li>碰到明显酸点停 20 秒，在原地小幅度碾，别憋气。</li>
+            <li>膝盖骨、髋骨和大腿内侧靠腹股沟的位置都别压。</li>
+          </ol>
+          <p class="cue"><b>要点：</b>慢比重有用。滚太快等于没滚；疼到咬牙说明压太狠了。</p>
+          <p class="mistake">常见错误：整个人重量一下砸上去、直接压膝盖、憋着气硬扛。</p>
+          <button class="btn quiet btn-sm solo" type="button" data-solo="quad">单独跟练</button>
+        </div>
+      </article>
+
+      <!-- 2 臀部外侧 -->
+      <article class="move" id="move-glute">
+        <div class="fig-wrap">
+          <svg class="fig" viewBox="0 0 340 230" role="img" aria-label="坐在泡沫轴上，脚踝搭在对侧膝盖上，身体压向一侧臀部">
+            <line class="ground" x1="18" y1="214" x2="322" y2="214"/>
+            <ellipse class="roller" cx="170" cy="198" rx="36" ry="12"/>
+            <line class="bone2" x1="145" y1="78" x2="124" y2="118"/>
+            <line class="bone2" x1="124" y1="118" x2="132" y2="150"/>
+            <line class="bone2" x1="195" y1="78" x2="216" y2="118"/>
+            <line class="bone2" x1="216" y1="118" x2="208" y2="150"/>
+            <line class="bone" x1="150" y1="160" x2="134" y2="186"/>
+            <line class="bone" x1="134" y1="186" x2="132" y2="208"/>
+            <line class="bone" x1="188" y1="160" x2="214" y2="186"/>
+            <line class="bone" x1="214" y1="186" x2="160" y2="188"/>
+            <line class="bone2" x1="160" y1="188" x2="148" y2="192"/>
+            <circle class="bone" cx="170" cy="54" r="14"/>
+            <line class="bone" x1="170" y1="68" x2="170" y2="76"/>
+            <line class="bone" x1="145" y1="76" x2="195" y2="76"/>
+            <line class="bone" x1="145" y1="76" x2="150" y2="160"/>
+            <line class="bone" x1="195" y1="76" x2="190" y2="160"/>
+            <line class="bone" x1="150" y1="160" x2="190" y2="160"/>
+            <ellipse class="hot" cx="184" cy="158" rx="14" ry="9"/>
+            <path class="arrow" d="M170 112 Q196 118 200 140"/>
+            <path class="arrowhead" d="M200 140 l-2 -9 l9 3 z"/>
+            <text class="label2" x="204" y="120">压向这一侧</text>
+            <text class="label" x="238" y="178">脚踝搭对侧膝上</text>
+            <text class="label" x="66" y="226">泡沫轴</text>
+          </svg>
+        </div>
+        <div class="move-body">
+          <div class="move-head"><span class="move-no">02 / ROLL</span><span class="move-tag">臀部外侧</span></div>
+          <h3>泡沫轴 · 臀部外侧</h3>
+          <p class="move-sub">臀中肌、阔筋膜张肌，别滚到腰</p>
+          <div class="dose"><span>45–60 秒 / 侧</span><span>1–2 轮</span><span>小范围移动</span></div>
+          <ol class="steps">
+            <li>坐在泡沫轴上，右脚踝搭到左膝上，双手在身后撑地。</li>
+            <li>重心压向右侧臀部，前后小范围移动，找大转子后上方的酸点。</li>
+            <li>找到后停 20 秒，小幅度碾；换另一侧。</li>
+            <li>压的是臀部外侧，不是腰，也不是大腿外侧那条硬带子。</li>
+          </ol>
+          <p class="cue"><b>要点：</b>脚踝搭上去能增加压力。感觉是酸胀不是刺痛，腰部不能有放射感。</p>
+          <p class="mistake">常见错误：直接滚髂胫束（越滚越疼）、压在腰椎上、整个人重量一下砸下去。</p>
+          <button class="btn quiet btn-sm solo" type="button" data-solo="glute">单独跟练</button>
+        </div>
+      </article>
+
+      <!-- 3 交叉腿拉伸 -->
+      <article class="move" id="move-stretch">
+        <div class="fig-wrap">
+          <svg class="fig" viewBox="0 0 340 230" role="img" aria-label="站立，一条腿交叉到另一条腿后方，手臂过头向对侧侧弯">
+            <line class="ground" x1="18" y1="212" x2="322" y2="212"/>
+            <circle class="bone" cx="150" cy="44" r="14"/>
+            <line class="bone" x1="153" y1="58" x2="158" y2="66"/>
+            <line class="bone" x1="158" y1="66" x2="170" y2="124"/>
+            <line class="bone" x1="142" y1="68" x2="178" y2="70"/>
+            <line class="bone" x1="160" y1="124" x2="184" y2="126"/>
+            <line class="bone" x1="166" y1="126" x2="158" y2="168"/>
+            <line class="bone" x1="158" y1="168" x2="154" y2="206"/>
+            <line class="bone2" x1="146" y1="208" x2="163" y2="208"/>
+            <line class="bone" x1="180" y1="127" x2="192" y2="168"/>
+            <line class="bone" x1="192" y1="168" x2="142" y2="202"/>
+            <line class="bone2" x1="132" y1="204" x2="151" y2="204"/>
+            <line class="bone2" x1="144" y1="72" x2="122" y2="104"/>
+            <line class="bone2" x1="122" y1="104" x2="148" y2="122"/>
+            <line class="bone" x1="170" y1="72" x2="188" y2="36"/>
+            <line class="bone" x1="188" y1="36" x2="146" y2="20"/>
+            <path class="ghost" d="M170 124 L184 66"/>
+            <path class="arrow flow" d="M206 48 Q198 18 166 16"/>
+            <path class="arrow" d="M166 16 l10 -3 M166 16 l9 6"/>
+            <text class="label2" x="212" y="60">向对侧侧弯</text>
+            <text class="label" x="214" y="206">交叉腿放后方</text>
+            <text class="label" x="196" y="130">骨盆朝前</text>
+          </svg>
+        </div>
+        <div class="move-body">
+          <div class="move-head"><span class="move-no">03 / STRETCH</span><span class="move-tag">髋外侧 → 膝外侧</span></div>
+          <h3>交叉腿 · 体侧拉伸</h3>
+          <p class="move-sub">拉开髋外侧到膝外侧那一条线</p>
+          <div class="dose"><span>30 秒 × 2 组 / 侧</span><span>呼吸放松</span><span>不弹震</span></div>
+          <ol class="steps">
+            <li>站立，疼痛侧腿交叉到另一条腿后方，双脚踩实。</li>
+            <li>同侧手臂举过头顶，向反方向侧弯。</li>
+            <li>骨盆保持正对前方，别撅臀、别转胯。</li>
+            <li>感到髋外侧到膝外侧一条线被拉开，停 30 秒，换侧。</li>
+          </ol>
+          <p class="cue"><b>要点：</b>拉伸感 5–6/10 就够。呼气时再侧弯一点，膝盖别锁死。</p>
+          <p class="mistake">常见错误：弯腰代偿、骨盆跟着转、憋气硬拉。</p>
+          <button class="btn quiet btn-sm solo" type="button" data-solo="stretch">单独跟练</button>
+        </div>
+      </article>
+
+      <!-- 4 内收肌拉伸 -->
+      <article class="move" id="move-adductor">
+        <div class="fig-wrap">
+          <svg class="fig" viewBox="0 0 340 230" role="img" aria-label="宽距站立侧弓步，重心移向屈膝侧，直腿内侧拉伸">
+            <line class="ground" x1="18" y1="212" x2="322" y2="212"/>
+            <path class="ghost" d="M172 130 L188 72"/>
+            <line class="bone" x1="160" y1="130" x2="184" y2="130"/>
+            <line class="bone" x1="172" y1="130" x2="130" y2="168"/>
+            <line class="bone" x1="130" y1="168" x2="124" y2="208"/>
+            <line class="bone2" x1="112" y1="210" x2="136" y2="210"/>
+            <line class="bone" x1="172" y1="130" x2="226" y2="172"/>
+            <line class="bone" x1="226" y1="172" x2="252" y2="208"/>
+            <line class="bone2" x1="244" y1="210" x2="262" y2="210"/>
+            <line class="bone" x1="156" y1="74" x2="172" y2="130"/>
+            <line class="bone" x1="142" y1="76" x2="170" y2="76"/>
+            <circle class="bone" cx="150" cy="52" r="14"/>
+            <line class="bone" x1="152" y1="66" x2="156" y2="74"/>
+            <line class="bone2" x1="144" y1="78" x2="120" y2="108"/>
+            <line class="bone2" x1="120" y1="108" x2="128" y2="158"/>
+            <line class="bone2" x1="168" y1="78" x2="134" y2="52"/>
+            <line class="bone2" x1="134" y1="52" x2="94" y2="42"/>
+            <ellipse class="hot" cx="212" cy="184" rx="13" ry="24" transform="rotate(20 212 184)"/>
+            <path class="arrow flow" d="M206 104 Q198 76 170 66"/>
+            <path class="arrow" d="M170 66 l10 -3 M170 66 l9 6"/>
+            <text class="label2" x="212" y="52">重心移向屈膝侧</text>
+            <text class="label2" x="228" y="196">直腿内侧拉开</text>
+            <text class="label" x="132" y="226">宽距站立</text>
+          </svg>
+        </div>
+        <div class="move-body">
+          <div class="move-head"><span class="move-no">04 / STRETCH</span><span class="move-tag">膝盖内侧上方</span></div>
+          <h3>侧弓步 · 内收肌拉伸</h3>
+          <p class="move-sub">股内侧肌、内收肌群，膝盖内上方酸胀用这个</p>
+          <div class="dose"><span>30 秒 × 2 组 / 侧</span><span>幅度渐进</span><span>关节缝疼就停</span></div>
+          <ol class="steps">
+            <li>双脚大幅分开站立，脚尖朝前，膝盖别内扣。</li>
+            <li>重心移向一侧，屈膝下蹲，另一条腿保持伸直。</li>
+            <li>双手扶在屈膝侧的膝盖或大腿上，直腿内侧有拉伸感。</li>
+            <li>停 30 秒，慢慢起身换侧；想加强可用手掌根轻推大腿内侧中段。</li>
+          </ol>
+          <p class="cue"><b>要点：</b>直腿脚尖朝前，别外八；下蹲不超过 90°；避开腹股沟和膝盖骨，不用硬轴猛压。</p>
+          <p class="mistake">常见错误：弓步太深、塌腰翘臀、把疼点压在膝盖内侧关节缝上。</p>
+          <button class="btn quiet btn-sm solo" type="button" data-solo="adductor">单独跟练</button>
+        </div>
+      </article>
+
+      <!-- 5 蚌式 -->
+      <article class="move" id="move-clam">
+        <div class="fig-wrap">
+          <svg class="fig" viewBox="0 0 340 200" role="img" aria-label="俯视图，侧卧屈膝，脚跟并拢，上侧膝盖打开">
+            <line class="ground" x1="30" y1="168" x2="310" y2="168"/>
+            <circle class="bone" cx="52" cy="112" r="13"/>
+            <line class="bone" x1="66" y1="112" x2="100" y2="112"/>
+            <line class="bone" x1="100" y1="112" x2="162" y2="124"/>
+            <line class="bone" x1="162" y1="124" x2="206" y2="132"/>
+            <line class="bone2" x1="206" y1="132" x2="218" y2="128"/>
+            <path class="ghost" d="M100 112 L164 110 L206 132"/>
+            <line class="bone" x1="100" y1="112" x2="168" y2="74"/>
+            <line class="bone" x1="168" y1="74" x2="206" y2="132"/>
+            <path class="arrow flow" d="M146 108 Q144 80 162 70"/>
+            <path class="arrow" d="M162 70 l-9 0 M162 70 l1 9"/>
+            <text class="label2" x="172" y="62">膝盖打开</text>
+            <text class="label" x="236" y="140">双脚并拢</text>
+            <text class="label" x="36" y="88">俯视 · 头在这边</text>
+          </svg>
+        </div>
+        <div class="move-body">
+          <div class="move-head"><span class="move-no">05 / STRENGTH</span><span class="move-tag">臀中肌</span></div>
+          <h3>蚌式开合</h3>
+          <p class="move-sub">外侧疼的根子，先把臀中肌叫醒</p>
+          <div class="dose"><span>15–20 次 × 2–3 组 / 侧</span><span>顶点停 1 秒</span><span>慢放</span></div>
+          <ol class="steps">
+            <li>侧卧，髋和膝各弯 90°，脚跟并拢，头枕在下侧手臂上。</li>
+            <li>骨盆保持垂直地面，别向后翻。</li>
+            <li>用臀部外侧发力，把上侧膝盖打开，像贝壳张开。</li>
+            <li>停 1 秒，慢慢放下，不砸、不借力。</li>
+          </ol>
+          <p class="cue"><b>要点：</b>感觉应该在臀部外侧，不是大腿前侧或腰。手放在屁股外侧，能摸到它在收紧。</p>
+          <p class="mistake">常见错误：身体后仰借力、两只脚分开、用腰转。</p>
+          <button class="btn quiet btn-sm solo" type="button" data-solo="clam">单独跟练</button>
+        </div>
+      </article>
+
+      <!-- 6 侧卧直腿抬高 -->
+      <article class="move" id="move-sideleg">
+        <div class="fig-wrap">
+          <svg class="fig" viewBox="0 0 340 210" role="img" aria-label="侧卧，上侧腿伸直向上抬起，身体保持一条直线">
+            <line class="ground" x1="18" y1="186" x2="322" y2="186"/>
+            <circle class="bone" cx="54" cy="120" r="13"/>
+            <line class="bone" x1="68" y1="124" x2="136" y2="138"/>
+            <line class="bone2" x1="76" y1="130" x2="62" y2="148"/>
+            <line class="bone2" x1="62" y1="148" x2="88" y2="152"/>
+            <line class="bone" x1="136" y1="138" x2="196" y2="148"/>
+            <line class="bone" x1="196" y1="148" x2="244" y2="158"/>
+            <line class="bone2" x1="244" y1="158" x2="256" y2="162"/>
+            <path class="ghost" d="M136 138 L188 108 L236 100"/>
+            <line class="bone legraise" x1="136" y1="138" x2="194" y2="140"/>
+            <line class="bone legraise" x1="194" y1="140" x2="242" y2="150"/>
+            <path class="arrow" d="M256 144 Q254 118 244 108"/>
+            <path class="arrowhead" d="M244 108 l0 9 l9 -2 z"/>
+            <text class="label2" x="262" y="126">抬 30–40°</text>
+            <text class="label" x="60" y="176">身体成一条直线</text>
+          </svg>
+        </div>
+        <div class="move-body">
+          <div class="move-head"><span class="move-no">06 / STRENGTH</span><span class="move-tag">臀中肌</span></div>
+          <h3>侧卧直腿抬高</h3>
+          <p class="move-sub">练臀中肌的“稳”，不是抬得越高越好</p>
+          <div class="dose"><span>12–15 次 × 2–3 组 / 侧</span><span>停 1 秒</span><span>慢放</span></div>
+          <ol class="steps">
+            <li>侧卧，身体成一条直线，下侧手臂垫头。</li>
+            <li>上侧腿伸直，脚尖朝前、略朝下。</li>
+            <li>慢慢抬到 30–40°，停 1 秒。</li>
+            <li>控制着放下，不碰下侧腿，再重复。</li>
+          </ol>
+          <p class="cue"><b>要点：</b>脚尖朝前，别朝上（不然变成练股四头）；骨盆别向后倒，身体别往前滚。</p>
+          <p class="mistake">常见错误：抬太高导致腰代偿、脚尖外旋、放下时自由落体。</p>
+          <button class="btn quiet btn-sm solo" type="button" data-solo="sideleg">单独跟练</button>
+        </div>
+      </article>
+
+      <!-- 7 单腿臀桥 -->
+      <article class="move" id="move-bridge">
+        <div class="fig-wrap">
+          <svg class="fig" viewBox="0 0 340 210" role="img" aria-label="仰卧单腿臀桥，一脚踩地，另一条腿伸直抬起，髋部顶起">
+            <line class="ground" x1="18" y1="196" x2="322" y2="196"/>
+            <circle class="bone" cx="56" cy="156" r="13"/>
+            <line class="bone2" x1="72" y1="170" x2="74" y2="170"/>
+            <line class="bone" x1="74" y1="170" x2="146" y2="148"/>
+            <path class="ghost" d="M76 172 L146 176"/>
+            <line class="bone" x1="146" y1="148" x2="190" y2="116"/>
+            <line class="bone" x1="190" y1="116" x2="194" y2="176"/>
+            <line class="bone2" x1="186" y1="178" x2="204" y2="178"/>
+            <line class="bone" x1="146" y1="148" x2="204" y2="140"/>
+            <line class="bone" x1="204" y1="140" x2="248" y2="134"/>
+            <line class="bone2" x1="248" y1="134" x2="258" y2="130"/>
+            <ellipse class="hot" cx="152" cy="152" rx="13" ry="10"/>
+            <path class="arrow" d="M146 188 V158"/>
+            <path class="arrowhead" d="M146 158 l-5 9 h10 z"/>
+            <text class="label2" x="166" y="112">肩—髋—膝一条线</text>
+            <text class="label" x="206" y="160">顶点停 2 秒</text>
+            <text class="label" x="40" y="190">仰卧 · 脚跟蹬地</text>
+          </svg>
+        </div>
+        <div class="move-body">
+          <div class="move-head"><span class="move-no">07 / STRENGTH</span><span class="move-tag">臀大肌 + 臀中肌</span></div>
+          <h3>单腿臀桥</h3>
+          <p class="move-sub">让臀部接管大腿外侧的活</p>
+          <div class="dose"><span>8–10 次 × 2–3 组 / 侧</span><span>顶点停 2 秒</span><span>骨盆水平</span></div>
+          <ol class="steps">
+            <li>仰卧，一侧脚踩地，另一条腿伸直抬起。</li>
+            <li>脚跟发力把髋顶起，肩—髋—膝成一条线。</li>
+            <li>顶点夹臀停 2 秒，骨盆保持水平。</li>
+            <li>慢慢落下，换另一侧。</li>
+          </ol>
+          <p class="cue"><b>要点：</b>用脚跟蹬地，不是用腰顶。顶起时腰不能反弓，感觉在屁股不在腰。</p>
+          <p class="mistake">常见错误：顶太高反弓腰、骨盆一边高一边低、用脚尖发力。</p>
+          <button class="btn quiet btn-sm solo" type="button" data-solo="bridge">单独跟练</button>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= 红线 ================= -->
+  <section class="block" id="redflags" style="border-bottom:0">
+    <div class="block-head">
+      <span class="no">05 / RED FLAGS</span>
+      <h2>这些情况别自己练</h2>
+    </div>
+    <div class="red-wrap">
+      <div class="red-card">
+        <h3>出现任一条，去康复科 / 运动医学</h3>
+        <ul class="red-list">
+          <li>膝盖内侧是<b>关节缝</b>疼（不是肌肉），伴肿胀、卡顿、打软腿</li>
+          <li>明显肿胀、淤青，或疼在某一个点越来越集中</li>
+          <li>走路跛脚、腿发不上力、上下楼打软腿</li>
+          <li>疼超过 1–2 周不减轻，或越来越重</li>
+          <li>麻木，或疼往小腿、脚面放射</li>
+          <li>同时腰痛，或咳嗽打喷嚏时腿疼加重</li>
+        </ul>
+      </div>
+      <div class="back-card">
+        <h3>什么时候能回去打球</h3>
+        <ul class="back-list">
+          <li>走路、上下楼、单腿站立都不疼</li>
+          <li>按压酸点只剩轻微酸，不是刺痛</li>
+          <li>先半场、低强度打 20 分钟试水</li>
+          <li>第二天不反弹，再逐步加量</li>
+        </ul>
+        <p class="back-note">回去打之前，先做 5 分钟动态热身（高抬腿、弓步走、侧向移动），别一上来就全场。</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <b>说明：</b>本页是自我管理参考，不替代诊断。持续疼、加重或出现红线信号，去医院。<br>
+    铁蛋 · 2026-11-06 · 私人专区
+  </footer>
+
+</main>
+
+<!-- ================= 跟练播放器 ================= -->
+<div class="player" id="player" hidden role="dialog" aria-modal="true" aria-labelledby="p-name">
+  <div class="player-card">
+    <div class="p-top">
+      <span class="p-tag" id="p-tag">跟练</span>
+      <button class="icon-btn" id="p-close" type="button" aria-label="退出跟练">✕</button>
+    </div>
+    <div class="p-prog" id="p-prog">1 / 1</div>
+    <h3 id="p-name">准备</h3>
+    <div class="p-side" id="p-side"></div>
+    <div class="p-time" id="p-time">0:00</div>
+    <div class="p-bar"><i id="p-fill"></i></div>
+    <p class="p-cue" id="p-cue"></p>
+    <div class="p-actions">
+      <button class="btn quiet" id="p-prev" type="button">上一项</button>
+      <button class="btn primary" id="p-toggle" type="button">暂停</button>
+      <button class="btn quiet" id="p-next" type="button">跳过</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- 数据 ---------------- */
+const ZONES = {
+  a:{n:'① 大腿前外侧 · 大片酸胀',k:'股四头肌 DOMS',d:'大腿前外侧一大片按压酸，以酸胀为主，不是某一个点刺痛。打球急停、变向、连续起跳后 2–3 天最重。',do:'轻活动 + 泡沫轴滚股四头肌 + 睡够，3–7 天自己会退。'},
+  b:{n:'② 髋外侧到膝外侧 · 一条线',k:'髂胫束 / 臀中肌劳损',d:'从大转子往下到膝盖外侧一条线酸疼，上下楼、下蹲、久坐起身更明显。髂胫束本身是筋膜，越硬滚越疼。',do:'别直接滚那条带子：滚股四头肌和臀部 + 交叉腿拉伸 + 练臀中肌。'},
+  c:{n:'③ 大转子周围 · 按压痛',k:'臀中肌 / 阔筋膜张肌紧张',d:'胯骨外侧那个凸起周围按压痛，侧睡压到会疼，久坐后起身更明显。',do:'蚌式、侧卧抬腿；少跷二郎腿；别侧睡压患侧。'},
+  d:{n:'④ 膝盖内侧上方 · 按压酸胀',k:'股内侧肌 / 内收肌 DOMS',d:'膝盖内上方 5–10cm 那块肌肉按压酸胀，屈伸膝、上下楼时更明显。多是股内侧肌和内收肌群跟着大量急停变向一起疲劳。',do:'轻滚大腿内侧中段 + 侧弓步拉伸 + 臀中肌分担负荷。先确认不是关节缝的疼。',warn:'如果疼点正好在膝盖内侧那条关节缝上，或者有肿胀、卡顿、打软腿——那不是肌肉，去骨科 / 运动医学查一下（鹅足、内侧半月板、内侧副韧带都在那一带）。'}
+};
+
+const EX = {
+  quad:{name:'泡沫轴 · 股四头肌',cue:'慢滚，酸点停 20 秒。疼感别超过 6/10，膝盖和髋骨别压。',anchor:'move-quad',secs:60},
+  glute:{name:'泡沫轴 · 臀部外侧',cue:'压臀部外侧，不压腰。别滚大腿外侧那条硬带子。',anchor:'move-glute',secs:45},
+  stretch:{name:'交叉腿 · 体侧拉伸',cue:'骨盆朝前，侧弯到髋外侧有拉伸感，别弹震。',anchor:'move-stretch',secs:30},
+  adductor:{name:'侧弓步 · 内收肌拉伸',cue:'直腿脚尖朝前，下蹲不超过 90°。关节缝疼就停。',anchor:'move-adductor',secs:30},
+  clam:{name:'蚌式开合',cue:'脚跟并拢，只有膝盖开。骨盆别后翻，慢慢放下。',anchor:'move-clam',secs:45},
+  sideleg:{name:'侧卧直腿抬高',cue:'脚尖朝前，抬 30–40°。身体别往前滚。',anchor:'move-sideleg',secs:45},
+  bridge:{name:'单腿臀桥',cue:'脚跟蹬地，肩—髋—膝一条线。顶点停 2 秒。',anchor:'move-bridge',secs:45}
+};
+
+const DAYS = [
+  {d:1,short:'休息',title:'第 1 天 · 先别折腾',note:'刚打完 48 小时内以休息为主。有急性刺痛或发热才冰敷，没有就不冰。',
+   items:[
+     {ex:'quad',sides:2,secs:30,detail:'轻滚，30 秒/侧'},
+     {label:'睡觉 8 小时，多喝水',detail:'修复靠这个',icon:'😴'},
+     {label:'明显刺痛 / 发热才冰敷 15 分钟',detail:'隔一层布，不直接贴皮肤',icon:'🧊'}
+   ]},
+  {d:2,short:'轻动',title:'第 2 天 · 开始动',note:'酸痛最重的一天，别硬拉伸。轻活动帮血流带走代谢废物。',
+   items:[
+     {ex:'quad',sides:2,secs:30,detail:'轻滚，30 秒/侧'},
+     {ex:'adductor',sides:2,secs:20,detail:'非常轻，20 秒/侧'},
+     {label:'快走 15 分钟',detail:'能说话的速度',icon:'🚶'},
+     {label:'蛋白质吃够',detail:'鸡蛋 / 牛奶 / 瘦肉都行',icon:'🥚'}
+   ]},
+  {d:3,short:'热敷',title:'第 3 天 · 热敷 + 放松',note:'你现在大概在这。48 小时后改用热敷，别再用冰。',
+   items:[
+     {label:'热敷 15–20 分钟',detail:'热水袋 / 热毛巾，隔布',icon:'🔥'},
+     {ex:'quad',sides:2,secs:60,detail:'60 秒/侧'},
+     {ex:'glute',sides:2,secs:45,detail:'45 秒/侧'},
+     {ex:'stretch',sides:2,secs:30,detail:'30 秒/侧 × 2 组'},
+     {ex:'stretch',sides:2,secs:30,detail:'第 2 组'},
+     {ex:'adductor',sides:2,secs:30,detail:'30 秒/侧'},
+     {ex:'clam',sides:2,secs:45,detail:'12–15 次/侧'}
+   ]},
+  {d:4,short:'放松',title:'第 4 天 · 放松 + 唤醒',note:'酸胀应该开始往下走。滚、拉、练三样都上，别加量太快。',
+   items:[
+     {label:'热敷 15 分钟',detail:'练前做，肌肉更好松',icon:'🔥'},
+     {ex:'quad',sides:2,secs:60,detail:'60 秒/侧'},
+     {ex:'glute',sides:2,secs:45,detail:'45 秒/侧'},
+     {ex:'stretch',sides:2,secs:30,detail:'30 秒/侧 × 2 组'},
+     {ex:'stretch',sides:2,secs:30,detail:'第 2 组'},
+     {ex:'adductor',sides:2,secs:30,detail:'30 秒/侧 × 2 组'},
+     {ex:'adductor',sides:2,secs:30,detail:'第 2 组'},
+     {ex:'clam',sides:2,secs:60,detail:'15–20 次/侧'},
+     {label:'快走 20 分钟',detail:'疼感 4/10 以内',icon:'🚶'}
+   ]},
+  {d:5,short:'力量',title:'第 5 天 · 力量日',note:'重点从放松转到臀中肌力量。动作慢，宁少勿快。',
+   items:[
+     {ex:'glute',sides:2,secs:45,detail:'45 秒/侧'},
+     {ex:'stretch',sides:2,secs:30,detail:'30 秒/侧 × 2 组'},
+     {ex:'stretch',sides:2,secs:30,detail:'第 2 组'},
+     {ex:'adductor',sides:2,secs:30,detail:'30 秒/侧 × 2 组'},
+     {ex:'adductor',sides:2,secs:30,detail:'第 2 组'},
+     {ex:'sideleg',sides:2,secs:45,detail:'12–15 次/侧'},
+     {ex:'clam',sides:2,secs:60,detail:'15–20 次/侧'}
+   ]},
+  {d:6,short:'强化',title:'第 6 天 · 强化 + 臀桥',note:'最后一次完整训练。臀部有酸胀是对的，外侧刺痛就停。',
+   items:[
+     {ex:'glute',sides:2,secs:45,detail:'45 秒/侧'},
+     {ex:'stretch',sides:2,secs:30,detail:'30 秒/侧 × 2 组'},
+     {ex:'stretch',sides:2,secs:30,detail:'第 2 组'},
+     {ex:'adductor',sides:2,secs:30,detail:'30 秒/侧 × 2 组'},
+     {ex:'adductor',sides:2,secs:30,detail:'第 2 组'},
+     {ex:'sideleg',sides:2,secs:45,detail:'12–15 次/侧'},
+     {ex:'clam',sides:2,secs:60,detail:'15–20 次/侧'},
+     {ex:'bridge',sides:2,secs:45,detail:'8–10 次/侧'}
+   ]},
+  {d:7,short:'回场',title:'第 7 天 · 回球场',note:'先低强度试水。打球前只做激活，打完再做这套恢复。',
+   items:[
+     {label:'打球前：动态热身 5 分钟',detail:'高抬腿 / 弓步走 / 侧向移动',icon:'🏀'},
+     {label:'打球前：蚌式 15 次/侧',detail:'只是激活，不做到酸',icon:'💪'},
+     {ex:'quad',sides:2,secs:30,detail:'打完轻滚 30 秒/侧'},
+     {ex:'stretch',sides:2,secs:30,detail:'打完 30 秒/侧 × 2 组'},
+     {ex:'stretch',sides:2,secs:30,detail:'第 2 组'},
+     {ex:'adductor',sides:2,secs:30,detail:'打完 30 秒/侧 × 2 组'},
+     {ex:'adductor',sides:2,secs:30,detail:'第 2 组'}
+   ]}
+];
+
+/* ---------------- 自测 ---------------- */
+const zoneBtns=document.getElementById('zoneBtns');
+const zoneInfo=document.getElementById('zoneInfo');
+zoneBtns.innerHTML=Object.keys(ZONES).map(k=>
+  `<button class="zone-btn" type="button" data-zone="${k}"><span class="zn">${k.toUpperCase()==='A'?'1':k.toUpperCase()==='B'?'2':k.toUpperCase()==='C'?'3':'4'}</span><span class="zt"><b>${ZONES[k].n.replace(/^[①②③④]\s*/,'')}</b><span>${ZONES[k].k}</span></span></button>`
+).join('');
+const zoneBtnsAll=[...document.querySelectorAll('.zone-btn')];
+const zoneFigsAll=[...document.querySelectorAll('.zone')];
+
+function selectZone(k){
+  zoneBtnsAll.forEach(b=>b.classList.toggle('on',b.dataset.zone===k));
+  zoneFigsAll.forEach(g=>g.classList.toggle('on',g.dataset.zone===k));
+  const z=ZONES[k];
+  zoneInfo.innerHTML=`<div class="zi-k">${z.k}</div><h3>${z.n}</h3><p>${z.d}</p><div class="zi-do">${z.do}</div>${z.warn?`<div class="zone-warn">⚠️ ${z.warn}</div>`:''}`;
+}
+zoneBtns.addEventListener('click',e=>{const b=e.target.closest('.zone-btn');if(b)selectZone(b.dataset.zone);});
+zoneFigsAll.forEach(g=>{
+  g.addEventListener('click',()=>selectZone(g.dataset.zone));
+  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();selectZone(g.dataset.zone);}});
+});
+selectZone('d');
+
+/* ---------------- 计划 ---------------- */
+const daysEl=document.getElementById('days');
+const planTitle=document.getElementById('planTitle');
+const planNote=document.getElementById('planNote');
+const planList=document.getElementById('planList');
+const startBtn=document.getElementById('startBtn');
+const planTime=document.getElementById('planTime');
+let curDay=2;
+
+daysEl.innerHTML=DAYS.map((d,i)=>
+  `<button class="day-btn" type="button" role="tab" data-day="${i}" aria-selected="${i===2}">D${d.d}<small>${d.short}</small></button>`
+).join('');
+const dayBtnAll=[...daysEl.querySelectorAll('.day-btn')];
+
+function buildQueue(i){
+  const q=[];
+  DAYS[i].items.forEach(it=>{
+    if(!it.ex) return;
+    const info=EX[it.ex];
+    if(it.sides===2){
+      q.push({name:info.name,side:'左侧',secs:it.secs,cue:info.cue,anchor:info.anchor});
+      q.push({name:info.name,side:'右侧',secs:it.secs,cue:info.cue,anchor:info.anchor});
+    }else{
+      q.push({name:info.name,side:'',secs:it.secs,cue:info.cue,anchor:info.anchor});
+    }
+  });
+  return q;
+}
+
+function renderDay(i){
+  curDay=i;
+  dayBtnAll.forEach((b,j)=>{b.classList.toggle('on',j===i);b.setAttribute('aria-selected',j===i);});
+  const d=DAYS[i];
+  planTitle.textContent=d.title;
+  planNote.textContent=d.note;
+  planList.innerHTML=d.items.map(it=>{
+    const info=it.ex?EX[it.ex]:null;
+    const name=info?info.name:it.label;
+    const side=info&&it.sides===2?'<span class="t-side">左右各一组</span>':'';
+    const link=info?`<a class="t-link" href="#${info.anchor}">看图解</a>`:'';
+    return `<li class="task"><span class="t-ico">${it.icon||'›'}</span><div class="t-txt"><b>${name}${side}</b><span>${it.detail||''}</span></div>${link}</li>`;
+  }).join('');
+  const q=buildQueue(i);
+  const mins=Math.max(1,Math.round(q.reduce((a,b)=>a+b.secs,0)/60));
+  planTime.textContent=q.length?`约 ${mins} 分钟`:'休息日';
+  startBtn.textContent=q.length?`按 D${d.d} 跟练`:'今天没有计时项目';
+  startBtn.disabled=!q.length;
+}
+
+daysEl.addEventListener('click',e=>{const b=e.target.closest('.day-btn');if(b)renderDay(+b.dataset.day);});
+renderDay(2);
+
+/* ---------------- 播放器 ---------------- */
+const player=document.getElementById('player');
+const pTag=document.getElementById('p-tag');
+const pProg=document.getElementById('p-prog');
+const pName=document.getElementById('p-name');
+const pSide=document.getElementById('p-side');
+const pTime=document.getElementById('p-time');
+const pFill=document.getElementById('p-fill');
+const pCue=document.getElementById('p-cue');
+const pToggle=document.getElementById('p-toggle');
+const pPrev=document.getElementById('p-prev');
+const pNext=document.getElementById('p-next');
+const pClose=document.getElementById('p-close');
+
+let queue=[],qi=0,remain=0,secs=0,running=false,timerId=null,endAt=0;
+
+function fmt(s){s=Math.max(0,s|0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+
+function renderPlayer(){
+  const it=queue[qi];
+  if(!it) return;
+  pName.textContent=it.name;
+  pSide.textContent=it.side||'';
+  pCue.textContent=it.cue||'';
+  pProg.textContent=(qi+1)+' / '+queue.length;
+  pTime.textContent=fmt(remain);
+  const pct=Math.max(0,Math.min(1,remain/secs));
+  pFill.style.width=(pct*100).toFixed(2)+'%';
+  pFill.classList.toggle('low',pct<.25);
+}
+
+function loadItem(i){
+  qi=i;
+  const it=queue[i];
+  secs=it.secs;
+  remain=secs;
+  renderPlayer();
+  if(running) endAt=Date.now()+remain*1000;
+}
+
+function startTimer(){
+  if(!queue.length) return;
+  running=true;
+  clearInterval(timerId);
+  endAt=Date.now()+remain*1000;
+  timerId=setInterval(tick,250);
+  pToggle.textContent='暂停';
+}
+function pauseTimer(){
+  if(!running) return;
+  remain=Math.max(0,Math.ceil((endAt-Date.now())/1000));
+  running=false;
+  clearInterval(timerId);
+  timerId=null;
+  if(remain<=0) remain=1;
+  renderPlayer();
+  pToggle.textContent='继续';
+}
+function tick(){
+  const left=Math.max(0,Math.ceil((endAt-Date.now())/1000));
+  if(left!==remain){
+    remain=left;
+    if(remain>0&&remain<=3) beep(880,.06,.035);
+    renderPlayer();
+  }
+  if(left<=0){ beep(1280,.12,.05); advance(1); }
+}
+function advance(dir){
+  if(!queue.length) return;
+  const n=qi+dir;
+  if(n>=queue.length){ finish(); return; }
+  const target=Math.max(0,Math.min(queue.length-1,n));
+  if(target===qi&&dir<0) return;
+  loadItem(target);
+  if(running) endAt=Date.now()+remain*1000;
+}
+function finish(){
+  clearInterval(timerId);
+  timerId=null;
+  running=false;
+  pTag.textContent='完成';
+  pProg.textContent='全部完成';
+  pName.textContent='今天练完了';
+  pSide.textContent='';
+  pTime.textContent='✓';
+  pCue.textContent='热敷 15–20 分钟，补水，今晚早点睡。明天看酸胀有没有往下走。';
+  pFill.style.width='100%';
+  pFill.classList.remove('low');
+  pToggle.hidden=true;
+  pPrev.hidden=true;
+  pNext.hidden=true;
+  beep(1180,.16,.05);
+}
+function openPlayer(entries,tag){
+  if(!entries.length) return;
+  queue=entries;
+  qi=0;
+  running=false;
+  clearInterval(timerId);
+  timerId=null;
+  pTag.textContent=tag;
+  pToggle.hidden=false;
+  pPrev.hidden=false;
+  pNext.hidden=false;
+  pToggle.textContent='暂停';
+  player.hidden=false;
+  document.body.classList.add('no-scroll');
+  loadItem(0);
+  startTimer();
+}
+function closePlayer(){
+  clearInterval(timerId);
+  timerId=null;
+  running=false;
+  player.hidden=true;
+  document.body.classList.remove('no-scroll');
+  queue=[];
+}
+
+/* 提示音 */
+let ac=null;
+function beep(freq,dur,vol){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC) return;
+    ac=ac||new AC();
+    if(ac.state==='suspended') ac.resume();
+    const o=ac.createOscillator(),g=ac.createGain();
+    o.type='sine';
+    o.frequency.value=freq;
+    g.gain.value=vol;
+    o.connect(g);g.connect(ac.destination);
+    const t=ac.currentTime;
+    g.gain.setValueAtTime(vol,t);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.start(t);o.stop(t+dur);
+  }catch(e){}
+}
+
+/* 事件绑定 */
+startBtn.addEventListener('click',()=>openPlayer(buildQueue(curDay),'跟练 · D'+DAYS[curDay].d));
+document.getElementById('heroStart').addEventListener('click',()=>openPlayer(buildQueue(2),'跟练 · D3'));
+document.querySelectorAll('.solo').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const k=btn.dataset.solo;
+    const info=EX[k];
+    openPlayer([
+      {name:info.name,side:'左侧',secs:info.secs,cue:info.cue,anchor:info.anchor},
+      {name:info.name,side:'右侧',secs:info.secs,cue:info.cue,anchor:info.anchor}
+    ],'单项跟练');
+  });
+});
+pToggle.addEventListener('click',()=>{running?pauseTimer():startTimer();});
+pNext.addEventListener('click',()=>advance(1));
+pPrev.addEventListener('click',()=>{
+  if(remain<secs-1&&qi>=0){ remain=secs; endAt=Date.now()+remain*1000; renderPlayer(); return; }
+  advance(-1);
+});
+pClose.addEventListener('click',closePlayer);
+player.addEventListener('click',e=>{if(e.target===player)closePlayer();});
+document.addEventListener('keydown',e=>{
+  if(player.hidden) return;
+  if(e.key==='Escape') closePlayer();
+  if(e.key===' '){e.preventDefault();running?pauseTimer():startTimer();}
+});
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

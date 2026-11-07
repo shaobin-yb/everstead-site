@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>家庭片单 · 纪录片与公开课</title>
+<style>
+:root{
+  --bg:#03060c;--panel:rgba(10,20,38,.62);--panel-2:rgba(14,28,52,.86);
+  --line:rgba(56,189,248,.16);--line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;--blue:#3b82f6;--text:#e2ecf7;--muted:#7d92ad;
+  --gold:#f5c518;--vip:#f59e0b;--green:#34d399;--violet:#a78bfa;
+  --mono:'Cascadia Mono','Consolas',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(1000px 500px at 15% -10%,rgba(34,211,238,.10),transparent 60%),
+    radial-gradient(800px 400px at 90% 0%,rgba(59,130,246,.08),transparent 60%);
+}
+a{text-decoration:none;color:inherit}
+[hidden]{display:none!important}
+
+/* ---------- 顶栏 ---------- */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(3,6,12,.92);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.hwrap{max-width:1680px;margin:0 auto;padding:16px 28px 0}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:26px;font-weight:800;letter-spacing:.5px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--cyan)}
+.sub{color:var(--muted);font-size:14px}
+.bar{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:14px 0 16px;
+}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{
+  font:inherit;font-size:16px;font-weight:600;color:var(--muted);
+  background:rgba(10,20,38,.6);border:1px solid var(--line);
+  border-radius:10px;padding:10px 18px;cursor:pointer;
+  transition:color .18s,border-color .18s,background-color .18s,transform .12s;
+}
+.tab:hover{color:var(--text);border-color:var(--line-strong)}
+.tab:active{transform:scale(.97)}
+.tab[aria-selected="true"]{
+  color:#04121a;background:linear-gradient(135deg,#22d3ee,#38bdf8);
+  border-color:transparent;
+}
+.tab b{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13px;opacity:.85;margin-left:6px}
+.search{
+  margin-left:auto;display:flex;align-items:center;gap:8px;
+  border:1px solid var(--line);background:rgba(10,20,38,.6);
+  border-radius:10px;padding:0 12px;min-width:260px;
+  transition:border-color .18s;
+}
+.search:focus-within{border-color:var(--line-strong)}
+.search input{
+  font:inherit;font-size:15px;color:var(--text);background:transparent;
+  border:0;outline:0;padding:11px 0;width:100%;min-width:0;
+}
+.search input::placeholder{color:#5b6f88}
+.search svg{flex:none;opacity:.55}
+
+/* ---------- 网格 ---------- */
+main{max-width:1680px;margin:0 auto;padding:26px 28px 64px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:20px}
+.card{
+  display:flex;flex-direction:column;background:var(--panel);
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  transition:transform .18s,border-color .18s,background-color .18s,box-shadow .18s;
+}
+.card:hover{
+  transform:translateY(-4px);border-color:var(--line-strong);
+  background:var(--panel-2);box-shadow:0 10px 30px rgba(0,0,0,.45);
+}
+.card:active{transform:scale(.98)}
+.card:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}
+.poster{position:relative;aspect-ratio:3/4;background:linear-gradient(160deg,#0b1730,#060c18);overflow:hidden}
+.poster.wide{aspect-ratio:16/9}
+.poster img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .2s,transform .3s}
+.card:hover .poster img{transform:scale(1.035)}
+.score{
+  position:absolute;left:8px;bottom:8px;font-family:var(--mono);font-size:15px;
+  font-weight:700;color:var(--gold);background:rgba(3,6,12,.82);
+  border:1px solid rgba(245,197,24,.35);border-radius:7px;padding:2px 8px;
+  font-variant-numeric:tabular-nums;
+}
+.score::before{content:"★ ";font-size:12px}
+.badge{
+  position:absolute;right:8px;top:8px;font-size:12px;font-weight:700;
+  border-radius:6px;padding:3px 8px;letter-spacing:.5px;
+  background:rgba(3,6,12,.82);border:1px solid transparent;
+}
+.badge.vip{color:var(--vip);border-color:rgba(245,158,11,.4)}
+.badge.solo{color:var(--violet);border-color:rgba(167,139,250,.4)}
+.badge.free{color:var(--green);border-color:rgba(52,211,153,.4)}
+.badge.own{color:var(--cyan);border-color:rgba(34,211,238,.4)}
+.badge.cat{color:#dbeafe;border-color:rgba(147,197,253,.35);background:rgba(30,58,138,.72)}
+.cbody{padding:12px 13px 14px;display:flex;flex-direction:column;gap:7px}
+.cbody h3{
+  font-size:16px;font-weight:700;line-height:1.42;text-wrap:balance;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.meta{
+  font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;font-variant-numeric:tabular-nums;
+}
+.own{color:#9fb3cc}
+
+/* ---------- 央视卡 ---------- */
+.grid-tv{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.card.tv{padding:20px 20px 18px;gap:10px;justify-content:flex-start;min-height:170px}
+.tvtop{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tvlogo{
+  font-size:13px;font-weight:800;letter-spacing:2px;color:#04121a;
+  background:linear-gradient(135deg,#22d3ee,#38bdf8);border-radius:6px;padding:4px 10px;
+}
+.tvgo{font-size:13px;color:var(--muted);transition:color .18s}
+.card.tv:hover .tvgo{color:var(--cyan)}
+.card.tv h3{font-size:19px;line-height:1.4;text-wrap:balance}
+.card.tv .meta{white-space:normal;line-height:1.6;font-size:14px}
+
+/* ---------- 状态 ---------- */
+.empty{display:none;text-align:center;color:var(--muted);padding:90px 20px;font-size:17px}
+.empty.show{display:block}
+footer{
+  max-width:1680px;margin:0 auto;padding:0 28px 48px;
+  color:#5b6f88;font-size:13px;line-height:1.9;
+}
+footer b{color:#8aa1bd;font-weight:600}
+.hint{margin-bottom:22px;color:var(--muted);font-size:14px;line-height:1.8}
+.hint kbd{
+  font-family:var(--mono);font-size:12px;color:#a9c1da;background:rgba(10,20,38,.8);
+  border:1px solid var(--line);border-radius:5px;padding:2px 7px;
+}
+
+@media (min-width:1700px){
+  .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .cbody h3{font-size:17px}
+}
+@media (max-width:640px){
+  .hwrap,main,footer{padding-left:16px;padding-right:16px}
+  h1{font-size:21px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .grid-tv{grid-template-columns:1fr}
+  .cbody h3{font-size:14px}
+  .tab{padding:9px 13px;font-size:14px}
+  .search{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;scroll-behavior:auto!important}
+  .card:hover{transform:none}
+  .card:hover .poster img{transform:none}
+}
+</style>
+<script>
+var _hmt=_hmt||[];
+(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?1d958a32a6588643ee6e67da344c7693";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();
+</script>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div class="brand">
+      <h1>家庭片单 · <em>纪录片与公开课</em></h1>
+      <span class="sub">B站正版 + 央视官网 · 在线看，不占硬盘 · 108 条</span>
+    </div>
+    <div class="bar">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" data-tab="doc">纪录片<b>86</b></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="course">公开课<b>15</b></button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="cctv">央视官网<b>7</b></button>
+      </div>
+      <label class="search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <input id="q" type="search" placeholder="搜片名 / 课程 / 分类" autocomplete="off">
+      </label>
+    </div>
+  </div>
+</header>
+
+<main>
+  <p class="hint" id="hint">按评分排序。带「大会员」标记的需登录 B站会员账号；其余可直接播。</p>
+
+  <section class="grid" id="pane-doc">
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss38597" target="_blank" rel="noopener" data-k="但是还有书籍 第2季  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/85eaa09eee26bff57d7c1426e9bdd6aaf738ac8e.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge solo">独家</span></div><div class="cbody"><h3>但是还有书籍 第2季</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss45192" target="_blank" rel="noopener" data-k="但是还有书籍3  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/5d90554f29533502a7c5b9c8b9a8bfaf3bafed25.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge own">出品</span></div><div class="cbody"><h3>但是还有书籍3</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss88835" target="_blank" rel="noopener" data-k="你好，12315  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/3c1a01ed28c60ac04b0f6edf2f0707ae1afa100f.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge own">出品</span></div><div class="cbody"><h3>你好，12315</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss20302" target="_blank" rel="noopener" data-k="地球脉动  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/7ebcd63fa782dd4f732ad9cab9fad9482479fadd.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>地球脉动</h3><p class="meta">全11集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss46178" target="_blank" rel="noopener" data-k="地球脉动 第三季  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/571c98fe1d9b532c98cb5aa23b9b875ced8dcae0.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>地球脉动 第三季</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss20790" target="_blank" rel="noopener" data-k="河西走廊  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/08ec3ef588a52ed3dfeb799e42c6334e916f9ae6.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>河西走廊</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss34917" target="_blank" rel="noopener" data-k="绿色星球  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/eebafc7c374701cdf27e5068b5e885c6337d0567.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge solo">独家</span></div><div class="cbody"><h3>绿色星球</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss25488" target="_blank" rel="noopener" data-k="荒野求生 第一季  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/ec7d2c51950c0dad2a4292dbc7470ac8eae06686.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>荒野求生 第一季</h3><p class="meta">全15集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss25487" target="_blank" rel="noopener" data-k="荒野求生 第二季  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/4710bbc26dcdc503f47eba867ec726a70fc25821.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>荒野求生 第二季</h3><p class="meta">全13集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss44170" target="_blank" rel="noopener" data-k="闪闪的儿科医生  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/c72a32feef5f3f0c9a9b6be4de529e483a639fa5.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge own">出品</span></div><div class="cbody"><h3>闪闪的儿科医生</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss48056" target="_blank" rel="noopener" data-k="闪闪的儿科医生2  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/8d5ffd3bacd836778474fa719a321f9f2a4948b6.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge own">出品</span></div><div class="cbody"><h3>闪闪的儿科医生2</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss98700" target="_blank" rel="noopener" data-k="闪闪的儿科医生3  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/1078f58c923c089d383d7cb13eda9dbf133c01e9.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.9</span><span class="badge own">出品</span></div><div class="cbody"><h3>闪闪的儿科医生3</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss24439" target="_blank" rel="noopener" data-k="人生一串  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/7a790c64ff70f12c11888be0532b6981a923afd5.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>人生一串</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss31906" target="_blank" rel="noopener" data-k="人生第一次  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/66a83e44847c288cdc6226d9c43e8dd7da4a8352.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>人生第一次</h3><p class="meta">全12集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39865" target="_blank" rel="noopener" data-k="众神之地  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/49249fd8bfcc1a461a1529debe14c7c4e176e4e9.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>众神之地</h3><p class="meta">全4集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss27249" target="_blank" rel="noopener" data-k="但是还有书籍  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/f6114ae6a0f519883b99a4194d2a0b676aabd0a1.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>但是还有书籍</h3><p class="meta">全5集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss72882" target="_blank" rel="noopener" data-k="养猫的人  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/9fc65038b8b74f3f2895c2e8036b35ef0daf9e40.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>养猫的人</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39864" target="_blank" rel="noopener" data-k="决胜荒野第三季  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/dfbd0b1b23edf138466c69f74827a45c6502719e.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>决胜荒野第三季</h3><p class="meta">全13集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss27767" target="_blank" rel="noopener" data-k="单挑荒野 第一季  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/f15de64dd13a74c13c07034f28f0d2fe8e70ebff.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge solo">独家</span></div><div class="cbody"><h3>单挑荒野 第一季</h3><p class="meta">全9集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss27770" target="_blank" rel="noopener" data-k="单挑荒野 第二季  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/ce1a923b2db97c66bf65301a98e88aba34b9638e.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge solo">独家</span></div><div class="cbody"><h3>单挑荒野 第二季</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss48800" target="_blank" rel="noopener" data-k="单挑荒野：水之章  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/29f33feb30d440aae93ac060377e29b61742c07f.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>单挑荒野：水之章</h3><p class="meta">全12集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss44463" target="_blank" rel="noopener" data-k="如果国宝会说话 第四季  限时免费"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/f5ae9302689c7224dab26eca042996064b274f11.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge free">限时免费</span></div><div class="cbody"><h3>如果国宝会说话 第四季</h3><p class="meta">全25集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss32793" target="_blank" rel="noopener" data-k="宇宙时空之旅：未知世界  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/7fd34722ae5e65086a0ed202db1795cbd85bf1b8.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge solo">独家</span></div><div class="cbody"><h3>宇宙时空之旅：未知世界</h3><p class="meta">全12集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss28277" target="_blank" rel="noopener" data-k="守护解放西  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/13059001c9284c9392c7fb046cdb64dff159effa.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>守护解放西</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss40509" target="_blank" rel="noopener" data-k="守护解放西3  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/3a5e05f8277b4e6b0c5190d1e649a2ba856b2197.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>守护解放西3</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss26955" target="_blank" rel="noopener" data-k="宠物医院  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/d136f0fb025c3d84c6cc57720a2764999f07812b.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>宠物医院</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss40768" target="_blank" rel="noopener" data-k="挤痘大师  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/b34e5bd5a952e67c7bfd1de8e8bf0f74d8d88247.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge solo">独家</span></div><div class="cbody"><h3>挤痘大师</h3><p class="meta">全13集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss45196" target="_blank" rel="noopener" data-k="是坏情绪啊，没关系  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/db2f2d89d7b65e46fb6c46e8a77920b6485858ad.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>是坏情绪啊，没关系</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss29074" target="_blank" rel="noopener" data-k="派出所的故事2019  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/58d2bd4812946d9a4411e85b62ce76fd4510304e.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>派出所的故事2019</h3><p class="meta">全15集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39852" target="_blank" rel="noopener" data-k="流言终结者（精选版）  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/dc967887c0ef794dd64dace4c52feeed0d46157f.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge solo">独家</span></div><div class="cbody"><h3>流言终结者（精选版）</h3><p class="meta">全70集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss40542" target="_blank" rel="noopener" data-k="疼痛之王  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/ceba08beb42962e9df98409fc628291f9c032773.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge solo">独家</span></div><div class="cbody"><h3>疼痛之王</h3><p class="meta">全9集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss29083" target="_blank" rel="noopener" data-k="百家讲坛之王立群读《史记》秦始皇  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/6a951ac9f319fb0c81b5f218687496ab4eadb5ec.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>百家讲坛之王立群读《史记》秦始皇</h3><p class="meta">全47集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss32639" target="_blank" rel="noopener" data-k="穷豪旅游记 第三季  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/57ee64bd577c3b732093e53ca590833590e0e489.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge own">出品</span></div><div class="cbody"><h3>穷豪旅游记 第三季</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss34282" target="_blank" rel="noopener" data-k="航拍中国 第一季  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/3ec08f8d016c3e7a778e0358ff7e5a3560dfd2e8.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>航拍中国 第一季</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss25249" target="_blank" rel="noopener" data-k="荒岛余生  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/502c91273308bb5f5cbb5d5b34f530740372c5d1.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.8</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>荒岛余生</h3><p class="meta">全4集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss26489" target="_blank" rel="noopener" data-k="bilibili@黄金眼  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/f3c59d93087db1b5bb1211a9388cb4124f314cc1.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge own">出品</span></div><div class="cbody"><h3>bilibili@黄金眼</h3><p class="meta">全23集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss43161" target="_blank" rel="noopener" data-k="不止考古·我与三星堆  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/cea6473bb07655ac3d76954709d7e4da756daf41.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge own">出品</span></div><div class="cbody"><h3>不止考古·我与三星堆</h3><p class="meta">全5集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39275" target="_blank" rel="noopener" data-k="不白吃的食神之旅  "><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/7d69540293a948cc465e3917ebe5ae62702a8885.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span></div><div class="cbody"><h3>不白吃的食神之旅</h3><p class="meta">全14集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss27759" target="_blank" rel="noopener" data-k="人生一串 第二季  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/7db272b2e887bb3615a8aee29cf4ed839dc54e82.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge own">出品</span></div><div class="cbody"><h3>人生一串 第二季</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39861" target="_blank" rel="noopener" data-k="人生第二次  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/987eb66169d09abe60111e09b209ed9683baa5f1.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge own">出品</span></div><div class="cbody"><h3>人生第二次</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss26776" target="_blank" rel="noopener" data-k="决胜荒野  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/9921fba51303e73e07887de426ff4aeb60ea0071.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge solo">独家</span></div><div class="cbody"><h3>决胜荒野</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss25810" target="_blank" rel="noopener" data-k="历史那些事  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/50d19022996ea598c2d38a4236e9d247c25b92c9.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge own">出品</span></div><div class="cbody"><h3>历史那些事</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39016" target="_blank" rel="noopener" data-k="大城无小事·城市真英雄2021  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/1af654c8845eb23fd5a8511f1e04dea5706ab080.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>大城无小事·城市真英雄2021</h3><p class="meta">全12集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss34733" target="_blank" rel="noopener" data-k="守护解放西2  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/ba37f849fcc927fc532e9c790601608f1d8ae267.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge own">出品</span></div><div class="cbody"><h3>守护解放西2</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss37908" target="_blank" rel="noopener" data-k="小主安康-宠物医院3  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/d11d4c3303894b9b0e8c268e6dd4df84ebb41659.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge own">出品</span></div><div class="cbody"><h3>小主安康-宠物医院3</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss29026" target="_blank" rel="noopener" data-k="我住在这里的理由 第一季  "><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/706aea58c233fb285d5ad815e87d4ff8f4b2b0bb.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span></div><div class="cbody"><h3>我住在这里的理由 第一季</h3><p class="meta">全100集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss33042" target="_blank" rel="noopener" data-k="我住在这里的理由 第三季  "><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/502c73ec1b7eb5c0b6ceba8ae762df4210632341.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span></div><div class="cbody"><h3>我住在这里的理由 第三季</h3><p class="meta"></p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss48826" target="_blank" rel="noopener" data-k="生命奇观  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/0ea69fe30f7f1f9637d42e354a0a4fa96078be4f.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge own">出品</span></div><div class="cbody"><h3>生命奇观</h3><p class="meta">全3集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss33546" target="_blank" rel="noopener" data-k="航拍中国 第三季  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/27ca622a70f63a0f082af05270af3267e990e81f.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.7</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>航拍中国 第三季</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss45187" target="_blank" rel="noopener" data-k="中国救护  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/41a48436a32a4ff1783daf239d2538a0247de805.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.6</span><span class="badge own">出品</span></div><div class="cbody"><h3>中国救护</h3><p class="meta">全9集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss33585" target="_blank" rel="noopener" data-k="中国通史  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/48fdbee6cd5ea2bef11863efcaa8b65498991fb7.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.6</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>中国通史</h3><p class="meta">全100集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39188" target="_blank" rel="noopener" data-k="人生一串 第三季  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/6c05210675336fc19583ef76c38c893ac6ce46b0.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.6</span><span class="badge own">出品</span></div><div class="cbody"><h3>人生一串 第三季</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss27847" target="_blank" rel="noopener" data-k="历史那些事 第二季  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/488a95b1151dd6bc4834394dc85955a807fa54e4.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.6</span><span class="badge own">出品</span></div><div class="cbody"><h3>历史那些事 第二季</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss43272" target="_blank" rel="noopener" data-k="航拍中国 第四季  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/9ecdb83bd1babf69901e5d53e02efde3cae1d1ee.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.6</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>航拍中国 第四季</h3><p class="meta">全11集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39871" target="_blank" rel="noopener" data-k="英雄之路  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/98b3e24db3281b3855ae5774413132bf20a873e0.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.6</span><span class="badge own">出品</span></div><div class="cbody"><h3>英雄之路</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss238117" target="_blank" rel="noopener" data-k="闪闪的儿科医生4  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/7f8961b1fab86a57a94c7692e6803e49713e9b4f.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.6</span><span class="badge own">出品</span></div><div class="cbody"><h3>闪闪的儿科医生4</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss44167" target="_blank" rel="noopener" data-k="历史那些事3  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/7c7247203c03c7a2238b503b1359626d32dafc31.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.5</span><span class="badge own">出品</span></div><div class="cbody"><h3>历史那些事3</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss43361" target="_blank" rel="noopener" data-k="挤痘大师 第2季  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/1d6fe011a5d474a32eeb1ddb250e17de3b69c459.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.5</span><span class="badge solo">独家</span></div><div class="cbody"><h3>挤痘大师 第2季</h3><p class="meta">全14集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss26706" target="_blank" rel="noopener" data-k="航拍中国 第二季  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/98eabaab3e4657a992b97d4ea9d1c2d7e53e3a73.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.5</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>航拍中国 第二季</h3><p class="meta">全7集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss25915" target="_blank" rel="noopener" data-k="冒险雷探长  限时免费"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/20803365ee6f3bd7208b0ea0bf0cacf8c6bc5792.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.4</span><span class="badge free">限时免费</span></div><div class="cbody"><h3>冒险雷探长</h3><p class="meta">更新至第408集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss28333" target="_blank" rel="noopener" data-k="决胜荒野之华夏秘境  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/1ea7435207d559cd47201f9f98808f2b477b32d5.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.4</span><span class="badge own">出品</span></div><div class="cbody"><h3>决胜荒野之华夏秘境</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss44473" target="_blank" rel="noopener" data-k="守护解放西4  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/6dd3cd3b6105071f0c2e22032c3196175117333f.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.4</span><span class="badge own">出品</span></div><div class="cbody"><h3>守护解放西4</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss32329" target="_blank" rel="noopener" data-k="小主安康－宠物医院2  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/7fb826892e4b5143190f882c0c02d10dafacd033.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.4</span><span class="badge own">出品</span></div><div class="cbody"><h3>小主安康－宠物医院2</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss29044" target="_blank" rel="noopener" data-k="我住在这里的理由 第二季  "><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/415a591d1be1bb8669a100a0b9b36e021ad8d1d9.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.4</span></div><div class="cbody"><h3>我住在这里的理由 第二季</h3><p class="meta">全100集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss95645" target="_blank" rel="noopener" data-k="舌尖上的中国4  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/d9be392c25addb449de9760cae48233ac1a1daf7.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.4</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>舌尖上的中国4</h3><p class="meta">全7集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss36701" target="_blank" rel="noopener" data-k="奇食记  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/8a63718fd6229389a1584db332eeadc9303bb6bf.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.3</span><span class="badge own">出品</span></div><div class="cbody"><h3>奇食记</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39874" target="_blank" rel="noopener" data-k="我们是这样长大的  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/e57db47f356fb52694d4201467e35c309b479a76.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.3</span><span class="badge own">出品</span></div><div class="cbody"><h3>我们是这样长大的</h3><p class="meta">全9集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss36698" target="_blank" rel="noopener" data-k="第一餐  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/5cfbefee23743a052dcdf805e1b0cf8b974c2be8.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.3</span><span class="badge own">出品</span></div><div class="cbody"><h3>第一餐</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss42542" target="_blank" rel="noopener" data-k="去你家吃饭好吗2  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/bda6fe247d19a136be98c56832e7472fc2d4287d.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.1</span><span class="badge own">出品</span></div><div class="cbody"><h3>去你家吃饭好吗2</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss45209" target="_blank" rel="noopener" data-k="野境求真  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/6a9fd3c1b0d79339dd4e6a552f59c4e862c27dee.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.1</span><span class="badge own">出品</span></div><div class="cbody"><h3>野境求真</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss39868" target="_blank" rel="noopener" data-k="奇食记2  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/4570f21b0d436879f458c96eeb83612cc1b810f4.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.0</span><span class="badge own">出品</span></div><div class="cbody"><h3>奇食记2</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss29331" target="_blank" rel="noopener" data-k="百家讲坛之易中天品三国  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/216e59374d8204323d5fc42e390f0ad9010290d5.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="score">9.0</span><span class="badge vip">大会员</span></div><div class="cbody"><h3>百家讲坛之易中天品三国</h3><p class="meta">全52集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss45189" target="_blank" rel="noopener" data-k="人生一串 第四季  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/e75c178b55bbb6ca8ecf9df1694ed7256ecee938.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge own">出品</span></div><div class="cbody"><h3>人生一串 第四季</h3><p class="meta">更新至第1集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss172429" target="_blank" rel="noopener" data-k="你好，12315 第二季  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/f7db72eb6e8b8c330454362d1156da126042a2a3.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge own">出品</span></div><div class="cbody"><h3>你好，12315 第二季</h3><p class="meta">全8集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss113547" target="_blank" rel="noopener" data-k="单挑神秘地表  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/654f98d51dc3c77ca85eabbdae5e3c9e5583828a.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge vip">大会员</span></div><div class="cbody"><h3>单挑神秘地表</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss109985" target="_blank" rel="noopener" data-k="守护解放西6  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/8ab71c27fdcee2458385b25a687561bf917965bf.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge own">出品</span></div><div class="cbody"><h3>守护解放西6</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss124647" target="_blank" rel="noopener" data-k="守护解放西·探案季  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/b919574cc83eb7624649cfa08e4b292df8bd1e3f.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge own">出品</span></div><div class="cbody"><h3>守护解放西·探案季</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss45623" target="_blank" rel="noopener" data-k="带你探索地球（中配版）  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/07bacfb28e72ce563467d1293c9669af37940537.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge vip">大会员</span></div><div class="cbody"><h3>带你探索地球（中配版）</h3><p class="meta">全6集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss125095" target="_blank" rel="noopener" data-k="德爷的登阶奇旅  出品"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/c42cff6f2ef7c8973339c4615dd93bc54fe299a8.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge own">出品</span></div><div class="cbody"><h3>德爷的登阶奇旅</h3><p class="meta">全12集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss104938" target="_blank" rel="noopener" data-k="柯南幕后：青山刚昌的30年  独家"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/2d71fca0cab8ed3d6bdd8ab0482ac686d1c4f884.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge solo">独家</span></div><div class="cbody"><h3>柯南幕后：青山刚昌的30年</h3><p class="meta">全1集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss119686" target="_blank" rel="noopener" data-k="荒野求生 第五季  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/da4fb4ce2626de8543dfa5d1a0d16706fa72ad51.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge vip">大会员</span></div><div class="cbody"><h3>荒野求生 第五季</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss131205" target="_blank" rel="noopener" data-k="荒野求生 第六季  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/3120f5671bdd37e7e9ed8e47fe4329c1b3d74fe9.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge vip">大会员</span></div><div class="cbody"><h3>荒野求生 第六季</h3><p class="meta">全10集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss108950" target="_blank" rel="noopener" data-k="贝尔·格里尔斯之鲨战  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/c46ec91d168038e57e72b14a936bc89cb075f25b.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge vip">大会员</span></div><div class="cbody"><h3>贝尔·格里尔斯之鲨战</h3><p class="meta">全1集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss330060" target="_blank" rel="noopener" data-k="贝尔的求生教室  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/73238ce804a5eef4b3a5bda3ad291919219c6eb4.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge vip">大会员</span></div><div class="cbody"><h3>贝尔的求生教室</h3><p class="meta">全2集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss308577" target="_blank" rel="noopener" data-k="跟着贝尔勇闯荒野  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/image/52fd4c458b813b47b5cad8aad96a06b957b277f2.png@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge vip">大会员</span></div><div class="cbody"><h3>跟着贝尔勇闯荒野</h3><p class="meta">全5集</p></div></a>
+<a class="card" href="https://www.bilibili.com/bangumi/play/ss26421" target="_blank" rel="noopener" data-k="这就是中国  大会员"><div class="poster "><img src="https://i0.hdslb.com/bfs/bangumi/c886d6dfa0fab0c80d2a005b50ae3fafa9394134.jpg@366w_515h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge vip">大会员</span></div><div class="cbody"><h3>这就是中国</h3><p class="meta">更新至第355集</p></div></a>
+  </section>
+
+  <section class="grid" id="pane-course" hidden>
+<a class="card" href="https://www.bilibili.com/video/BV1y7qwBuE2H" target="_blank" rel="noopener" data-k="mit 6.824 分布式系统 · 2020 双语字幕  计算机系统"><div class="poster wide"><img src="https://i2.hdslb.com/bfs/archive/a7a3499a9fdfce1054d96b6af4a77972ec783658.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">计算机系统</span></div><div class="cbody"><h3>MIT 6.824 分布式系统 · 2020 双语字幕</h3><p class="meta">20P · 25h59m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1UMgkzVE9i" target="_blank" rel="noopener" data-k="mit 6.824 分布式系统 · 2021 精翻中文语音  计算机系统"><div class="poster wide"><img src="https://i1.hdslb.com/bfs/archive/18b6d77058bc9c731456ab6a0513444e856e7bee.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">计算机系统</span></div><div class="cbody"><h3>MIT 6.824 分布式系统 · 2021 精翻中文语音</h3><p class="meta">22P · 34h37m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1WYKk6GEUd" target="_blank" rel="noopener" data-k="mit 6.824 分布式系统 · 2026 中文配音重制  计算机系统"><div class="poster wide"><img src="https://i0.hdslb.com/bfs/archive/54a345c2d6107224c014dc9d77d165b792a03cb8.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">计算机系统</span></div><div class="cbody"><h3>MIT 6.824 分布式系统 · 2026 中文配音重制</h3><p class="meta">20P · 23h10m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1T8HCzME3d" target="_blank" rel="noopener" data-k="吴恩达机器学习 · 2025 中英完结  机器学习"><div class="poster wide"><img src="https://i2.hdslb.com/bfs/archive/1ead593ade63fdeb4bea0b709db12d777a50ab27.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">机器学习</span></div><div class="cbody"><h3>吴恩达机器学习 · 2025 中英完结</h3><p class="meta">99P · 14h37m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1GF4m1K7vM" target="_blank" rel="noopener" data-k="吴恩达深度学习 · 中英双语全课程  机器学习"><div class="poster wide"><img src="https://i2.hdslb.com/bfs/archive/4cf44c5ae5c34418ced8940a95b2c429f787d594.png@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">机器学习</span></div><div class="cbody"><h3>吴恩达深度学习 · 中英双语全课程</h3><p class="meta">99P · 14h27m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1b4anzMEUv" target="_blank" rel="noopener" data-k="斯坦福 cs229 机器学习 · 吴恩达  机器学习"><div class="poster wide"><img src="https://i1.hdslb.com/bfs/archive/b5e9f042b4f7b643f90797179363b2fbd4156188.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">机器学习</span></div><div class="cbody"><h3>斯坦福 CS229 机器学习 · 吴恩达</h3><p class="meta">20P · 26h33m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1XxEL6LESR" target="_blank" rel="noopener" data-k="线性代数的本质 · 3blue1brown 中文配音  数学"><div class="poster wide"><img src="https://i1.hdslb.com/bfs/archive/f76984b37691f09e7c850e638da645e592967859.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">数学</span></div><div class="cbody"><h3>线性代数的本质 · 3Blue1Brown 中文配音</h3><p class="meta">16P · 3h18m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1ys411472E" target="_blank" rel="noopener" data-k="线性代数的本质 · 3blue1brown 官方双语  数学"><div class="poster wide"><img src="https://i2.hdslb.com/bfs/archive/c81a8eb032f3eaa1afd604272a410ac6896f281e.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">数学</span></div><div class="cbody"><h3>线性代数的本质 · 3Blue1Brown 官方双语</h3><p class="meta">16P · 2h52m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV16U4y1G7W5" target="_blank" rel="noopener" data-k="耶鲁「幸福的科学」· 48 讲  心理学"><div class="poster wide"><img src="https://i2.hdslb.com/bfs/archive/0546ad05e9dc11c215c85bcf53b80f0b87eab2c8.png@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">心理学</span></div><div class="cbody"><h3>耶鲁「幸福的科学」· 48 讲</h3><p class="meta">48P · 7h22m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1dXuczMEy8" target="_blank" rel="noopener" data-k="耶鲁「幸福的科学」· 50 讲  心理学"><div class="poster wide"><img src="https://i1.hdslb.com/bfs/archive/8c6227743bd8a31943d70212cb826377488ecde8.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">心理学</span></div><div class="cbody"><h3>耶鲁「幸福的科学」· 50 讲</h3><p class="meta">50P · 7h33m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV167uN6BEAx" target="_blank" rel="noopener" data-k="耶鲁心理学导论 · paul bloom  心理学"><div class="poster wide"><img src="https://i0.hdslb.com/bfs/archive/4b13e8d68b9bf36bcbe662ab43760d29b9fef8be.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">心理学</span></div><div class="cbody"><h3>耶鲁心理学导论 · Paul Bloom</h3><p class="meta">41P · 34h25m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1vJ411d7Hf" target="_blank" rel="noopener" data-k="斯坦福 cs231n · 2017 中英字幕  计算机视觉"><div class="poster wide"><img src="https://i1.hdslb.com/bfs/archive/6ada15f1dad30af9bacc6e3c52777326b4e5b815.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">计算机视觉</span></div><div class="cbody"><h3>斯坦福 CS231n · 2017 中英字幕</h3><p class="meta">35P · 19h56m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV14xa8zfEdq" target="_blank" rel="noopener" data-k="斯坦福 cs231n · 2025 李飞飞  计算机视觉"><div class="poster wide"><img src="https://i1.hdslb.com/bfs/archive/6685a6107b64336efb8a7a177a0feff5afc443c7.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">计算机视觉</span></div><div class="cbody"><h3>斯坦福 CS231n · 2025 李飞飞</h3><p class="meta">18P · 21h13m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1hquz6XEfo" target="_blank" rel="noopener" data-k="ted 演讲 100 场 · 双语精读  英语听力"><div class="poster wide"><img src="https://i1.hdslb.com/bfs/archive/dff6e377a8c1c2bb5c1450c32986dd70b2499bf4.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">英语听力</span></div><div class="cbody"><h3>TED 演讲 100 场 · 双语精读</h3><p class="meta">24P · 5h43m</p></div></a>
+<a class="card" href="https://www.bilibili.com/video/BV1CJVi6GEd8" target="_blank" rel="noopener" data-k="ted 经典 49 篇 · 中英双语  英语听力"><div class="poster wide"><img src="https://i0.hdslb.com/bfs/archive/d735457a583adeccbdd70eb2f5f018326aea9ce6.jpg@480w_270h_1c.webp" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.opacity=0"><span class="badge cat">英语听力</span></div><div class="cbody"><h3>TED 经典 49 篇 · 中英双语</h3><p class="meta">49P · 9h35m</p></div></a>
+  </section>
+
+  <section class="grid-tv" id="pane-cctv" hidden>
+<a class="card tv" href="https://tv.cctv.com/cctv9/" target="_blank" rel="noopener" data-k="cctv-9 纪录频道 央视纪录片大本营 · 栏目与节目回看"><div class="tvtop"><span class="tvlogo">央视</span><span class="tvgo">打开 →</span></div><h3>CCTV-9 纪录频道</h3><p class="meta">央视纪录片大本营 · 栏目与节目回看</p></a>
+<a class="card tv" href="https://tv.cctv.com/lm/" target="_blank" rel="noopener" data-k="cctv 栏目大全 按栏目查全部节目"><div class="tvtop"><span class="tvlogo">央视</span><span class="tvgo">打开 →</span></div><h3>CCTV 栏目大全</h3><p class="meta">按栏目查全部节目</p></a>
+<a class="card tv" href="https://search.cctv.com/search.php?qtext=%E7%BA%AA%E5%BD%95%E7%89%87&amp;type=video" target="_blank" rel="noopener" data-k="央视网视频搜索 搜片名直接看 · 纪录片频道结果"><div class="tvtop"><span class="tvlogo">央视</span><span class="tvgo">打开 →</span></div><h3>央视网视频搜索</h3><p class="meta">搜片名直接看 · 纪录片频道结果</p></a>
+<a class="card tv" href="https://tv.cctv.com/2017/11/29/VIDAjmY28VSqK4hfQtHw0yJE171129.shtml" target="_blank" rel="noopener" data-k="《国家宝藏》第一季 cctv 节目官网 · 全集"><div class="tvtop"><span class="tvlogo">央视</span><span class="tvgo">打开 →</span></div><h3>《国家宝藏》第一季</h3><p class="meta">CCTV 节目官网 · 全集</p></a>
+<a class="card tv" href="https://arts.cctv.cn/program/gjbz/" target="_blank" rel="noopener" data-k="央博《国家宝藏》 央视文艺 · 国家宝藏专区"><div class="tvtop"><span class="tvlogo">央视</span><span class="tvgo">打开 →</span></div><h3>央博《国家宝藏》</h3><p class="meta">央视文艺 · 国家宝藏专区</p></a>
+<a class="card tv" href="https://tv.cctv.com/2026/10/04/VIDEvkelyuLweq9uaRlZ8uUj261004.shtml" target="_blank" rel="noopener" data-k="《典籍里的中国·焕新季》 cctv 节目官网 · 焕新季"><div class="tvtop"><span class="tvlogo">央视</span><span class="tvgo">打开 →</span></div><h3>《典籍里的中国·焕新季》</h3><p class="meta">CCTV 节目官网 · 焕新季</p></a>
+<a class="card tv" href="https://www.yangshipin.cn/" target="_blank" rel="noopener" data-k="央视频 央视官方视频平台 · 纪录片/直播"><div class="tvtop"><span class="tvlogo">央视频</span><span class="tvgo">打开 →</span></div><h3>央视频</h3><p class="meta">央视官方视频平台 · 纪录片/直播</p></a>
+  </section>
+
+  <div class="empty" id="empty">没有匹配的条目，换个关键词试试</div>
+</main>
+
+<footer>
+  <b>版权说明</b>：本页只做正版片源索引，内容均在 B站 / 央视官网在线播放，不下载、不转存。<br>
+  <b>NAS 影视库</b>：公版与 CC 授权影片另存于 <b>影视/</b> 目录，用电视播放器走 SMB 直连（Sintel、Tears of Steel 已入库）。<br>
+  <b>数据</b>：B站片单取自官方 PGC 接口，公开课逐条验真 · 更新于 2026-11-07
+</footer>
+
+<script>
+(function(){
+  var tabs = document.querySelectorAll('.tab');
+  var panes = {
+    doc: document.getElementById('pane-doc'),
+    course: document.getElementById('pane-course'),
+    cctv: document.getElementById('pane-cctv')
+  };
+  var q = document.getElementById('q');
+  var empty = document.getElementById('empty');
+  var hint = document.getElementById('hint');
+  var cur = 'doc';
+  var hintText = {
+    doc: '按评分排序。带「大会员」标记的需登录 B站会员账号；其余可直接播。',
+    course: '全部为公开课合集，已逐个核验可访问；点击进入 B站播放列表。',
+    cctv: '央视官方入口，全部实测可打开；节目页可能随官网调整，失效时用「栏目大全」找。'
+  };
+
+  function apply(){
+    var kw = q.value.trim().toLowerCase();
+    var shown = 0;
+    var cards = panes[cur].querySelectorAll('.card');
+    for (var i = 0; i < cards.length; i++) {
+      var hit = !kw || cards[i].getAttribute('data-k').indexOf(kw) !== -1;
+      cards[i].style.display = hit ? '' : 'none';
+      if (hit) shown++;
+    }
+    empty.classList.toggle('show', shown === 0);
+  }
+
+  function switchTo(name){
+    cur = name;
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].setAttribute('aria-selected', tabs[i].getAttribute('data-tab') === name ? 'true' : 'false');
+    }
+    for (var k in panes) { panes[k].hidden = k !== name; }
+    hint.textContent = hintText[name];
+    apply();
+  }
+
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].addEventListener('click', function(){ switchTo(this.getAttribute('data-tab')); });
+  }
+  q.addEventListener('input', apply);
+  q.addEventListener('keydown', function(e){
+    if (e.key === 'Enter') {
+      var first = panes[cur].querySelector('.card:not([style*="display: none"])');
+      if (first) first.focus();
+    }
+  });
+  if (location.hash === '#course') switchTo('course');
+  if (location.hash === '#cctv') switchTo('cctv');
+})();
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

@@ -2,6 +2,7 @@ User-agent: *
 Disallow: /private.html
 Disallow: /work.html
 Disallow: /tools/work-report/
+Disallow: /tools/wuliangye-report/
 Disallow: /tools/combo-report/
 Disallow: /tools/counterparty/
 Disallow: /tools/deck/

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>2026年10月经济数据 · 对比与初步结论</title>
+<style>
+  :root{
+    --ink:#14161a; --ink2:#3d434d; --ink3:#717886; --ink4:#98a1b0;
+    --line:#e3e7ee; --line2:#eef1f5; --bg:#f4f5f8; --card:#fff;
+    --red:#b3121d; --red-soft:#fdecec; --blue:#2f5d8a; --blue-soft:#e9f0f7;
+    --green:#1c7a58; --green-soft:#e8f5ef; --amber:#9a6400; --amber-soft:#fff5de;
+    --num:"DIN Alternate","Bahnschrift","Roboto Condensed",ui-sans-serif,system-ui;
+    --shadow:0 1px 2px rgba(20,22,26,.05), 0 8px 24px -12px rgba(20,22,26,.16);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:15px; line-height:1.68; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+  em{font-style:normal}
+
+  /* ---------- hero ---------- */
+  .hero{padding:54px 0 30px;border-bottom:1px solid var(--line);background:
+    radial-gradient(1100px 320px at 12% -40%, #fff 0%, rgba(255,255,255,0) 70%), #fbfbfc;}
+  .kicker{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;letter-spacing:.14em;color:var(--red);font-weight:700;text-transform:uppercase}
+  .kicker .dot{width:6px;height:6px;border-radius:50%;background:var(--red)}
+  h1{font-family:"Songti SC","Source Han Serif SC","Noto Serif SC",serif;font-size:clamp(28px,4vw,44px);line-height:1.24;margin:14px 0 12px;letter-spacing:.01em}
+  h1 .hl{background:linear-gradient(transparent 62%, rgba(179,18,29,.16) 62%);}
+  .dek{max-width:840px;color:var(--ink2);font-size:16px;margin:0 0 22px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px 10px;font-size:12.5px;color:var(--ink3)}
+  .chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink2)}
+  .chip b{color:var(--ink);font-weight:600}
+
+  /* ---------- sections ---------- */
+  section{padding:34px 0 6px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin:0 0 16px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .sec-head .no{font-family:var(--num);font-size:13px;font-weight:700;color:var(--red);letter-spacing:.08em}
+  .sec-head h2{font-size:19px;margin:0;letter-spacing:.01em}
+  .sec-head .hint{margin-left:auto;font-size:12.5px;color:var(--ink4)}
+
+  /* ---------- kpi ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 16px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi:before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--blue)}
+  .kpi.up:before{background:var(--red)}
+  .kpi.dn:before{background:var(--green)}
+  .kpi .k-label{font-size:12.5px;color:var(--ink3);display:flex;justify-content:space-between;gap:8px}
+  .kpi .k-val{font-family:var(--num);font-size:33px;line-height:1.15;font-weight:700;letter-spacing:-.02em;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+  .kpi .k-sub{font-size:12px;color:var(--ink3)}
+  .kpi .k-delta{margin-top:8px;display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--line2);color:var(--ink2)}
+  .kpi.up .k-delta{background:var(--red-soft);color:var(--red)}
+  .kpi.dn .k-delta{background:var(--green-soft);color:var(--green)}
+  .kpi .k-val.pos{color:var(--red)}
+  .kpi .k-val.neg{color:var(--green)}
+  .k-val small{font-size:16px;font-weight:600;margin-left:1px}
+
+  /* ---------- charts ---------- */
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 18px 14px;box-shadow:var(--shadow)}
+  .card.span2{grid-column:1 / -1}
+  .card h3{margin:0;font-size:15.5px;display:flex;align-items:center;gap:8px}
+  .card h3 .tag{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--ink3);border:1px solid var(--line);border-radius:4px;padding:1px 5px;background:#fafbfc}
+  .card .cap{margin:4px 0 14px;font-size:12.5px;color:var(--ink3)}
+  .legend{display:flex;gap:14px;margin:0 0 12px;font-size:12px;color:var(--ink2);flex-wrap:wrap}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+  .chart-head{display:flex;align-items:flex-start;gap:12px}
+  .chart-head .legend{margin-left:auto;margin-bottom:0}
+
+  .rows{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+  .crow{display:flex;align-items:center;gap:10px}
+  .clabel{flex:0 0 108px;font-size:12.5px;color:var(--ink2);line-height:1.25;text-align:right}
+  .clabel .n{display:block;font-size:11px;color:var(--ink4)}
+  .clabel.wide{flex:0 0 138px}
+  .cplot{position:relative;flex:1 1 auto;min-width:0}
+  .cgrid{position:absolute;inset:0;pointer-events:none}
+  .cgrid span{position:absolute;top:0;bottom:0;border-left:1px dashed #e8ebf1}
+  .cbars{position:relative;display:flex;flex-direction:column;gap:6px;padding:1px 0}
+  .ctrack{position:relative;height:10px;border-radius:3px;background:#f1f3f7}
+  .cbar{position:absolute;top:0;bottom:0;left:0;width:0;border-radius:3px;transition:width .85s cubic-bezier(.22,.8,.25,1);background:var(--blue)}
+  /* 统一口径：正 = 红，负 = 绿；深浅区分「当月/累计」两个口径 */
+  .cbar.pos{background:var(--red)}
+  .cbar.neg{background:var(--green)}
+  .cbar.grey{background:#b9c0cc}
+  .cbar.s2{opacity:.45}
+  .cbar .v{
+    position:absolute;left:100%;top:50%;transform:translateY(-50%);margin-left:7px;
+    font-family:var(--num);font-size:12px;font-weight:700;color:var(--ink2);white-space:nowrap;font-variant-numeric:tabular-nums;
+  }
+  .cvals{
+    flex:0 0 64px;display:flex;flex-direction:column;gap:6px;align-items:flex-end;
+    font-family:var(--num);font-size:12.5px;font-weight:700;color:var(--ink2);
+    font-variant-numeric:tabular-nums;letter-spacing:-.01em;
+  }
+  .cvals .cv{height:10px;line-height:10px;white-space:nowrap}
+  .cvals .cv.pos{color:var(--red)}
+  .cvals .cv.neg{color:var(--green)}
+  .cvals .cv.est{color:var(--amber)}
+  .caxis{position:relative;height:16px;margin:2px 74px 0 118px}
+  .caxis.wide{margin-left:148px}
+  .caxis span{position:absolute;transform:translateX(-50%);font-family:var(--num);font-size:10.5px;color:var(--ink4)}
+  .caxis span:first-child{transform:none}
+  .caxis span:last-child{transform:translateX(-100%)}
+  .foot{margin:10px 0 0;font-size:11.5px;color:var(--ink4);line-height:1.5}
+  .foot b{color:var(--ink3);font-weight:600}
+
+  /* ---------- stat trio ---------- */
+  .trio{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:4px}
+  .trio .t{background:#fafbfc;border:1px solid var(--line2);border-radius:10px;padding:12px 14px}
+  .trio .t .lab{font-size:12px;color:var(--ink3)}
+  .trio .t .num{font-family:var(--num);font-size:27px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums}
+  .trio .t .num small{font-size:14px;font-weight:600}
+  .trio .t .d{font-size:11.5px;margin-top:2px}
+
+  /* ---------- 结论 ---------- */
+  .concl{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px 18px;box-shadow:var(--shadow);margin:22px 0 6px;border-left:4px solid var(--red)}
+  .concl h2{font-size:18px;margin:0 0 4px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .concl .kicker2{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--ink4);border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+  .concl .lead{margin:8px 0 14px;font-size:14px;color:var(--ink2);line-height:1.7}
+  .concl .lead b{color:var(--ink)}
+  .concl ol{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+  .concl li{position:relative;padding-left:26px;font-size:13.5px;line-height:1.65;color:var(--ink2)}
+  .concl li:before{content:attr(data-i);position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:5px;background:var(--line2);color:var(--ink3);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .concl li b{color:var(--ink)}
+  .concl .oneline{margin:14px 0 0;padding:11px 14px;background:var(--bg);border-radius:9px;font-size:13.5px;line-height:1.7;color:var(--ink2)}
+  .concl .oneline b{color:var(--ink)}
+  .cl-legend{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:14px 0 0;font-size:12px;color:var(--ink3)}
+  .cl-legend span{display:inline-flex;align-items:center;gap:5px}
+  .cl-legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+
+  /* ---------- table ---------- */
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:var(--shadow)}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:820px}
+  thead th{
+    text-align:left;font-size:12px;font-weight:700;color:var(--ink3);letter-spacing:.04em;
+    padding:11px 14px;background:#fafbfc;border-bottom:1px solid var(--line);white-space:nowrap;
+  }
+  thead th.n,td.n{text-align:right;font-family:var(--num);font-variant-numeric:tabular-nums;white-space:nowrap}
+  tbody td{padding:10px 14px;border-bottom:1px solid var(--line2);vertical-align:middle}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#fbfcfe}
+  td .unit{font-size:11.5px;color:var(--ink4);margin-left:3px}
+  td .why{font-size:12px;color:var(--ink3)}
+  .grp td{background:#f7f8fb;font-weight:700;font-size:12px;color:var(--ink2);letter-spacing:.03em;padding:7px 14px}
+  .pos{color:var(--red);font-weight:600}
+  .neg{color:var(--green);font-weight:600}
+  .flat{color:var(--ink3)}
+  .pill{display:inline-block;font-size:11px;font-weight:600;padding:1px 7px;border-radius:999px;background:var(--line2);color:var(--ink2)}
+  .pill.est{background:var(--amber-soft);color:var(--amber)}
+
+  /* ---------- verify ---------- */
+  .checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .check{display:flex;gap:11px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:13px 15px;box-shadow:var(--shadow)}
+  .check .ic{flex:0 0 22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--green-soft);color:var(--green)}
+  .check.warn .ic{background:var(--amber-soft);color:var(--amber)}
+  .check p{margin:0;font-size:13px;color:var(--ink2)}
+  .check b{color:var(--ink)}
+
+  /* ---------- notes ---------- */
+  .notes{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 20px 16px;box-shadow:var(--shadow)}
+  .notes ol{margin:10px 0 0;padding-left:20px;color:var(--ink2);font-size:13.5px}
+  .notes li{margin:7px 0}
+  details.raw{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:2px 18px;box-shadow:var(--shadow)}
+  details.raw summary{cursor:pointer;padding:12px 0;font-weight:600;font-size:14px;color:var(--ink)}
+  details.raw .body{border-top:1px solid var(--line2);padding:12px 0 18px;color:var(--ink2);font-size:14px}
+  details.raw h4{margin:16px 0 4px;font-size:14.5px;color:var(--ink)}
+  details.raw p{margin:0 0 10px}
+  .swipe{display:none;font-size:12px;color:var(--ink4);margin:8px 0 0}
+  footer{padding:34px 0 60px;color:var(--ink4);font-size:12.5px;border-top:1px solid var(--line);margin-top:26px}
+  footer a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(47,93,138,.3)}
+  .src{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:6px}
+
+  @media (max-width:900px){
+    .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid{grid-template-columns:1fr}
+    .checks{grid-template-columns:1fr}
+    .trio{grid-template-columns:1fr}
+  }
+  @media (max-width:520px){
+    .kpis{grid-template-columns:1fr}
+    .clabel{flex-basis:86px;font-size:12px}
+    .clabel.wide{flex-basis:104px}
+  }
+  @media (max-width:620px){
+    .clabel{flex-basis:88px;font-size:11.5px}
+    .clabel.wide{flex-basis:98px}
+    .cvals{flex-basis:54px;font-size:11.5px}
+    .caxis{margin:2px 64px 0 98px}
+    .caxis.wide{margin-left:108px}
+    .caxis span{font-size:10px}
+    .caxis span:nth-child(even){display:none}
+    .sec-head{flex-wrap:wrap}
+    .sec-head .hint{margin-left:0;flex-basis:100%;margin-top:-4px}
+    .swipe{display:block}
+  }
+  @media print{
+    body{background:#fff}
+    .card,.kpi,.tbl-wrap,.check,.notes,details.raw{box-shadow:none}
+    section{padding:20px 0 4px;break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker"><span class="dot"></span>数据对比 · 2026年10月国民经济运行</div>
+    <h1>总量平稳，<span class="hl">结构在换挡</span><br>10 月经济数据 7 组对比 + 初步结论</h1>
+    <p class="dek">
+      国新办 11 月 16 日发布会披露 10 月数据。同一张成绩单里出现了明显分化：<b>外贸</b>当月增速大幅冲高，
+      <b>工业与服务业</b>较累计小幅回落，<b>投资</b>仍在负区间，<b>价格端 PPI 明显强于 CPI</b>。
+      以下把「当月 vs 累计」「分项 vs 整体」「出口 vs 进口」三组关系拆开对比，数据逐字取自原文。
+    </p>
+    <div class="meta">
+      <span class="chip">来源 <b>金融时报</b>（微信公众号）</span>
+      <span class="chip">发布 <b>2026-11-16</b></span>
+      <span class="chip">记者 <b>马梅若</b> · 见习记者 <b>任志伟</b></span>
+      <span class="chip">口径 <b>国家统计局</b> · 国新办发布会</span>
+      <span class="chip">图表 <b>7</b> 组 · 明细 <b>27</b> 行</span>
+    </div>
+    <div class="cl-legend">
+      <span><i style="background:#b3121d"></i>红 = 正（<b>+</b> / 增长）</span>
+      <span><i style="background:#1c7a58"></i>绿 = 负（<b>−</b> / 下降）</span>
+      <span><i style="background:#b9c0cc"></i>灰 = 持平 / 原文未给</span>
+      <span>颜色只标数值方向，不评好坏</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ========== 0. 初步结论 ========== -->
+  <section class="concl" id="conclusion">
+    <h2>初步结论 <span class="kicker2">本页判断 · 非原文表述</span></h2>
+    <p class="lead">
+      10 月这份成绩单，<b>总量平稳、结构分化</b>：外需与高技术制造是两处明确的亮点，
+      投资和下游价格是两处短板。四条线拎出来看——
+    </p>
+    <ol>
+      <li data-i="1"><b>外需是当月唯一的强项。</b>进出口当月 <span class="pos">+31.2%</span>，比累计 <span class="pos">+20.0%</span> 高出 <b>11.2pp</b>；其中出口 <span class="pos">+28.7%</span>、进口 <span class="pos">+34.7%</span>，<b>进口比出口快 6.0pp</b>——进口高增更适合解释为备货/价格因素，不宜直接读成内需回暖。</li>
+      <li data-i="2"><b>生产端动能在累计之下。</b>工业增加值当月 <span class="pos">+4.8%</span>，累计 <span class="pos">+5.3%</span>（当月低 <b>0.5pp</b>）；服务业生产指数 <span class="pos">+4.6%</span>，累计 <span class="pos">+4.7%</span>（低 <b>0.1pp</b>）。总量没掉，但边际在放缓。</li>
+      <li data-i="3"><b>换挡发生在结构，不在总量。</b>高技术制造业 <span class="pos">+17.6%</span>，是整体 <b>4.8% 的 3.7 倍</b>；装备制造 <span class="pos">+10.6%</span>；产品端 3D 打印设备 <span class="pos">+85.9%</span>、锂离子电池 <span class="pos">+30.0%</span>、工业机器人 <span class="pos">+26.0%</span>。新旧动能的分化比总量数字更有信息量。</li>
+      <li data-i="4"><b>投资是唯一的负区，也是分化最大的一格。</b>固定资产投资 <span class="neg">−8.1%</span>，扣除房地产 <span class="neg">−5.1%</span>（房地产单项原文未给，不做定量归因）；同期知识产权产品投资 <span class="pos">+9.2%</span>、信息服务业投资 <span class="pos">+20.5%</span>——<b>两端相差 28.6pp</b>。传统的“基建+地产”在退，新经济投资在进，但没补上总量缺口。</li>
+    </ol>
+    <p class="oneline">
+      <b>价格与消费各补一句：</b>PPI <span class="pos">+5.7%</span>（涨幅比上月扩大 0.7pp，推 9 月 5.0%）、CPI 仅 <span class="pos">+0.7%</span>，<b>剪刀差 5.0pp</b>——上游在涨价、下游传不动，中下游成本与利润要盯；社零 <span class="pos">+1.0%</span>，其中服务零售 <span class="pos">+4.9%</span>、商品零售 <span class="pos">+0.9%</span>，消费是“服务强、商品弱”。就业 <b>5.1%</b>（比上月 <span class="neg">−0.1pp</span>），1—10 月均值 5.2% 与上年持平，属于平稳。
+    </p>
+    <p class="oneline">
+      <b>一句话：</b>总量不差、结构在换——<b>亮点在外需和高技术，短板在投资和下游价格</b>。
+      <b>待核：</b>固投 <span class="neg">−8.1%</span> 与进出口 <span class="pos">+31.2%</span> 的组合与近年常见区间差距较大，对外引用前建议用统计局官网原始发布复核（见第 06 节校验提示）。
+    </p>
+    <p class="foot" style="margin-top:10px">
+      说明：结论中的差值（11.2 / 6.0 / 0.5 / 0.1 / 28.6 / 5.0pp）与倍数（3.7 倍）均由本页按原文数字相减或相除得出，非原文表述；原文未给的口径不做推算，<span class="pill est">推算</span> 处已逐条标注。
+    </p>
+  </section>
+
+  <!-- ========== 1. KPI ========== -->
+  <section id="kpi">
+    <div class="sec-head">
+      <span class="no">01</span><h2>四个核心数字</h2>
+      <span class="hint">均为 10 月当月同比，失业率为当月值</span>
+    </div>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <!-- ========== 2. 当月 vs 累计 ========== -->
+  <section id="charts">
+    <div class="sec-head">
+      <span class="no">02</span><h2>当月 vs 累计：外贸一枝独秀</h2>
+      <span class="hint">同一指标，两种时间口径的直接对撞</span>
+    </div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="chart-head">
+          <h3>实体指标：当月增速与累计增速<span class="tag">同比 %</span></h3>
+        </div>
+        <p class="cap">工业、服务业当月略低于累计；进出口当月高出累计 <b>11.2</b> 个百分点。</p>
+        <div id="c1"></div>
+        <p class="foot"><b>读法：</b>累计值被前 9 个月摊平，当月值反映最新动能。进出口两者差距最大。</p>
+      </div>
+
+      <div class="card">
+        <div class="chart-head">
+          <h3>价格指标：CPI 温和，PPI 走高<span class="tag">同比 %</span></h3>
+        </div>
+        <p class="cap">PPI 同比 5.7%，涨幅比上月扩大 0.7 个百分点；CPI 同比仅 0.7%。</p>
+        <div id="c2"></div>
+        <p class="foot"><b>注：</b>「PPI 上月 5.0%」为据原文「涨幅扩大 0.7 个百分点」反推，原文未直接给出。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== 3. 结构对比 ========== -->
+  <section id="struct">
+    <div class="sec-head">
+      <span class="no">03</span><h2>结构对比：谁跑得比整体快</h2>
+      <span class="hint">分项增速 − 整体增速 = 结构性溢价（百分点）</span>
+    </div>
+    <div class="grid">
+
+      <div class="card">
+        <div class="chart-head">
+          <h3>工业内部：高技术是整体的 3.7 倍<span class="tag">10月同比 %</span></h3>
+        </div>
+        <p class="cap">全部工业 4.8%，装备制造 10.6%，高技术制造 17.6%。</p>
+        <div id="c3"></div>
+        <p class="foot"><b>17.6 ÷ 4.8 ≈ 3.7 倍。</b>原文表述为「分别快于全部规模以上工业 5.8 和 12.8 个百分点」，与上表差值与原文一致。</p>
+      </div>
+
+      <div class="card">
+        <div class="chart-head">
+          <h3>新质产品产量：3D 打印近乎翻倍<span class="tag">10月同比 %</span></h3>
+        </div>
+        <p class="cap">3D 打印设备 85.9%、锂离子电池 30.0%、工业机器人 26.0%。</p>
+        <div id="c4"></div>
+        <p class="foot"><b>对照：</b>同期全部工业增加值增速 4.8%，三条产品线增速分别约为其 18 倍、6 倍、5 倍。</p>
+      </div>
+
+      <div class="card">
+        <div class="chart-head">
+          <h3>外贸：进口比出口更猛<span class="tag">同比 %</span></h3>
+        </div>
+        <p class="cap">10 月出口 28.7%、进口 34.7%；累计出口 17.6%、进口 23.6%。</p>
+        <div id="c5"></div>
+        <p class="foot"><b>边际：</b>当月较累计，出口提高 11.1pp、进口提高 11.1pp，两者同步加速，进口仍快 6.0pp。</p>
+      </div>
+
+      <div class="card">
+        <div class="chart-head">
+          <h3>消费：服务快于商品，线下慢于线上<span class="tag">1—10月累计同比 %</span></h3>
+        </div>
+        <p class="cap">服务零售 4.9%，商品零售 0.9%，社零 1.0%，网上零售 3.7%。</p>
+        <div id="c6"></div>
+        <p class="foot"><b>价差：</b>服务零售比商品零售快 <b>4.0</b> 个百分点——消费结构在往服务端迁移。</p>
+      </div>
+
+      <div class="card span2">
+        <div class="chart-head">
+          <h3>投资：整体负增长，结构在向上<span class="tag">1—10月累计同比 %</span></h3>
+        </div>
+        <p class="cap">固定资产投资 −8.1%，扣除房地产开发 −5.1%；知识产权产品 +9.2%、高技术产业 +4.0%、信息服务业 +20.5%、航空航天 +10.2%。</p>
+        <div id="c7"></div>
+        <p class="foot"><b>反差：</b>整体 −8.1% 与信息服务业 +20.5% 相差 28.6 个百分点。房地产开发是拖累项（原文只给「扣除后」口径，未给房地产单项增速）。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========== 4. 就业 ========== -->
+  <section id="jobs">
+    <div class="sec-head">
+      <span class="no">04</span><h2>就业：小幅改善，大城市持平全国</h2>
+      <span class="hint">城镇调查失业率，单位 %</span>
+    </div>
+    <div class="card">
+      <div class="trio">
+        <div class="t">
+          <div class="lab">10 月 全国城镇调查失业率</div>
+          <div class="num">5.1<small>%</small></div>
+          <div class="d neg">比上月下降 0.1pp</div>
+        </div>
+        <div class="t">
+          <div class="lab">10 月 31 个大城市</div>
+          <div class="num">5.1<small>%</small></div>
+          <div class="d neg">比上月下降 0.1pp</div>
+        </div>
+        <div class="t">
+          <div class="lab">1—10 月 平均值</div>
+          <div class="num">5.2<small>%</small></div>
+          <div class="d flat">与上年同期持平</div>
+        </div>
+      </div>
+      <p class="foot"><b>推理说明：</b>原文说 10 月比上月「下降 0.1 个百分点」，据此反推 9 月为 5.2%；累计平均 5.2% 与上年同期持平，说明全年就业盘面基本没变，10 月属于月内小幅波动，不宜过度解读。</p>
+    </div>
+  </section>
+
+  <!-- ========== 5. 明细表 ========== -->
+  <section id="table">
+    <div class="sec-head">
+      <span class="no">05</span><h2>全量明细对比表</h2>
+      <span class="hint">当月 / 累计 / 差值，逐项对账</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>指标</th>
+            <th class="n">10 月（当月）</th>
+            <th class="n">1—10 月（累计）</th>
+            <th class="n">当月 − 累计</th>
+            <th>原文备注</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <p class="swipe">← 左右滑动查看完整表格 →</p>
+    <p class="foot" style="margin-top:10px">
+      颜色：<span class="pos">红 = 正增长</span>，<span class="neg">绿 = 下降/回落</span>。「—」表示原文未给出该口径数据。
+      差值为百分点（pp），由本页按原文数字相减得出，非原文表述。
+    </p>
+  </section>
+
+  <!-- ========== 6. 校验 ========== -->
+  <section id="verify">
+    <div class="sec-head">
+      <span class="no">06</span><h2>自洽性校验与风险提示</h2>
+      <span class="hint">先算一遍，再下结论</span>
+    </div>
+    <div class="checks">
+      <div class="check">
+        <div class="ic">✓</div>
+        <p><b>进出口分项加总吻合：</b>出口 27905 亿元 + 进口 20778 亿元 = <b>48683 亿元</b>，与原文 10 月进出口总额完全一致，分项无串位。</p>
+      </div>
+      <div class="check">
+        <div class="ic">✓</div>
+        <p><b>结构溢价吻合：</b>装备制造 10.6 − 4.8 = <b>5.8pp</b>；高技术 17.6 − 4.8 = <b>12.8pp</b>，与原文「分别快 5.8 和 12.8 个百分点」一字不差。</p>
+      </div>
+      <div class="check">
+        <div class="ic">✓</div>
+        <p><b>量级自洽：</b>累计进出口 448100 亿元 ≈ 10 个月 × 4.48 万亿，与单月 48683 亿元同量级，未见小数点级错位。</p>
+      </div>
+      <div class="check warn">
+        <div class="ic">!</div>
+        <p><b>整体水平偏离常态：</b>固定资产投资 <b>−8.1%</b>、进出口 <b>+31.2%</b>、PPI <b>+5.7%</b> 与近年常见区间差距较大。本页照录原文，<b>建议以统计局官网原始发布复核</b>后再对外引用。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 7. 口径 ========== -->
+  <section id="notes">
+    <div class="sec-head">
+      <span class="no">07</span><h2>口径说明</h2>
+    </div>
+    <div class="notes">
+      <ol>
+        <li>除特别标注「环比」外，本页增速均为<b>同比</b>；差额单位为<b>百分点（pp）</b>。</li>
+        <li>「社会消费品零售总额 416464 亿元」「网上零售额 169811 亿元」「固定资产投资 364824 亿元」均为<b>1—10 月累计绝对值</b>，不是当月值。</li>
+        <li>「社会消费商品和服务零售总额」与「社会消费品零售总额」是<b>两个不同口径</b>（前者含服务、后者不含），不可直接相除或互相替代。</li>
+        <li>「网上商品和服务零售额」含服务，与社零口径不一致，本页仅并列展示，<b>不计算占比</b>，以免口径混算。</li>
+        <li>工业为「规模以上工业增加值」同比；服务业为「服务业生产指数」同比；投资为「固定资产投资（不含农户）」。</li>
+        <li>「PPI 上月 5.0%」「9 月失业率 5.2%」为据原文变化幅度<b>反推</b>（已标 <span class="pill est">推算</span>），原文未直接给出。</li>
+        <li>原文仅给出「扣除房地产开发」后的投资增速（−5.1%），<b>未给房地产单项增速</b>，故本页不对房地产做定量归因。</li>
+      </ol>
+    </div>
+
+    <details class="raw">
+      <summary>查看原文全文（用于逐字核对，1384 字）</summary>
+      <div class="body">
+        <p>11月16日，国新办举行新闻发布会，介绍2026年10月份国民经济运行情况。</p>
+        <p>据国家统计局新闻发言人、总经济师、国民经济综合统计司司长付凌晖介绍，10月份，我国生产供给平稳增长，市场销售规模扩大，对外贸易快速增长，就业和物价总体稳定，新质生产力茁壮成长，国民经济运行延续总体平稳、向新向优发展态势。</p>
+        <h4>高技术制造业增长17.6%</h4>
+        <p>10月份，全国规模以上工业增加值同比增长4.8%，环比增长0.21%。</p>
+        <p>装备制造业增加值同比增长10.6%，高技术制造业增加值增长17.6%，分别快于全部规模以上工业增加值5.8和12.8个百分点。3D打印设备、锂离子电池、工业机器人产品产量同比分别增长85.9%、30.0%、26.0%。</p>
+        <p>1至10月份，全国规模以上工业增加值同比增长5.3%。</p>
+        <h4>现代服务业增势良好</h4>
+        <p>10月份，全国服务业生产指数同比增长4.6%。其中，租赁和商务服务业，信息传输、软件和信息技术服务业生产指数同比分别增长9.3%、9.2%。</p>
+        <p>1至10月份，全国服务业生产指数同比增长4.7%。</p>
+        <h4>服务零售增长较快</h4>
+        <p>1至10月份，社会消费商品和服务零售总额同比增长2.5%，其中服务零售额增长4.9%，商品零售额增长0.9%。</p>
+        <p>同期，社会消费品零售总额416464亿元，同比增长1.0%。全国网上商品和服务零售额169811亿元，同比增长3.7%。</p>
+        <h4>知识产权产品投资快速增长</h4>
+        <p>1至10月份，全国固定资产投资（不含农户）364824亿元，同比下降8.1%；扣除房地产开发的固定资产投资下降5.1%。</p>
+        <p>其中，知识产权产品投资同比增长9.2%，高技术产业投资增长4.0%。信息服务业，航空、航天器及设备制造业投资分别增长20.5%、10.2%。</p>
+        <h4>货物进出口快速增长</h4>
+        <p>10月份，货物进出口总额48683亿元，同比增长31.2%。其中，出口27905亿元，增长28.7%；进口20778亿元，增长34.7%。</p>
+        <p>1至10月份，货物进出口总额448100亿元，同比增长20.0%。其中，出口增长17.6%，进口增长23.6%。</p>
+        <h4>城镇调查失业率下降</h4>
+        <p>1至10月份，全国城镇调查失业率平均值为5.2%，与上年同期持平。</p>
+        <p>10月份，全国城镇调查失业率为5.1%，比上月下降0.1个百分点。31个大城市城镇调查失业率为5.1%，比上月下降0.1个百分点。</p>
+        <h4>工业生产者价格同比涨幅扩大</h4>
+        <p>10月份，全国居民消费价格（CPI）同比上涨0.7%，环比持平。扣除食品和能源价格后的核心CPI同比上涨0.8%。</p>
+        <p>10月份，全国工业生产者出厂价格（PPI）同比上涨5.7%，涨幅比上月扩大0.7个百分点；环比上涨0.7%。</p>
+        <p>1至10月份，全国居民消费价格同比上涨0.9%，工业生产者出厂价格同比上涨2.7%。</p>
+        <p>总的来看，10月份国民经济运行总体平稳，延续动能向新、结构向优的发展态势。</p>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <div class="src">
+      <span>数据来源：<a href="https://mp.weixin.qq.com/s/ICBTp7kTvGpSAkbHZ6T4ag" target="_blank" rel="noopener">金融时报《最新经济数据发布！》</a>（2026-11-16）</span>
+      <span>口径：国家统计局 / 国新办发布会</span>
+    </div>
+    <p style="margin:6px 0 0">本页由原始推文正文逐字提取生成，所有百分比与金额均未做四舍五入或改写；涨幅/差值类衍生计算已在上文标注。图表为零依赖内联 SVG/CSS 渲染，可离线打开。</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------- data ---------------- */
+  var KPIS = [
+    { label: "规模以上工业增加值", val: 4.8, unit: "%", sub: "10 月同比", delta: "累计 +5.3%", s: 1 },
+    { label: "服务业生产指数",     val: 4.6, unit: "%", sub: "10 月同比", delta: "累计 +4.7%", s: 1 },
+    { label: "货物进出口总额",     val: 31.2, unit: "%", sub: "10 月同比", delta: "累计 +20.0%", s: 1 },
+    { label: "城镇调查失业率",     val: 5.1,  unit: "%", sub: "10 月", delta: "比上月 −0.1pp", s: 0, noSign: true }
+  ];
+
+  var CHARTS = {
+    c1: {
+      series: [{ name: "10 月当月", color: "#b3121d" }, { name: "1—10 月累计", color: "#2f5d8a" }],
+      min: 0, max: 35, ticks: 5, sign: true,
+      rows: [
+        { label: "规模以上工业", note: "增加值", values: [4.8, 5.3] },
+        { label: "服务业", note: "生产指数", values: [4.6, 4.7] },
+        { label: "货物进出口", note: "总额", values: [31.2, 20.0] }
+      ]
+    },
+    c2: {
+      series: [{ name: "同比", color: "#b3121d" }],
+      min: 0, max: 7, ticks: 7, sign: true, signed: true,
+      rows: [
+        { label: "PPI 同比", note: "10 月", values: [5.7] },
+        { label: "PPI 同比", note: "9 月（推算）", values: [5.0], est: true },
+        { label: "PPI 同比", note: "1—10 月累计", values: [2.7] },
+        { label: "CPI 同比", note: "1—10 月累计", values: [0.9] },
+        { label: "核心 CPI", note: "10 月", values: [0.8] },
+        { label: "CPI 同比", note: "10 月", values: [0.7] }
+      ]
+    },
+    c3: {
+      series: [{ name: "10 月同比", color: "#b3121d" }],
+      min: 0, max: 20, ticks: 5, sign: true, signed: true,
+      rows: [
+        { label: "全部规模以上工业", note: "基准", values: [4.8] },
+        { label: "装备制造业", note: "快 5.8pp", values: [10.6] },
+        { label: "高技术制造业", note: "快 12.8pp", values: [17.6] }
+      ]
+    },
+    c4: {
+      series: [{ name: "10 月产量同比", color: "#b3121d" }],
+      min: 0, max: 90, ticks: 3, sign: true, signed: true,
+      rows: [
+        { label: "3D 打印设备", note: "", values: [85.9] },
+        { label: "锂离子电池", note: "", values: [30.0] },
+        { label: "工业机器人", note: "", values: [26.0] }
+      ]
+    },
+    c5: {
+      series: [{ name: "10 月当月", color: "#b3121d" }, { name: "1—10 月累计", color: "#2f5d8a" }],
+      min: 0, max: 40, ticks: 4, sign: true,
+      rows: [
+        { label: "出口", note: "", values: [28.7, 17.6] },
+        { label: "进口", note: "", values: [34.7, 23.6] }
+      ]
+    },
+    c6: {
+      series: [{ name: "1—10 月累计同比", color: "#2f5d8a" }],
+      min: 0, max: 6, ticks: 3, sign: true, signed: true, wide: true,
+      rows: [
+        { label: "服务零售额", note: "含服务", values: [4.9] },
+        { label: "网上零售额", note: "商品+服务", values: [3.7] },
+        { label: "商品和服务零售总额", note: "总口径", values: [2.5] },
+        { label: "社会消费品零售总额", note: "不含服务", values: [1.0] },
+        { label: "商品零售额", note: "", values: [0.9] }
+      ]
+    },
+    c7: {
+      series: [{ name: "1—10 月累计同比", color: "#2f5d8a" }],
+      min: -10, max: 25, ticks: 7, sign: true, signed: true, wide: true,
+      rows: [
+        { label: "固定资产投资", note: "不含农户", values: [-8.1] },
+        { label: "扣除房地产开发", note: "固投", values: [-5.1] },
+        { label: "高技术产业投资", note: "", values: [4.0] },
+        { label: "知识产权产品投资", note: "", values: [9.2] },
+        { label: "航空航天器及设备制造", note: "投资", values: [10.2] },
+        { label: "信息服务业投资", note: "", values: [20.5] }
+      ]
+    }
+  };
+
+  var TABLE = [
+    { g: "工业与服务业" },
+    { name: "规模以上工业增加值", m: 4.8, y: 5.3, why: "10 月环比 +0.21%" },
+    { name: "装备制造业增加值", m: 10.6, y: null, why: "快于工业 5.8pp" },
+    { name: "高技术制造业增加值", m: 17.6, y: null, why: "快于工业 12.8pp" },
+    { name: "3D 打印设备产量", m: 85.9, y: null, why: "" },
+    { name: "锂离子电池产量", m: 30.0, y: null, why: "" },
+    { name: "工业机器人产量", m: 26.0, y: null, why: "" },
+    { name: "服务业生产指数", m: 4.6, y: 4.7, why: "" },
+    { name: "租赁和商务服务业生产指数", m: 9.3, y: null, why: "" },
+    { name: "信息传输、软件和信息技术服务业生产指数", m: 9.2, y: null, why: "" },
+    { g: "消费" },
+    { name: "社会消费商品和服务零售总额", m: null, y: 2.5, why: "服务 4.9% / 商品 0.9%" },
+    { name: "服务零售额", m: null, y: 4.9, why: "" },
+    { name: "商品零售额", m: null, y: 0.9, why: "" },
+    { name: "社会消费品零售总额", m: null, y: 1.0, why: "416464 亿元" },
+    { name: "网上商品和服务零售额", m: null, y: 3.7, why: "169811 亿元" },
+    { g: "投资" },
+    { name: "固定资产投资（不含农户）", m: null, y: -8.1, why: "364824 亿元" },
+    { name: "扣除房地产开发的投资", m: null, y: -5.1, why: "" },
+    { name: "知识产权产品投资", m: null, y: 9.2, why: "" },
+    { name: "高技术产业投资", m: null, y: 4.0, why: "" },
+    { name: "信息服务业投资", m: null, y: 20.5, why: "" },
+    { name: "航空航天器及设备制造业投资", m: null, y: 10.2, why: "" },
+    { g: "外贸" },
+    { name: "货物进出口总额", m: 31.2, y: 20.0, why: "48683 / 448100 亿元" },
+    { name: "出口", m: 28.7, y: 17.6, why: "27905 亿元" },
+    { name: "进口", m: 34.7, y: 23.6, why: "20778 亿元" },
+    { g: "价格" },
+    { name: "CPI 同比", m: 0.7, y: 0.9, why: "10 月环比持平；核心 CPI 0.8%" },
+    { name: "PPI 同比", m: 5.7, y: 2.7, why: "10 月环比 +0.7%；涨幅比上月扩大 0.7pp" },
+    { g: "就业" },
+    { name: "城镇调查失业率", m: 5.1, y: 5.2, why: "比上月下降 0.1pp；累计为平均值", est: true },
+    { name: "31 个大城市城镇调查失业率", m: 5.1, y: null, why: "比上月下降 0.1pp" }
+  ];
+
+  /* ---------------- helpers ---------------- */
+  function n(v, d) { return (v > 0 ? "+" : "") + v.toFixed(d === undefined ? 1 : d); }
+  function pct(v) { return (v > 0 ? "+" : "") + v.toFixed(1) + "%"; }
+  function cls(v) { return v > 0 ? "pos" : (v < 0 ? "neg" : "flat"); }
+
+  /* ---------------- KPI ---------------- */
+  var kHost = document.getElementById("kpis");
+  KPIS.forEach(function (k) {
+    var d = document.createElement("div");
+    d.className = "kpi " + (k.s > 0 ? "up" : (k.s < 0 ? "dn" : ""));
+    d.innerHTML =
+      '<div class="k-label"><span>' + k.label + '</span></div>' +
+      '<div class="k-val ' + (k.noSign ? "" : cls(k.val)) + '">' + (k.noSign ? "" : (k.val > 0 ? "+" : "")) + k.val.toFixed(1) + '<small>' + k.unit + '</small></div>' +
+      '<div class="k-sub">' + k.sub + '</div>' +
+      '<div class="k-delta">' + k.delta + '</div>';
+    kHost.appendChild(d);
+  });
+
+  /* ---------------- chart engine ---------------- */
+  function renderChart(host, cfg) {
+    var min = cfg.min, max = cfg.max, span = max - min;
+    var tickCount = cfg.ticks || 5;
+    var zero = min < 0 ? (0 - min) / span * 100 : 0;
+
+    // legend
+    var leg = document.createElement("div");
+    leg.className = "legend";
+    cfg.series.forEach(function (s) {
+      var i = document.createElement("span");
+      var shade = document.createElement("i");
+      shade.style.background = s.color;
+      if (cfg.series.length > 1 && cfg.series.indexOf(s) === 1) shade.style.opacity = ".45";
+      shade.style.display = "inline-block"; shade.style.width = "9px"; shade.style.height = "9px";
+      shade.style.borderRadius = "2px"; shade.style.marginRight = "5px";
+      i.appendChild(shade);
+      i.appendChild(document.createTextNode(s.name));
+      leg.appendChild(i);
+    });
+    host.appendChild(leg);
+
+    var rows = document.createElement("div");
+    rows.className = "rows";
+
+    cfg.rows.forEach(function (row) {
+      var r = document.createElement("div");
+      r.className = "crow";
+
+      var lab = document.createElement("div");
+      lab.className = "clabel" + (cfg.wide ? " wide" : "");
+      lab.innerHTML = row.label + (row.note ? '<span class="n">' + row.note + "</span>" : "");
+
+      var plot = document.createElement("div");
+      plot.className = "cplot";
+
+      var grid = document.createElement("div");
+      grid.className = "cgrid";
+      for (var t = 0; t <= tickCount; t++) {
+        var gx = t / tickCount * 100;
+        var gl = document.createElement("span");
+        gl.style.left = gx + "%";
+        grid.appendChild(gl);
+      }
+      plot.appendChild(grid);
+
+      var bars = document.createElement("div");
+      bars.className = "cbars";
+
+      var vals = document.createElement("div");
+      vals.className = "cvals";
+
+      row.values.forEach(function (v, si) {
+        var tr = document.createElement("div");
+        tr.className = "ctrack";
+        var bar = document.createElement("div");
+        bar.className = "cbar";
+        bar.classList.add(v > 0 ? "pos" : (v < 0 ? "neg" : "grey"));
+        if (si === 1) bar.classList.add("s2");
+
+        var left, width;
+        if (cfg.min < 0) {
+          var vx = (v - min) / span * 100;
+          left = Math.min(vx, zero);
+          width = Math.abs(vx - zero);
+        } else {
+          left = 0;
+          width = (v - min) / span * 100;
+        }
+        bar.style.left = left + "%";
+        bar.dataset.w = width;
+        tr.appendChild(bar);
+        bars.appendChild(tr);
+
+        var cv = document.createElement("span");
+        cv.className = "cv " + cls(v) + (row.est ? " est" : "");
+        cv.textContent = pct(v) + (row.est ? " *" : "");
+        vals.appendChild(cv);
+      });
+
+      plot.appendChild(bars);
+      r.appendChild(lab);
+      r.appendChild(plot);
+      r.appendChild(vals);
+      rows.appendChild(r);
+    });
+    host.appendChild(rows);
+
+    // axis
+    var axis = document.createElement("div");
+    axis.className = "caxis" + (cfg.wide ? " wide" : "");
+    for (var a = 0; a <= tickCount; a++) {
+      var val2 = min + span * a / tickCount;
+      var s = document.createElement("span");
+      s.style.left = (a / tickCount * 100) + "%";
+      s.textContent = Math.round(val2) + (cfg.unit || "%");
+      axis.appendChild(s);
+    }
+    host.appendChild(axis);
+
+    // animate
+    requestAnimationFrame(function () {
+      setTimeout(function () {
+        host.querySelectorAll(".cbar").forEach(function (b) {
+          b.style.width = b.dataset.w + "%";
+        });
+      }, 60);
+    });
+  }
+
+  Object.keys(CHARTS).forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) renderChart(el, CHARTS[id]);
+  });
+
+  /* ---------------- table ---------------- */
+  var tb = document.getElementById("tbody");
+  TABLE.forEach(function (row) {
+    var tr = document.createElement("tr");
+    if (row.g) {
+      tr.className = "grp";
+      tr.innerHTML = '<td colspan="5">' + row.g + "</td>";
+      tb.appendChild(tr);
+      return;
+    }
+    var diff = (row.m !== null && row.y !== null) ? (row.m - row.y) : null;
+    var mCell = row.m === null ? '<span class="flat">—</span>'
+      : '<span class="' + cls(row.m) + '">' + pct(row.m) + "</span>";
+    var yCell = row.y === null ? '<span class="flat">—</span>'
+      : '<span class="' + cls(row.y) + '">' + pct(row.y) + "</span>";
+    var dCell = diff === null ? '<span class="flat">—</span>'
+      : '<span class="' + cls(diff) + '">' + (diff > 0 ? "+" : "") + diff.toFixed(1) + " pp</span>";
+    tr.innerHTML =
+      "<td>" + row.name + (row.est ? ' <span class="pill est">推算</span>' : "") + "</td>" +
+      '<td class="n">' + mCell + "</td>" +
+      '<td class="n">' + yCell + "</td>" +
+      '<td class="n">' + dCell + "</td>" +
+      '<td><span class="why">' + (row.why || "") + "</span></td>";
+    tb.appendChild(tr);
+  });
+})();
+</script>
+<script src="../../nav-fab.js"></script>
+</body>
+</html>

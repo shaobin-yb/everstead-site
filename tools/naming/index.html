@@ -43,6 +43,7 @@ button[disabled]{opacity:.55;cursor:default}
   var SALT = Uint8Array.from(atob('5lRzM9JB7HWHfTZz77/KHA=='), function(c){return c.charCodeAt(0)});
   var IV   = Uint8Array.from(atob('WUTQGOM+QZJ0IpuY'),   function(c){return c.charCodeAt(0)});
   var ITER = 600000;
+  var ENC  = 'page.enc';
   var gate = document.getElementById('gate');
   var input = document.getElementById('pw');
   var btn = document.getElementById('btn');
@@ -54,34 +55,64 @@ button[disabled]{opacity:.55;cursor:default}
     return out;
   }
 
-  async function unlock(){
-    var pw = input.value;
+  async function decryptWith(pw){
+    var km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+    var key = await crypto.subtle.deriveKey(
+      {name:'PBKDF2', salt:SALT, iterations:ITER, hash:'SHA-256'},
+      km, {name:'AES-GCM', length:256}, false, ['decrypt']);
+    var res = await fetch(ENC + '?_=' + Date.now(), {cache:'no-store'});
+    if (!res.ok) throw new Error('密文加载失败');
+    var buf = await res.arrayBuffer();
+    var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv:IV}, key, buf);
+    return new TextDecoder().decode(plain);
+  }
+
+  function reveal(html){
+    document.open('text/html', 'replace');
+    document.write(html);
+    document.close();
+  }
+
+  function shake(){
+    gate.classList.remove('err'); void gate.offsetWidth; gate.classList.add('err');
+  }
+
+  async function unlock(pw, auto){
     if (!pw) return;
-    btn.disabled = true; msg.textContent = '';
+    btn.disabled = true;
+    if (!auto) msg.textContent = '';
     try {
-      var km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
-      var key = await crypto.subtle.deriveKey(
-        {name:'PBKDF2', salt:SALT, iterations:ITER, hash:'SHA-256'},
-        km, {name:'AES-GCM', length:256}, false, ['decrypt']);
-      var res = await fetch('page.enc?_=' + Date.now(), {cache:'no-store'});
-      if (!res.ok) throw new Error('密文加载失败');
-      var buf = await res.arrayBuffer();
-      var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv:IV}, key, buf);
-      var html = new TextDecoder().decode(plain);
-      document.open('text/html', 'replace');
-      document.write(html);
-      document.close();
-    } catch(e) {
-      gate.classList.remove('err'); void gate.offsetWidth; gate.classList.add('err');
+      var html = await decryptWith(pw);
+      try { sessionStorage.setItem('private_pw', pw); } catch (e) {}
+      reveal(html);
+    } catch (e) {
+      if (auto) {
+        /* 专区存的密码对不上(比如专区改过密码) -> 退回手动输入 */
+        input.style.display = ''; btn.style.display = '';
+        btn.disabled = false; msg.textContent = ''; input.focus();
+        return;
+      }
+      shake();
       msg.textContent = '密码不对，或浏览器不支持';
       input.value = ''; input.focus();
       btn.disabled = false;
     }
   }
 
-  btn.addEventListener('click', unlock);
-  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
-  input.focus();
+  btn.addEventListener('click', function(){ unlock(input.value, false); });
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(input.value, false); });
+
+  var cached = null;
+  try { cached = sessionStorage.getItem('private_pw'); } catch (e) {}
+  if (cached) {
+    /* 从私人专区点进来: 直接用专区密码解锁, 不再让用户输第二遍 */
+    input.style.display = 'none';
+    btn.style.display = 'none';
+    msg.textContent = '正在解锁…';
+    unlock(cached, true);
+  } else {
+    input.focus();
+  }
 })();
 </script>
 <script src="../../nav-fab.js"></script>

@@ -493,6 +493,7 @@ function unlock() {
   var input = document.getElementById('pw');
   if (sha256(input.value) === PASSWORD_HASH) {
     sessionStorage.setItem('private_ok', '1');
+    sessionStorage.setItem('private_pw', input.value);
     gate.style.display = 'none';
     document.getElementById('content').classList.add('open');
   } else {

@@ -81,11 +81,21 @@ IFIND_INDEX_URL = "https://api-mcp.51ifind.com:8643/ds-mcp-servers/hexin-ifind-d
 
 
 def _claude_cfg():
-    return json.loads(open(Path.home() / ".claude.json", encoding="utf-8").read())
+    """合并 ~/.claude.json 与 mcp-profiles/finance.json 的 mcpServers。
+    2026-11 起 finance 类 MCP 配置迁到 finance.json, 只读 .claude.json 会取不到 key 静默失败。"""
+    merged = {}
+    for src in (Path.home() / ".claude.json",
+                Path.home() / ".claude" / "mcp-profiles" / "finance.json"):
+        try:
+            cfg = json.loads(src.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        merged.update(cfg.get("mcpServers") or {})
+    return {"mcpServers": merged}
 
 
 def _fuyao_cfg(server):
-    """fuyao MCP 配置(url + key)从 ~/.claude.json 读。注意 url 路径与 server 名不同名。"""
+    """fuyao MCP 配置(url + key)。注意 url 路径与 server 名不同名。"""
     srv = _claude_cfg().get("mcpServers", {}).get(server) or {}
     return srv.get("url", ""), (srv.get("headers") or {}).get("X-api-key", "")
 

@@ -22,3 +22,6 @@ tools/growth/
 *.plain.html.bak
 *.plain.bak
 _plain_backup/
+
+# 本地编辑工具, 不上线
+首页点选编辑.html

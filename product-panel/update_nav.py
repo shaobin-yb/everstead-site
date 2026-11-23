@@ -656,19 +656,19 @@ def main():
         print("[3/3] 指标已算, nav-data.json 更新")
 
     if not dry and push:
-        r = subprocess.run(["git", "-C", str(SITE), "add", "-A"],
-                           capture_output=True, text=True)
+        # encoding 显式 utf-8: 中文路径在 GBK 下解码失败会让 stdout 变 None(2026-11-23 踩坑)
+        git_kw = dict(capture_output=True, text=True, encoding="utf-8", errors="replace")
+        subprocess.run(["git", "-C", str(SITE), "add", "-A"], **git_kw)
         r = subprocess.run(
             ["git", "-C", str(SITE), "commit", "-m",
-             "产品净值更新 %s" % datetime.now().strftime("%Y-%m-%d")],
-            capture_output=True, text=True)
-        if "nothing to commit" not in r.stdout + r.stderr:
-            r = subprocess.run(["git", "-C", str(SITE), "push"],
-                               capture_output=True, text=True)
+             "产品净值更新 %s" % datetime.now().strftime("%Y-%m-%d")], **git_kw)
+        out = (r.stdout or "") + (r.stderr or "")
+        if "nothing to commit" not in out:
+            r = subprocess.run(["git", "-C", str(SITE), "push"], **git_kw)
             if r.returncode == 0:
                 print("[push] everstead-site 已发布")
             else:
-                print("[push FAIL] %s" % r.stderr[-200:])
+                print("[push FAIL] %s" % (r.stderr or "")[-200:])
     print("[ok] 完成")
 
 

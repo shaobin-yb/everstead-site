@@ -492,11 +492,13 @@ def build_index(reports: list) -> None:
         tag = TYPE_TAG.get(kind, kind.upper())
         # data-cat: 首页展厅分组用(2026-09-22 起按分类工具的结果分组, 不再用 data-type 推导)
         catattr = f' data-cat="{cat}"' if cat else ''
-        # launch: 本机快捷唤起(走 18999 调度服务), 带 data-app 供前端拦截
+        # launch: 本机快捷唤起 → 直接导航到 18999 调度服务(新标签页)
         appattr = ''
         if kind == "launch":
-            appattr = ' data-app="%s"' % href.replace("launch://", "").rstrip("/")
-            ext = ''
+            app_id = href.replace("launch://", "").rstrip("/")
+            appattr = ' data-app="%s"' % app_id
+            href = "http://127.0.0.1:18999/launch?id=%s" % app_id
+            ext = ' target="_blank" rel="noopener"'
         return (f'<a class="card" data-type="{kind}"{catattr}{appattr} data-no="{no}" style="animation-delay:{delay:.2f}s" '
                 f'href="{href}"{ext}>'
                 f'<span class="corner c1"></span><span class="corner c2"></span>'
@@ -510,12 +512,12 @@ def build_index(reports: list) -> None:
 
     def local_link(name, href, icon, desc):
         """底部本地工具。
-        2026-10-08: 原来直接给 href="launch://xxx", Chrome 会静默拦截自定义协议
-        导航(顶级和 iframe 都拦), 点了没反应。改走本机调度服务
-        localhost:18999/launch?id=xxx(fetch 图片信标, 不碰协议机制)。
-        href 保留 launch:// 作为调度服务离线时的 Win+R 手动回退。"""
+        2026-11-23: 新版 Chrome 会拦公网页面 fetch 本机地址(Local Network Access),
+        图片信标方案失效。改为直接导航到本机调度服务(新标签页), 服务端返回提示页。"""
         app_id = href.replace("launch://", "").rstrip("/")
-        return (f'<a class="lt-item" href="{href}" data-app="{app_id}" title="{desc}">'
+        url = f'http://127.0.0.1:18999/launch?id={app_id}'
+        return (f'<a class="lt-item" href="{url}" data-app="{app_id}"'
+                f' target="_blank" rel="noopener" title="{desc}">'
                 f'<span class="lt-ico">{icon}</span>'
                 f'<span class="lt-body"><span class="lt-n">{name}</span>'
                 f'<span class="lt-d">{desc}</span></span>'

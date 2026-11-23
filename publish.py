@@ -74,14 +74,9 @@ def ai_metrics() -> dict:
 # 日期写死（拷贝会刷新 mtime，避免卡片日期失真）
 ROOT_ARTIFACTS = [
     # ---- 报告 ----
-    ("红利质量_产品一页通", "product-onepagers/红利质量_产品一页通.html", "2026-09-15", "📕", "report",
-     "净值 + 全收益指数对照 · 每日更新", "报告"),
-    ("价值1号_产品一页通", "product-onepagers/价值1号_产品一页通.html", "2026-09-15", "📗", "report",
-     "净值 + 全收益指数对照 · 每日更新", "报告"),
-    ("红利价值量化_产品一页通", "product-onepagers/红利价值量化_产品一页通.html", "2026-09-15", "📘", "report",
-     "国新 × 中邮 · 要素型", "报告"),
-    ("深度价值量化选股_产品一页通", "product-onepagers/深度价值量化选股_产品一页通.html", "2026-09-15", "📙", "report",
-     "国新 × 中邮 · 要素型", "报告"),
+    # 2026-11-23 老板要求: 四份一页通合并为一张"一页通"卡片, 点开分四个
+    ("产品一页通", "product-onepagers/index.html", "", "📑", "report",
+     "红利质量 / 价值1号 / 红利价值量化 / 深度价值量化选股 · 四份合一", "报告"),
     ("产品持仓池", "holdings.html", "2026-09-10", "📦", "report",
      "中邮价值1号(TOP10权重50.57%) + 红利质量(27.17%) 重仓股快照 · 与红利/深度观察池重叠标记", "报告"),
     ("上市公司购买理财产品情况", "上市公司购买理财产品情况.html", "2026-11-23", "📊", "report",
@@ -535,6 +530,17 @@ def build_index(reports: list) -> None:
         d = SITE / "radar-site" / "companies"
         return len(list(d.glob("*.html"))) if d.is_dir() else 0
 
+    def nav_latest_date() -> str:
+        """一页通卡片日期取产品净值最新日期(nav-data.json), 避免写死后过期。"""
+        p = SITE / "product-panel" / "nav-data.json"
+        try:
+            d = json.loads(p.read_text(encoding="utf-8"))
+            dates = [v.get("latest_date", "") for v in d.get("products", {}).values()
+                     if v.get("latest_date")]
+            return max(dates) if dates else ""
+        except Exception:
+            return ""
+
     cards, delay = [], 0.35
     for name, path, date, icon, kind, desc, cat in ROOT_ARTIFACTS:
         # lan(仅内网) / launch(本机快捷)卡片恒展示
@@ -546,6 +552,8 @@ def build_index(reports: list) -> None:
                                     f" · 页内直达 {n} 家公司分级站点" if n else "")
             if kind == "knowledge" and kb_date:
                 date = kb_date  # 知识库卡片日期取最新条目日期
+            if not date:
+                date = nav_latest_date() or datetime.now().strftime("%Y-%m-%d")
             if kind == "briefing":
                 date = briefing_date(latest_briefing_text) or datetime.fromtimestamp(
                     (SITE / path).stat().st_mtime).strftime("%Y-%m-%d")

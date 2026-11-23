@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>产品一页通 · 四份合一 · everstead</title>
+<style>
+:root{
+  --bg:#03060c;--panel:rgba(10,20,38,.55);--panel-hover:rgba(14,28,52,.78);
+  --line:rgba(56,189,248,.16);--line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee;--blue:#3b82f6;--violet:#8b5cf6;
+  --text:#e2ecf7;--muted:#7d92ad;
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(1100px 600px at 75% -10%,rgba(59,130,246,.12),transparent 60%),
+    radial-gradient(900px 500px at -10% 110%,rgba(139,92,246,.08),transparent 60%),
+    linear-gradient(rgba(56,189,248,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(56,189,248,.03) 1px,transparent 1px);
+  background-size:auto,auto,44px 44px,44px 44px;
+  background-attachment:fixed;
+}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:960px;margin:0 auto;padding:28px 20px 64px}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:36px}
+.logo{width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cyan),var(--blue));
+  display:flex;align-items:center;justify-content:center;font-size:19px}
+.brand{font-family:var(--mono);font-weight:700;letter-spacing:.2em;font-size:14px}
+.brand em{font-style:normal;color:var(--cyan)}
+.back{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+  transition:color .2s,border-color .2s}
+.back:hover{border-color:var(--line-strong);color:var(--cyan)}
+.head{margin-bottom:28px}
+.head h1{font-size:26px;font-weight:800;letter-spacing:.03em;text-wrap:balance}
+.head p{color:var(--muted);font-size:13px;margin-top:8px;text-wrap:pretty}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.card{display:block;border:1px solid var(--line);border-radius:14px;background:var(--panel);
+  backdrop-filter:blur(10px);padding:20px;position:relative;
+  transition:border-color .2s,background-color .2s,transform .15s}
+.card:hover{border-color:var(--line-strong);background:var(--panel-hover)}
+.card:active{transform:scale(.985)}
+.card:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.ico{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:21px;background:rgba(34,211,238,.08);border:1px solid var(--line);margin-bottom:14px}
+.card h2{font-size:16.5px;font-weight:700;letter-spacing:.02em;text-wrap:balance}
+.card .desc{color:var(--muted);font-size:12.5px;margin-top:6px;line-height:1.6;text-wrap:pretty}
+.stat{display:flex;align-items:baseline;gap:8px;margin-top:14px;padding-top:12px;
+  border-top:1px dashed var(--line)}
+.stat .k{font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.08em}
+.stat .v{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--cyan);font-variant-numeric:tabular-nums}
+.stat .v.neg{color:#f87171}
+.stat .v.pos{color:#34d399}
+.stat .d{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.stat .d.static{color:#a5b4fc}
+.go{position:absolute;top:20px;right:20px;font-size:12px;color:var(--muted);
+  font-family:var(--mono);letter-spacing:.06em;transition:color .2s}
+.card:hover .go{color:var(--cyan)}
+.foot{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:11.5px;color:var(--muted);line-height:1.9;text-align:center;
+  font-family:var(--mono);letter-spacing:.04em}
+@media (max-width:400px){
+  .wrap{padding:20px 14px 48px}
+  .head h1{font-size:22px}
+  .grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important}
+}
+</style>
+<script>
+var _hmt=_hmt||[];
+(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?1d958a32a6588643ee6e67da344c7693";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="logo">📑</div>
+    <div class="brand"><em>EVERSTEAD</em> · 产品一页通</div>
+    <a class="back" href="../index.html">← 稳稳回报</a>
+  </div>
+
+  <div class="head">
+    <h1>产品一页通 · 四份合一</h1>
+    <p>量化策略产品与国新合作产品要素速查 · 点击任意一份查看完整一页通 · 其中两只量化产品净值每交易日更新</p>
+  </div>
+
+  <div class="grid">
+    <a class="card" href="红利质量_产品一页通.html" target="_blank" rel="noopener">
+      <span class="go">打开 →</span>
+      <div class="ico">📕</div>
+      <h2>红利质量 · 产品一页通</h2>
+      <div class="desc">中邮资管红利质量量化选股策略 · 净值 + 全收益指数对照</div>
+      <div class="stat">
+        <span class="k">成立以来</span>
+        <span class="v" data-cum="ZY0053">—</span>
+        <span class="d" data-date="ZY0053">读取中</span>
+      </div>
+    </a>
+
+    <a class="card" href="价值1号_产品一页通.html" target="_blank" rel="noopener">
+      <span class="go">打开 →</span>
+      <div class="ico">📗</div>
+      <h2>价值1号 · 产品一页通</h2>
+      <div class="desc">中邮资管价值策略1号 · 净值 + 全收益指数对照</div>
+      <div class="stat">
+        <span class="k">成立以来</span>
+        <span class="v" data-cum="ZY0049">—</span>
+        <span class="d" data-date="ZY0049">读取中</span>
+      </div>
+    </a>
+
+    <a class="card" href="红利价值量化_产品一页通.html" target="_blank" rel="noopener">
+      <span class="go">打开 →</span>
+      <div class="ico">📘</div>
+      <h2>红利价值量化 · 产品一页通</h2>
+      <div class="desc">国新证券红利价值量化集合资管计划 · 策略与要素</div>
+      <div class="stat">
+        <span class="k">要素表口径</span>
+        <span class="v" style="font-size:13px;color:#a5b4fc">正式要素</span>
+        <span class="d static">2026-09-08</span>
+      </div>
+    </a>
+
+    <a class="card" href="深度价值量化选股_产品一页通.html" target="_blank" rel="noopener">
+      <span class="go">打开 →</span>
+      <div class="ico">📙</div>
+      <h2>深度价值量化选股 · 产品一页通</h2>
+      <div class="desc">国新证券深度价值量化选股集合资管计划 · 策略与要素</div>
+      <div class="stat">
+        <span class="k">要素表口径</span>
+        <span class="v" style="font-size:13px;color:#a5b4fc">正式要素</span>
+        <span class="d static">2026-09-08</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="foot">
+    数据来源：产品净值每日盘后由中邮资管产品净值管道自动更新 · 一页通 PDF 口径与净值面板一致<br>
+    仅供内部沟通参考，不构成投资建议
+  </div>
+</div>
+
+<script>
+(function(){
+  fetch('../product-panel/nav-data.json', {cache:'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var prods = d.products || {};
+      document.querySelectorAll('[data-cum]').forEach(function(el){
+        var p = prods[el.getAttribute('data-cum')];
+        if (!p) return;
+        var cum = p.cum_return;
+        if (typeof cum === 'number') {
+          el.textContent = (cum >= 0 ? '+' : '') + cum.toFixed(2) + '%';
+          el.classList.add(cum >= 0 ? 'pos' : 'neg');
+        }
+        var dEl = document.querySelector('[data-date="' + el.getAttribute('data-cum') + '"]');
+        if (dEl && p.latest_date) dEl.textContent = p.latest_date;
+      });
+    })
+    .catch(function(){
+      document.querySelectorAll('[data-date]').forEach(function(el){
+        if (el.textContent === '读取中') el.textContent = '—';
+      });
+    });
+})();
+</script>
+</body>
+</html>

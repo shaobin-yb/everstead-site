@@ -110,9 +110,9 @@ ROOT_ARTIFACTS = [
      "资管产品税后收益率一键计算", "工具"),
 
     # ---- 驾驶舱 ----
-    ("客户情报雷达", "radar.html", "2026-09-11", "📡", "radar",
+    ("客户情报雷达", "radar.html", "", "📡", "radar",
      "巨潮每日公告抓取 + 受托方解析 + iFind 打分{companies}", "驾驶舱"),
-    ("资管投研驾驶舱", "cockpit.html", "2026-09-09", "🖥️", "cockpit",
+    ("资管投研驾驶舱", "cockpit.html", "", "🖥️", "cockpit",
      "每日盘后自动更新 · 市场总览/温度/产品净值/红利·深度价值关注池异动/龙虎榜/同业新发", "驾驶舱"),
     ("因子工厂快照", "factors.html", "2026-09-09", "⚗️", "cockpit",
      "关注池 86 只 · 股息率TTM/动量/波动率/成交额 五因子本地计算", "驾驶舱"),
@@ -541,6 +541,23 @@ def build_index(reports: list) -> None:
         except Exception:
             return ""
 
+    def cockpit_data_date() -> str:
+        """驾驶舱卡片日期取 cockpit-data.json 的 updated。"""
+        try:
+            d = json.loads((SITE.parent / "cockpit" / "cockpit-data.json").read_text(encoding="utf-8"))
+            return str(d.get("updated", ""))[:10]
+        except Exception:
+            return ""
+
+    def radar_scan_date() -> str:
+        """雷达卡片日期取 radar.html 里的检索时间。"""
+        try:
+            head = (SITE / "radar.html").read_text(encoding="utf-8", errors="replace")[:20000]
+            m = re.search(r"检索时间\s*(20\d{2}-\d{2}-\d{2})", head)
+            return m.group(1) if m else ""
+        except Exception:
+            return ""
+
     cards, delay = [], 0.35
     for name, path, date, icon, kind, desc, cat in ROOT_ARTIFACTS:
         # lan(仅内网) / launch(本机快捷)卡片恒展示
@@ -552,8 +569,14 @@ def build_index(reports: list) -> None:
                                     f" · 页内直达 {n} 家公司分级站点" if n else "")
             if kind == "knowledge" and kb_date:
                 date = kb_date  # 知识库卡片日期取最新条目日期
+            if not date and path == "product-onepagers/index.html":
+                date = nav_latest_date()
+            if not date and path == "cockpit.html":
+                date = cockpit_data_date()
+            if not date and path == "radar.html":
+                date = radar_scan_date()
             if not date:
-                date = nav_latest_date() or datetime.now().strftime("%Y-%m-%d")
+                date = datetime.now().strftime("%Y-%m-%d")
             if kind == "briefing":
                 date = briefing_date(latest_briefing_text) or datetime.fromtimestamp(
                     (SITE / path).stat().st_mtime).strftime("%Y-%m-%d")

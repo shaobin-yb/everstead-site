@@ -1506,14 +1506,14 @@ a{text-decoration:none;color:inherit}
     }, 6000);
   }
 
-  var items = document.querySelectorAll('.lt-item');
+  var items = document.querySelectorAll('.lt-item, .card[data-app]');
   for(var i = 0; i < items.length; i++){
     (function(a){
       a.addEventListener('click', function(e){
         e.preventDefault();
         var appId = a.getAttribute('data-app');
         if(!appId) return;
-        var nm = a.querySelector('.lt-n');
+        var nm = a.querySelector('.lt-n') || a.querySelector('.t');
         nm = nm ? nm.textContent : appId;
         fetch(LAUNCH_SERVICE + '/launch?id=' + encodeURIComponent(appId), {cache:'no-store'})
           .then(function(r){

@@ -141,6 +141,8 @@ ROOT_ARTIFACTS = [
      "客户/商机/拜访纪要 · 账号 wangshaobin · 🔒 仅公司内网可访问", "工作区"),
     ("铁蛋近期工作总结", "reports/铁蛋近期工作总结.html", "2026-09-08", "📄", "report",
      "专题调研 · 工作汇报", "工作区"),
+    ("首页点选编辑", "launch://homeeditor", "2026-11-23", "🛠️", "launch",
+     "点选板块调布局排版 · 导出 JSON 交给铁蛋上线 · 仅本机可唤起", "工作区"),
 
     # ---- 密码访问（2026-10-08: 整个板块移到最下面）----
     ("私人专区", "private.html", "2026-09-15", "🔐", "vault",
@@ -479,7 +481,7 @@ def build_index(reports: list) -> None:
     TYPE_TAG = {'radar': '雷达', 'tool': '工具', 'report': '报告', 'kb': '知识库',
                 'knowledge': '知识库', 'briefing': '点评', 'cockpit': '驾驶舱',
                 'lan': '内网', 'external': '外链', 'vault': '密码专区',
-                'local': '本地'}
+                'local': '本地', 'launch': '快捷'}
 
     def card(name, href, date, icon, kind, desc, delay, no, external=False, cat=""):
         ext = ' target="_blank" rel="noopener"' if external else ''
@@ -490,7 +492,12 @@ def build_index(reports: list) -> None:
         tag = TYPE_TAG.get(kind, kind.upper())
         # data-cat: 首页展厅分组用(2026-09-22 起按分类工具的结果分组, 不再用 data-type 推导)
         catattr = f' data-cat="{cat}"' if cat else ''
-        return (f'<a class="card" data-type="{kind}"{catattr} data-no="{no}" style="animation-delay:{delay:.2f}s" '
+        # launch: 本机快捷唤起(走 18999 调度服务), 带 data-app 供前端拦截
+        appattr = ''
+        if kind == "launch":
+            appattr = ' data-app="%s"' % href.replace("launch://", "").rstrip("/")
+            ext = ''
+        return (f'<a class="card" data-type="{kind}"{catattr}{appattr} data-no="{no}" style="animation-delay:{delay:.2f}s" '
                 f'href="{href}"{ext}>'
                 f'<span class="corner c1"></span><span class="corner c2"></span>'
                 f'<span class="corner c3"></span><span class="corner c4"></span>'
@@ -528,8 +535,8 @@ def build_index(reports: list) -> None:
 
     cards, delay = [], 0.35
     for name, path, date, icon, kind, desc, cat in ROOT_ARTIFACTS:
-        # lan 卡片(仅内网)恒展示
-        if kind == "lan" or exists(path):
+        # lan(仅内网) / launch(本机快捷)卡片恒展示
+        if kind in ("lan", "launch") or exists(path):
             if kind == "radar":
                 # 2026-09-20: 原写死 "433 家", 扩到近一年后已过期, 改为按实际产物取数
                 n = radar_company_count()

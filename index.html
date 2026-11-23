@@ -695,7 +695,7 @@ var _hmt=_hmt||[];
 
   <!-- 数据条 -->
   <section class="stats">
-    <div class="stat" data-jump="全部" title="点击查看全部成果"><div class="stat-ico">🗂️</div><div class="v" data-count="28">0</div><div class="k">归档成果</div></div>
+    <div class="stat" data-jump="全部" title="点击查看全部成果"><div class="stat-ico">🗂️</div><div class="v" data-count="29">0</div><div class="k">归档成果</div></div>
     <div class="stat" data-jump="驾驶舱" title="点击只看驾驶舱"><div class="stat-ico">📡</div><div class="v" data-count="1">0</div><div class="k">雷达 / 站点</div></div>
     <div class="stat" data-jump="报告" title="点击只看报告"><div class="stat-ico">📄</div><div class="v" data-count="7">0</div><div class="k">专题报告</div></div>
     <div class="stat" data-jump="知识库" title="点击只看知识库"><div class="stat-ico">📚</div><div class="v" data-count="32">0</div><div class="k">知识库条目</div></div>
@@ -1311,7 +1311,7 @@ var _hmt=_hmt||[];
         <h2>成果展厅</h2>
         <div class="en">ARTIFACT GALLERY</div>
       </div>
-      <div class="count">28 ITEMS</div>
+      <div class="count">29 ITEMS</div>
     </div>
     <div class="filter-bar" id="filter-bar" role="tablist" aria-label="成果筛选"></div>
     <div id="gallery-wrap">
@@ -1343,7 +1343,8 @@ var _hmt=_hmt||[];
 <a class="card" data-type="vault" data-cat="工作区" data-no="25" style="animation-delay:1.79s" href="work.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">💼</div><div class="card-tag">密码专区</div></div><div class="t">工作区</div><div class="m">业务资料与工作材料 · 工作密码解锁</div><div class="d"><span class="card-no">25</span><span>2026-09-09</span></div><span class="arrow">→</span></a>
 <a class="card" data-type="lan" data-cat="工作区" data-no="26" style="animation-delay:1.85s" href="http://192.168.100.148:3000" target="_blank" rel="noopener"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">👥</div><div class="card-tag">内网</div></div><div class="t">CRM 客户关系管理系统</div><div class="m">客户/商机/拜访纪要 · 账号 wangshaobin · 🔒 仅公司内网可访问</div><div class="d"><span class="card-no">26</span><span>2026-09-07</span></div><span class="arrow">→</span></a>
 <a class="card" data-type="report" data-cat="工作区" data-no="27" style="animation-delay:1.91s" href="reports/铁蛋近期工作总结.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">📄</div><div class="card-tag">报告</div></div><div class="t">铁蛋近期工作总结</div><div class="m">专题调研 · 工作汇报</div><div class="d"><span class="card-no">27</span><span>2026-09-08</span></div><span class="arrow">→</span></a>
-<a class="card" data-type="vault" data-cat="密码访问" data-no="28" style="animation-delay:1.97s" href="private.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🔐</div><div class="card-tag">密码专区</div></div><div class="t">私人专区</div><div class="m">家庭与私人资料 · 个人密码解锁</div><div class="d"><span class="card-no">28</span><span>2026-09-15</span></div><span class="arrow">→</span></a>
+<a class="card" data-type="launch" data-cat="工作区" data-app="homeeditor" data-no="28" style="animation-delay:1.97s" href="launch://homeeditor"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🛠️</div><div class="card-tag">快捷</div></div><div class="t">首页点选编辑</div><div class="m">点选板块调布局排版 · 导出 JSON 交给铁蛋上线 · 仅本机可唤起</div><div class="d"><span class="card-no">28</span><span>2026-11-23</span></div><span class="arrow">→</span></a>
+<a class="card" data-type="vault" data-cat="密码访问" data-no="29" style="animation-delay:2.03s" href="private.html"><span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span><div class="card-top"><div class="card-ico">🔐</div><div class="card-tag">密码专区</div></div><div class="t">私人专区</div><div class="m">家庭与私人资料 · 个人密码解锁</div><div class="d"><span class="card-no">29</span><span>2026-09-15</span></div><span class="arrow">→</span></a>
       </div>
     </div>
   </section>
@@ -2095,14 +2096,14 @@ var _hmt=_hmt||[];
     }, 6000);
   }
 
-  var items = document.querySelectorAll('.lt-item');
+  var items = document.querySelectorAll('.lt-item, .card[data-app]');
   for(var i = 0; i < items.length; i++){
     (function(a){
       a.addEventListener('click', function(e){
         e.preventDefault();
         var appId = a.getAttribute('data-app');
         if(!appId) return;
-        var nm = a.querySelector('.lt-n');
+        var nm = a.querySelector('.lt-n') || a.querySelector('.t');
         nm = nm ? nm.textContent : appId;
         fetch(LAUNCH_SERVICE + '/launch?id=' + encodeURIComponent(appId), {cache:'no-store'})
           .then(function(r){

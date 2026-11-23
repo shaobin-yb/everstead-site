@@ -502,5 +502,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script src="../../nav-fab.js"></script>
+<!-- td-private-sso --><script>(function(){try{
+var ok=localStorage.getItem('private_ok'),until=+(localStorage.getItem('private_until')||0),pw=localStorage.getItem('private_pw');
+if(ok!=='1'||!pw||(until&&Date.now()>until))return;
+try{sessionStorage.setItem('private_ok','1');sessionStorage.setItem('private_pw',pw);}catch(e){}
+function fill(){var i=document.querySelector('input[type=password]');if(!i)return;
+if(i.value!==pw){i.value=pw;i.dispatchEvent(new Event('input',{bubbles:true}));i.dispatchEvent(new Event('change',{bubbles:true}));}
+var root=i.closest('form,div,body')||document,b=root.querySelectorAll('button,a[role=button],input[type=button],input[type=submit]'),hit=null;
+for(var k=0;k<b.length;k++){var t=(b[k].textContent||b[k].value||'').replace(/\s+/g,'');if(/解锁|进入|确定|提交|打开/.test(t)){hit=b[k];break;}}
+if(hit){hit.click();}else{i.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));}}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){setTimeout(fill,0);setTimeout(fill,300);});}
+else{setTimeout(fill,0);setTimeout(fill,300);}
+}catch(e){}})();</script>
 </body>
 </html>

@@ -624,6 +624,14 @@ def inject_baidu() -> None:
     subprocess.run([sys.executable, str(SITE / "inject_baidu.py")], check=True)
 
 
+def inject_private_sso() -> None:
+    """私人专区一次解锁(2026-11-23): 给区内子页面补自动解锁片段。
+    与 inject_baidu 同理, 页面重建后由 publish 补回, 幂等。"""
+    script = SITE.parent / "scripts" / "inject_private_sso.py"
+    if script.exists():
+        subprocess.run([sys.executable, str(script)], check=True)
+
+
 def main():
     args = [a for a in sys.argv[1:] if a != "--no-push"]
     push = "--no-push" not in sys.argv[1:]
@@ -649,6 +657,7 @@ def main():
     build_search_index.main()
     inject_nav()  # 全站悬浮导航(返回上一步+返回首页), 增量幂等
     inject_baidu()  # 百度统计, 增量幂等(重建页面后补回)
+    inject_private_sso()  # 私人专区一次解锁, 增量幂等
     if push:
         subprocess.run(["git", "-C", str(SITE), "add", "-A"], check=True)
         subprocess.run(["git", "-C", str(SITE), "commit", "-m", "发布: 稳稳回报更新"], check=True)

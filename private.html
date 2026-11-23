@@ -494,6 +494,13 @@ function unlock() {
   if (sha256(input.value) === PASSWORD_HASH) {
     sessionStorage.setItem('private_ok', '1');
     sessionStorage.setItem('private_pw', input.value);
+    /* 2026-11-23 老板: 进专区的密码用一次就够, 区内子页面不再二次输入。
+       localStorage 跨标签页共享, 12 小时有效; 子页面用 private_pw 自动解锁。 */
+    try {
+      localStorage.setItem('private_ok', '1');
+      localStorage.setItem('private_pw', input.value);
+      localStorage.setItem('private_until', String(Date.now() + 12 * 3600 * 1000));
+    } catch (e) {}
     gate.style.display = 'none';
     document.getElementById('content').classList.add('open');
   } else {
@@ -512,11 +519,28 @@ document.getElementById('pw').addEventListener('keydown', function(e) {
 document.getElementById('btn').addEventListener('click', unlock);
 console.log('[private] 事件已绑定');
 
-/* 本会话已解锁过 → 直接显示 */
-if (sessionStorage.getItem('private_ok') === '1') {
-  document.getElementById('gate').style.display = 'none';
-  document.getElementById('content').classList.add('open');
-}
+/* 已解锁过 → 直接显示:
+   ① 本会话(sessionStorage) ② 12 小时内通行的 localStorage 标记(跨标签页) */
+(function () {
+  var lsOk = false;
+  try {
+    var until = +(localStorage.getItem('private_until') || 0);
+    lsOk = localStorage.getItem('private_ok') === '1' &&
+           (!until || Date.now() < until);
+    if (lsOk) {
+      // 每次进专区刷新有效期
+      localStorage.setItem('private_until', String(Date.now() + 12 * 3600 * 1000));
+      if (!sessionStorage.getItem('private_pw')) {
+        var pw = localStorage.getItem('private_pw');
+        if (pw) sessionStorage.setItem('private_pw', pw);
+      }
+    }
+  } catch (e) {}
+  if (sessionStorage.getItem('private_ok') === '1' || lsOk) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('content').classList.add('open');
+  }
+})();
 </script>
 <script src="tools/naming/naming-fx.js"></script>
 </body>

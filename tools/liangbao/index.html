@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>私密页面</title>
+<style>
+:root{--ink:#2b241c;--paper:#faf7f2;--line:#e6ded1;--gold:#c9a227}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 600px at 50% -10%,#fff 0%,var(--paper) 55%,#f2ece2 100%);
+color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+display:flex;align-items:center;justify-content:center;padding:24px}
+.gate{max-width:360px;width:100%;background:rgba(255,253,248,.92);border:1px solid var(--line);
+border-radius:22px;padding:40px 30px;text-align:center;box-shadow:0 18px 50px rgba(74,55,35,.10)}
+.lock{font-size:28px;margin-bottom:14px}
+h1{font-size:17px;font-weight:600;letter-spacing:.08em;margin:0 0 6px}
+p{font-size:12.5px;color:#8a7f6f;margin:0 0 22px;line-height:1.7}
+input{width:100%;padding:13px 16px;font-size:16px;letter-spacing:.3em;text-align:center;
+border:1px solid var(--line);border-radius:14px;background:#fff;outline:none;transition:border-color .25s,box-shadow .25s}
+input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.15)}
+button{width:100%;margin-top:12px;padding:13px;font-size:14.5px;font-weight:600;
+border:0;border-radius:14px;background:var(--ink);color:#fff;cursor:pointer;transition:opacity .2s}
+button:hover{opacity:.88}
+button[disabled]{opacity:.55;cursor:default}
+.err{animation:shake .4s}
+.msg{font-size:12px;color:#b4544a;height:16px;margin-top:10px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+</style>
+</head>
+<body>
+<div class="gate" id="gate">
+  <div class="lock">🔒</div>
+  <h1>私密内容</h1>
+  <p>请输入访问密码</p>
+  <input type="password" id="pw" placeholder="••••••" autocomplete="off" inputmode="numeric">
+  <button id="btn">解锁</button>
+  <div class="msg" id="msg"></div>
+</div>
+<script>
+(function(){
+  var SALT = Uint8Array.from(atob('2Wpq+npa5V5WPQTZ3SDMvg=='), function(c){return c.charCodeAt(0)});
+  var IV   = Uint8Array.from(atob('Ws49ZsJ0RCM17q6N'),   function(c){return c.charCodeAt(0)});
+  var ITER = 600000;
+  var gate = document.getElementById('gate');
+  var input = document.getElementById('pw');
+  var btn = document.getElementById('btn');
+  var msg = document.getElementById('msg');
+
+  function b64ToBytes(b64){
+    var bin = atob(b64), out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+
+  async function unlock(){
+    var pw = input.value;
+    if (!pw) return;
+    btn.disabled = true; msg.textContent = '';
+    try {
+      var km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveKey']);
+      var key = await crypto.subtle.deriveKey(
+        {name:'PBKDF2', salt:SALT, iterations:ITER, hash:'SHA-256'},
+        km, {name:'AES-GCM', length:256}, false, ['decrypt']);
+      var res = await fetch('page.enc?_=' + Date.now(), {cache:'no-store'});
+      if (!res.ok) throw new Error('密文加载失败');
+      var buf = await res.arrayBuffer();
+      var plain = await crypto.subtle.decrypt({name:'AES-GCM', iv:IV}, key, buf);
+      var html = new TextDecoder().decode(plain);
+      document.open('text/html', 'replace');
+      document.write(html);
+      document.close();
+    } catch(e) {
+      gate.classList.remove('err'); void gate.offsetWidth; gate.classList.add('err');
+      msg.textContent = '密码不对，或浏览器不支持';
+      input.value = ''; input.focus();
+      btn.disabled = false;
+    }
+  }
+
+  btn.addEventListener('click', unlock);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') unlock(); });
+  input.focus();
+
+  /* 从私人专区进来: 沿用专区刚输入的密码自动解密, 不再二次输入 */
+  try {
+    var saved = sessionStorage.getItem('private_pw');
+    if (saved) {
+      input.value = saved;
+      msg.style.color = '#8a7f6f';
+      msg.textContent = '正在自动解锁…';
+      unlock();
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

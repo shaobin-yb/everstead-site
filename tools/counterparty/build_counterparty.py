@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 直接交易对手库 → 稳稳回报工具箱页面生成器
-数据源: D:\\工作文件\\初期项目\\方案等文件\\直接交易对手库汇总表20241223-更新地域.xlsx
+数据源: D:\\工作文件\\天空之岛\\直接交易对手库汇总表20261121-发送.xlsx
+        (2026-11-21 版起无省份列, 省份按企业名从 prov_map.json 继承, 缺失留空)
 输出:   counterparty.html (数据内嵌, 零外部依赖)
 
 分类体系 (2026-09-11 版):
@@ -17,8 +18,10 @@ from pathlib import Path
 
 import openpyxl
 
-SRC = Path(r"D:\工作文件\初期项目\方案等文件\直接交易对手库汇总表20241223-更新地域.xlsx")
+SRC = Path(r"D:\工作文件\天空之岛\直接交易对手库汇总表20261121-发送.xlsx")
 OUT = Path(__file__).parent / "counterparty.html"
+PROV_MAP_FILE = Path(__file__).parent / "prov_map.json"
+UPDATED = "2026-11-21"
 
 # 汇总表 5 家缺注册省的企业, 按公开信息补全 (核实日期 2026-09-11)
 PROV_FIX = {
@@ -260,6 +263,104 @@ OTHER_NATURE = {
 }
 
 
+# ============================================================
+# 2026-11-21 版新增企业校正 (逐家核对, 仅高置信度条目)
+# ============================================================
+MANUAL_CAT.update({
+    # 城投平台
+    "宁波开发投资集团有限公司": "城投平台",
+    "山西省交通开发投资集团有限公司": "城投平台",
+    "江西省铁路航空投资集团有限公司": "城投平台",
+    "江苏省铁路集团有限公司": "城投平台",
+    "南京市投资控股有限公司": "城投平台",
+    "徐州市新盛投资控股集团有限公司": "城投平台",
+    "上海浦东开发(集团)有限公司": "城投平台",
+    "上海金桥(集团)有限公司": "城投平台",
+    "福州古厝集团有限公司": "城投平台",
+    "上海陆家嘴(集团)有限公司": "城投平台",
+    "上海申迪(集团)有限公司": "城投平台",
+    "无锡市新发集团有限公司": "城投平台",
+    "海宁市资产经营公司": "城投平台",
+    "南京新工投资集团有限责任公司": "城投平台",
+    "芜湖市投资控股集团有限公司": "城投平台",
+    "福建漳龙集团有限公司": "城投平台",
+    "南京江宁经济技术开发集团有限公司": "城投平台",
+    "河南投资集团有限公司": "城投平台",
+    "安徽省投资集团控股有限公司": "城投平台",
+    "海南省发展控股集团有限公司": "城投平台",
+    "青岛国信产融控股(集团)有限公司": "城投平台",
+    "宜宾三江投资建设集团有限公司": "城投平台",
+    "上海地产(集团)有限公司": "城投平台",
+    "重庆市地产集团有限公司": "城投平台",
+    # 金融同业
+    "深圳市鲲鹏股权投资管理有限公司": "金融同业",
+    "中银集团投资有限公司": "金融同业",
+    "中国投融资担保股份有限公司": "金融同业",
+    "五矿资本控股有限公司": "金融同业",
+    "南银法巴消费金融有限公司": "金融同业",
+    # 产业企业
+    "申能股份有限公司": "产业企业",
+    "中国化学工程集团有限公司": "产业企业",
+    "中建三局集团有限公司": "产业企业",
+    "中国电子信息产业集团有限公司": "产业企业",
+    "上海隧道工程股份有限公司": "产业企业",
+    "北控水务(中国)投资有限公司": "产业企业",
+    "北京城市排水集团有限责任公司": "产业企业",
+    "四川能源发展集团有限责任公司": "产业企业",
+    "中交投资有限公司": "产业企业",
+    "中交路桥建设有限公司": "产业企业",
+    "中交一公局集团有限公司": "产业企业",
+    "中电建路桥集团有限公司": "产业企业",
+    "中铁投资集团有限公司": "产业企业",
+    "山东高速路桥集团股份有限公司": "产业企业",
+    "中国葛洲坝集团股份有限公司": "产业企业",
+    "中国物流集团有限公司": "产业企业",
+    "浪潮集团有限公司": "产业企业",
+    "万华化学集团股份有限公司": "产业企业",
+    "内蒙古伊利实业集团股份有限公司": "产业企业",
+    "比亚迪股份有限公司": "产业企业",
+    "北京京东世纪贸易有限公司": "产业企业",
+    "华润双鹤药业股份有限公司": "产业企业",
+    "上海金茂投资管理集团有限公司": "产业企业",
+    "广州市自来水有限公司": "产业企业",
+    "广州市净水有限公司": "产业企业",
+    "深圳市环境水务集团有限公司": "产业企业",
+})
+
+CENTRAL |= {
+    "中粮集团有限公司", "中国化学工程集团有限公司", "中建三局集团有限公司",
+    "中国电子信息产业集团有限公司", "中国电气装备集团有限公司",
+    "中国国际航空股份有限公司", "中国电力国际有限公司", "中国电力国际发展有限公司",
+    "华润电力投资有限公司", "华润医药商业集团有限公司", "华润双鹤药业股份有限公司",
+    "上海金茂投资管理集团有限公司", "中银集团投资有限公司",
+    "中国中金财富证券有限公司", "中信百信银行股份有限公司",
+    "中国投融资担保股份有限公司", "五矿资本控股有限公司", "中国物流集团有限公司",
+    "中国中信股份有限公司", "中国太平保险控股有限公司",
+    "招商局仁和人寿保险股份有限公司", "招商局港口控股有限公司",
+    "招商局融资租赁有限公司", "国银金融租赁股份有限公司", "国开证券股份有限公司",
+    "人保再保险股份有限公司", "中华联合财产保险股份有限公司",
+    "招商信诺人寿保险有限公司", "通用环球国际融资租赁(天津)有限公司",
+    "国家开发银行", "中国农业发展银行", "中国进出口银行",
+    "中国电力建设集团有限公司", "中电建新能源集团股份有限公司",
+    "中电建路桥集团有限公司", "中交第四航务工程局有限公司",
+    "中交路桥建设有限公司", "中交一公局集团有限公司", "中交投资有限公司",
+    "中铁投资集团有限公司", "中国核工业二四建设有限公司",
+    "中国葛洲坝集团股份有限公司", "国网国际融资租赁有限公司",
+    "中电投融和融资租赁有限公司", "中国环球租赁有限公司",
+    "华电融资租赁有限公司", "华能天成融资租赁有限公司", "国新融资租赁有限公司",
+    "国家能源集团宁夏煤业有限责任公司", "中国大唐集团能源投资有限责任公司",
+    "国家电投集团黄河上游水电开发有限责任公司", "国家电投集团东北电力有限公司",
+    "国电投绿色能源股份有限公司", "中国医药健康产业股份有限公司",
+    "中航科创有限公司",
+}
+
+OTHER_NATURE |= {
+    "北京京东世纪贸易有限公司", "比亚迪股份有限公司",
+    "内蒙古伊利实业集团股份有限公司", "万华化学集团股份有限公司",
+    "北京供销社投资管理中心", "南银法巴消费金融有限公司",
+}
+
+
 def nature_of(name: str) -> str:
     if name in CENTRAL:
         return "央企"
@@ -271,47 +372,68 @@ def nature_of(name: str) -> str:
 def excel_date(v):
     if isinstance(v, (int, float)):
         return (datetime(1899, 12, 30) + timedelta(days=int(v))).strftime("%Y-%m-%d")
-    return v or ""
+    if isinstance(v, datetime):
+        return v.strftime("%Y-%m-%d")
+    return str(v or "").strip()
 
 
 def load():
+    PROV_MAP = json.loads(PROV_MAP_FILE.read_text(encoding="utf-8")) if PROV_MAP_FILE.exists() else {}
     wb = openpyxl.load_workbook(SRC, data_only=True)
-    ws = wb["汇总表"]
+    ws = wb["投资主体授信"]
     active = []
     for row in ws.iter_rows(min_row=3, values_only=True):
         if row[0] is None:
             continue
         name = str(row[1]).strip()
-        prov = str(row[2]).strip() if row[2] else ""
-        prov = PROV_FIX.get(name, prov)
+        if not name:
+            continue
+        prov = PROV_FIX.get(name) or PROV_MAP.get(name, "")
+        lim = row[6] if isinstance(row[6], (int, float)) else None
+        if lim is not None and float(lim).is_integer():
+            lim = int(lim)
         active.append({
             "seq": int(row[0]),
             "name": name,
             "prov": prov,
             "cat": classify(name),
             "nature": nature_of(name),
-            "ext": str(row[3] or "").strip(),
+            "ext": str(row[2] or "").strip(),
+            "extdate": excel_date(row[3]),
             "int": str(row[4] or "").strip(),
             "outlook": str(row[5] or "").strip(),
-            "limit": row[6] if isinstance(row[6], (int, float)) else None,
+            "limit": lim,
             "date": excel_date(row[7]),
             "note": str(row[8]).strip() if row[8] else "",
             "analyst": str(row[9]).strip() if row[9] else "",
         })
 
+    active_names = {c["name"] for c in active}
+    adj_note = {}
+    if "本次调整" in wb.sheetnames:
+        for row in wb["本次调整"].iter_rows(min_row=3, values_only=True):
+            if row[0] is None or not row[1]:
+                continue
+            if row[13]:
+                adj_note[str(row[1]).strip()] = str(row[13]).strip()
     ws2 = wb["历史出库企业"]
     removed = []
     for row in ws2.iter_rows(min_row=2, values_only=True):
         if row[0] is None:
             continue
+        name = str(row[1]).strip()
+        if name in active_names:  # 源表存在同时在库+出库的重叠记录, 以在库表为准
+            continue
         int_raw = str(row[3]).strip() if row[3] else ""
         note = str(row[6]).strip() if row[6] else ""
+        if not note:
+            note = adj_note.get(name, "")
         if int_raw not in RATING_SET:
             note = (int_raw + ";" + note) if note else int_raw
             int_raw = ""
         removed.append({
             "seq": int(row[0]),
-            "name": str(row[1]).strip(),
+            "name": name,
             "ext": str(row[2] or "").strip(),
             "int": int_raw,
             "limit": row[4] if isinstance(row[4], (int, float)) else None,
@@ -456,7 +578,7 @@ td.num{font-family:var(--mono);text-align:right}
     <div class="brand">EVERSTEAD <em>TOOLBOX</em></div>
     <a class="back" href="../../tools.html">← 工具箱</a>
   </div>
-  <div class="sub">DIRECT COUNTERPARTY DATABASE · 中邮保险资产管理有限公司 · 更新于 2024-12-23</div>
+  <div class="sub">DIRECT COUNTERPARTY DATABASE · 中邮保险资产管理有限公司 · 更新于 __UPDATED__</div>
 
   <div class="stats" id="stats"></div>
   <div class="cat-panel" id="catPanel"></div>
@@ -524,6 +646,7 @@ else{gate.classList.remove('err');void gate.offsetWidth;gate.classList.add('err'
 if(sessionStorage.getItem(GATE_KEY)==='1'){document.getElementById('gate').style.display='none'}
 
 function statBox(k,v,unit,cls){return '<div class="stat"><div class="k">'+k+'</div><div class="v '+cls+'">'+v+'<small>'+unit+'</small></div></div>'}
+function fmtAmt(n){return Math.round(n*100)/100}
 
 function renderStats(){
   var total=0, aaa=0, warn=0;
@@ -541,9 +664,9 @@ function renderStats(){
   var centLim=0; cent.forEach(function(c){centLim+=c.limit||0});
   document.getElementById('stats').innerHTML=
     statBox('在库对手', ACTIVE.length, '家', '')+
-    statBox('授信总额度', total, '亿元', 'gold')+
-    statBox('央企系', cent.length, '家 · '+centLim+'亿', '')+
-    statBox('覆盖省份', Object.keys(ACTIVE.reduce(function(m,c){m[c.prov]=1;return m},{})).length, '个省市自治区', '')+
+    statBox('授信总额度', fmtAmt(total), '亿元', 'gold')+
+    statBox('央企系', cent.length, '家 · '+fmtAmt(centLim)+'亿', '')+
+    statBox('覆盖省份', Object.keys(ACTIVE.reduce(function(m,c){if(c.prov)m[c.prov]=1;return m},{})).length, '个省市自治区', '')+
     statBox('风险提示', (neg+obs)+warn, '负面'+neg+' · 观察'+obs+' · 低内评'+warn, 'warn');
   var catsN=0; ACTIVE.forEach(function(c){catsN+=c.limit||0});
   var order=['金融同业','城投平台','产业企业','综合集团'];
@@ -554,11 +677,11 @@ function renderStats(){
     var lim=0; ACTIVE.forEach(function(c){if(c.cat===k)lim+=c.limit||0});
     var pct=Math.round(n/ACTIVE.length*1000)/10;
     var lpct=catsN?Math.round(lim/catsN*1000)/10:0;
-    bar+='<div style="width:'+pct+'%;background:'+CAT_COLOR[k]+'" title="'+k+' '+n+'家 · '+lim+'亿"></div>';
-    legend+='<span class="lg"><span class="dot" style="background:'+CAT_COLOR[k]+'"></span>'+k+' <b>'+n+'</b>家 <span class="lim">'+lim+'亿</span> ('+lpct+'%)</span>';
+    bar+='<div style="width:'+pct+'%;background:'+CAT_COLOR[k]+'" title="'+k+' '+n+'家 · '+fmtAmt(lim)+'亿"></div>';
+    legend+='<span class="lg"><span class="dot" style="background:'+CAT_COLOR[k]+'"></span>'+k+' <b>'+n+'</b>家 <span class="lim">'+fmtAmt(lim)+'亿</span> ('+lpct+'%)</span>';
   });
   var otherN=nat['其他']||0, lgovN=nat['地方国企']||0;
-  legend+='<span class="lg">｜ 央企 <b>'+cent.length+'</b>家 <span class="lim">'+centLim+'亿</span> · 地方国企 <b>'+lgovN+'</b>家 · 其他 <b>'+otherN+'</b>家</span>';
+  legend+='<span class="lg">｜ 央企 <b>'+cent.length+'</b>家 <span class="lim">'+fmtAmt(centLim)+'亿</span> · 地方国企 <b>'+lgovN+'</b>家 · 其他 <b>'+otherN+'</b>家</span>';
   document.getElementById('catPanel').innerHTML=
     '<div class="cat-title">CLASS BREAKDOWN · 分类概览(按授信额度占比加权)</div>'+
     '<div class="cat-bar">'+bar+'</div>'+
@@ -709,6 +832,7 @@ def main():
         print("⚠️ 仍有缺省份:", missing)
 
     html = (HTML_TPL
+            .replace("__UPDATED__", UPDATED)
             .replace("__ACTIVE__", json.dumps(active, ensure_ascii=False))
             .replace("__REMOVED__", json.dumps(removed, ensure_ascii=False)))
     OUT.write_text(html, encoding="utf-8")

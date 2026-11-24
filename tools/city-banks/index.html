@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>城商行总资产全景 · 2026-11-23 · EVERSTEAD</title>
+<style>
+:root{
+  --bg:#03060c; --panel:rgba(10,20,38,.55); --panel-hover:rgba(14,28,52,.75);
+  --line:rgba(56,189,248,.16); --line-strong:rgba(56,189,248,.45);
+  --cyan:#22d3ee; --blue:#3b82f6; --violet:#8b5cf6;
+  --green:#34d399; --orange:#fb923c; --rose:#f43f5e;
+  --gold:#C6A15B; --gold-bright:#E3C98F;
+  --text:#e2ecf7; --muted:#7d92ad;
+  --glow:0 0 24px rgba(34,211,238,.25); --glow-gold:0 0 24px rgba(198,161,91,.28);
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas','Courier New',ui-monospace,monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(1100px 600px at 75% -10%, rgba(198,161,91,.13), transparent 60%),
+  radial-gradient(900px 500px at -10% 110%, rgba(59,130,246,.12), transparent 60%),
+  linear-gradient(rgba(198,161,91,.045) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(198,161,91,.045) 1px, transparent 1px), var(--bg);
+  background-size:auto,auto,44px 44px,44px 44px,auto;
+  mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 120% 90% at 50% 0%, #000 55%, transparent 100%)}
+.wrap{position:relative;z-index:3;max-width:1180px;margin:0 auto;padding:0 24px 56px}
+.topbar{display:flex;align-items:center;gap:14px;padding:22px 0 0}
+.topbar .logo{width:40px;height:40px;border-radius:10px;flex-shrink:0;background:linear-gradient(135deg,var(--gold),var(--cyan));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:#03101f;box-shadow:var(--glow-gold);font-family:var(--mono)}
+.topbar .brand{font-family:var(--mono);font-weight:700;letter-spacing:.28em;font-size:15px}
+.topbar .brand em{font-style:normal;background:linear-gradient(90deg,var(--gold-bright),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar .back{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:rgba(10,20,38,.4);transition:border-color .25s,color .25s}
+.topbar .back:hover{border-color:var(--line-strong);color:var(--cyan)}
+.sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--muted);margin:14px 0 26px;line-height:1.9}
+.sub b{color:var(--gold-bright)}
+h2.sec{display:flex;align-items:baseline;gap:12px;padding-bottom:12px;margin:42px 0 18px;border-bottom:1px solid var(--line);font-size:19px;letter-spacing:.06em}
+h2.sec .no{font-family:var(--mono);font-weight:800;font-size:13px;background:linear-gradient(90deg,var(--gold-bright),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+h2.sec .hint{font-size:11px;color:var(--muted);font-weight:400;letter-spacing:.1em;margin-left:auto;font-family:var(--mono)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.kpi{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:18px 18px 14px;backdrop-filter:blur(10px)}
+.kpi .v{font-family:var(--mono);font-size:26px;font-weight:800;color:var(--gold-bright);line-height:1.15}
+.kpi .v small{font-size:13px;color:var(--muted);font-weight:400;margin-left:4px}
+.kpi .k{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
+.kpi .k b{color:var(--cyan);font-weight:600}
+.insights{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.ins{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:18px 20px;position:relative;overflow:hidden}
+.ins::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--gold),rgba(34,211,238,.4))}
+.ins .t{font-size:15px;font-weight:700;margin-bottom:8px}
+.ins .t em{font-style:normal;color:var(--gold-bright);font-family:var(--mono);font-size:12px;margin-right:8px}
+.ins .d{font-size:12.5px;color:#a9bdd4;line-height:1.85}
+.ins .d b{color:var(--cyan);font-weight:600}
+.ins .d .num{font-family:var(--mono);color:var(--gold-bright)}
+.chart-row{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
+@media(max-width:900px){.chart-row{grid-template-columns:1fr}}
+.panel{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:20px;backdrop-filter:blur(10px)}
+.panel h3{font-size:14px;letter-spacing:.08em;margin-bottom:16px;color:var(--text)}
+.panel h3 span{font-size:11px;color:var(--muted);font-weight:400;margin-left:8px;font-family:var(--mono)}
+.bar-item{display:grid;grid-template-columns:96px 1fr 108px;align-items:center;gap:10px;margin-bottom:7px;font-size:12px}
+.bar-item .nm{text-align:right;color:#c3d3e6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-item .tr{height:16px;background:rgba(56,189,248,.06);border-radius:4px;overflow:hidden}
+.bar-item .fl{height:100%;border-radius:4px;background:linear-gradient(90deg,rgba(198,161,91,.85),rgba(34,211,238,.75))}
+.bar-item .vl{font-family:var(--mono);color:var(--gold-bright);font-size:11.5px;text-align:right;white-space:nowrap}
+.bar-item .vl small{color:var(--muted)}
+.bar-item.mut .fl{background:linear-gradient(90deg,rgba(125,146,173,.5),rgba(125,146,173,.3))}
+.tier-row{display:grid;grid-template-columns:112px 1fr 188px;align-items:center;gap:10px;margin-bottom:9px;font-size:12px}
+.tier-row .nm{color:#c3d3e6}
+.tier-row .tr{height:20px;background:rgba(56,189,248,.06);border-radius:4px;overflow:hidden}
+.tier-row .fl{height:100%;border-radius:4px}
+.tier-row .vl{font-family:var(--mono);font-size:10.8px;color:var(--muted);text-align:right;white-space:nowrap}
+.tier-row .vl b{color:var(--gold-bright)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--muted)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.timeline{display:flex;align-items:flex-end;gap:5px;height:120px;margin-top:6px}
+.tlcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.tlbar{width:100%;max-width:46px;background:linear-gradient(180deg,rgba(251,146,60,.85),rgba(251,146,60,.35));border-radius:4px 4px 0 0;position:relative}
+.tlbar.t0{background:linear-gradient(180deg,rgba(52,211,153,.85),rgba(52,211,153,.35))}
+.tln{font-family:var(--mono);font-size:11px;color:var(--gold-bright)}
+.tly{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.toolbar input{flex:1;min-width:200px;padding:9px 14px;font-size:13px;color:var(--text);background:rgba(3,6,12,.6);border:1px solid var(--line);border-radius:9px;outline:none;font-family:inherit}
+.toolbar input:focus{border-color:var(--gold)}
+.toolbar select{padding:9px 12px;font-size:12.5px;color:var(--text);background:rgba(3,6,12,.6);border:1px solid var(--line);border-radius:9px;outline:none;font-family:inherit}
+.toolbar .cnt{font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:auto}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:880px}
+thead th{position:sticky;top:0;background:#0a1626;color:var(--muted);font-weight:600;font-size:11px;letter-spacing:.08em;text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none;white-space:nowrap}
+thead th:hover{color:var(--cyan)}
+tbody td{padding:9px 12px;border-bottom:1px solid rgba(56,189,248,.06);white-space:nowrap}
+tbody tr:hover{background:rgba(14,28,52,.5)}
+td.rk{font-family:var(--mono);color:var(--muted)}
+td.bk{font-weight:600}
+td.as{font-family:var(--mono);color:var(--gold-bright);text-align:right}
+td.rep{color:#9fb3c9;font-size:11.5px}
+.badge{display:inline-block;font-family:var(--mono);font-size:10.5px;padding:2px 8px;border-radius:999px;border:1px solid var(--line)}
+.b-cp-in{color:var(--green);border-color:rgba(52,211,153,.4)}
+.b-cp-out{color:var(--orange);border-color:rgba(251,146,60,.4)}
+.b-cp-no{color:var(--muted)}
+.b-t0{color:var(--gold-bright);border-color:rgba(198,161,91,.45)}
+.b-t1{color:var(--cyan);border-color:rgba(34,211,238,.35)}
+.b-t2{color:#93c5fd;border-color:rgba(147,197,253,.3)}
+.b-t3{color:#9fb3c9;border-color:var(--line)}
+.b-stale{color:var(--rose);border-color:rgba(244,63,94,.4)}
+.b-y{color:var(--green)}
+.ext-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}
+.ext{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:18px 20px;position:relative}
+.ext .n{font-family:var(--mono);font-size:11px;color:var(--gold-bright);letter-spacing:.16em}
+.ext .t{font-size:14.5px;font-weight:700;margin:7px 0 8px}
+.ext .d{font-size:12.5px;color:#a9bdd4;line-height:1.8}
+.ext .how{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(56,189,248,.15);font-size:11.5px;color:var(--muted);line-height:1.75}
+.ext .how b{color:var(--cyan);font-weight:600}
+.ext .tag{position:absolute;right:14px;top:14px;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:999px;border:1px solid rgba(52,211,153,.4);color:var(--green)}
+.ext .tag.todo{border-color:rgba(198,161,91,.4);color:var(--gold-bright)}
+.note{border:1px solid rgba(198,161,91,.25);border-radius:12px;background:rgba(198,161,91,.06);padding:14px 18px;font-size:12px;color:#c7b998;line-height:1.9;margin-top:16px}
+.foot{margin-top:52px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--muted);text-align:center;line-height:2}
+.gate{position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.gate-panel{max-width:400px;width:calc(100% - 48px);text-align:center;border:1px solid var(--line);border-radius:16px;padding:42px 30px;background:var(--panel)}
+.gate-panel .g-ico{font-size:40px;margin-bottom:12px}
+.gate-panel h2{font-size:19px;margin-bottom:8px;letter-spacing:.1em}
+.gate-panel p{font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.8}
+.gate-panel input{width:100%;padding:11px 14px;font-family:var(--mono);font-size:15px;letter-spacing:.3em;color:var(--text);background:rgba(3,6,12,.6);border:1px solid var(--line);border-radius:10px;outline:none;text-align:center}
+.gate-panel input:focus{border-color:var(--gold)}
+.gate-panel button{margin-top:14px;width:100%;padding:11px;font-size:13px;font-weight:600;letter-spacing:.2em;color:#03101f;cursor:pointer;background:linear-gradient(90deg,var(--gold-bright),var(--cyan));border:none;border-radius:10px}
+.gate-err{display:none;margin-top:12px;font-size:12px;color:var(--rose)}
+.gate-err.on{display:block}
+@media print{.gate,.bg-grid,.topbar .back,.toolbar{display:none!important}}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<div class="gate" id="gate">
+  <div class="gate-panel">
+    <div class="g-ico">🔒</div>
+    <h2>城商行总资产全景</h2>
+    <p>内部工作资料 · 含交易对手库覆盖信息 · 密码访问</p>
+    <input type="password" id="pw" placeholder="请输入工作密码" autocomplete="off">
+    <button id="btn" type="button">解 锁</button>
+    <div class="gate-err" id="gerr">密码不对, 再试一次</div>
+  </div>
+</div>
+
+<div class="wrap" id="main" style="display:none">
+  <div class="topbar">
+    <div class="logo">E</div>
+    <div class="brand">EVERSTEAD <em>TOOLBOX</em></div>
+    <a class="back" href="../../work.html">← 工作区</a>
+  </div>
+  <div class="sub">CITY COMMERCIAL BANKS · 123 家最新总资产 · 数据截至 <b>2026-11-23</b> · 单位 <b>亿元</b><br>
+  来源: 公众号「交易圈」《123家城商行最新总资产》 · 原始数据: 企业预警通 · 整理: 2026-11-24</div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <h2 class="sec"><span class="no">01</span>关键洞察<span class="hint">数字均按原表逐字核对</span></h2>
+  <div class="insights">
+    <div class="ins"><div class="t"><em>TOP3</em>前三甲齐破 4 万亿</div>
+      <div class="d">江苏银行 <span class="num">56,058.45</span> 亿、北京银行 <span class="num">47,656.44</span> 亿、宁波银行 <span class="num">40,973.54</span> 亿——TOP3 合计 <b>14.47 万亿</b>，超过榜单 106 家总盘的 20%。</div></div>
+    <div class="ins"><div class="t"><em>贴身</em>第 6、7 名仅差 58.76 亿</div>
+      <div class="d">杭州银行 <span class="num">25,303.95</span> 亿 vs 徽商银行 <span class="num">25,245.19</span> 亿，差距仅 <b>0.23%</b>，名次一步之遥；两家均为 2026 三季报口径。</div></div>
+    <div class="ins"><div class="t"><em>集中</em>14 家万亿行占半壁江山</div>
+      <div class="d">万亿及以上 <b>14 家</b>，合计 <span class="num">34.83 万亿</span>，占 106 家总资产 <b>50.1%</b>；CR5 = <b>30.4%</b>，CR10 = <b>43.9%</b>，CR20 = <b>58.0%</b>。</div></div>
+    <div class="ins"><div class="t"><em>时效</em>铁岭银行停在 2014 年报</div>
+      <div class="d">106 家中 <b>82 家</b>已披露 2026 三季报；另有 <b>17 家</b>最新报告期早于 2025-11-23，最久的铁岭银行距数据截止日约 <b>12 年</b>。披露滞后本身就是治理与经营状况的信号。</div></div>
+    <div class="ins"><div class="t"><em>区域</em>辽宁系 10 家扎堆滞后榜</div>
+      <div class="d">榜单二 17 家中辽宁 <b>10 家</b>（含锦州银行 8,265.52 亿、辽沈银行 2,395.67 亿等），报告期均在 2024 年及以前；河北 2 家、内蒙古 3 家、云南/四川各 1 家。</div></div>
+    <div class="ins"><div class="t"><em>格局</em>中西部杀入十强</div>
+      <div class="d">成都银行第 <b>8</b>（14,987.25 亿）、中原银行第 <b>9</b>（14,959.99 亿，吸收合并后，中报口径）；江苏 4 家合计 <span class="num">9.84 万亿</span> 略高于浙江 13 家合计 <span class="num">9.80 万亿</span>。</div></div>
+  </div>
+
+  <h2 class="sec"><span class="no">02</span>结构图谱<span class="hint">榜单一 · 106 家近一年披露口径</span></h2>
+  <div class="chart-row">
+    <div class="panel"><h3>TOP 20 总资产 <span>亿元</span></h3><div id="top20"></div></div>
+    <div class="panel"><h3>规模梯队 <span>家数 / 合计规模 / 占比</span></h3><div id="tiers"></div>
+      <div class="legend"><span><i style="background:linear-gradient(90deg,rgba(198,161,91,.85),rgba(34,211,238,.75))"></i>合计总资产</span><span>梯队按榜单一 106 家划分</span></div>
+    </div>
+  </div>
+  <div class="chart-row" style="margin-top:16px">
+    <div class="panel"><h3>省域格局 TOP 12 <span>123 家全口径 · 含滞后银行</span></h3><div id="provs"></div></div>
+    <div class="panel"><h3>披露时效 <span>榜单二 · 17 家按最新报告年份</span></h3><div id="timeline" class="timeline"></div>
+      <div class="legend"><span><i style="background:rgba(52,211,153,.8)"></i>2025 年报告</span><span><i style="background:rgba(251,146,60,.8)"></i>2024 年及更早</span></div>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="no">03</span>全量明细<span class="hint">123 家 · 可搜索 / 筛选 / 排序 · 点击表头排序</span></h2>
+  <div class="toolbar">
+    <input id="q" placeholder="🔍 搜索银行名称或省份…">
+    <select id="fList"><option value="">全部榜单</option><option value="top">榜单一 · 近一年披露</option><option value="stale">榜单二 · 更新滞后</option></select>
+    <select id="fProv"><option value="">全部省份</option></select>
+    <select id="fTier"><option value="">全部梯队</option></select>
+    <select id="fRep"><option value="">全部报告期</option></select>
+    <select id="fCp"><option value="">全部对手库状态</option><option value="在库">对手库 · 在库</option><option value="出库">对手库 · 出库</option><option value="未入库">对手库 · 未入库</option></select>
+    <button class="back" id="csv" style="margin-left:0;cursor:pointer;padding:9px 14px;background:rgba(10,20,38,.4);border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:11px;letter-spacing:.1em">导出 CSV</button>
+    <span class="cnt" id="cnt"></span>
+  </div>
+  <div class="tbl-wrap"><table id="tbl"><thead><tr>
+    <th data-s="rank">名次</th><th data-s="bank">银行</th><th data-s="prov">省份</th>
+    <th data-s="assets" style="text-align:right">总资产(亿元)</th><th data-s="report">最新报告期</th>
+    <th data-s="tier">梯队</th><th data-s="cp">交易对手库</th><th>客户名单</th>
+  </tr></thead><tbody></tbody></table></div>
+
+  <h2 class="sec"><span class="no">04</span>客户覆盖交叉<span class="hint">123 家 × 站内两份存量名单</span></h2>
+  <div class="kpis" style="margin-bottom:16px">
+    <div class="kpi"><div class="v">20<small>家</small></div><div class="k">直接交易对手库 · <b>在库授信</b></div></div>
+    <div class="kpi"><div class="v">2<small>家</small></div><div class="k">对手库 · <b>历史出库</b></div></div>
+    <div class="kpi"><div class="v">101<small>家</small></div><div class="k">对手库 · <b>未入库</b>（拓客空间）</div></div>
+    <div class="kpi"><div class="v">56.8<small>%</small></div><div class="k">已入库银行资产占 123 家总盘</div></div>
+    <div class="kpi"><div class="v">98<small>家</small></div><div class="k">命中金融客户名单精选版（980 家）</div></div>
+  </div>
+  <div class="chart-row">
+    <div class="panel"><h3>未入库城商行 · 按资产规模 TOP 15 <span>拓客优先级参考</span></h3><div id="uncovered"></div>
+      <div class="legend">“未入库”指不在《直接交易对手库汇总表》中，不等同于无业务往来；对手库数据版本 2024-12-23。</div>
+    </div>
+    <div class="panel"><h3>分梯队入库覆盖率 <span>在库+出库 / 该梯队家数</span></h3><div id="covtier"></div>
+      <div class="legend">头部大行基本全入库；3000 亿以下覆盖率骤降，长尾是主要空白。</div>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="no">05</span>可拓展方向<span class="hint">已执行的标 ✅ · 待补数据的标 ⏳</span></h2>
+  <div class="ext-grid">
+    <div class="ext"><span class="tag">✅ 已内置</span><div class="n">EXT 01</div><div class="t">季度快照与名次变化</div>
+      <div class="d">本次已把 123 家落成结构化基线（CSV/JSON + 生成脚本）。下季度再抓一版，即可自动算出规模增速、名次升降、新进/掉队名单。</div>
+      <div class="how"><b>落地：</b>复用 build_data.py 换新数据重跑 → 页面自动出环比。建议每季末后 2 周更新。</div></div>
+    <div class="ext"><span class="tag">✅ 已内置</span><div class="n">EXT 02</div><div class="t">省域格局与集中度</div>
+      <div class="d">江苏 vs 浙江“双雄”、山东 14 家数量最多但单家规模最小、四川/河北的地市行密度，可支撑区域金融资源判断与分区域拜访规划。</div>
+      <div class="how"><b>落地：</b>已出省域 TOP12 与 CR 指标；进一步可叠加各省 GDP、存款余额，算“金融深化度 = 城商行资产/GDP”。</div></div>
+    <div class="ext"><span class="tag">✅ 已内置</span><div class="n">EXT 03</div><div class="t">客户库覆盖交叉</div>
+      <div class="d">123 家城商行与站内《直接交易对手库》《金融客户名单精选版》交叉：22 家已入库（TOP10 全覆盖），101 家未入库，按资产排序即得拓客优先级清单。</div>
+      <div class="how"><b>落地：</b>未入库名单可直接交业务团队过筛；对手库数据请同步更新至最新版（现为 2024-12-23）。</div></div>
+    <div class="ext"><span class="tag todo">⏳ 待数据</span><div class="n">EXT 04</div><div class="t">质量维度：从规模榜到质量榜</div>
+      <div class="d">总资产只排规模，排不出安全。补净利润、ROE、不良率、拨备覆盖率、资本充足率，才能识别“大而不强”与“小而美”。</div>
+      <div class="how"><b>落地：</b>企业预警通/年报可导；123 家中上市银行（A/H）披露最全，非上市需逐个翻年报，建议先做 TOP 30。</div></div>
+    <div class="ext"><span class="tag todo">⏳ 待数据</span><div class="n">EXT 05</div><div class="t">风险观察池</div>
+      <div class="d">17 家披露滞后银行天然构成风险关注池：辽宁 10 家集中在 2020–2024 报告期，锦州银行规模 8,265 亿但仍滞留 2022 中报，值得单独跟踪化险与重组进度。</div>
+      <div class="how"><b>落地：</b>按季检索这 17 家官网/评级报告/监管批复；标注化险模式（辽沈/山西/四川银行均为新设合并样本）。</div></div>
+    <div class="ext"><span class="tag todo">⏳ 待数据</span><div class="n">EXT 06</div><div class="t">资管业务视角</div>
+      <div class="d">城商行既是理财代销渠道，也是同业理财/委外资金的来源。补理财规模、代销牌照、网点数量，可回答“谁有渠道、谁有钱、谁能合作”。</div>
+      <div class="how"><b>落地：</b>理财公司/代销名单、各行理财年报；可先聚焦万亿俱乐部 14 家 + 5000 亿以上 26 家做分层。</div></div>
+    <div class="ext"><span class="tag todo">⏳ 待数据</span><div class="n">EXT 07</div><div class="t">上市属性与可比估值</div>
+      <div class="d">A/H 上市城商行约 20 余家，PB/PE 与资产规模、ROE 的关系可用于非上市行的相对定价参考（转让/受让、增资场景）。</div>
+      <div class="how"><b>落地：</b>名单打标“上市/非上市/港股”，接行情做 PB 分位；非上市行用可比公司法估值。</div></div>
+    <div class="ext"><span class="tag todo">⏳ 待数据</span><div class="n">EXT 08</div><div class="t">名单动态维护</div>
+      <div class="d">吸收合并（中原银行）、新设合并（四川/山西/辽沈银行）、更名与重组会改变名单口径；本次已按文章口径固化基线，后续需跟踪变动。</div>
+      <div class="how"><b>落地：</b>建“变动台账”：事件/涉及行/对规模口径的影响；每季更新时对照。</div></div>
+  </div>
+
+  <div class="note">⚠️ 口径提醒：各行报告期不同（2026 三季报 82 家、中报 9 家、一季报 2 家、2025 年报 13 家），排名仅供参考；总资产排的是规模，排不出安全。榜单二按报告期由近到远排列，不是规模排名。</div>
+
+  <div class="foot">
+    数据来源: 公众号「交易圈」《123家城商行最新总资产》→ 企业预警通 www.qyyjt.cn（金融机构 → 银行大全 → 城商行）<br>
+    交易对手库: 直接交易对手库汇总表（2024-12-23 版） · 客户名单: 金融客户名单精选版（980 家，2026-08-26）<br>
+    EVERSTEAD WORKSPACE · 整理于 2026-11-24
+  </div>
+</div>
+
+<script>
+var DATA = [{"rank": 1, "bank": "江苏银行", "prov": "江苏", "assets": 56058.45, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 128, "cp_ext": "AAA", "cl": false}, {"rank": 2, "bank": "北京银行", "prov": "北京", "assets": 47656.44, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 156, "cp_ext": "AAA", "cl": false}, {"rank": 3, "bank": "宁波银行", "prov": "浙江", "assets": 40973.54, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 128, "cp_ext": "AAA", "cl": false}, {"rank": 4, "bank": "上海银行", "prov": "上海", "assets": 33688.63, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 156, "cp_ext": "AAA", "cl": false}, {"rank": 5, "bank": "南京银行", "prov": "江苏", "assets": 32867.58, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 128, "cp_ext": "AAA", "cl": false}, {"rank": 6, "bank": "杭州银行", "prov": "浙江", "assets": 25303.95, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 73, "cp_ext": "AAA", "cl": true}, {"rank": 7, "bank": "徽商银行", "prov": "安徽", "assets": 25245.19, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 73, "cp_ext": "AAA", "cl": false}, {"rank": 8, "bank": "成都银行", "prov": "四川", "assets": 14987.25, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 97, "cp_ext": "AAA", "cl": false}, {"rank": 9, "bank": "中原银行", "prov": "河南", "assets": 14959.99, "report": "2026年中报", "list": "top", "tier": "万亿及以上", "rtype": "中报", "cp": "在库", "cp_limit": 24, "cp_ext": "AAA", "cl": false}, {"rank": 10, "bank": "长沙银行", "prov": "湖南", "assets": 13435.55, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 56, "cp_ext": "AAA", "cl": false}, {"rank": 11, "bank": "厦门国际银行", "prov": "福建", "assets": 11471.95, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 60, "cp_ext": "AAA", "cl": false}, {"rank": 12, "bank": "重庆银行", "prov": "重庆", "assets": 11265.58, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "在库", "cp_limit": 73, "cp_ext": "AAA", "cl": false}, {"rank": 13, "bank": "盛京银行", "prov": "辽宁", "assets": 10298.55, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 14, "bank": "哈尔滨银行", "prov": "黑龙江", "assets": 10106.06, "report": "2026年三季报", "list": "top", "tier": "万亿及以上", "rtype": "三季报", "cp": "出库", "cp_limit": 0, "cp_ext": "AAA", "cl": false}, {"rank": 15, "bank": "广州银行", "prov": "广东", "assets": 9779.41, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "在库", "cp_limit": 42, "cp_ext": "AAA", "cl": true}, {"rank": 16, "bank": "天津银行", "prov": "天津", "assets": 9573.98, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "在库", "cp_limit": 24, "cp_ext": "AAA", "cl": true}, {"rank": 17, "bank": "吉林银行", "prov": "吉林", "assets": 9112.29, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 18, "bank": "齐鲁银行", "prov": "山东", "assets": 8881.42, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "在库", "cp_limit": 32, "cp_ext": "AAA", "cl": true}, {"rank": 19, "bank": "苏州银行", "prov": "江苏", "assets": 8815.03, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "在库", "cp_limit": 32, "cp_ext": "AAA", "cl": true}, {"rank": 20, "bank": "青岛银行", "prov": "山东", "assets": 8745.7, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "在库", "cp_limit": 42, "cp_ext": "AAA", "cl": true}, {"rank": 21, "bank": "四川银行", "prov": "四川", "assets": 8034.44, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 22, "bank": "郑州银行", "prov": "河南", "assets": 7829.12, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "出库", "cp_limit": 0, "cp_ext": "AAA", "cl": false}, {"rank": 23, "bank": "贵阳银行", "prov": "贵州", "assets": 7734.08, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "在库", "cp_limit": 24, "cp_ext": "AAA", "cl": true}, {"rank": 24, "bank": "东莞银行", "prov": "广东", "assets": 7092.54, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "在库", "cp_limit": 32, "cp_ext": "AAA", "cl": false}, {"rank": 25, "bank": "湖北银行", "prov": "湖北", "assets": 7009.05, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 26, "bank": "汉口银行", "prov": "湖北", "assets": 6851.18, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 27, "bank": "湖南银行", "prov": "湖南", "assets": 6603.73, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 28, "bank": "贵州银行", "prov": "贵州", "assets": 6483.35, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 29, "bank": "桂林银行", "prov": "广西", "assets": 6348.43, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 30, "bank": "河北银行", "prov": "河北", "assets": 6026.91, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 31, "bank": "江西银行", "prov": "江西", "assets": 5930.73, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 32, "bank": "长安银行", "prov": "陕西", "assets": 5818.56, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 33, "bank": "广西北部湾银行", "prov": "广西", "assets": 5699.66, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 34, "bank": "西安银行", "prov": "陕西", "assets": 5544.19, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 35, "bank": "威海银行", "prov": "山东", "assets": 5434.78, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 36, "bank": "兰州银行", "prov": "甘肃", "assets": 5348.17, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 37, "bank": "九江银行", "prov": "江西", "assets": 5344.47, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 38, "bank": "温州银行", "prov": "浙江", "assets": 5203.5, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 39, "bank": "大连银行", "prov": "辽宁", "assets": 5108.25, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 40, "bank": "浙江泰隆商行", "prov": "浙江", "assets": 5015.15, "report": "2026年三季报", "list": "top", "tier": "5000–10000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 41, "bank": "广东华兴银行", "prov": "广东", "assets": 4991.71, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 42, "bank": "厦门银行", "prov": "福建", "assets": 4941.2, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 43, "bank": "广东华润银行", "prov": "广东", "assets": 4842.29, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 44, "bank": "昆仑银行", "prov": "新疆", "assets": 4756.38, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 45, "bank": "日照银行", "prov": "山东", "assets": 4440.99, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 46, "bank": "甘肃银行", "prov": "甘肃", "assets": 4430.09, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "在库", "cp_limit": 21, "cp_ext": "AAA", "cl": false}, {"rank": 47, "bank": "富滇银行", "prov": "云南", "assets": 4366.62, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 48, "bank": "重庆三峡银行", "prov": "重庆", "assets": 4193.38, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 49, "bank": "张家口银行", "prov": "河北", "assets": 4148.25, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 50, "bank": "唐山银行", "prov": "河北", "assets": 4129.81, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 51, "bank": "晋商银行", "prov": "山西", "assets": 4076.68, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 52, "bank": "台州银行", "prov": "浙江", "assets": 4012.79, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 53, "bank": "龙江银行", "prov": "黑龙江", "assets": 3975.05, "report": "2025年报", "list": "top", "tier": "3000–5000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 54, "bank": "潍坊银行", "prov": "山东", "assets": 3740.46, "report": "2026年中报", "list": "top", "tier": "3000–5000亿", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 55, "bank": "浙江稠州商行", "prov": "浙江", "assets": 3662.19, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 56, "bank": "山西银行", "prov": "山西", "assets": 3453.39, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 57, "bank": "沧州银行", "prov": "河北", "assets": 3380.16, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 58, "bank": "广东南粤银行", "prov": "广东", "assets": 3375.76, "report": "2025年报", "list": "top", "tier": "3000–5000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 59, "bank": "浙江民泰商行", "prov": "浙江", "assets": 3341.01, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 60, "bank": "赣州银行", "prov": "江西", "assets": 3229.24, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 61, "bank": "上饶银行", "prov": "江西", "assets": 3145.98, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 62, "bank": "齐商银行", "prov": "山东", "assets": 3117.46, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 63, "bank": "绵阳市商行", "prov": "四川", "assets": 3104.28, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 64, "bank": "济宁银行", "prov": "山东", "assets": 3003.89, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 65, "bank": "福建海峡银行", "prov": "福建", "assets": 3000.85, "report": "2026年三季报", "list": "top", "tier": "3000–5000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 66, "bank": "东营银行", "prov": "山东", "assets": 2874.12, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 67, "bank": "四川天府银行", "prov": "四川", "assets": 2803.57, "report": "2025年报", "list": "top", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 68, "bank": "绍兴银行", "prov": "浙江", "assets": 2779.65, "report": "2026年中报", "list": "top", "tier": "1000–3000亿", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 69, "bank": "柳州银行", "prov": "广西", "assets": 2722.88, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 70, "bank": "莱商银行", "prov": "山东", "assets": 2628.01, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 71, "bank": "乌鲁木齐银行", "prov": "新疆", "assets": 2590.32, "report": "2026年中报", "list": "top", "tier": "1000–3000亿", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 72, "bank": "邯郸银行", "prov": "河北", "assets": 2582.98, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 73, "bank": "乐山市商行", "prov": "四川", "assets": 2452.3, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 74, "bank": "承德银行", "prov": "河北", "assets": 2405.25, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 75, "bank": "蒙商银行", "prov": "内蒙古", "assets": 2275.43, "report": "2025年报", "list": "top", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 76, "bank": "宁夏银行", "prov": "宁夏", "assets": 2208.13, "report": "2026年中报", "list": "top", "tier": "1000–3000亿", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 77, "bank": "泸州银行", "prov": "四川", "assets": 2124.79, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 78, "bank": "秦皇岛银行", "prov": "河北", "assets": 2116.85, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 79, "bank": "宁波通商银行", "prov": "浙江", "assets": 2062.45, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 80, "bank": "湖州银行", "prov": "浙江", "assets": 2035.17, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 81, "bank": "临商银行", "prov": "山东", "assets": 2034.81, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 82, "bank": "嘉兴银行", "prov": "浙江", "assets": 2034.11, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 83, "bank": "新疆银行", "prov": "新疆", "assets": 2013.69, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 84, "bank": "邢台银行", "prov": "河北", "assets": 1985.68, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 85, "bank": "烟台银行", "prov": "山东", "assets": 1890.86, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 86, "bank": "泉州银行", "prov": "福建", "assets": 1877.68, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 87, "bank": "长城华西银行", "prov": "四川", "assets": 1821.14, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 88, "bank": "保定银行", "prov": "河北", "assets": 1696.89, "report": "2025年报", "list": "top", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 89, "bank": "云南红塔银行", "prov": "云南", "assets": 1614.75, "report": "2026年一季报", "list": "top", "tier": "1000–3000亿", "rtype": "一季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 90, "bank": "泰安银行", "prov": "山东", "assets": 1582.12, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 91, "bank": "抚顺银行", "prov": "辽宁", "assets": 1500.2, "report": "2026年中报", "list": "top", "tier": "1000–3000亿", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 92, "bank": "朝阳银行", "prov": "辽宁", "assets": 1354.7, "report": "2025年报", "list": "top", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 93, "bank": "金华银行", "prov": "浙江", "assets": 1334.14, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 94, "bank": "宜宾市商行", "prov": "四川", "assets": 1320.71, "report": "2026年中报", "list": "top", "tier": "1000–3000亿", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 95, "bank": "达州银行", "prov": "四川", "assets": 1254.19, "report": "2025年报", "list": "top", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 96, "bank": "遂宁银行", "prov": "四川", "assets": 1217.96, "report": "2025年报", "list": "top", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 97, "bank": "海南银行", "prov": "海南", "assets": 1197.54, "report": "2026年三季报", "list": "top", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 98, "bank": "青海银行", "prov": "青海", "assets": 1173.54, "report": "2025年报", "list": "top", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 99, "bank": "德州银行", "prov": "山东", "assets": 950.76, "report": "2025年报", "list": "top", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 100, "bank": "石嘴山银行", "prov": "宁夏", "assets": 781.99, "report": "2026年中报", "list": "top", "tier": "1000亿以下", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 101, "bank": "雅安市商行", "prov": "四川", "assets": 716.52, "report": "2026年一季报", "list": "top", "tier": "1000亿以下", "rtype": "一季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": false}, {"rank": 102, "bank": "哈密市商行", "prov": "新疆", "assets": 659.82, "report": "2026年中报", "list": "top", "tier": "1000亿以下", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 103, "bank": "江苏长江商行", "prov": "江苏", "assets": 658.76, "report": "2026年三季报", "list": "top", "tier": "1000亿以下", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 104, "bank": "西藏银行", "prov": "西藏", "assets": 609.59, "report": "2025年报", "list": "top", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 105, "bank": "枣庄银行", "prov": "山东", "assets": 607.83, "report": "2025年报", "list": "top", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 106, "bank": "宁波东海银行", "prov": "浙江", "assets": 252.77, "report": "2025年报", "list": "top", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 1, "bank": "廊坊银行", "prov": "河北", "assets": 3038.03, "report": "2025年中报", "list": "stale", "tier": "3000–5000亿", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 2, "bank": "辽沈银行", "prov": "辽宁", "assets": 2395.67, "report": "2024年报", "list": "stale", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 3, "bank": "鄂尔多斯银行", "prov": "内蒙古", "assets": 1777.04, "report": "2023年报", "list": "stale", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 4, "bank": "内蒙古银行", "prov": "内蒙古", "assets": 1663.81, "report": "2023年报", "list": "stale", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 5, "bank": "曲靖市商业银行", "prov": "云南", "assets": 667.74, "report": "2023年报", "list": "stale", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 6, "bank": "自贡银行", "prov": "四川", "assets": 940.51, "report": "2023年报", "list": "stale", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 7, "bank": "本溪银行", "prov": "辽宁", "assets": 511.86, "report": "2022年报", "list": "stale", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 8, "bank": "锦州银行", "prov": "辽宁", "assets": 8265.52, "report": "2022年中报", "list": "stale", "tier": "5000–10000亿", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 9, "bank": "乌海银行", "prov": "内蒙古", "assets": 309.14, "report": "2022年中报", "list": "stale", "tier": "1000亿以下", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 10, "bank": "丹东银行", "prov": "辽宁", "assets": 939.6, "report": "2021年三季报", "list": "stale", "tier": "1000亿以下", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 11, "bank": "盘锦银行", "prov": "辽宁", "assets": 591.89, "report": "2021年中报", "list": "stale", "tier": "1000亿以下", "rtype": "中报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 12, "bank": "阜新银行", "prov": "辽宁", "assets": 1656.01, "report": "2020年报", "list": "stale", "tier": "1000–3000亿", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 13, "bank": "葫芦岛银行", "prov": "辽宁", "assets": 996.44, "report": "2020年报", "list": "stale", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 14, "bank": "营口银行", "prov": "辽宁", "assets": 1676.6, "report": "2020年三季报", "list": "stale", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 15, "bank": "鞍山银行", "prov": "辽宁", "assets": 1237.1, "report": "2020年三季报", "list": "stale", "tier": "1000–3000亿", "rtype": "三季报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 16, "bank": "衡水银行", "prov": "河北", "assets": 777.52, "report": "2019年报", "list": "stale", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}, {"rank": 17, "bank": "铁岭银行", "prov": "辽宁", "assets": 295.9, "report": "2014年报", "list": "stale", "tier": "1000亿以下", "rtype": "年报", "cp": "未入库", "cp_limit": null, "cp_ext": "", "cl": true}];
+var KPIS = [{"v": "123", "u": "家", "k": "城商行总数（榜单一 106 + 榜单二 17）"}, {"v": "72.31", "u": "万亿", "k": "123 家合计总资产 · 榜单一合计 69.54 万亿"}, {"v": "14", "u": "家", "k": "万亿俱乐部 · 合计占榜单一 <b>50.1%</b>"}, {"v": "43.9", "u": "%", "k": "CR10 集中度 · CR5 30.4% · CR20 58.0%"}, {"v": "17", "u": "家", "k": "披露滞后 · 其中辽宁系 <b>10 家</b>"}, {"v": "31", "u": "省", "k": "覆盖省级行政区 · 辽宁 / 山东 14 家数量最多"}];
+var PASSWORD_HASH = "62030069b40c02d1dd642d438194850f14d9e79a25abd1e53c02f7391f8242c8";
+var GATE_KEY = "ws_citybanks_ok";
+function sha256(ascii){
+  function rr(v,a){return (v>>>a)|(v<<(32-a));}
+  var mp=Math.pow,mw=mp(2,32),r="",w=[],bl=ascii.length*8;
+  var h=sha256.h=sha256.h||[],k=sha256.k=sha256.k||[],pc=k.length,ic={};
+  for(var c=2;pc<64;c++){if(!ic[c]){for(var i=0;i<313;i+=c)ic[i]=c;h[pc]=mp(c,.5)*mw|0;k[pc++]=mp(c,1/3)*mw|0;}}
+  ascii+="\x80";while(ascii.length%64-56)ascii+="\x00";
+  for(var i=0;i<ascii.length;i++){var j=ascii.charCodeAt(i);if(j>>8)return "";w[i>>2]|=j<<((3-i)%4)*8;}
+  w[w.length]=bl/mw|0;w[w.length]=bl;
+  for(var j=0;j<w.length;){var ww=w.slice(j,j+=16),oh=h;h=h.slice(0,8);
+    for(var i=0;i<64;i++){var w15=ww[i-15],w2=ww[i-2],a=h[0],e=h[4];
+      var t1=h[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&h[5])^(~e&h[6]))+k[i]+(ww[i]=(i<16)?ww[i]:(ww[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+ww[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10)))|0);
+      var t2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&h[1])^(a&h[2])^(h[1]&h[2]));
+      h=[(t1+t2)|0].concat(h);h[4]=(h[4]+t1)|0;}
+    for(var i=0;i<8;i++)h[i]=(h[i]+oh[i])|0;}
+  for(var i=0;i<8;i++)for(var j=3;j+1;j--){var b=(h[i]>>(j*8))&255;r+=((b<16)?0:"")+b.toString(16);}
+  return r;
+}
+function openGate(){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('main').style.display='block';
+  sessionStorage.setItem(GATE_KEY,'1');
+  init();
+}
+function tryUnlock(){
+  var v=document.getElementById('pw').value;
+  if(sha256(v)===PASSWORD_HASH){openGate();}
+  else{var g=document.getElementById('gerr');g.classList.add('on');document.getElementById('pw').value='';}
+}
+document.getElementById('btn').addEventListener('click',tryUnlock);
+document.getElementById('pw').addEventListener('keydown',function(e){if(e.key==='Enter')tryUnlock();});
+
+function fmt(n){return n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtW(n){return (n/10000).toFixed(2)+' 万亿';}
+
+var state={sort:'rank',dir:1,q:'',list:'',prov:'',tier:'',rep:'',cp:''};
+function renderKpis(){
+  var el=document.getElementById('kpis');
+  el.innerHTML=KPIS.map(function(k){
+    return '<div class="kpi"><div class="v">'+k.v+(k.u?'<small>'+k.u+'</small>':'')+'</div><div class="k">'+k.k+'</div></div>';
+  }).join('');
+}
+function renderTop20(){
+  var rows=DATA.filter(function(b){return b.list==='top';}).slice(0,20);
+  var mx=rows[0].assets;
+  document.getElementById('top20').innerHTML=rows.map(function(b,i){
+    return '<div class="bar-item"><div class="nm">'+b.bank+'</div>'+
+      '<div class="tr"><div class="fl" style="width:'+(b.assets/mx*100).toFixed(1)+'%"></div></div>'+
+      '<div class="vl">'+fmt(b.assets)+' <small>亿</small></div></div>';
+  }).join('');
+}
+function renderTiers(){
+  var tiers=['万亿及以上','5000–10000亿','3000–5000亿','1000–3000亿','1000亿以下'];
+  var colors=['linear-gradient(90deg,rgba(198,161,91,.9),rgba(227,201,143,.8))','linear-gradient(90deg,rgba(34,211,238,.8),rgba(59,130,246,.7))','linear-gradient(90deg,rgba(59,130,246,.65),rgba(139,92,246,.55))','linear-gradient(90deg,rgba(125,146,173,.5),rgba(125,146,173,.35))','linear-gradient(90deg,rgba(125,146,173,.3),rgba(125,146,173,.18))'];
+  var top=DATA.filter(function(b){return b.list==='top';});
+  var tot=top.reduce(function(s,b){return s+b.assets;},0);
+  var mx=0;
+  var agg=tiers.map(function(t){
+    var rs=top.filter(function(b){return b.tier===t;});
+    var s=rs.reduce(function(x,b){return x+b.assets;},0);
+    mx=Math.max(mx,s);
+    return {t:t,n:rs.length,s:s,p:s/tot*100};
+  });
+  document.getElementById('tiers').innerHTML=agg.map(function(a,i){
+    return '<div class="tier-row"><div class="nm">'+a.t+'</div>'+
+      '<div class="tr"><div class="fl" style="width:'+(a.s/mx*100).toFixed(1)+'%;background:'+colors[i]+'"></div></div>'+
+      '<div class="vl"><b>'+a.n+' 家</b> · '+fmtW(a.s)+' · '+a.p.toFixed(1)+'%</div></div>';
+  }).join('');
+}
+function renderProvs(){
+  var m={};
+  DATA.forEach(function(b){
+    if(!m[b.prov])m[b.prov]={n:0,s:0,stale:0};
+    m[b.prov].n++;m[b.prov].s+=b.assets;if(b.list==='stale')m[b.prov].stale++;
+  });
+  var arr=Object.keys(m).map(function(k){return {p:k,n:m[k].n,s:m[k].s,stale:m[k].stale};});
+  arr.sort(function(a,b){return b.s-a.s;});
+  var mx=arr[0].s;
+  document.getElementById('provs').innerHTML=arr.slice(0,12).map(function(a){
+    return '<div class="bar-item'+(a.stale>0?'':'')+'" style="grid-template-columns:74px 1fr 158px"><div class="nm">'+a.p+'</div>'+
+      '<div class="tr"><div class="fl" style="width:'+(a.s/mx*100).toFixed(1)+'%"></div></div>'+
+      '<div class="vl">'+fmtW(a.s)+' <small>· '+a.n+'家'+(a.stale?' (滞后'+a.stale+')':'')+'</small></div></div>';
+  }).join('');
+}
+function renderTimeline(){
+  var stale=DATA.filter(function(b){return b.list==='stale';});
+  var years={};
+  stale.forEach(function(b){
+    var y=(b.report.match(/(\d{4})/)||[])[1];
+    years[y]=(years[y]||0)+1;
+  });
+  var ks=Object.keys(years).sort();
+  var mx=Math.max.apply(null,ks.map(function(k){return years[k];}));
+  document.getElementById('timeline').innerHTML=ks.map(function(k){
+    var h=20+ (years[k]/mx)*80;
+    return '<div class="tlcol"><div class="tln">'+years[k]+'</div><div class="tlbar'+(k>='2025'?' t0':'')+'" style="height:'+h+'px"></div><div class="tly">'+k+'</div></div>';
+  }).join('');
+}
+function renderCoverage(){
+  var no=DATA.filter(function(b){return b.cp==='未入库';}).sort(function(a,b){return b.assets-a.assets;}).slice(0,15);
+  var mx=no[0].assets;
+  document.getElementById('uncovered').innerHTML=no.map(function(b){
+    return '<div class="bar-item"><div class="nm">'+b.bank+'</div>'+
+      '<div class="tr"><div class="fl" style="width:'+(b.assets/mx*100).toFixed(1)+'%;background:linear-gradient(90deg,rgba(244,63,94,.55),rgba(251,146,60,.6))"></div></div>'+
+      '<div class="vl">'+fmt(b.assets)+' <small>亿</small></div></div>';
+  }).join('');
+  var tiers=['万亿及以上','5000–10000亿','3000–5000亿','1000–3000亿','1000亿以下'];
+  var mx2=0;
+  var agg=tiers.map(function(t){
+    var rs=DATA.filter(function(b){return b.tier===t;});
+    var hit=rs.filter(function(b){return b.cp!=='未入库';}).length;
+    mx2=Math.max(mx2,rs.length);
+    return {t:t,n:rs.length,h:hit};
+  });
+  document.getElementById('covtier').innerHTML=agg.map(function(a){
+    var pct=a.n?a.h/a.n*100:0;
+    return '<div class="tier-row"><div class="nm">'+a.t+'</div>'+
+      '<div class="tr"><div class="fl" style="width:'+(a.n/mx2*100).toFixed(1)+'%;background:linear-gradient(90deg,rgba(52,211,153,.7),rgba(34,211,238,.6))"></div></div>'+
+      '<div class="vl"><b>'+(a.n?a.h+'/'+a.n:'0/0')+'</b> · '+pct.toFixed(0)+'%</div></div>';
+  }).join('');
+}
+function filtered(){
+  return DATA.filter(function(b){
+    if(state.list && b.list!==state.list)return false;
+    if(state.prov && b.prov!==state.prov)return false;
+    if(state.tier && b.tier!==state.tier)return false;
+    if(state.rep && b.report!==state.rep)return false;
+    if(state.cp && b.cp!==state.cp)return false;
+    if(state.q){var q=state.q.toLowerCase();if(b.bank.toLowerCase().indexOf(q)<0&&b.prov.toLowerCase().indexOf(q)<0)return false;}
+    return true;
+  });
+}
+function tierBadge(t){
+  var cls={'万亿及以上':'b-t0','5000–10000亿':'b-t1','3000–5000亿':'b-t2'};
+  return '<span class="badge '+(cls[t]||'b-t3')+'">'+t+'</span>';
+}
+function cpBadge(s){
+  if(s==='在库')return '<span class="badge b-cp-in">在库</span>';
+  if(s==='出库')return '<span class="badge b-cp-out">出库</span>';
+  return '<span class="badge b-cp-no">未入库</span>';
+}
+function renderTable(){
+  var rows=filtered();
+  var s=state.sort,d=state.dir;
+  rows.sort(function(a,b){
+    var x=a[s],y=b[s];
+    if(typeof x==='string'){return x.localeCompare(y,'zh')*d;}
+    return (x-y)*d;
+  });
+  document.querySelector('#tbl tbody').innerHTML=rows.map(function(b){
+    return '<tr><td class="rk">'+(b.list==='top'?String(b.rank).padStart(2,'0'):'<span class="badge b-stale">滞后</span>')+'</td>'+
+      '<td class="bk">'+b.bank+'</td><td>'+b.prov+'</td>'+
+      '<td class="as">'+fmt(b.assets)+'</td><td class="rep">'+b.report+'</td>'+
+      '<td>'+tierBadge(b.tier)+'</td><td>'+cpBadge(b.cp)+(b.cp==='在库'?' <span style="color:var(--muted);font-size:10.5px">'+b.cp_ext+'/'+(b.cp_limit||0)+'亿</span>':'')+'</td>'+
+      '<td>'+(b.cl?'<span class="badge b-y">✓</span>':'<span style="color:var(--muted)">—</span>')+'</td></tr>';
+  }).join('');
+  document.getElementById('cnt').textContent='共 '+rows.length+' 家';
+}
+function downloadCsv(){
+  var rows=filtered();
+  var head=['榜单','名次','银行','省份','总资产(亿元)','最新报告期','梯队','交易对手库','客户名单命中'];
+  var lines=[head.join(',')];
+  rows.forEach(function(b){
+    lines.push([b.list==='top'?'榜单一':'榜单二',b.rank,'"'+b.bank+'"',b.prov,b.assets,b.report,b.tier,b.cp,b.cl?'是':'否'].join(','));
+  });
+  var blob=new Blob(['\ufeff'+lines.join('\n')],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='城商行总资产_筛选结果.csv';
+  a.click();
+}
+function init(){
+  renderKpis();renderTop20();renderTiers();renderProvs();renderTimeline();renderCoverage();
+  var provs=[...new Set(DATA.map(function(b){return b.prov;}))].sort(function(a,b){return a.localeCompare(b,'zh');});
+  document.getElementById('fProv').innerHTML+=''+provs.map(function(p){return '<option>'+p+'</option>';}).join('');
+  var tiers=[...new Set(DATA.map(function(b){return b.tier;}))];
+  document.getElementById('fTier').innerHTML+=tiers.map(function(t){return '<option>'+t+'</option>';}).join('');
+  var reps=[...new Set(DATA.map(function(b){return b.report;}))].sort().reverse();
+  document.getElementById('fRep').innerHTML+=reps.map(function(t){return '<option>'+t+'</option>';}).join('');
+  document.getElementById('q').addEventListener('input',function(e){state.q=e.target.value.trim();renderTable();});
+  document.getElementById('fList').addEventListener('change',function(e){state.list=e.target.value;renderTable();});
+  document.getElementById('fProv').addEventListener('change',function(e){state.prov=e.target.value;renderTable();});
+  document.getElementById('fTier').addEventListener('change',function(e){state.tier=e.target.value;renderTable();});
+  document.getElementById('fRep').addEventListener('change',function(e){state.rep=e.target.value;renderTable();});
+  document.getElementById('fCp').addEventListener('change',function(e){state.cp=e.target.value;renderTable();});
+  document.getElementById('csv').addEventListener('click',downloadCsv);
+  document.querySelectorAll('#tbl thead th[data-s]').forEach(function(th){
+    th.addEventListener('click',function(){
+      var s=th.getAttribute('data-s');
+      if(state.sort===s)state.dir=-state.dir;else{state.sort=s;state.dir=1;}
+      renderTable();
+    });
+  });
+  renderTable();
+}
+if(sessionStorage.getItem(GATE_KEY)==='1'){openGate();}
+</script>
+</body>
+</html>

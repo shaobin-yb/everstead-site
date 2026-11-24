@@ -39,6 +39,7 @@ SKIP = {
     "tools/deck/成果演示-单文件版.html",  # 单文件演示自带全局翻页, 再注入会打架
     "tools/unassigned/unassigned.html",
     "tools/scattered-private/index.html",
+    "tools/city-banks/index.html",   # 密码门页(2026-11-24)
     "tools/token-usage/index.html",  # 密码门页(2026-09-14)
     "tools/stats/index.html",        # 密码门页(2026-09-15)
     "tools/work-report/index.html",  # 私人文件页(2026-09-15)

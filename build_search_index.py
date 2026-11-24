@@ -60,6 +60,7 @@ PRIVATE_PREFIXES = (
     "tools/cs15/",         # CS 1.5 单机人机版(私人专区, 2026-10-30)
     "tools/media-index/",  # 家庭片单·纪录片与公开课(私人专区, 2026-11-07)
     "tools/reg-trust/",    # 资产管理信托新规对照(内部材料, 工作密码门, 2026-10-30)
+    "tools/city-banks/",   # 123家城商行总资产全景(含对手库覆盖, 工作密码门, 2026-11-24)
     "knowledge/alm-interpretation/",  # 《办法》深度解读(内部材料, 含产品策略, 密码门, 2026-09-24)
 )
 SKIP_FILES = {"index.html", "index-template.html", "kb.html", "search.json"}

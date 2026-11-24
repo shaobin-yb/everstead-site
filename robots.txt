@@ -5,6 +5,7 @@ Disallow: /tools/work-report/
 Disallow: /tools/wuliangye-report/
 Disallow: /tools/combo-report/
 Disallow: /tools/counterparty/
+Disallow: /tools/city-banks/
 Disallow: /tools/deck/
 Disallow: /tools/meal/
 Disallow: /tools/yuezi/
